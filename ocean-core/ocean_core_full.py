@@ -29,6 +29,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
+# Global variables initialization
+_warmup_task: Optional[asyncio.Task] = None
+
 # ═══════════════════════════════════════════════════════════════════
 # LOGGING
 # ═══════════════════════════════════════════════════════════════════
@@ -43,8 +46,12 @@ logger = logging.getLogger("OceanCoreFull")
 # ═══════════════════════════════════════════════════════════════════
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
+ALBANIAN_DICT_MODE = os.getenv("ALBANIAN_DICT_MODE", "off").lower()
 PORT = int(os.getenv("PORT", "8030"))
 TRANSLATION_NODE = os.getenv("TRANSLATION_NODE", "http://localhost:8036")
+
+# Global variable for warmup task
+_warmup_task = None
 
 # ═══════════════════════════════════════════════════════════════════
 # IMPORT ALL ENGINES (with graceful fallbacks)
@@ -64,7 +71,7 @@ except ImportError as e:
 
 # 2. Real Answer Engine - Deep Knowledge
 try:
-    from real_answer_engine import get_answer_engine
+    from real_answer_engine import RealAnswerEngine
     REAL_ANSWER_AVAILABLE = True
     logger.info("✅ RealAnswerEngine loaded")
 except ImportError as e:
@@ -228,6 +235,7 @@ class ChatRequest(BaseModel):
     use_mega_layers: bool = True
     use_knowledge_seeds: bool = True
     strict_mode: bool = False  # Detyron ndjekjen e rregullave pa devijim
+    use_albanian_dictionary: bool = False
 
 class ChatResponse(BaseModel):
     response: str
@@ -258,7 +266,7 @@ def initialize_engines():
     
     if REAL_ANSWER_AVAILABLE:
         try:
-            answer_engine = get_answer_engine()
+            answer_engine = RealAnswerEngine()
             logger.info("🚀 RealAnswerEngine initialized")
         except Exception as e:
             logger.error(f"❌ RealAnswerEngine init failed: {e}")
@@ -467,7 +475,7 @@ VIOLATION OF THESE RULES IS NOT ALLOWED."""
         engines_used.append("StrictMode")
     
     # 4.6. ALBANIAN DICTIONARY - Direct response for Albanian definition queries
-    if ALBANIAN_DICT_AVAILABLE:
+    if ALBANIAN_DICT_AVAILABLE and (req.use_albanian_dictionary or ALBANIAN_DICT_MODE in {"on", "auto"}):
         # Check if we have a direct Albanian answer (for definitions, greetings, etc.)
         albanian_response = get_albanian_response(prompt)
         if albanian_response:

@@ -223,6 +223,37 @@ services:
     restart: unless-stopped
 
   # ==========================
+  # AI GLOBAL CPU (NANOGRID)
+  # ==========================
+  ai-global-9999:
+    build:
+      context: ./9999
+      dockerfile: Dockerfile
+    container_name: clisonix-ai-global-9999
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PORT: "9999"
+      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      MODEL: "llama3.1:8b"
+      API_KEYS_FILE: "/app/config/api_keys.json"
+      CLISONIX_MODULE_MAP_PATH: "/app/CLISONIX_MODULE_MAP.md"
+    volumes:
+      - ./9999/output:/app/output
+      - ./config/api_keys.json:/app/config/api_keys.json:ro
+      - ./CLISONIX_MODULE_MAP.md:/app/CLISONIX_MODULE_MAP.md:ro
+    ports:
+      - "9999:9999"
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9999/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ==========================
   # AVIATION WEATHER API (Microservice)
   # ==========================
   aviation:

@@ -9,6 +9,26 @@ import { useState, useEffect } from 'react';
  */
 
 const MODULES = [
+  // 🎵 CREATIVE TOOLS
+  {
+    id: 'music-studio',
+    name: 'Music Studio',
+    description: 'Create music with solfège notes (do-re-mi), waveforms, effects & genres',
+    icon: '🎵',
+    color: 'from-purple-500 to-pink-600',
+    category: 'Creative',
+    isNew: true,
+    featured: true
+  },
+  {
+    id: 'openmind',
+    name: 'OpenMind AI',
+    description: 'Complete AI workspace: chat, memory, tasks, music & vision generation',
+    icon: '🧠',
+    color: 'from-blue-500 to-purple-600',
+    category: 'AI Chat',
+    featured: true
+  },
   // 🌊 AI & CHAT
   {
     id: 'curiosity-ocean',
@@ -144,6 +164,7 @@ export default function HomePage() {
             <div className="hidden md:flex items-center gap-8">
               <a href="#asi-trinity" className="text-gray-600 hover:text-emerald-600 transition-colors">ASI Trinity</a>
               <a href="#modules" className="text-gray-600 hover:text-emerald-600 transition-colors">Tools</a>
+              <Link href="/modules/music-studio" className="text-gray-600 hover:text-purple-600 transition-colors">Music Studio</Link>
               <a href="#tech-stack" className="text-gray-600 hover:text-emerald-600 transition-colors">Why Us</a>
               <Link href="/modules" className="text-gray-600 hover:text-emerald-600 transition-colors">Dashboard</Link>
             </div>

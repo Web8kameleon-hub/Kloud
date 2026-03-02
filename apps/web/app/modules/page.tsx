@@ -64,6 +64,15 @@ const publicModules = [
     accent: 'slate'
   },
   {
+    id: 'openmind',
+    name: 'OpenMind',
+    description: 'General AI cockpit: chat, memory, workflows, vision, and music from the 9999 engine',
+    icon: Brain,
+    category: 'AI Chat',
+    href: '/modules/openmind',
+    accent: 'slate'
+  },
+  {
     id: 'web-reader',
     name: 'Web Reader',
     description: 'Browse any webpage, search the web, and chat with page content',

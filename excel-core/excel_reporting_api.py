@@ -6,19 +6,31 @@ Port: 8010
 Plotësisht e izoluar - pa konflikt!
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from datetime import datetime
 import subprocess
 import psutil
-import json
-import os
+from pathlib import Path
+
+from lagter_v1_excel import LagterV1ExcelBuilder
+from lagter_v1_models import LagterPayload
 
 app = FastAPI(
     title="Clisonix Excel Core",
     description="API ekskluzive për Excel Dashboard - Isolated",
     version="1.0.0"
 )
+
+LAGTER_EXPORT_DIR = Path("excel-core/output")
+LAGTER_SHEETS = [
+    "Overview",
+    "KPI",
+    "LawCompliance",
+    "EnigmaRegistry",
+    "Sketches"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,7 +60,12 @@ async def root():
             "/health",
             "/api/reporting/system-metrics",
             "/api/reporting/docker-containers",
-            "/api/reporting/docker-stats"
+            "/api/reporting/docker-stats",
+            "/api/lagter/v1/meta",
+            "/api/lagter/v1/template",
+            "/api/lagter/v1/process-map",
+            "/api/lagter/v1/export",
+            "/api/lagter/v1/export/custom"
         ]
     }
 
@@ -118,6 +135,125 @@ async def docker_stats():
         "stats": stats,
         "timestamp": datetime.utcnow().isoformat()
     }
+
+
+@app.get("/api/lagter/v1/meta")
+async def lagter_v1_meta():
+    builder = LagterV1ExcelBuilder()
+    payload = builder.build_payload()
+    uptime_seconds = int((datetime.utcnow() - datetime.fromisoformat(payload["generated_at"].replace("Z", "+00:00").replace("+00:00", ""))).total_seconds()) if payload.get("generated_at") else 0
+    return {
+        "module": "LAGTER v1",
+        "version": payload["version"],
+        "generated_at": payload["generated_at"],
+        "data_mode": "real",
+        "sheets": LAGTER_SHEETS,
+        "counts": {
+            "kpis": len(payload["kpis"]),
+            "laws": len(payload["law_checks"]),
+            "enigmas": len(payload["enigma_registry"]),
+            "sketch_points": len(payload["sketch_points"])
+        },
+        "observability": {
+            "export_dir": str(LAGTER_EXPORT_DIR),
+            "generated_files": len(list(LAGTER_EXPORT_DIR.glob("lagter_v1_dashboard_*.xlsx"))) if LAGTER_EXPORT_DIR.exists() else 0,
+            "uptime_seconds_estimate": max(uptime_seconds, 0)
+        }
+    }
+
+
+@app.get("/api/lagter/v1/template")
+async def lagter_v1_template():
+    return {
+        "mode": "template",
+        "description": "Schema contract for custom payload. No demo values.",
+        "required": [
+            "generated_at",
+            "version",
+            "kpis",
+            "law_checks",
+            "enigma_registry",
+            "sketch_points",
+        ],
+        "fields": {
+            "generated_at": "ISO-8601 string",
+            "version": "string",
+            "kpis": [
+                {
+                    "name": "string",
+                    "target": "number",
+                    "actual": "number",
+                }
+            ],
+            "law_checks": [
+                {
+                    "law": "string",
+                    "description": "string",
+                    "pass_rate": "number (0..1)",
+                }
+            ],
+            "enigma_registry": [
+                {
+                    "enigma_id": "string",
+                    "title": "string",
+                    "status": "open|testing|decoded|archived",
+                    "confidence": "number (0..1)",
+                    "hypothesis": "string",
+                }
+            ],
+            "sketch_points": [
+                {
+                    "day": "string",
+                    "bio": "number (0..1)",
+                    "behavior": "number (0..1)",
+                    "ambient": "number (0..1)",
+                    "tension": "number (0..1)",
+                }
+            ],
+        },
+        "example_post_target": "/api/lagter/v1/export/custom",
+    }
+
+
+@app.get("/api/lagter/v1/process-map")
+async def lagter_v1_process_map():
+    builder = LagterV1ExcelBuilder()
+    return {
+        "module": "LAGTER v1",
+        "steps": builder.process_map(),
+    }
+
+
+@app.get("/api/lagter/v1/export")
+async def lagter_v1_export():
+    builder = LagterV1ExcelBuilder()
+    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    LAGTER_EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+    file_path = LAGTER_EXPORT_DIR / f"lagter_v1_dashboard_{timestamp}.xlsx"
+    builder.write_workbook(file_path)
+
+    return FileResponse(
+        path=str(file_path),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename=file_path.name,
+    )
+
+
+@app.post("/api/lagter/v1/export/custom")
+async def lagter_v1_export_custom(payload: LagterPayload):
+    try:
+        builder = LagterV1ExcelBuilder()
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        LAGTER_EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+        file_path = LAGTER_EXPORT_DIR / f"lagter_v1_dashboard_custom_{timestamp}.xlsx"
+        builder.write_workbook(file_path, payload.model_dump())
+        return FileResponse(
+            path=str(file_path),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            filename=file_path.name,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid payload for LAGTER export: {exc}")
 
 if __name__ == "__main__":
     import uvicorn

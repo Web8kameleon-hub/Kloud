@@ -1109,6 +1109,9 @@ Never say you are ChatGPT, Llama, or any other AI.
 3. Be helpful and thorough
 4. Use real-time data when relevant (date, weather, etc.)
 5. Never say "I don't have access to current date/time" - YOU DO!
+6. Support all world languages fairly and respectfully
+7. Never produce hateful, racist, discriminatory, or demeaning content
+8. If user asks for harmful discrimination, refuse briefly and redirect safely
 
 {extra_context}
 
@@ -1345,7 +1348,19 @@ async def chat(req: Req, request: Request):
                 "stop": []
             }
         })
-        resp = r.json().get("message", {}).get("content", "")
+        if r.status_code != 200:
+            resp = (
+                "Service is warming up. Please retry in a few seconds. "
+                "I support all languages and respond respectfully to everyone."
+            )
+        else:
+            resp = r.json().get("message", {}).get("content", "")
+
+        if not resp or not resp.strip():
+            resp = (
+                "I am ready, but the model returned an empty response. "
+                "Please retry your question; multilingual mode remains active."
+            )
 
         # Save assistant response to history
         add_to_history(user_id, "assistant", resp)

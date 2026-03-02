@@ -144,8 +144,23 @@ export default function RootLayout({
         />
         <link rel="canonical" href="https://clisonix.com" />
         <meta name="theme-color" content="#6366f1" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Clisonix" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                window.addEventListener('load', function () {
+                  navigator.serviceWorker.register('/sw-music-studio.js').catch(function () {});
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} antialiased`}

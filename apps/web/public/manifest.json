@@ -1,7 +1,7 @@
 {
-  "name": "Clisonix Cloud",
+  "name": "Clisonix Cloud - AI Intelligence Platform",
   "short_name": "Clisonix",
-  "description": "AI-Powered Industrial Intelligence & Behavioral Science Platform",
+  "description": "AI-Powered Industrial Intelligence, Music Studio, OpenMind, and Behavioral Science Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -9,7 +9,23 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["business", "productivity", "utilities"],
+  "categories": ["business", "productivity", "utilities", "music"],
+  "shortcuts": [
+    {
+      "name": "Music Studio",
+      "short_name": "Music",
+      "description": "Create music with solfège notes",
+      "url": "/modules/music-studio?source=homescreen",
+      "icons": [{ "src": "/icons/music-studio-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "OpenMind AI",
+      "short_name": "OpenMind",
+      "description": "AI workspace with chat, memory, and tasks",
+      "url": "/modules/openmind?source=homescreen",
+      "icons": [{ "src": "/icons/openmind-96.png", "sizes": "96x96" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",

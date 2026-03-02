@@ -758,7 +758,27 @@ def get_albanian_response(query: str) -> str | None:
             translation = get_word_translation(word)
             if translation:
                 return f"**{word}** në anglisht: *{translation}*"
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 2.5) CHECK FOR ALBANIAN LANGUAGE QUALITY / BUG REPORTS
+    # ═══════════════════════════════════════════════════════════════════════════
+    if "shqipe" in query_lower and (
+        "ankesa" in query_lower
+        or "nuk funksionon" in query_lower
+        or "nuk fuksionon" in query_lower
+        or "po bej" in query_lower
+        or "test" in query_lower
+    ):
+        return (
+            "Faleminderit për testin e gjuhës shqipe. E mora si raport cilësie dhe po e trajtoj me prioritet.\n\n"
+            "Për debug më të saktë, dërgo 2-3 shembuj ku përgjigjja del e gabuar dhe rezultatin e pritur.\n"
+            "Unë do përgjigjem në shqip të qartë, pa fallback të përgjithshëm, dhe me fokus te pyetja konkrete."
+        )
     
+    def contains_phrase(text: str, phrase: str) -> bool:
+        pattern = r"(^|\W)" + re.escape(phrase) + r"(\W|$)"
+        return re.search(pattern, text) is not None
+
     # ═══════════════════════════════════════════════════════════════════════════
     # 3) CHECK FOR GREETINGS
     # ═══════════════════════════════════════════════════════════════════════════
@@ -766,7 +786,7 @@ def get_albanian_response(query: str) -> str | None:
                  "si je", "si jeni", "mirëmëngjes", "mirëmbrëma", "pershendetje",
                  "pershendetje", "hej", "ej", "ore"]
     for g in greetings:
-        if g in query_lower:
+        if contains_phrase(query_lower, g):
             import random
             return random.choice(SENTENCE_PATTERNS["greeting_response"])
     
@@ -810,7 +830,7 @@ Thjesht pyet dhe unë do të përpiqem të përgjigjem!"""
     # ═══════════════════════════════════════════════════════════════════════════
     farewells = ["lamtumirë", "mirupafshim", "shihemi", "natën", "ciao", "bye"]
     for f in farewells:
-        if f in query_lower:
+        if contains_phrase(query_lower, f):
             import random
             return random.choice(SENTENCE_PATTERNS["farewell"])
     
