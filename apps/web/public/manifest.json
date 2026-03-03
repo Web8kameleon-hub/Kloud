@@ -15,15 +15,13 @@
       "name": "Music Studio",
       "short_name": "Music",
       "description": "Create music with solfège notes",
-      "url": "/modules/music-studio?source=homescreen",
-      "icons": [{ "src": "/icons/music-studio-96.png", "sizes": "96x96" }]
+      "url": "/modules/music-studio?source=homescreen"
     },
     {
       "name": "OpenMind AI",
       "short_name": "OpenMind",
       "description": "AI workspace with chat, memory, and tasks",
-      "url": "/modules/openmind?source=homescreen",
-      "icons": [{ "src": "/icons/openmind-96.png", "sizes": "96x96" }]
+      "url": "/modules/openmind?source=homescreen"
     }
   ],
   "icons": [

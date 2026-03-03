@@ -1,3 +1,41 @@
+from fastapi import Request
+
+# AI Melody generation endpoint (must be after app = FastAPI)
+from fastapi import Body
+@app.post("/api/v1/music/ai-generate")
+async def ai_generate_melody(request: Request, body: dict = Body(...)):
+    prompt = body.get("prompt") or "Krijo një melodi të nxehtë, ritmike, me motiv lalalalaaaa la/la, stil modern."
+    # Build LLM prompt for Ocean Core
+    llm_prompt = f"Krijo një sekuencë notash solfezh (do, re, mi, fa, sol, la, si) për këtë kërkesë: {prompt}. Jep si JSON array: [{'{'}'note': 'do', 'duration': 'quarter', 'octave': 'mid'{'}'}, ...]. Mund të shtosh waveform, genre."
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                OCEAN_CORE_URL + "/api/v1/llm/generate",
+                json={"prompt": llm_prompt, "max_tokens": 256}
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            # Try to extract JSON from LLM response
+            import re, ast
+            match = re.search(r'\[.*\]', data.get("text", ""), re.DOTALL)
+            if match:
+                seq = ast.literal_eval(match.group(0))
+                # Convert to NoteSequence[]
+                sequence = [
+                    {
+                        "id": str(i+1),
+                        "note": n.get("note", "do"),
+                        "duration": n.get("duration", "quarter"),
+                        "octave": n.get("octave", "mid")
+                    } for i, n in enumerate(seq) if n.get("note") in SOLFEGE_FREQ
+                ]
+                # Optionally parse waveform/genre
+                waveform = data.get("waveform") or "sine"
+                genre = data.get("genre") or "pop"
+                return {"sequence": sequence, "waveform": waveform, "genre": genre}
+    except Exception as e:
+        return {"error": str(e)}
+    return {"error": "AI nuk mundi të gjenerojë melodi"}
 import base64
 import math
 import os
@@ -15,6 +53,8 @@ import httpx
 import imageio.v2 as imageio
 import numpy as np
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from PIL import Image, ImageDraw
 
@@ -134,6 +174,15 @@ EFFECTS = {
 }
 
 app = FastAPI(title="Clisonix 9999 Gateway", version="2.0.0")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 MEMORY_STORE: List[Dict[str, Any]] = []
 TASK_STORE: Dict[str, Dict[str, Any]] = {}
@@ -654,18 +703,18 @@ async def music_create(req: MusicCreateRequest):
             next_freq = SOLFEGE_FREQ.get(req.notes[i + 1].lower(), root_freq)
             next_freq *= OCTAVE_MULTIPLIERS.get(octaves[min(i + 1, len(octaves) - 1)].lower(), 1.0)
             
-            wave1 = generate_wave(root_freq, note_duration_sec, waveform)
-            wave2 = generate_wave(next_freq, note_duration_sec, waveform)
+            wave_data1 = generate_wave(root_freq, note_duration_sec, waveform)
+            wave_data2 = generate_wave(next_freq, note_duration_sec, waveform)
             
-            samples = min(len(wave1), len(wave2))
+            samples = min(len(wave_data1), len(wave_data2))
             for n in range(samples):
-                mixed = (wave1[n] + wave2[n]) / 2
+                mixed = (wave_data1[n] + wave_data2[n]) / 2
                 audio.append(int(mixed * 32767))
         
         else:
             # Single note mode
-            wave = generate_wave(root_freq, note_duration_sec, waveform)
-            for value in wave:
+            wave_data = generate_wave(root_freq, note_duration_sec, waveform)
+            for value in wave_data:
                 # Apply distortion
                 if req.effects and "distortion" in req.effects:
                     if abs(value) > 0.7:
@@ -710,9 +759,9 @@ async def music_create(req: MusicCreateRequest):
         cmd = ["ffmpeg", "-y", "-i", str(wav_path), str(mp3_path)]
         proc = subprocess.run(cmd, capture_output=True, text=True)
         if proc.returncode == 0:
-            return {"status": "success", "file": str(mp3_path), "format": "mp3", "genre": req.genre, "effects": req.effects}
+            return FileResponse(str(mp3_path), media_type="audio/mpeg", filename=f"melody-{ts}.mp3")
 
-    return {"status": "success", "file": str(wav_path), "format": "wav", "genre": req.genre, "effects": req.effects}
+    return FileResponse(str(wav_path), media_type="audio/wav", filename=f"melody-{ts}.wav")
 
 
 @app.post("/api/v1/algebra/binary-solfege")

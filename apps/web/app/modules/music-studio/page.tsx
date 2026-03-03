@@ -77,6 +77,36 @@ export default function MusicStudio() {
     setInstallPromptEvent(null);
   };
 
+  const aiGenerateMelody = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch('http://127.0.0.1:9999/api/v1/music/ai-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: 'Krijo një melodi hot hot, ritmike, me motiv lalalalaaaa la/la, stil modern.',
+        }),
+      });
+      if (!response.ok) throw new Error('AI nuk mundi të krijojë melodi');
+      const data = await response.json();
+      if (data && data.sequence) {
+        setSequence(data.sequence);
+        setSettings((current) => ({
+          ...current,
+          waveform: data.waveform || current.waveform,
+          genre: data.genre || current.genre,
+        }));
+        setActiveTab('sequence');
+      } else {
+        alert('AI nuk ktheu melodi!');
+      }
+    } catch {
+      alert('Gabim nga AI!');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   // Add note to sequence
   const addNote = (note: Note = 'do', duration: Duration = 'quarter', octave: Octave = 'mid') => {
     setSequence([
@@ -493,6 +523,8 @@ export default function MusicStudio() {
                       ref={audioRef}
                       controls
                       className="w-full bg-slate-700 rounded-lg"
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
                     />
                     <div className="flex gap-2">
                       <button
@@ -564,6 +596,30 @@ export default function MusicStudio() {
                 </p>
               </div>
             </div>
+
+
+            {/* AI Generate Button */}
+            <button
+              onClick={aiGenerateMelody}
+              disabled={isGenerating}
+              className={`w-full py-3 mb-2 rounded-lg font-bold text-base flex items-center justify-center gap-2 transition-all ${
+                isGenerating
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-pink-600 to-yellow-500 text-white hover:from-pink-700 hover:to-yellow-600 shadow-lg hover:shadow-xl'
+              }`}
+            >
+              {isGenerating ? (
+                <>
+                  <div className="animate-spin">🤖</div>
+                  AI po krijon...
+                </>
+              ) : (
+                <>
+                  <span>🎤</span>
+                  AI Krijo Melodi Hot
+                </>
+              )}
+            </button>
 
             {/* Generate Button */}
             <button
