@@ -1,0 +1,101 @@
+version: "3.9"
+
+services:
+  node1:
+    build: .
+    container_name: node1
+    ports:
+      - "8001:8000" # JSON Gateway
+      - "9001:9000" # Gossip
+    volumes:
+      - ./backups/node1:/app/backups
+      - ./keys/node1:/app/keys
+    environment:
+      NODE_ID: 1
+    networks:
+      - nanogrid_net
+
+  node2:
+    build: .
+    container_name: node2
+    ports:
+      - "8002:8000"
+      - "9002:9000"
+    volumes:
+      - ./backups/node2:/app/backups
+      - ./keys/node2:/app/keys
+    environment:
+      NODE_ID: 2
+    networks:
+      - nanogrid_net
+
+  node3:
+    build: .
+    container_name: node3
+    ports:
+      - "8003:8000"
+      - "9003:9000"
+    volumes:
+      - ./backups/node3:/app/backups
+      - ./keys/node3:/app/keys
+    environment:
+      NODE_ID: 3
+    networks:
+      - nanogrid_net
+
+  node4:
+    build: .
+    container_name: node4
+    ports:
+      - "8004:8000"
+      - "9004:9000"
+    volumes:
+      - ./backups/node4:/app/backups
+      - ./keys/node4:/app/keys
+    environment:
+      NODE_ID: 4
+    networks:
+      - nanogrid_net
+
+  node5:
+    build: .
+    container_name: node5
+    ports:
+      - "8005:8000"
+      - "9005:9000"
+    volumes:
+      - ./backups/node5:/app/backups
+      - ./keys/node5:/app/keys
+    environment:
+      NODE_ID: 5
+    networks:
+      - nanogrid_net
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - nanogrid_net
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      - nanogrid_net
+
+  victoriadb:
+    image: victoriametrics/victoria-metrics:latest
+    ports:
+      - "8428:8428"
+    networks:
+      - nanogrid_net
+
+networks:
+  nanogrid_net:
+    driver: bridge

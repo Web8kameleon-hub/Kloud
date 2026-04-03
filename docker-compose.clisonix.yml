@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  clisonix-bridge:
+    image: alpine
+    container_name: clisonix_bridge
+    volumes:
+      - ./clisonix-bridge-healthcheck.sh:/healthcheck.sh
+    command: sh -c "chmod +x /healthcheck.sh && /healthcheck.sh && sleep 30"
+    networks:
+      - nanogrid_net
+    restart: always
+
+networks:
+  nanogrid_net:
+    external: true

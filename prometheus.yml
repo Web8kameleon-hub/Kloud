@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'nodes'
+    static_configs:
+      - targets: ['node1:9000','node2:9000','node3:9000','node4:9000','node5:9000']
+
+  - job_name: 'victoriametrics'
+    static_configs:
+      - targets: ['victoriadb:8428']
+  - job_name: 'clisonix_bridge'
+    static_configs:
+      - targets: ['host.docker.internal:9111']  # Node exporter or bridge
+    metrics_path: /metrics
+    scrape_interval: 10s

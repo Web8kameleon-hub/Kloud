@@ -1,0 +1,11 @@
+/target
+**/*.rs.bk
+.idea
+.vscode/settings.json
+.DS_Store
+*.log
+Cargo.lock
+nanogrid/target/
+dashboard/target/
+ultra-algebra-fpga/target/
+
