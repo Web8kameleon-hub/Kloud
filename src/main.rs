@@ -19,8 +19,8 @@ async fn main() {
     let (bulk_tx, bulk_rx) = mpsc::channel(100);
 
     // Node inbox/outbox
-    let (inbox_tx, inbox_rx) = mpsc::channel(100);
-    let (outbox_tx, outbox_rx) = mpsc::channel(100);
+    let (_inbox_tx, inbox_rx) = mpsc::channel(100);
+    let (outbox_tx, _outbox_rx) = mpsc::channel(100);
 
     // Create Node
     let mut node = Node::new(
