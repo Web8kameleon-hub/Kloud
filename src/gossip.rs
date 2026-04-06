@@ -95,7 +95,7 @@ impl GossipEngine {
             },
             known_msg_ids: self.known_ids.iter().cloned().collect(),
         };
-        for peer in selected_peers {
+        for _peer in selected_peers {
             let _ = self.digest_tx.send(digest.clone()).await;
         }
     }
