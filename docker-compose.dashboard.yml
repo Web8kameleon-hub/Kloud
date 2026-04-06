@@ -1,13 +1,12 @@
-version: '3.8'
 services:
   dashboard:
     build: ./dashboard
     ports:
       - "3001:8080"
     environment:
-      - NANOGRID_ENDPOINT=http://nanogrid:8080
+      - NANOGRID_ENDPOINT=http://node1:8000
     depends_on:
-      - nanogrid
+      - node1
   grafana:
     image: grafana/grafana:oss
     ports:

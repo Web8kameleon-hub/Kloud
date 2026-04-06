@@ -1,11 +1,14 @@
-version: '3.9'
 services:
-  clisonix-bridge:
-    image: alpine
-    container_name: clisonix_bridge
-    volumes:
-      - ./clisonix-bridge-healthcheck.sh:/healthcheck.sh
-    command: sh -c "chmod +x /healthcheck.sh && /healthcheck.sh && sleep 30"
+  kloud-health-probe:
+    image: curlimages/curl:8.8.0
+    container_name: kloud_health_probe
+    command: >
+      sh -c "while true; do
+      curl -fsS http://node1:8000/status >/dev/null || echo 'health check failed';
+      sleep 10;
+      done"
+    depends_on:
+      - node1
     networks:
       - nanogrid_net
     restart: always
