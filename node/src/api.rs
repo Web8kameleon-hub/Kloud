@@ -822,9 +822,9 @@ async fn get_dashboard(
                                 <option value="accepted" {}>accepted</option>
                                 <option value="rejected-invalid-ops" {}>rejected-invalid-ops</option>
                                 <option value="rejected-invalid-payload" {}>rejected-invalid-payload</option>
-                                <option value="failed-channel-closed" {}>failed-channel-closed</option>
+                                <option value="failed-channel-closed" __FAILED_CHANNEL_SELECTED__>failed-channel-closed</option>
                             </select>
-                            <input type="number" min="5" max="200" name="limit" value="{}" />
+                            <input type="number" min="5" max="200" name="limit" value="__LIMIT_VALUE__" />
                             <button type="submit">Apply</button>
                         </form>
                         <div class="table-wrap">
@@ -948,10 +948,13 @@ async fn get_dashboard(
         if outcome_filter == "ok" { "selected" } else { "" },
         if outcome_filter == "accepted" { "selected" } else { "" },
         if outcome_filter == "rejected-invalid-ops" { "selected" } else { "" },
-        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" },
-        if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
-        limit
+        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" }
     )
+    .replace(
+        "__FAILED_CHANNEL_SELECTED__",
+        if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
+    )
+    .replace("__LIMIT_VALUE__", &limit.to_string())
     .replace("__EVENT_ROWS__", &events_rows)
     .replace("__STATE_HTML__", &state_html);
 
