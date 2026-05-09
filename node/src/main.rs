@@ -89,7 +89,9 @@ async fn main() {
         .unwrap_or(1200);
     let peers_str = std::env::var("PEERS").unwrap_or("".to_string());
 
-    // Parse PEERS: supports "id:host:gossip_port" (remote) or "id:gossip_port" (local 127.0.0.1)
+    // Parse PEERS formats:
+    // - remote: id:host:gossip_port OR id:host:gossip_port:api_port
+    // - local:  id:gossip_port OR id:gossip_port:api_port (host defaults to 127.0.0.1)
     let mut peer_addresses = HashMap::new();   // id -> gossip addr (host:port)
     let mut peer_api_addrs = HashMap::new();   // id -> HTTP API base URL
     let mut peers: Vec<u64> = Vec::new();
@@ -98,14 +100,40 @@ async fn main() {
         for seg in peers_str.split(',') {
             let parts: Vec<&str> = seg.trim().split(':').collect();
             match parts.len() {
-                3 => {
-                    // id:host:gossip_port
-                    if let (Ok(id), Ok(gossip_port)) = (parts[0].parse::<u64>(), parts[2].parse::<u16>()) {
+                4 => {
+                    // id:host:gossip_port:api_port
+                    if let (Ok(id), Ok(gossip_port), Ok(api_port)) = (
+                        parts[0].parse::<u64>(),
+                        parts[2].parse::<u16>(),
+                        parts[3].parse::<u16>(),
+                    ) {
                         let host = parts[1];
-                        let api_port = gossip_port + 1000;
                         peer_addresses.insert(id, format!("{}:{}", host, gossip_port));
                         peer_api_addrs.insert(id, format!("http://{}:{}", host, api_port));
                         peers.push(id);
+                    }
+                }
+                3 => {
+                    if parts[1].chars().all(|c| c.is_ascii_digit()) {
+                        // id:gossip_port:api_port (local)
+                        if let (Ok(id), Ok(gossip_port), Ok(api_port)) = (
+                            parts[0].parse::<u64>(),
+                            parts[1].parse::<u16>(),
+                            parts[2].parse::<u16>(),
+                        ) {
+                            peer_addresses.insert(id, format!("127.0.0.1:{}", gossip_port));
+                            peer_api_addrs.insert(id, format!("http://127.0.0.1:{}", api_port));
+                            peers.push(id);
+                        }
+                    } else {
+                        // id:host:gossip_port
+                        if let (Ok(id), Ok(gossip_port)) = (parts[0].parse::<u64>(), parts[2].parse::<u16>()) {
+                            let host = parts[1];
+                            let api_port = gossip_port + 1000;
+                            peer_addresses.insert(id, format!("{}:{}", host, gossip_port));
+                            peer_api_addrs.insert(id, format!("http://{}:{}", host, api_port));
+                            peers.push(id);
+                        }
                     }
                 }
                 2 => {
