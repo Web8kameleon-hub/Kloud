@@ -352,7 +352,7 @@ docker-compose logs -f api
 ```json
 {
   "owner": "Ledjan Ahmati",
-  "company": "WEB8euroweb GmbH", 
+  "company": "ABA GmbH", 
   "sepa_iban": "DE72xxxxxxxxxxx63",
   "sepa_bic": "XXX",
   "sepa_bank": "Sparkasse Bochum",
@@ -410,4 +410,3 @@ pytest tests/test_billing.py -v
 - Payment system status at `/billing/stats`
 
 **No Mock Data:** This is an industrial-grade backend using real business integration, actual system monitoring, and live payment processing. All metrics, business information, and processing capabilities are real and functional. - FastAPI + Worker + Docker Compose
-

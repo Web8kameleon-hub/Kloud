@@ -19,6 +19,10 @@ on:
       - 'ocean-core/**'
       - 'services/**'
       - '.github/workflows/deploy-docker.yml'
+  workflow_call:
+    secrets:
+      HETZNER_SSH_KEY:
+        required: false
   workflow_dispatch:
     inputs:
       services:
@@ -53,6 +57,16 @@ env:
   HETZNER_IP: 46.224.203.89
   DEPLOY_PATH: /opt/kloud
   SERVER_USER: root
+  SSH_KEY_SECRET_NAME: HETZNER_SSH_KEY
+  
+  # WWWMMM Fluid Global Runtime
+  FLUID_AUTOSTART: "true"
+  WWWMMM_AUTORUN: "true"
+  PRIMARY_RESONANT_PROFILE: "wwwmmm-ndb-stigma-tide-rezonance-nanogrid"
+  ADAPTIVE_COMPAT_MODE: "true"
+  OLD_MODE_ON_MISMATCH: "true"
+  RESONANT_WRITE_MODE: "new-first"
+  RESONANT_FALLBACK_MODE: "old-modus"
   
   # Service Ports (for health checks)
   PORT_WEB: 3000
@@ -76,8 +90,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate SSH Key
+        env:
+          HETZNER_SSH_KEY: ${{ secrets[env.SSH_KEY_SECRET_NAME] }}
         run: |
-          if [ -z "${{ secrets.HETZNER_SSH_KEY }}" ]; then
+          if [ -z "$HETZNER_SSH_KEY" ]; then
             echo "::error::HETZNER_SSH_KEY secret is not set"
             echo "Please add your SSH private key to repository secrets"
             exit 1
@@ -85,9 +101,11 @@ jobs:
           echo "✅ SSH key is configured"
 
       - name: Setup SSH
+        env:
+          HETZNER_SSH_KEY: ${{ secrets[env.SSH_KEY_SECRET_NAME] }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "$HETZNER_SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ env.HETZNER_IP }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
@@ -157,6 +175,33 @@ jobs:
           echo "✅ Action completed"
           ENDSSH
 
+      - name: Configure WWWMMM Fluid on Server
+        run: |
+          ssh root@${{ env.HETZNER_IP }} << ENDSSH
+          cd ${{ env.DEPLOY_PATH }}
+          touch .env
+
+          set_kv () {
+            key="$1"
+            val="$2"
+            if grep -q "^${key}=" .env; then
+              sed -i "s|^${key}=.*|${key}=${val}|" .env
+            else
+              echo "${key}=${val}" >> .env
+            fi
+          }
+
+          set_kv "FLUID_AUTOSTART" "${{ env.FLUID_AUTOSTART }}"
+          set_kv "WWWMMM_AUTORUN" "${{ env.WWWMMM_AUTORUN }}"
+          set_kv "PRIMARY_RESONANT_PROFILE" "${{ env.PRIMARY_RESONANT_PROFILE }}"
+          set_kv "ADAPTIVE_COMPAT_MODE" "${{ env.ADAPTIVE_COMPAT_MODE }}"
+          set_kv "OLD_MODE_ON_MISMATCH" "${{ env.OLD_MODE_ON_MISMATCH }}"
+          set_kv "RESONANT_WRITE_MODE" "${{ env.RESONANT_WRITE_MODE }}"
+          set_kv "RESONANT_FALLBACK_MODE" "${{ env.RESONANT_FALLBACK_MODE }}"
+
+          echo "✅ WWWMMM Fluid env synchronized"
+          ENDSSH
+
       - name: Show Running Services
         run: |
           ssh ${{ env.SERVER_USER }}@${{ env.HETZNER_IP }} << 'ENDSSH'
@@ -205,6 +250,40 @@ jobs:
           echo ""
           echo "🎉 Deployment complete!"
           ENDSSH
+
+      - name: Smoke Check (External HTTP)
+        continue-on-error: true
+        run: |
+          set +e
+          ENDPOINTS=(
+            "https://clisonix.ai/health"
+            "https://clisonix.ai/api/v1/status"
+            "https://clx.clisonix.ai/health"
+            "https://clx.clisonix.ai/api/v1/status"
+            "https://cxl.i/health"
+            "https://cxl.i/api/v1/status"
+            "https://lite.clisonix.ai/health"
+            "https://lite.clisonix.ai/api/v1/status"
+            "https://kloud.cloud/health"
+            "https://kloud.cloud/api/v1/status"
+            "https://kloud.aiagi.io/health"
+            "https://kloud.aiagi.io/api/v1/status"
+          )
+
+          OK=false
+          for url in "${ENDPOINTS[@]}"; do
+            echo "🔎 Checking $url"
+            if curl -fsS --max-time 20 --retry 8 --retry-delay 4 --retry-all-errors "$url"; then
+              echo "✅ Smoke check passed at $url"
+              OK=true
+              break
+            fi
+          done
+
+          if [ "$OK" != "true" ]; then
+            echo "⚠️ Smoke check endpoints not reachable yet after retries"
+          fi
+          exit 0
 
   # =========================================================================
   # SUMMARY

@@ -5,7 +5,6 @@ Persistent data storage for balancer state and metrics
 """
 
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from datetime import datetime, timezone
@@ -17,7 +16,7 @@ from cors_policy import apply_standard_cors
 app = FastAPI(
     title="Balancer Data",
     description="Persistent data storage for balancer configuration and state",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Add CORS
@@ -31,31 +30,37 @@ SERVICE_START = datetime.now(timezone.utc).isoformat()
 
 
 @app.post("/data/documents")
-async def create_document(collection: str, docId: Optional[str] = None, data: Optional[Dict] = None):
+async def create_document(
+    collection: str, docId: Optional[str] = None, data: Optional[Dict] = None
+):
     """Create new document"""
     if not collection:
         raise HTTPException(status_code=400, detail="collection name required")
-    
+
     if collection not in COLLECTIONS:
         COLLECTIONS[collection] = []
-    
-    doc = {
-        "docId": docId or f"doc_{len(COLLECTIONS[collection])}__{datetime.now().timestamp()}",
+
+    resolved_doc_id = (
+        docId or f"doc_{len(COLLECTIONS[collection])}__{datetime.now().timestamp()}"
+    )
+
+    doc: Dict[str, Any] = {
+        "docId": resolved_doc_id,
         "collection": collection,
         "data": data or {},
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "updatedAt": datetime.now(timezone.utc).isoformat(),
-        "version": 1
+        "version": 1,
     }
-    
+
     COLLECTIONS[collection].append(doc)
-    DATA_STORE[doc["docId"]] = doc
-    
+    DATA_STORE[resolved_doc_id] = doc
+
     return {
         "success": True,
         "message": f"Document created in {collection}",
-        "docId": doc["docId"],
-        "document": doc
+        "docId": resolved_doc_id,
+        "document": doc,
     }
 
 
@@ -64,11 +69,11 @@ async def get_document(docId: str):
     """Get document by ID"""
     if docId not in DATA_STORE:
         raise HTTPException(status_code=404, detail=f"Document {docId} not found")
-    
+
     return {
         "success": True,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "document": DATA_STORE[docId]
+        "document": DATA_STORE[docId],
     }
 
 
@@ -76,19 +81,21 @@ async def get_document(docId: str):
 async def get_collection(collection: str, limit: Optional[int] = None):
     """Get all documents in collection"""
     if collection not in COLLECTIONS:
-        raise HTTPException(status_code=404, detail=f"Collection {collection} not found")
-    
+        raise HTTPException(
+            status_code=404, detail=f"Collection {collection} not found"
+        )
+
     docs = COLLECTIONS[collection]
     if limit:
         docs = docs[-limit:]
-    
+
     return {
         "success": True,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "collection": collection,
         "totalDocuments": len(COLLECTIONS[collection]),
         "returnedDocuments": len(docs),
-        "documents": docs
+        "documents": docs,
     }
 
 
@@ -97,17 +104,17 @@ async def update_document(docId: str, data: Dict):
     """Update document"""
     if docId not in DATA_STORE:
         raise HTTPException(status_code=404, detail=f"Document {docId} not found")
-    
+
     doc = DATA_STORE[docId]
     doc["data"].update(data)
     doc["updatedAt"] = datetime.now(timezone.utc).isoformat()
     doc["version"] += 1
-    
+
     return {
         "success": True,
         "message": "Document updated",
         "docId": docId,
-        "document": doc
+        "document": doc,
     }
 
 
@@ -116,16 +123,18 @@ async def delete_document(docId: str):
     """Delete document"""
     if docId not in DATA_STORE:
         raise HTTPException(status_code=404, detail=f"Document {docId} not found")
-    
+
     doc = DATA_STORE.pop(docId)
     collection = doc["collection"]
     if collection in COLLECTIONS:
-        COLLECTIONS[collection] = [d for d in COLLECTIONS[collection] if d["docId"] != docId]
-    
+        COLLECTIONS[collection] = [
+            d for d in COLLECTIONS[collection] if d["docId"] != docId
+        ]
+
     return {
         "success": True,
         "message": f"Document {docId} deleted",
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -135,19 +144,19 @@ async def store_metrics(nodeId: str, metrics: Dict):
     metric_entry = {
         "nodeId": nodeId,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "metrics": metrics
+        "metrics": metrics,
     }
-    
+
     METRICS_HISTORY.append(metric_entry)
-    
+
     # Keep only last 10000 entries
     if len(METRICS_HISTORY) > 10000:
         METRICS_HISTORY.pop(0)
-    
+
     return {
         "success": True,
         "message": f"Metrics stored for {nodeId}",
-        "timestamp": metric_entry["timestamp"]
+        "timestamp": metric_entry["timestamp"],
     }
 
 
@@ -155,16 +164,16 @@ async def store_metrics(nodeId: str, metrics: Dict):
 async def get_metrics(nodeId: str, limit: Optional[int] = None):
     """Get metrics for node"""
     node_metrics = [m for m in METRICS_HISTORY if m["nodeId"] == nodeId]
-    
+
     if limit:
         node_metrics = node_metrics[-limit:]
-    
+
     return {
         "success": True,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "nodeId": nodeId,
         "metricCount": len(node_metrics),
-        "metrics": node_metrics
+        "metrics": node_metrics,
     }
 
 
@@ -175,15 +184,15 @@ async def store_config(configId: str, config: Dict):
         "configId": configId,
         "config": config,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "version": 1
+        "version": 1,
     }
-    
+
     DATA_STORE[f"config_{configId}"] = config_doc
-    
+
     return {
         "success": True,
         "message": f"Configuration {configId} stored",
-        "configId": configId
+        "configId": configId,
     }
 
 
@@ -192,12 +201,14 @@ async def get_config(configId: str):
     """Get configuration"""
     key = f"config_{configId}"
     if key not in DATA_STORE:
-        raise HTTPException(status_code=404, detail=f"Configuration {configId} not found")
-    
+        raise HTTPException(
+            status_code=404, detail=f"Configuration {configId} not found"
+        )
+
     return {
         "success": True,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "config": DATA_STORE[key]
+        "config": DATA_STORE[key],
     }
 
 
@@ -207,9 +218,7 @@ async def list_collections():
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "totalCollections": len(COLLECTIONS),
-        "collections": {
-            name: len(docs) for name, docs in COLLECTIONS.items()
-        }
+        "collections": {name: len(docs) for name, docs in COLLECTIONS.items()},
     }
 
 
@@ -217,14 +226,16 @@ async def list_collections():
 async def get_storage_stats():
     """Get storage statistics"""
     total_docs = sum(len(docs) for docs in COLLECTIONS.values())
-    
+
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "totalDocuments": total_docs,
         "totalCollections": len(COLLECTIONS),
-        "totalConfigurations": sum(1 for k in DATA_STORE.keys() if k.startswith("config_")),
+        "totalConfigurations": sum(
+            1 for k in DATA_STORE.keys() if k.startswith("config_")
+        ),
         "metricsHistorySize": len(METRICS_HISTORY),
-        "totalDataStoreEntries": len(DATA_STORE)
+        "totalDataStoreEntries": len(DATA_STORE),
     }
 
 
@@ -233,20 +244,24 @@ async def export_data(collection: Optional[str] = None):
     """Export data"""
     if collection:
         if collection not in COLLECTIONS:
-            raise HTTPException(status_code=404, detail=f"Collection {collection} not found")
-        data = COLLECTIONS[collection]
+            raise HTTPException(
+                status_code=404, detail=f"Collection {collection} not found"
+            )
+        export_payload: Any = COLLECTIONS[collection]
     else:
-        data = {
+        export_payload = {
             "collections": COLLECTIONS,
             "metrics": METRICS_HISTORY,
-            "configurations": {k: v for k, v in DATA_STORE.items() if k.startswith("config_")}
+            "configurations": {
+                k: v for k, v in DATA_STORE.items() if k.startswith("config_")
+            },
         }
-    
+
     return {
         "success": True,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "dataSize": len(json.dumps(data)),
-        "data": data
+        "dataSize": len(json.dumps(export_payload)),
+        "data": export_payload,
     }
 
 
@@ -255,26 +270,29 @@ async def import_data(collection: str, documents: List[Dict]):
     """Import documents to collection"""
     if collection not in COLLECTIONS:
         COLLECTIONS[collection] = []
-    
+
     count = 0
     for doc_data in documents:
         doc = {
-            "docId": doc_data.get("docId", f"doc_{len(COLLECTIONS[collection])}__{datetime.now().timestamp()}"),
+            "docId": doc_data.get(
+                "docId",
+                f"doc_{len(COLLECTIONS[collection])}__{datetime.now().timestamp()}",
+            ),
             "collection": collection,
             "data": doc_data.get("data", {}),
             "createdAt": datetime.now(timezone.utc).isoformat(),
             "updatedAt": datetime.now(timezone.utc).isoformat(),
-            "version": 1
+            "version": 1,
         }
         COLLECTIONS[collection].append(doc)
         DATA_STORE[doc["docId"]] = doc
         count += 1
-    
+
     return {
         "success": True,
         "message": f"Imported {count} documents",
         "collection": collection,
-        "importedCount": count
+        "importedCount": count,
     }
 
 
@@ -282,17 +300,19 @@ async def import_data(collection: str, documents: List[Dict]):
 async def delete_collection(collection: str):
     """Delete entire collection"""
     if collection not in COLLECTIONS:
-        raise HTTPException(status_code=404, detail=f"Collection {collection} not found")
-    
+        raise HTTPException(
+            status_code=404, detail=f"Collection {collection} not found"
+        )
+
     docs = COLLECTIONS.pop(collection)
     for doc in docs:
         DATA_STORE.pop(doc["docId"], None)
-    
+
     return {
         "success": True,
         "message": f"Collection {collection} deleted",
         "deletedDocuments": len(docs),
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -305,7 +325,7 @@ async def health():
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "storedDocuments": sum(len(docs) for docs in COLLECTIONS.values()),
         "metricsStored": len(METRICS_HISTORY),
-        "collections": len(COLLECTIONS)
+        "collections": len(COLLECTIONS),
     }
 
 
@@ -335,19 +355,19 @@ async def info():
             "POST /data/import": "Import data",
             "DELETE /data/collections/:collection": "Delete collection",
             "GET /health": "Health check",
-            "GET /info": "Service info"
-        }
+            "GET /info": "Service info",
+        },
     }
 
 
 if __name__ == "__main__":
     port = int(os.getenv("BALANCER_DATA_PORT", "3337"))
     host = os.getenv("BALANCER_DATA_HOST", "0.0.0.0")
-    
-    print(f"\n{'='*60}")
-    print(f"  BALANCER DATA SERVICE (Python)")
+
+    print(f"\n{'=' * 60}")
+    print("  BALANCER DATA SERVICE (Python)")
     print(f"  Listening on {host}:{port}")
-    print(f"  Persistent data storage & state management")
-    print(f"{'='*60}\n")
-    
+    print("  Persistent data storage & state management")
+    print(f"{'=' * 60}\n")
+
     uvicorn.run(app, host=host, port=port, log_level="info")

@@ -1,6 +1,7 @@
 # =============================================================================
 # KLOUD CLOUD - UNIFIED DEPLOYMENT PIPELINE
 # =============================================================================
+# cspell:ignore Buildx buildx KUBECONFIG kubeconfig bitnami kubectl semver
 # Deploys to Hetzner Kubernetes with optional Helm or raw K8s manifests
 # 
 # Triggers:
@@ -20,6 +21,10 @@ on:
       - 'deploy/kubernetes/**'
       - 'helm/**'
       - '.github/workflows/deploy.yml'
+  workflow_call:
+    secrets:
+      HETZNER_KUBECONFIG:
+        required: false
   workflow_dispatch:
     inputs:
       environment:
@@ -51,6 +56,12 @@ env:
   REGISTRY: ghcr.io
   # Must be lowercase for Docker - github.repository can have uppercase
   IMAGE_NAME: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+  FLUID_AUTOSTART: "true"
+  PRIMARY_RESONANT_PROFILE: "wwwmmm-ndb-stigma-tide-rezonance-nanogrid"
+  RESONANT_MODE: "new-first"
+  ALLOW_OLD_MODUS_FALLBACK: "true"
+  TIDE_FALLBACK_THRESHOLD: "0.55"
+  RESONANT_SYNC_MODE: "adaptive"
 
 jobs:
   # =========================================================================
@@ -123,7 +134,7 @@ jobs:
         run: |
           if [ -z "${{ secrets.HETZNER_KUBECONFIG }}" ]; then
             echo "⚠️ HETZNER_KUBECONFIG secret not set"
-            echo "::warning::HETZNER_KUBECONFIG secret is required for deployment"
+            echo "::error::HETZNER_KUBECONFIG secret is required for deployment"
             exit 1
           fi
           echo "✅ Required secrets are present"
@@ -134,9 +145,11 @@ jobs:
           version: 'v1.28.0'
 
       - name: Configure kubectl for Hetzner
+        env:
+          KUBECONFIG_B64: ${{ secrets.HETZNER_KUBECONFIG }}
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.HETZNER_KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          echo "$KUBECONFIG_B64" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Verify cluster connection
@@ -160,6 +173,38 @@ jobs:
           kubectl rollout status deployment/kloud-ocean-core -n $NAMESPACE --timeout=5m
           kubectl rollout status deployment/kloud-frontend -n $NAMESPACE --timeout=5m
 
+      - name: Smoke check (kubectl path)
+        continue-on-error: true
+        run: |
+          set +e
+          ENDPOINTS=(
+            "https://clisonix.ai/health"
+            "https://clisonix.ai/api/v1/status"
+            "https://clx.clisonix.ai/health"
+            "https://clx.clisonix.ai/api/v1/status"
+            "https://cxl.i/health"
+            "https://cxl.i/api/v1/status"
+            "https://lite.clisonix.ai/health"
+            "https://lite.clisonix.ai/api/v1/status"
+            "https://kloud.cloud/health"
+            "https://kloud.cloud/api/v1/status"
+          )
+
+          OK=false
+          for url in "${ENDPOINTS[@]}"; do
+            echo "🔎 Checking $url"
+            if curl -fsS --max-time 20 --retry 8 --retry-delay 4 --retry-all-errors "$url"; then
+              echo "✅ Smoke check passed at $url"
+              OK=true
+              break
+            fi
+          done
+
+          if [ "$OK" != "true" ]; then
+            echo "⚠️ Smoke check endpoints not reachable yet after retries"
+          fi
+          exit 0
+
   # =========================================================================
   # DEPLOY WITH HELM (Optional)
   # =========================================================================
@@ -181,7 +226,7 @@ jobs:
         run: |
           if [ -z "${{ secrets.HETZNER_KUBECONFIG }}" ]; then
             echo "⚠️ HETZNER_KUBECONFIG secret not set"
-            echo "::warning::HETZNER_KUBECONFIG secret is required for Helm deployment"
+            echo "::error::HETZNER_KUBECONFIG secret is required for Helm deployment"
             exit 1
           fi
           echo "✅ Required secrets are present"
@@ -195,9 +240,11 @@ jobs:
         uses: azure/setup-kubectl@v4
 
       - name: Create kubeconfig from secrets
+        env:
+          KUBECONFIG_B64: ${{ secrets.HETZNER_KUBECONFIG }}
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.HETZNER_KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+          echo "$KUBECONFIG_B64" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Add Helm repositories
@@ -246,6 +293,38 @@ jobs:
         run: |
           kubectl get pods -n kloud-${{ inputs.environment }}
           kubectl get services -n kloud-${{ inputs.environment }}
+
+      - name: Smoke check (helm path)
+        continue-on-error: true
+        run: |
+          set +e
+          ENDPOINTS=(
+            "https://clisonix.ai/health"
+            "https://clisonix.ai/api/v1/status"
+            "https://clx.clisonix.ai/health"
+            "https://clx.clisonix.ai/api/v1/status"
+            "https://cxl.i/health"
+            "https://cxl.i/api/v1/status"
+            "https://lite.clisonix.ai/health"
+            "https://lite.clisonix.ai/api/v1/status"
+            "https://kloud.cloud/health"
+            "https://kloud.cloud/api/v1/status"
+          )
+
+          OK=false
+          for url in "${ENDPOINTS[@]}"; do
+            echo "🔎 Checking $url"
+            if curl -fsS --max-time 20 --retry 8 --retry-delay 4 --retry-all-errors "$url"; then
+              echo "✅ Smoke check passed at $url"
+              OK=true
+              break
+            fi
+          done
+
+          if [ "$OK" != "true" ]; then
+            echo "⚠️ Smoke check endpoints not reachable yet after retries"
+          fi
+          exit 0
 
   # =========================================================================
   # DEPLOYMENT SUMMARY

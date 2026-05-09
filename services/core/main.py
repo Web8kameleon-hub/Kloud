@@ -14,7 +14,9 @@ import uuid
 from cors_policy import apply_standard_cors
 
 # Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(name)s | %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
 logger = logging.getLogger("core-api")
 
 # Instance ID for tracking
@@ -26,7 +28,7 @@ app = FastAPI(
     description="Core microservice - Status, Health, System Metrics",
     version="2.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # CORS
@@ -46,9 +48,9 @@ def get_system_metrics():
     try:
         cpu = psutil.cpu_percent(interval=0.1)
         memory = psutil.virtual_memory()
-        disk = psutil.disk_usage('/')
+        disk = psutil.disk_usage("/")
         net = psutil.net_io_counters()
-        
+
         return {
             "cpu_percent": cpu,
             "memory_percent": memory.percent,
@@ -59,9 +61,9 @@ def get_system_metrics():
             "net_bytes_sent": net.bytes_sent,
             "net_bytes_recv": net.bytes_recv,
             "processes": len(psutil.pids()),
-            "hostname": os.uname().nodename if hasattr(os, 'uname') else "unknown",
+            "hostname": os.uname().nodename if hasattr(os, "uname") else "unknown",
             "boot_time": psutil.boot_time(),
-            "uptime_seconds": (datetime.now(timezone.utc) - START_TIME).total_seconds()
+            "uptime_seconds": (datetime.now(timezone.utc) - START_TIME).total_seconds(),
         }
     except Exception as e:
         logger.error(f"Failed to get system metrics: {e}")
@@ -76,7 +78,7 @@ async def root():
         "version": "2.0.0",
         "instance": INSTANCE_ID,
         "status": "running",
-        "docs": "/docs"
+        "docs": "/docs",
     }
 
 
@@ -88,7 +90,7 @@ async def health():
         "service": "core-api",
         "instance": INSTANCE_ID,
         "uptime": get_uptime(),
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -103,11 +105,11 @@ async def status():
         "uptime": get_uptime(),
         "memory": {
             "used": round(system.get("memory_used", 0) / (1024**2)),
-            "total": round(system.get("memory_total", 0) / (1024**2))
+            "total": round(system.get("memory_total", 0) / (1024**2)),
         },
         "system": system,
         "redis": {"status": "not_configured"},
-        "postgres": {"status": "not_configured"}
+        "postgres": {"status": "not_configured"},
     }
 
 
@@ -126,11 +128,11 @@ async def asi_status():
             "components": {
                 "alba": {"status": "active", "role": "Data Collection"},
                 "albi": {"status": "active", "role": "EEG Processing"},
-                "jona": {"status": "active", "role": "Neural Synthesis"}
-            }
+                "jona": {"status": "active", "role": "Neural Synthesis"},
+            },
         },
         "instance": INSTANCE_ID,
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -147,7 +149,7 @@ async def metrics():
         "system_cpu_percent": system.get("cpu_percent", 0),
         "system_memory_percent": system.get("memory_percent", 0),
         "system_disk_percent": system.get("disk_percent", 0),
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -156,11 +158,26 @@ async def services():
     """List all microservices"""
     return {
         "services": [
-            {"name": "core-api", "port": 8000, "status": "running", "description": "Core API - Status & Metrics"},
-            {"name": "reporting", "port": 8001, "status": "running", "description": "Excel & PowerPoint Generation"},
-            {"name": "excel", "port": 8002, "status": "running", "description": "Excel Operations & Formulas"}
+            {
+                "name": "core-api",
+                "port": 8000,
+                "status": "running",
+                "description": "Core API - Status & Metrics",
+            },
+            {
+                "name": "reporting",
+                "port": 8001,
+                "status": "running",
+                "description": "Excel & PowerPoint Generation",
+            },
+            {
+                "name": "excel",
+                "port": 8002,
+                "status": "running",
+                "description": "Excel Operations & Formulas",
+            },
         ],
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -174,14 +191,14 @@ async def global_exception_handler(request: Request, exc: Exception):
             "error": "Internal Server Error",
             "message": str(exc),
             "instance": INSTANCE_ID,
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        },
     )
 
 
 if __name__ == "__main__":
     import uvicorn
+
     port = int(os.environ.get("PORT", 8000))
     logger.info(f"Starting Core API on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
-

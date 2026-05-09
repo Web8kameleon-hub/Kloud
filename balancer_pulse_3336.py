@@ -17,7 +17,7 @@ from cors_policy import apply_standard_cors
 app = FastAPI(
     title="Balancer Pulse",
     description="Heartbeat monitoring and node liveness detection",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Add CORS
@@ -32,20 +32,22 @@ HEARTBEAT_TIMEOUT = 30  # seconds
 
 
 @app.post("/pulse/heartbeat")
-async def receive_heartbeat(nodeId: str, status: Optional[str] = None, metrics: Optional[Dict] = None):
+async def receive_heartbeat(
+    nodeId: str, status: Optional[str] = None, metrics: Optional[Dict] = None
+):
     """Receive heartbeat from node"""
     global PULSES_RECEIVED
-    
+
     if not nodeId:
         raise HTTPException(status_code=400, detail="nodeId required")
-    
+
     timestamp = datetime.now(timezone.utc)
-    
+
     # Check if node was previously dead
     if nodeId in DEAD_NODES:
         DEAD_NODES.remove(nodeId)
         print(f"[{timestamp.isoformat()}] Node {nodeId} is ALIVE again")
-    
+
     HEARTBEATS[nodeId] = {
         "nodeId": nodeId,
         "lastPulse": timestamp.isoformat(),
@@ -53,16 +55,16 @@ async def receive_heartbeat(nodeId: str, status: Optional[str] = None, metrics: 
         "metrics": metrics or {},
         "pulseCount": (HEARTBEATS.get(nodeId, {}).get("pulseCount", 0) + 1),
         "alive": True,
-        "downtime": 0
+        "downtime": 0,
     }
-    
+
     PULSES_RECEIVED += 1
-    
+
     return {
         "success": True,
         "message": f"Heartbeat received from {nodeId}",
         "timestamp": timestamp.isoformat(),
-        "pulseCount": HEARTBEATS[nodeId]["pulseCount"]
+        "pulseCount": HEARTBEATS[nodeId]["pulseCount"],
     }
 
 
@@ -74,16 +76,16 @@ async def get_node_pulse_status(nodeId: str):
             "nodeId": nodeId,
             "status": "unknown",
             "alive": False,
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
-    
+
     node = HEARTBEATS[nodeId]
     last_pulse = datetime.fromisoformat(node["lastPulse"])
     time_since_pulse = datetime.now(timezone.utc) - last_pulse
-    
+
     is_alive = time_since_pulse.total_seconds() < HEARTBEAT_TIMEOUT
     node["alive"] = is_alive
-    
+
     return {
         "nodeId": nodeId,
         "status": node["status"],
@@ -91,7 +93,7 @@ async def get_node_pulse_status(nodeId: str):
         "lastPulse": node["lastPulse"],
         "timeSincePulse": round(time_since_pulse.total_seconds()),
         "pulseCount": node["pulseCount"],
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -100,29 +102,31 @@ async def get_all_pulse_status():
     """Get pulse status of all nodes"""
     now = datetime.now(timezone.utc)
     nodes = []
-    
+
     for nodeId, node in HEARTBEATS.items():
         last_pulse = datetime.fromisoformat(node["lastPulse"])
         time_since_pulse = now - last_pulse
         is_alive = time_since_pulse.total_seconds() < HEARTBEAT_TIMEOUT
         node["alive"] = is_alive
-        
-        nodes.append({
-            "nodeId": nodeId,
-            "status": node["status"],
-            "alive": is_alive,
-            "timeSincePulse": round(time_since_pulse.total_seconds()),
-            "pulseCount": node["pulseCount"]
-        })
-    
+
+        nodes.append(
+            {
+                "nodeId": nodeId,
+                "status": node["status"],
+                "alive": is_alive,
+                "timeSincePulse": round(time_since_pulse.total_seconds()),
+                "pulseCount": node["pulseCount"],
+            }
+        )
+
     alive_count = sum(1 for n in nodes if n["alive"])
-    
+
     return {
         "timestamp": now.isoformat(),
         "totalNodes": len(nodes),
         "aliveNodes": alive_count,
         "deadNodes": len(DEAD_NODES),
-        "nodes": nodes
+        "nodes": nodes,
     }
 
 
@@ -131,23 +135,21 @@ async def get_dead_nodes():
     """Get list of dead/unresponsive nodes"""
     now = datetime.now(timezone.utc)
     dead = []
-    
+
     for nodeId, node in HEARTBEATS.items():
         last_pulse = datetime.fromisoformat(node["lastPulse"])
         time_since_pulse = now - last_pulse
         if time_since_pulse.total_seconds() >= HEARTBEAT_TIMEOUT:
-            dead.append({
-                "nodeId": nodeId,
-                "lastPulse": node["lastPulse"],
-                "timeSincePulse": round(time_since_pulse.total_seconds()),
-                "status": "dead"
-            })
-    
-    return {
-        "timestamp": now.isoformat(),
-        "deadNodeCount": len(dead),
-        "deadNodes": dead
-    }
+            dead.append(
+                {
+                    "nodeId": nodeId,
+                    "lastPulse": node["lastPulse"],
+                    "timeSincePulse": round(time_since_pulse.total_seconds()),
+                    "status": "dead",
+                }
+            )
+
+    return {"timestamp": now.isoformat(), "deadNodeCount": len(dead), "deadNodes": dead}
 
 
 @app.post("/pulse/resuscitate/{nodeId}")
@@ -155,18 +157,18 @@ async def resuscitate_node(nodeId: str):
     """Manually resuscitate a dead node"""
     if nodeId not in HEARTBEATS:
         raise HTTPException(status_code=404, detail=f"Node {nodeId} not found")
-    
+
     node = HEARTBEATS[nodeId]
     node["lastPulse"] = datetime.now(timezone.utc).isoformat()
     node["alive"] = True
-    
+
     if nodeId in DEAD_NODES:
         DEAD_NODES.remove(nodeId)
-    
+
     return {
         "success": True,
         "message": f"Node {nodeId} resuscitated",
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -176,7 +178,7 @@ async def get_pulse_config():
     return {
         "heartbeat_timeout_seconds": HEARTBEAT_TIMEOUT,
         "max_dead_nodes_tracked": 1000,
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -184,15 +186,15 @@ async def get_pulse_config():
 async def update_pulse_config(timeout: Optional[int] = None):
     """Update pulse configuration"""
     global HEARTBEAT_TIMEOUT
-    
+
     if timeout:
         HEARTBEAT_TIMEOUT = timeout
-    
+
     return {
         "success": True,
         "message": "Configuration updated",
         "heartbeat_timeout_seconds": HEARTBEAT_TIMEOUT,
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -200,16 +202,22 @@ async def update_pulse_config(timeout: Optional[int] = None):
 async def get_pulse_metrics():
     """Get pulse metrics"""
     now = datetime.now(timezone.utc)
-    alive = sum(1 for node in HEARTBEATS.values() 
-                if (now - datetime.fromisoformat(node["lastPulse"])).total_seconds() < HEARTBEAT_TIMEOUT)
-    
+    alive = sum(
+        1
+        for node in HEARTBEATS.values()
+        if (now - datetime.fromisoformat(node["lastPulse"])).total_seconds()
+        < HEARTBEAT_TIMEOUT
+    )
+
     return {
         "timestamp": now.isoformat(),
         "totalPulsesReceived": PULSES_RECEIVED,
         "nodeCount": len(HEARTBEATS),
         "aliveCount": alive,
         "deadCount": len(DEAD_NODES),
-        "avgHeartbeatRate": round(PULSES_RECEIVED / max(1, len(HEARTBEATS))) if HEARTBEATS else 0
+        "avgHeartbeatRate": round(PULSES_RECEIVED / max(1, len(HEARTBEATS)))
+        if HEARTBEATS
+        else 0,
     }
 
 
@@ -218,13 +226,13 @@ async def reset_node_pulse(nodeId: str):
     """Reset pulse counter for node"""
     if nodeId not in HEARTBEATS:
         raise HTTPException(status_code=404, detail=f"Node {nodeId} not found")
-    
+
     HEARTBEATS[nodeId]["pulseCount"] = 0
-    
+
     return {
         "success": True,
         "message": f"Pulse counter reset for {nodeId}",
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -232,16 +240,20 @@ async def reset_node_pulse(nodeId: str):
 async def health():
     """Health check"""
     now = datetime.now(timezone.utc)
-    alive = sum(1 for node in HEARTBEATS.values() 
-                if (now - datetime.fromisoformat(node["lastPulse"])).total_seconds() < HEARTBEAT_TIMEOUT)
-    
+    alive = sum(
+        1
+        for node in HEARTBEATS.values()
+        if (now - datetime.fromisoformat(node["lastPulse"])).total_seconds()
+        < HEARTBEAT_TIMEOUT
+    )
+
     return {
         "status": "healthy",
         "service": "balancer-pulse-3336",
         "timestamp": now.isoformat(),
         "monitoredNodes": len(HEARTBEATS),
         "aliveNodes": alive,
-        "totalPulses": PULSES_RECEIVED
+        "totalPulses": PULSES_RECEIVED,
     }
 
 
@@ -266,19 +278,19 @@ async def info():
             "GET /pulse/metrics": "Get pulse metrics",
             "POST /pulse/reset/:nodeId": "Reset node pulse counter",
             "GET /health": "Health check",
-            "GET /info": "Service info"
-        }
+            "GET /info": "Service info",
+        },
     }
 
 
 if __name__ == "__main__":
     port = int(os.getenv("BALANCER_PULSE_PORT", "3336"))
     host = os.getenv("BALANCER_PULSE_HOST", "0.0.0.0")
-    
-    print(f"\n{'='*60}")
+
+    print(f"\n{'=' * 60}")
     print(f"  BALANCER PULSE SERVICE (Python)")
     print(f"  Listening on {host}:{port}")
     print(f"  Heartbeat monitoring & node liveness detection")
-    print(f"{'='*60}\n")
-    
+    print(f"{'=' * 60}\n")
+
     uvicorn.run(app, host=host, port=port, log_level="info")

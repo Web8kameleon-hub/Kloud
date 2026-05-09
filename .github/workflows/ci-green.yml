@@ -17,6 +17,15 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  FLUID_AUTOSTART: "true"
+  WWWMMM_AUTORUN: "true"
+  PRIMARY_RESONANT_PROFILE: "wwwmmm-ndb-stigma-tide-rezonance-nanogrid"
+  ADAPTIVE_COMPAT_MODE: "true"
+  OLD_MODE_ON_MISMATCH: "true"
+  RESONANT_WRITE_MODE: "new-first"
+  RESONANT_FALLBACK_MODE: "old-modus"
+
 jobs:
   # ===========================================================
   # 🐍 PYTHON SECURITY

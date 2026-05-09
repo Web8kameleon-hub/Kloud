@@ -326,6 +326,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate deployment prerequisites
+        id: deploy_prereq
         run: |
           echo "🔍 Checking deployment prerequisites..."
           HAS_SSH=false

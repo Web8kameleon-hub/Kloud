@@ -37,8 +37,7 @@ from pydantic import BaseModel
 
 # Setup logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s | %(levelname)s | %(name)s | %(message)s'
+    level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 logger = logging.getLogger("intelligence-lab")
 
@@ -50,21 +49,22 @@ PORT = int(os.environ.get("INTELLIGENCE_LAB_PORT", "8099"))
 # LIFECYCLE
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifecycle"""
     logger.info("🧪 Intelligence Lab starting...")
-    
+
     # Initialize KLAJDI
     _klajdi = get_klajdi_lab()
     logger.info("🔬 KLAJDI Lab initialized")
-    
+
     # Initialize MALI
     _mali = get_mali_core()
     logger.info("🏔️ MALI Core initialized")
-    
+
     yield
-    
+
     # Cleanup
     _mali.stop_monitoring()
     logger.info("🧪 Intelligence Lab shutting down...")
@@ -80,7 +80,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 apply_standard_cors(app)
@@ -89,6 +89,7 @@ apply_standard_cors(app)
 # ═══════════════════════════════════════════════════════════════════════════════
 # MODELS
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 class SignalInput(BaseModel):
     source: str  # ocean, blerina, liam, alda, system, etc.
@@ -118,6 +119,7 @@ class AnnouncementInput(BaseModel):
 # ROOT & HEALTH
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @app.get("/")
 async def root():
     """Root endpoint"""
@@ -126,13 +128,29 @@ async def root():
         "version": "1.0.0",
         "components": {
             "klajdi": "Knost-Labor-Array-Jonify-Detective-Intelligence",
-            "mali": "Master Announced Labor Intelligence"
+            "mali": "Master Announced Labor Intelligence",
         },
         "endpoints": {
-            "klajdi": ["/klajdi/signal", "/klajdi/case", "/klajdi/diagnostics", "/klajdi/stats"],
-            "mali": ["/mali/cycle", "/mali/report", "/mali/announcements", "/mali/monitor"],
-            "tables": ["/tables/all", "/tables/system", "/tables/docker", "/tables/liam", "/tables/alda"]
-        }
+            "klajdi": [
+                "/klajdi/signal",
+                "/klajdi/case",
+                "/klajdi/diagnostics",
+                "/klajdi/stats",
+            ],
+            "mali": [
+                "/mali/cycle",
+                "/mali/report",
+                "/mali/announcements",
+                "/mali/monitor",
+            ],
+            "tables": [
+                "/tables/all",
+                "/tables/system",
+                "/tables/docker",
+                "/tables/liam",
+                "/tables/alda",
+            ],
+        },
     }
 
 
@@ -141,21 +159,21 @@ async def health():
     """Health check"""
     klajdi = get_klajdi_lab()
     mali = get_mali_core()
-    
+
     return {
         "status": "healthy",
         "service": "intelligence-lab",
         "components": {
             "klajdi": {
                 "signals": klajdi.get_stats()["signals_ingested"],
-                "cases": klajdi.get_stats()["cases_opened"]
+                "cases": klajdi.get_stats()["cases_opened"],
             },
             "mali": {
                 "cycles": mali.get_stats()["intake_cycles"],
-                "running": mali._running
-            }
+                "running": mali._running,
+            },
         },
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -164,11 +182,11 @@ async def status():
     """Detailed status"""
     klajdi = get_klajdi_lab()
     mali = get_mali_core()
-    
+
     return {
         "klajdi_stats": klajdi.get_stats(),
         "mali_stats": mali.get_stats(),
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -176,28 +194,41 @@ async def status():
 # KLAJDI ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @app.post("/klajdi/signal")
 async def ingest_signal(signal: SignalInput):
     """Ingest a signal into KLAJDI"""
     klajdi = get_klajdi_lab()
-    
+
     try:
-        source = SignalSource[signal.source.upper()] if signal.source.upper() in SignalSource.__members__ else SignalSource.EXTERNAL
-        channel = SignalChannel[signal.channel.upper()] if signal.channel.upper() in SignalChannel.__members__ else SignalChannel.INTERNAL
-        severity = SignalSeverity[signal.severity.upper()] if signal.severity.upper() in SignalSeverity.__members__ else SignalSeverity.INFO
-        
+        source = (
+            SignalSource[signal.source.upper()]
+            if signal.source.upper() in SignalSource.__members__
+            else SignalSource.EXTERNAL
+        )
+        channel = (
+            SignalChannel[signal.channel.upper()]
+            if signal.channel.upper() in SignalChannel.__members__
+            else SignalChannel.INTERNAL
+        )
+        severity = (
+            SignalSeverity[signal.severity.upper()]
+            if signal.severity.upper() in SignalSeverity.__members__
+            else SignalSeverity.INFO
+        )
+
         result = await klajdi.ingest_signal(
             source=source,
             channel=channel,
             payload=signal.payload,
             severity=severity,
-            meta=signal.meta
+            meta=signal.meta,
         )
-        
+
         return {
             "status": "ingested",
             "signal_id": result.id,
-            "ions_count": len(result.ions)
+            "ions_count": len(result.ions),
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -205,89 +236,73 @@ async def ingest_signal(signal: SignalInput):
 
 @app.get("/klajdi/signals")
 async def get_signals(
-    source: Optional[str] = None,
-    severity: Optional[str] = None,
-    limit: int = 100
+    source: Optional[str] = None, severity: Optional[str] = None, limit: int = 100
 ):
     """Get signals from KLAJDI"""
     klajdi = get_klajdi_lab()
-    
+
     signals = klajdi.array._signals[-limit:]
-    
+
     if source:
         try:
             source_enum = SignalSource[source.upper()]
             signals = [s for s in signals if s.source == source_enum]
         except KeyError:
             pass
-    
+
     if severity:
         try:
             severity_enum = SignalSeverity[severity.upper()]
             signals = [s for s in signals if s.severity == severity_enum]
         except KeyError:
             pass
-    
-    return {
-        "signals": [s.to_dict() for s in signals],
-        "count": len(signals)
-    }
+
+    return {"signals": [s.to_dict() for s in signals], "count": len(signals)}
 
 
 @app.post("/klajdi/case")
 async def open_case(case: CaseInput):
     """Open a new investigation case"""
     klajdi = get_klajdi_lab()
-    
+
     # Get signals if IDs provided
     signals = []
     if case.signal_ids:
         for s in klajdi.array._signals:
             if s.id in case.signal_ids:
                 signals.append(s)
-    
+
     result = klajdi.open_case(
-        title=case.title,
-        hypothesis=case.hypothesis,
-        signals=signals
+        title=case.title, hypothesis=case.hypothesis, signals=signals
     )
-    
-    return {
-        "status": "opened",
-        "case": result.to_dict()
-    }
+
+    return {"status": "opened", "case": result.to_dict()}
 
 
 @app.get("/klajdi/cases")
 async def get_cases(status: Optional[str] = None):
     """Get all investigation cases"""
     klajdi = get_klajdi_lab()
-    return {
-        "cases": klajdi.get_cases(status),
-        "total": len(klajdi._cases)
-    }
+    return {"cases": klajdi.get_cases(status), "total": len(klajdi._cases)}
 
 
 @app.post("/klajdi/case/{case_id}/analyze")
 async def analyze_case(case_id: str):
     """Analyze an investigation case"""
     klajdi = get_klajdi_lab()
-    
+
     case = None
     for c in klajdi._cases:
         if c.id == case_id:
             case = c
             break
-    
+
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
-    
+
     result = await klajdi.analyze_case(case)
-    
-    return {
-        "status": "analyzed",
-        "case": result.to_dict()
-    }
+
+    return {"status": "analyzed", "case": result.to_dict()}
 
 
 @app.get("/klajdi/diagnostics")
@@ -316,6 +331,7 @@ async def export_klajdi():
 # MALI ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @app.post("/mali/cycle")
 async def run_mali_cycle():
     """Run one MALI intake cycle"""
@@ -337,10 +353,9 @@ async def get_mali_report_markdown():
     """Get MALI report as markdown"""
     mali = get_mali_core()
     report = await mali.generate_comprehensive_report()
-    
+
     return JSONResponse(
-        content={"markdown": report.get("markdown", "")},
-        media_type="application/json"
+        content={"markdown": report.get("markdown", "")}, media_type="application/json"
     )
 
 
@@ -348,16 +363,13 @@ async def get_mali_report_markdown():
 async def start_mali_monitoring(background_tasks: BackgroundTasks):
     """Start continuous MALI monitoring"""
     mali = get_mali_core()
-    
+
     if mali._running:
         return {"status": "already_running"}
-    
+
     background_tasks.add_task(mali.start_continuous_monitoring)
-    
-    return {
-        "status": "started",
-        "interval_seconds": mali._cycle_interval
-    }
+
+    return {"status": "started", "interval_seconds": mali._cycle_interval}
 
 
 @app.post("/mali/monitor/stop")
@@ -370,24 +382,22 @@ async def stop_mali_monitoring():
 
 @app.get("/mali/announcements")
 async def get_announcements(
-    unacknowledged_only: bool = False,
-    min_priority: int = 1,
-    limit: int = 50
+    unacknowledged_only: bool = False, min_priority: int = 1, limit: int = 50
 ):
     """Get MALI announcements"""
     mali = get_mali_core()
-    
+
     if unacknowledged_only:
         announcements = mali.announcements.get_unacknowledged()
     else:
         announcements = mali.announcements._announcements
-    
+
     # Filter by priority
     announcements = [a for a in announcements if a.priority.value >= min_priority]
-    
+
     return {
         "announcements": [a.to_dict() for a in announcements[-limit:]],
-        "total": len(announcements)
+        "total": len(announcements),
     }
 
 
@@ -395,11 +405,11 @@ async def get_announcements(
 async def make_announcement(ann: AnnouncementInput):
     """Create a manual announcement"""
     mali = get_mali_core()
-    
+
     try:
         ann_type = AnnouncementType[ann.type.upper()]
         priority = AnnouncementPriority(ann.priority)
-        
+
         result = mali.announcements.announce(
             type=ann_type,
             priority=priority,
@@ -407,13 +417,10 @@ async def make_announcement(ann: AnnouncementInput):
             content=ann.content,
             source_module=ann.source_module,
             data=ann.data,
-            actions=ann.actions
+            actions=ann.actions,
         )
-        
-        return {
-            "status": "announced",
-            "announcement": result.to_dict()
-        }
+
+        return {"status": "announced", "announcement": result.to_dict()}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -422,12 +429,12 @@ async def make_announcement(ann: AnnouncementInput):
 async def acknowledge_announcement(announcement_id: str):
     """Acknowledge an announcement"""
     mali = get_mali_core()
-    
+
     success = mali.announcements.acknowledge(announcement_id)
-    
+
     if not success:
         raise HTTPException(status_code=404, detail="Announcement not found")
-    
+
     return {"status": "acknowledged", "id": announcement_id}
 
 
@@ -441,6 +448,7 @@ async def mali_stats():
 # ═══════════════════════════════════════════════════════════════════════════════
 # TABLES ENDPOINTS - Excel-ready data
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 @app.get("/tables/all")
 async def get_all_tables():
@@ -481,24 +489,27 @@ async def get_alda_table():
 # COMBINED ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @app.get("/combined/dashboard")
 async def get_combined_dashboard():
     """Get combined dashboard data from KLAJDI and MALI"""
     klajdi = get_klajdi_lab()
     mali = get_mali_core()
-    
+
     return {
         "klajdi": {
             "stats": klajdi.get_stats(),
             "recent_signals": [s.to_dict() for s in klajdi.array._signals[-10:]],
-            "open_cases": len([c for c in klajdi._cases if c.status == "open"])
+            "open_cases": len([c for c in klajdi._cases if c.status == "open"]),
         },
         "mali": {
             "stats": mali.get_stats(),
-            "recent_announcements": [a.to_dict() for a in mali.announcements._announcements[-5:]],
-            "source_status": mali.intake.get_source_status()
+            "recent_announcements": [
+                a.to_dict() for a in mali.announcements._announcements[-5:]
+            ],
+            "source_status": mali.intake.get_source_status(),
         },
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -507,30 +518,31 @@ async def get_article_data():
     """Get data ready for article generation"""
     mali = get_mali_core()
     klajdi = get_klajdi_lab()
-    
+
     # Get tables
     tables = await mali.tabulator.generate_all_tables()
-    
+
     # Get recent insights
     insights = [
-        a.to_dict() for a in mali.announcements._announcements
+        a.to_dict()
+        for a in mali.announcements._announcements
         if a.type.value == "insight"
     ][-5:]
-    
+
     # Get patterns
     patterns = mali.intelligence._patterns[-10:]
-    
+
     # Get KLAJDI findings
     findings = []
     for case in klajdi._cases[-5:]:
         findings.extend(case.findings)
-    
+
     return {
         "tables": tables,
         "insights": insights,
         "patterns": patterns,
         "findings": findings[-10:],
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -540,5 +552,5 @@ async def get_article_data():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
 
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
