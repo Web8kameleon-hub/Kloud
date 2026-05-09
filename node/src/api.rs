@@ -761,6 +761,10 @@ async fn get_dashboard(
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis();
+    let clisonix_public_host = std::env::var("CLISONIX_PUBLIC_HOST").unwrap_or("91.98.47.131".to_string());
+    let clisonix_bridge_port = std::env::var("CLISONIX_BRIDGE_PORT").unwrap_or("8889".to_string());
+    let clisonix_runtime_port = std::env::var("CLISONIX_RUNTIME_PORT").unwrap_or("9080".to_string());
+    let clisonix_gossip_port = std::env::var("CLISONIX_GOSSIP_PORT").unwrap_or("9001".to_string());
 
     let filtered_events: Vec<SecurityEvent> = all_events
         .into_iter()
@@ -785,6 +789,20 @@ async fn get_dashboard(
     if state_html.is_empty() {
         state_html.push_str("<li><span class=\"state-key\">empty</span><code class=\"state-val\">no local keys yet</code></li>");
     }
+
+    let public_refs_html = format!(
+        "<li><span class=\"state-key\">Public TLS (no port)</span><code class=\"state-val\">https://{}:443</code></li>\
+         <li><span class=\"state-key\">Kloud Bridge</span><code class=\"state-val\">http://{}:{}</code></li>\
+         <li><span class=\"state-key\">Kloud Runtime</span><code class=\"state-val\">http://{}:{}</code></li>\
+         <li><span class=\"state-key\">Gossip Node1</span><code class=\"state-val\">{}:{}</code></li>",
+        clisonix_public_host,
+        clisonix_public_host,
+        clisonix_bridge_port,
+        clisonix_public_host,
+        clisonix_runtime_port,
+        clisonix_public_host,
+        clisonix_gossip_port,
+    );
 
     // Safety: escape HTML special characters before interpolating event fields into HTML.
     // All string fields MUST be escaped here to prevent XSS if field values ever become
@@ -1084,6 +1102,11 @@ async fn get_dashboard(
                     </section>
 
                     <section class="card span-12">
+                        <div class="k">Reference Endpoints</div>
+                        <ul class="state-list">__PUBLIC_REFS_HTML__</ul>
+                    </section>
+
+                    <section class="card span-12">
                         <div class="k">Mesh Topology</div>
                         <div id="mesh-container" style="margin-top: 12px;">
                             <div style="color: var(--muted); font-size: 0.9rem; margin-bottom: 12px;">Loading mesh topology...</div>
@@ -1270,6 +1293,7 @@ async fn get_dashboard(
         "__FAILED_CHANNEL_SELECTED__",
         if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
     )
+    .replace("__PUBLIC_REFS_HTML__", &public_refs_html)
     .replace("__LIMIT_VALUE__", &limit.to_string())
     .replace("__EVENT_ROWS__", &events_rows)
     .replace("__STATE_HTML__", &state_html);
