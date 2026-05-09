@@ -577,7 +577,11 @@ async fn post_peer_announce(
             p.api_addr = req.api_addr.clone();
             p.gossip_addr = req.gossip_addr.clone();
             p.last_seen_ms = now_ms;
-            p.reachable = true;
+            // Reachability must be established by health-check loop, not announce.
+            p.reachable = false;
+            p.latency_ms = 0;
+            p.state = "Unknown".to_string();
+            p.tide = "Unknown".to_string();
         })
         .or_insert(PeerRecord {
             id: req.id,
@@ -587,7 +591,7 @@ async fn post_peer_announce(
             tide: "Unknown".to_string(),
             last_seen_ms: now_ms,
             latency_ms: 0,
-            reachable: true,
+            reachable: false,
         });
     Json(serde_json::json!({"ok": true, "registered": req.id}))
 }
