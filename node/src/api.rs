@@ -86,12 +86,62 @@ pub struct SecurityStatusResponse {
     pub event_count: usize,
 }
 
+#[derive(Serialize)]
+pub struct ResonantContractMeta {
+    pub contract: String,
+    pub schema_version: String,
+    pub adapter: String,
+    pub source_endpoint: String,
+    pub generated_at_ms: u128,
+}
+
+#[derive(Serialize)]
+pub struct ResonantMetrics {
+    pub active_peers: usize,
+    pub avg_latency_ms: u64,
+    pub bandwidth_kbps: u64,
+    pub load: f32,
+    pub latency_percent: f32,
+    pub bandwidth_percent: f32,
+    pub load_percent: f32,
+}
+
+#[derive(Serialize)]
+pub struct ResonantStatusResponse {
+    pub meta: ResonantContractMeta,
+    pub node_id: u64,
+    pub state: String,
+    pub tide: String,
+    pub ndb_score: f32,
+    pub ndb_delta: f32,
+    pub ndb_threshold: f32,
+    pub stigma_level_default: u8,
+    pub high_risk: bool,
+    pub event_count: usize,
+    pub trace_state: String,
+    pub metrics: ResonantMetrics,
+}
+
+#[derive(Serialize)]
+pub struct ResonantEvent {
+    pub trace_id: String,
+    pub timestamp_ms: u128,
+    pub node_id: u64,
+    pub endpoint: String,
+    pub action: String,
+    pub stigma_level: u8,
+    pub ndb_score: f32,
+    pub outcome: String,
+}
+
 pub fn create_router(state: ApiState) -> Router {
     Router::new()
         .route("/submit", get(get_submit_help).post(submit_op))
         .route("/status", get(get_status))
         .route("/security/status", get(get_security_status))
         .route("/security/events", get(get_security_events))
+    .route("/resonant/status", get(get_resonant_status))
+    .route("/resonant/events", get(get_resonant_events))
         .route("/peers", get(get_peers))
         .route("/state", get(get_state))
         .route("/dashboard", get(get_dashboard))
@@ -348,6 +398,86 @@ async fn get_security_events(
     Json(result)
 }
 
+async fn get_resonant_status(
+    State(state): State<ApiState>,
+) -> Json<ResonantStatusResponse> {
+    let metrics = *state.metrics.lock().await;
+    let tide = *state.tide_level.lock().await;
+    let score = compute_ndb_score(&metrics);
+    let delta = ndb_delta(score);
+    let threshold = ndb_threshold();
+    let event_count = state.security_events.lock().await.len();
+
+    let load_percent = (metrics.load * 100.0).clamp(0.0, 100.0);
+    let latency_percent = ((metrics.avg_latency_ms as f32 / 250.0) * 100.0).clamp(0.0, 100.0);
+    let bandwidth_percent = ((metrics.bandwidth_kbps as f32 / 10000.0) * 100.0).clamp(0.0, 100.0);
+    let high_risk = score > threshold;
+
+    Json(ResonantStatusResponse {
+        meta: ResonantContractMeta {
+            contract: "resonant-core".to_string(),
+            schema_version: "1.0.0".to_string(),
+            adapter: "node-api-adapter".to_string(),
+            source_endpoint: "/status".to_string(),
+            generated_at_ms: SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_millis(),
+        },
+        node_id: state.node_id,
+        state: "Active".to_string(),
+        tide: format!("{:?}", tide),
+        ndb_score: compact_float(score),
+        ndb_delta: compact_float(delta),
+        ndb_threshold: threshold,
+        stigma_level_default: 2,
+        high_risk,
+        event_count,
+        trace_state: if high_risk {
+            "watch".to_string()
+        } else {
+            "stable".to_string()
+        },
+        metrics: ResonantMetrics {
+            active_peers: metrics.active_peers,
+            avg_latency_ms: metrics.avg_latency_ms,
+            bandwidth_kbps: metrics.bandwidth_kbps,
+            load: compact_float(metrics.load),
+            latency_percent: compact_float(latency_percent),
+            bandwidth_percent: compact_float(bandwidth_percent),
+            load_percent: compact_float(load_percent),
+        },
+    })
+}
+
+async fn get_resonant_events(
+    State(state): State<ApiState>,
+    Query(query): Query<EventsQuery>,
+) -> Json<Vec<ResonantEvent>> {
+    let max_limit = 200;
+    let limit = query.limit.unwrap_or(25).clamp(1, max_limit);
+    let events = state.security_events.lock().await;
+
+    let mut result: Vec<ResonantEvent> = events
+        .iter()
+        .rev()
+        .take(limit)
+        .map(|e| ResonantEvent {
+            trace_id: format!("{}:{}:{}", e.node_id, e.endpoint, e.timestamp_ms),
+            timestamp_ms: e.timestamp_ms,
+            node_id: e.node_id,
+            endpoint: e.endpoint.clone(),
+            action: e.action.clone(),
+            stigma_level: e.stigma_level,
+            ndb_score: e.ndb_score,
+            outcome: e.outcome.clone(),
+        })
+        .collect();
+
+    result.reverse();
+    Json(result)
+}
+
 async fn get_peers(
     State(state): State<ApiState>,
 ) -> Json<serde_json::Value> {
@@ -392,6 +522,17 @@ async fn get_dashboard(
     let endpoint_filter = query.endpoint.unwrap_or_default();
     let outcome_filter = query.outcome.unwrap_or_default();
     let limit = query.limit.unwrap_or(25).clamp(5, 200);
+
+    let stigma_l1 = all_events.iter().filter(|e| e.stigma_level == 1).count();
+    let stigma_l2 = all_events.iter().filter(|e| e.stigma_level == 2).count();
+    let stigma_l3 = all_events.iter().filter(|e| e.stigma_level == 3).count();
+    let trace_state = if high_risk { "WATCH" } else { "STABLE" };
+    let trace_state_class = if high_risk { "risk" } else { "ok" };
+    let node_id = state.node_id;
+    let generated_at_ms = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis();
 
     let filtered_events: Vec<SecurityEvent> = all_events
         .into_iter()
@@ -548,6 +689,10 @@ async fn get_dashboard(
                     font-weight: 700;
                     cursor: pointer;
                 }}
+                .stigma-grid {{ display: flex; gap: 10px; margin-top: 10px; }}
+                .stigma-item {{ flex: 1; background: #f6f9fc; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--line); }}
+                .sl {{ display: block; font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }}
+                .sc {{ display: block; font-size: 1.5rem; font-weight: 700; margin-top: 4px; }}
                 .table-wrap {{ overflow: auto; border: 1px solid var(--line); border-radius: 12px; }}
                 table {{ width: 100%; border-collapse: collapse; min-width: 700px; background: #fff; }}
                 th, td {{ padding: 10px; border-bottom: 1px solid #edf1f5; text-align: left; font-size: .92rem; }}
@@ -578,7 +723,7 @@ async fn get_dashboard(
                 <div class="hero">
                     <div>
                         <h1 class="title">Kloud Control Surface</h1>
-                        <p class="sub">Live Sovereign Fabric telemetry with NDB/STIGMA security posture.</p>
+                        <p class="sub">Node <strong>#{}</strong> &middot; Live Sovereign Fabric telemetry with NDB/STIGMA security posture.</p>
                     </div>
                     <div class="chip">TIDE: {}</div>
                 </div>
@@ -632,6 +777,27 @@ async fn get_dashboard(
                         <div class="k">State Keys</div>
                         <div class="v">{}</div>
                         <div class="sub">CRDT local map cardinality</div>
+                    </section>
+
+                    <section class="card span-4">
+                        <div class="k">Stigma Trace State</div>
+                        <div class="v {}">{}</div>
+                        <div class="sub">{} security events total</div>
+                    </section>
+
+                    <section class="card span-4">
+                        <div class="k">Node Identity</div>
+                        <div class="v">#{}</div>
+                        <div class="sub">Generated at {}ms</div>
+                    </section>
+
+                    <section class="card span-4">
+                        <div class="k">Stigma Breakdown</div>
+                        <div class="stigma-grid">
+                            <div class="stigma-item"><span class="sl">L1 Minimal</span><span class="sc">{}</span></div>
+                            <div class="stigma-item"><span class="sl">L2 Standard</span><span class="sc">{}</span></div>
+                            <div class="stigma-item"><span class="sl">L3 Compact</span><span class="sc">{}</span></div>
+                        </div>
                     </section>
 
                     <section class="card span-12">
@@ -744,6 +910,7 @@ async fn get_dashboard(
         tide_color,
         if ndb_delta >= 0.0 { "#c2382e" } else { "#0a8f5b" },
         tide_label,
+        node_id,
         metrics.active_peers,
         ndb_score,
         ndb_delta,
@@ -761,6 +928,14 @@ async fn get_dashboard(
         load_percent,
         load_percent,
         state_map.len(),
+        trace_state_class,
+        trace_state,
+        event_count,
+        node_id,
+        generated_at_ms,
+        stigma_l1,
+        stigma_l2,
+        stigma_l3,
         filtered_events.len(),
         event_count,
         filtered_events.len(),
