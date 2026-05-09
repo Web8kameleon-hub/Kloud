@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1.7
+
+# Isolated multi-stage build for Kloud node.
+FROM rust:1.89-bookworm AS builder
+WORKDIR /app
+
+# Cache dependency resolution first.
+COPY Cargo.toml Cargo.lock ./
+COPY algebra/Cargo.toml algebra/Cargo.toml
+COPY protocol/Cargo.toml protocol/Cargo.toml
+COPY security/Cargo.toml security/Cargo.toml
+COPY node/Cargo.toml node/Cargo.toml
+
+# Add sources.
+COPY algebra/src algebra/src
+COPY protocol/src protocol/src
+COPY security/src security/src
+COPY node/src node/src
+
+RUN cargo build -p node --release
+
+FROM debian:bookworm-slim AS runtime
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates tini \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --uid 10001 --shell /usr/sbin/nologin kloud \
+    && mkdir -p /var/lib/kloud \
+    && chown -R 10001:10001 /var/lib/kloud
+
+WORKDIR /var/lib/kloud
+COPY --from=builder /app/target/release/node /usr/local/bin/kloud-node
+
+ENV NODE_ID=1
+ENV LISTEN_PORT=8080
+ENV PEERS=2:8081,3:8082
+
+# API listens at LISTEN_PORT + 1000 => default 9080.
+EXPOSE 9080
+
+USER 10001:10001
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/usr/local/bin/kloud-node"]
