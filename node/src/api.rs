@@ -593,6 +593,63 @@ async fn post_peer_announce(
             latency_ms: 0,
             reachable: false,
         });
+
+    // Run one immediate probe so topology is updated promptly without waiting
+    // for periodic health-check interval.
+    let (peer_id, peer_api_addr) = match peers.get(&req.id) {
+        Some(p) => (p.id, p.api_addr.clone()),
+        None => (req.id, String::new()),
+    };
+    drop(peers);
+
+    if !peer_api_addr.is_empty() {
+        let probe_url = format!("{}/status?stigma_level=2", peer_api_addr);
+        let start = std::time::Instant::now();
+        let probe = reqwest::Client::builder()
+            .timeout(std::time::Duration::from_millis(1200))
+            .build();
+
+        if let Ok(client) = probe {
+            let mut peers_after_probe = state.peers_map.lock().await;
+            match client.get(&probe_url).send().await {
+                Ok(resp) if resp.status().is_success() => {
+                    let latency_ms = start.elapsed().as_millis() as u64;
+                    let mut node_state = "Unknown".to_string();
+                    let mut tide = "Unknown".to_string();
+                    if let Ok(body) = resp.json::<serde_json::Value>().await {
+                        node_state = body
+                            .get("state")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("Unknown")
+                            .to_string();
+                        tide = body
+                            .get("tide")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("Unknown")
+                            .to_string();
+                    }
+
+                    if let Some(p) = peers_after_probe.get_mut(&peer_id) {
+                        p.reachable = true;
+                        p.latency_ms = latency_ms;
+                        p.state = node_state;
+                        p.tide = tide;
+                        p.last_seen_ms = SystemTime::now()
+                            .duration_since(UNIX_EPOCH)
+                            .unwrap_or_default()
+                            .as_millis();
+                    }
+                }
+                _ => {
+                    if let Some(p) = peers_after_probe.get_mut(&peer_id) {
+                        p.reachable = false;
+                        p.latency_ms = 0;
+                    }
+                }
+            }
+        }
+    }
+
     Json(serde_json::json!({"ok": true, "registered": req.id}))
 }
 
