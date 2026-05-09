@@ -804,7 +804,7 @@ async fn get_dashboard(
                         <div class="ops-head">
                             <div class="k">Operations Events</div>
                             <div class="ops-tools">
-                                <span id="refresh-state" class="sub">Auto-refresh every 5s · Showing {} / {} events</span>
+                                <span id="refresh-state" class="sub">Auto-refresh every 5s · __REFRESH_STATE_TEXT__</span>
                                 <button id="pause-refresh" class="tool-btn" type="button">Pause Refresh</button>
                                 <button id="export-csv" class="tool-btn" type="button">Export CSV</button>
                             </div>
@@ -934,12 +934,14 @@ async fn get_dashboard(
         node_id,
         generated_at_ms,
         stigma_l1,
+        stigma_l1,
         stigma_l2,
-        stigma_l3,
-        filtered_events.len(),
-        event_count,
-        filtered_events.len(),
+        stigma_l3
         event_count
+    .replace(
+        "__REFRESH_STATE_TEXT__",
+        &format!("Showing {} / {} events", filtered_events.len(), event_count),
+    )
     )
     .replace("__EP_ALL__", if endpoint_filter.is_empty() { "selected" } else { "" })
     .replace("__EP_STATUS__", if endpoint_filter == "/status" { "selected" } else { "" })
