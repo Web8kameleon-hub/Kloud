@@ -340,7 +340,12 @@ async fn get_status(
     Query(query): Query<StatusQuery>,
 ) -> Json<serde_json::Value> {
     let stigma_level = sanitize_stigma_level(query.stigma_level);
-    let metrics = *state.metrics.lock().await;
+    let mut metrics = *state.metrics.lock().await;
+    let reachable_peers = {
+        let peers = state.peers_map.lock().await;
+        peers.values().filter(|p| p.reachable).count()
+    };
+    metrics.active_peers = reachable_peers;
     let tide = *state.tide_level.lock().await;
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
@@ -578,7 +583,12 @@ async fn get_dashboard(
     State(state): State<ApiState>,
     Query(query): Query<DashboardQuery>,
 ) -> Html<String> {
-    let metrics = state.metrics.lock().await.clone();
+    let mut metrics = state.metrics.lock().await.clone();
+    let reachable_peers = {
+        let peers = state.peers_map.lock().await;
+        peers.values().filter(|p| p.reachable).count()
+    };
+    metrics.active_peers = reachable_peers;
     let tide = *state.tide_level.lock().await;
     let state_map = state.merge_sync.lock().await.get_state().clone();
     let all_events = state.security_events.lock().await.clone();
