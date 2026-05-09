@@ -318,7 +318,12 @@ async fn main() {
                 if tide_update_counter % 10 == 0 {
                     // Get real metrics from transport
                     let tm = transport_metrics.lock().await;
-                    metrics.active_peers = tm.active_connections;
+                    let mesh_active_peers = {
+                        let current_metrics = metrics_arc.lock().await;
+                        current_metrics.active_peers
+                    };
+                    // Keep the larger signal between mesh reachability and gossip connections.
+                    metrics.active_peers = std::cmp::max(mesh_active_peers, tm.active_connections);
                     metrics.avg_latency_ms = tm.avg_latency_ms;
                     metrics.bandwidth_kbps = tm.bandwidth_kbps;
                     metrics.load = (((tm.avg_latency_ms as f32) / 250.0).min(1.0)
