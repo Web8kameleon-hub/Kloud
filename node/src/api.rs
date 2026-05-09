@@ -839,14 +839,14 @@ async fn get_dashboard(
                                         <th>outcome</th>
                                     </tr>
                                 </thead>
-                                <tbody id="events-body">{}</tbody>
+                                <tbody id="events-body">__EVENT_ROWS__</tbody>
                             </table>
                         </div>
                     </section>
 
                     <section class="card span-12">
                         <div class="k">Local State (base64)</div>
-                        <ul class="state-list">{}</ul>
+                        <ul class="state-list">__STATE_HTML__</ul>
                     </section>
                 </div>
             </div>
@@ -950,10 +950,10 @@ async fn get_dashboard(
         if outcome_filter == "rejected-invalid-ops" { "selected" } else { "" },
         if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" },
         if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
-        limit,
-        events_rows,
-        state_html
-    );
+        limit
+    )
+    .replace("__EVENT_ROWS__", &events_rows)
+    .replace("__STATE_HTML__", &state_html);
 
     Html(html)
 }
