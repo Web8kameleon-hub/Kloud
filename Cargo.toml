@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "algebra",
+    "protocol",
+    "security",
+    "node",
+]
+resolver = "2"
