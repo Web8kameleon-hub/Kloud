@@ -354,6 +354,8 @@ jobs:
           
           echo "HAS_SSH=$HAS_SSH" >> $GITHUB_ENV
           echo "HAS_KUBECONFIG=$HAS_KUBECONFIG" >> $GITHUB_ENV
+          echo "has_ssh=$HAS_SSH" >> $GITHUB_OUTPUT
+          echo "has_kubeconfig=$HAS_KUBECONFIG" >> $GITHUB_OUTPUT
 
       # Try SSH deployment first (for Docker Compose servers)
       - name: Setup SSH Key
@@ -387,26 +389,26 @@ jobs:
 
       # Kubernetes deployment (only if SSH failed and kubeconfig exists)
       - name: Set up Helm
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         uses: azure/setup-helm@v4
         with:
           version: 'v3.14.0'
 
       - name: Set up kubectl
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         uses: azure/setup-kubectl@v4
         with:
           version: 'v1.29.0'
 
       - name: Configure kubeconfig
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.HETZNER_KUBECONFIG }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Verify cluster connection
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           echo "🔗 Connecting to Hetzner cluster..."
           kubectl cluster-info
@@ -414,14 +416,14 @@ jobs:
           echo "✅ Cluster connection verified"
 
       - name: Add Helm repositories
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
 
       - name: Create namespace
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
@@ -430,7 +432,7 @@ jobs:
       # DATABASES
       # -----------------------------------------------------------------------
       - name: Deploy PostgreSQL
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           helm upgrade --install postgres bitnami/postgresql \
@@ -441,7 +443,7 @@ jobs:
             --wait --timeout 5m
 
       - name: Deploy Redis
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           helm upgrade --install redis bitnami/redis \
@@ -451,7 +453,7 @@ jobs:
             --wait --timeout 5m
 
       - name: Deploy Neo4j
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           kubectl apply -n $NAMESPACE -f - <<EOF
@@ -494,7 +496,7 @@ jobs:
           EOF
 
       - name: Deploy VictoriaMetrics
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           kubectl apply -n $NAMESPACE -f - <<EOF
@@ -536,7 +538,7 @@ jobs:
       # ASI TRINITY
       # -----------------------------------------------------------------------
       - name: Deploy ASI Trinity (Alba, Albi, Jona, ASI)
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -596,7 +598,7 @@ jobs:
       # BINARY ALGEBRA (LIAM, ALDA, Alphabet)
       # -----------------------------------------------------------------------
       - name: Deploy Binary Algebra (Liam, Alda, Alphabet)
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -708,7 +710,7 @@ jobs:
       # OCEAN CORE + INTELLIGENCE
       # -----------------------------------------------------------------------
       - name: Deploy Ocean Core + Intelligence
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -799,7 +801,7 @@ jobs:
       # AGIEM + DATASOURCES (8 Regions)
       # -----------------------------------------------------------------------
       - name: Deploy AGIEM + Datasources
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true' && (inputs.deploy_scope == 'full' || inputs.deploy_scope == 'datasources' || github.event_name == 'push')
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true' && (inputs.deploy_scope == 'full' || inputs.deploy_scope == 'datasources' || github.event_name == 'push')
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -883,7 +885,7 @@ jobs:
       # 23 LABORATORIES (City-Named)
       # -----------------------------------------------------------------------
       - name: Deploy 23 Laboratories
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true' && (inputs.deploy_scope == 'full' || inputs.deploy_scope == 'labs' || github.event_name == 'push')
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true' && (inputs.deploy_scope == 'full' || inputs.deploy_scope == 'labs' || github.event_name == 'push')
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -940,7 +942,7 @@ jobs:
       # SERVICES (API, Web, Aviation, Behavioral, Economy, etc.)
       # -----------------------------------------------------------------------
       - name: Deploy Core Services
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           TAG="${{ needs.build-images.outputs.image_tag }}"
@@ -1104,7 +1106,7 @@ jobs:
       # INGRESS
       # -----------------------------------------------------------------------
       - name: Deploy Ingress
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           DOMAIN="${{ inputs.environment == 'staging' && 'staging.kloud.cloud' || 'kloud.cloud' }}"
@@ -1155,7 +1157,7 @@ jobs:
       # VERIFICATION
       # -----------------------------------------------------------------------
       - name: Verify All Deployments
-        if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
+        if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           echo "📊 Deployment Status:"
