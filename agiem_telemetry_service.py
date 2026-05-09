@@ -18,6 +18,7 @@ import json
 from datetime import datetime, timezone
 from agiem_core import AGIEMCore, MeshReporter, NodeReal
 from typing import Optional, Dict, Any
+from cors_policy import apply_standard_cors
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -27,13 +28,7 @@ app = FastAPI(
 )
 
 # Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # Initialize core services
 core = AGIEMCore()

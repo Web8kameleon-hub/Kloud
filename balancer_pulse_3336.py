@@ -11,6 +11,7 @@ import os
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any
 import asyncio
+from cors_policy import apply_standard_cors
 
 # Initialize FastAPI
 app = FastAPI(
@@ -20,13 +21,7 @@ app = FastAPI(
 )
 
 # Add CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # Heartbeat registry
 HEARTBEATS: Dict[str, Dict[str, Any]] = {}

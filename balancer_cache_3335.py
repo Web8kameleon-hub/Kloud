@@ -11,6 +11,7 @@ import os
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 import json
+from cors_policy import apply_standard_cors
 
 # Initialize FastAPI
 app = FastAPI(
@@ -20,13 +21,7 @@ app = FastAPI(
 )
 
 # Add CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # In-memory cache with TTL
 CACHE: Dict[str, Dict[str, Any]] = {}

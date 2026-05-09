@@ -18,6 +18,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
+from cors_policy import apply_standard_cors
 
 # API Version
 API_V1 = "/api/v1"
@@ -29,13 +30,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
