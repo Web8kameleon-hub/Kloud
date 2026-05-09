@@ -53,7 +53,7 @@ except Exception:
 
 # HTTP
 import httpx
-import requests
+import requests  # type: ignore[import-untyped]
 
 # --- Brain Router Initialization (must come after imports) ---
 brain_router = APIRouter(prefix="/brain", tags=["brain"])
@@ -658,6 +658,18 @@ class Settings(BaseSettings):
     stripe_publishable_key: Optional[str] = os.getenv("STRIPE_PUBLISHABLE_KEY")
     stripe_webhook_secret: Optional[str] = os.getenv("STRIPE_WEBHOOK_SECRET")
     stripe_base: str = "https://api.stripe.com/v1"
+
+    # Public access policy: Stripe public, PayPal/SEPA internal-only by default.
+    billing_public_stripe: bool = (
+        os.getenv("BILLING_PUBLIC_STRIPE", "true").lower() == "true"
+    )
+    billing_public_paypal: bool = (
+        os.getenv("BILLING_PUBLIC_PAYPAL", "false").lower() == "true"
+    )
+    billing_public_sepa: bool = (
+        os.getenv("BILLING_PUBLIC_SEPA", "false").lower() == "true"
+    )
+    internal_api_key: Optional[str] = os.getenv("INTERNAL_API_KEY")
 
     class Config:
         case_sensitive = True
@@ -2379,6 +2391,17 @@ def require_paypal():
     )
 
 
+def _require_internal_access(request: Request):
+    expected = (settings.internal_api_key or "").strip()
+    provided = (request.headers.get("X-Kloud-Internal-Key") or "").strip()
+    require(
+        bool(expected) and provided == expected,
+        "Internal access only",
+        403,
+        error_code="INTERNAL_ONLY",
+    )
+
+
 def paypal_token() -> str:
     require_paypal()
     try:
@@ -2407,20 +2430,7 @@ def paypal_token() -> str:
         )
 
 
-@app.post(
-    "/billing/paypal/order",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def paypal_create_order(payload: PayPalCreateOrderRequest):
-    """
-    Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).
-    Payload example:
-    {
-      "intent": "CAPTURE",
-      "purchase_units": [{"amount": {"currency_code":"EUR","value":"10.00"}}]
-    }
-    """
+def _paypal_create_order_impl(payload: PayPalCreateOrderRequest) -> JSONResponse:
     token = paypal_token()
     try:
         payload_dict = payload.dict(exclude_none=True)
@@ -2444,12 +2454,7 @@ def paypal_create_order(payload: PayPalCreateOrderRequest):
         )
 
 
-@app.post(
-    "/billing/paypal/capture/{order_id}",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def paypal_capture_order(order_id: str):
+def _paypal_capture_order_impl(order_id: str) -> JSONResponse:
     token = paypal_token()
     try:
         r = requests.post(
@@ -2466,6 +2471,108 @@ def paypal_capture_order(order_id: str):
                 "message": f"PayPal capture error: {e}",
             },
         )
+
+
+def _stripe_payment_intent_impl(payload: StripePaymentIntentRequest) -> JSONResponse:
+    require_stripe()
+    try:
+        data = payload.dict(exclude_none=True)
+        form_data: Dict[str, Any] = {
+            "amount": str(data["amount"]),
+            "currency": data["currency"],
+        }
+        if data.get("description"):
+            form_data["description"] = data["description"]
+        if data.get("customer"):
+            form_data["customer"] = data["customer"]
+        if data.get("payment_method_types"):
+            for idx, meth in enumerate(data["payment_method_types"]):
+                form_data[f"payment_method_types[{idx}]"] = meth
+        if data.get("metadata"):
+            for key, value in data["metadata"].items():
+                form_data[f"metadata[{key}]"] = str(value)
+
+        r = requests.post(
+            f"{settings.stripe_base}/payment_intents",
+            headers={"Authorization": f"Bearer {settings.stripe_api_key}"},
+            data=form_data,
+            timeout=15,
+        )
+        return JSONResponse(status_code=r.status_code, content=r.json())
+    except requests.RequestException as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"code": "STRIPE_ERROR", "message": f"Stripe error: {e}"},
+        )
+
+
+def _sepa_initiate_impl(payload: SepaInitiateRequest):
+    raise HTTPException(
+        status_code=501,
+        detail={
+            "code": "SEPA_NOT_CONFIGURED",
+            "message": "SEPA bank API not configured; integrate a real provider.",
+            "details": {"currency": payload.currency},
+        },
+    )
+
+
+@app.post(
+    "/billing/paypal/order",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def paypal_create_order(payload: PayPalCreateOrderRequest):
+    """
+    Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).
+    Payload example:
+    {
+      "intent": "CAPTURE",
+      "purchase_units": [{"amount": {"currency_code":"EUR","value":"10.00"}}]
+    }
+    """
+    require(
+        settings.billing_public_paypal,
+        "Public PayPal billing disabled",
+        403,
+        error_code="BILLING_PUBLIC_DISABLED",
+    )
+    return _paypal_create_order_impl(payload)
+
+
+@app.post(
+    "/billing/internal/paypal/order",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def internal_paypal_create_order(request: Request, payload: PayPalCreateOrderRequest):
+    _require_internal_access(request)
+    return _paypal_create_order_impl(payload)
+
+
+@app.post(
+    "/billing/paypal/capture/{order_id}",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def paypal_capture_order(order_id: str):
+    require(
+        settings.billing_public_paypal,
+        "Public PayPal billing disabled",
+        403,
+        error_code="BILLING_PUBLIC_DISABLED",
+    )
+    return _paypal_capture_order_impl(order_id)
+
+
+@app.post(
+    "/billing/internal/paypal/capture/{order_id}",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def internal_paypal_capture_order(request: Request, order_id: str):
+    _require_internal_access(request)
+    return _paypal_capture_order_impl(order_id)
 
 
 def require_stripe():
@@ -2488,36 +2595,25 @@ def stripe_payment_intent(payload: StripePaymentIntentRequest):
     Payload example:
     { "amount": 1000, "currency": "eur", "payment_method_types[]": "sepa_debit" }
     """
-    require_stripe()
-    try:
-        data = payload.dict(exclude_none=True)
-        form_data: Dict[str, Any] = {
-            "amount": str(data["amount"]),
-            "currency": data["currency"],
-        }
-        if data.get("description"):
-            form_data["description"] = data["description"]
-        if data.get("customer"):
-            form_data["customer"] = data["customer"]
-        if data.get("payment_method_types"):
-            for idx, meth in enumerate(data["payment_method_types"]):
-                form_data[f"payment_method_types[{idx}]"] = meth
-        if data.get("metadata"):
-            for key, value in data["metadata"].items():
-                form_data[f"metadata[{key}]"] = str(value)
+    require(
+        settings.billing_public_stripe,
+        "Public Stripe billing disabled",
+        403,
+        error_code="BILLING_PUBLIC_DISABLED",
+    )
+    return _stripe_payment_intent_impl(payload)
 
-        r = requests.post(
-            f"{settings.stripe_base}/payment_intents",
-            headers={"Authorization": f"Bearer {settings.stripe_api_key}"},
-            data=form_data,  # Stripe uses form-encoded
-            timeout=15,
-        )
-        return JSONResponse(status_code=r.status_code, content=r.json())
-    except requests.RequestException as e:
-        raise HTTPException(
-            status_code=502,
-            detail={"code": "STRIPE_ERROR", "message": f"Stripe error: {e}"},
-        )
+
+@app.post(
+    "/billing/internal/stripe/payment-intent",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def internal_stripe_payment_intent(
+    request: Request, payload: StripePaymentIntentRequest
+):
+    _require_internal_access(request)
+    return _stripe_payment_intent_impl(payload)
 
 
 # SEPA note: Requires bank API integration; not invented here.
@@ -2530,14 +2626,22 @@ def sepa_initiate(payload: SepaInitiateRequest):
     Placeholder endpoint to forward SEPA to a real bank API.
     Returns 501 until a concrete bank API is configured.
     """
-    raise HTTPException(
-        status_code=501,
-        detail={
-            "code": "SEPA_NOT_CONFIGURED",
-            "message": "SEPA bank API not configured; integrate a real provider.",
-            "details": {"currency": payload.currency},
-        },
+    require(
+        settings.billing_public_sepa,
+        "Public SEPA billing disabled",
+        403,
+        error_code="BILLING_PUBLIC_DISABLED",
     )
+    return _sepa_initiate_impl(payload)
+
+
+@app.post(
+    "/billing/internal/sepa/initiate",
+    responses={501: {"model": ErrorEnvelope}, 403: {"model": ErrorEnvelope}},
+)
+def internal_sepa_initiate(request: Request, payload: SepaInitiateRequest):
+    _require_internal_access(request)
+    return _sepa_initiate_impl(payload)
 
 
 # ------------- DB Utility Endpoints (REAL) -------------
