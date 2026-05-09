@@ -860,7 +860,7 @@ async fn get_dashboard(
 
                     function updateState() {{
                         if (!stateEl) return;
-                        var base = "Showing {} / {} events";
+                        var base = ((stateEl.textContent || "").split(" · ").pop() || "").trim();
                         stateEl.textContent = (paused ? "Refresh paused" : "Auto-refresh every 5s") + " · " + base;
                     }}
 
@@ -952,8 +952,6 @@ async fn get_dashboard(
         if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
         limit,
         events_rows,
-        filtered_events.len(),
-        event_count,
         state_html
     );
 
