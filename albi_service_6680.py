@@ -193,12 +193,6 @@ async def agent_analytics(data: Dict[str, Any]):
             "timestamp": analytics_entry["timestamp"],
         }
 
-        return {
-            "count": len(recent),
-            "anomalies": recent,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        }
-
 
 @app.get("/metrics")
 async def get_metrics():

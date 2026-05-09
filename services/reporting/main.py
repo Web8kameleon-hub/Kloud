@@ -5,13 +5,13 @@ Port: 8001
 """
 
 from fastapi import FastAPI, Response, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 from pathlib import Path
 import logging
 import subprocess
 import json
 import os
+from cors_policy import apply_standard_cors
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
@@ -24,13 +24,7 @@ app = FastAPI(
     docs_url="/docs"
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 REPORTS_DIR = Path("./reports")
 REPORTS_DIR.mkdir(exist_ok=True)

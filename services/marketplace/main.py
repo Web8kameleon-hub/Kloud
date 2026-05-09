@@ -12,7 +12,6 @@ Features:
 """
 
 from fastapi import FastAPI, HTTPException, Header, Request
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
@@ -22,6 +21,7 @@ import json
 import os
 import time
 from collections import defaultdict
+from cors_policy import apply_standard_cors
 
 app = FastAPI(
     title="Kloud Marketplace API",
@@ -30,13 +30,7 @@ app = FastAPI(
 )
 
 # CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # =============================================================================
 # BILLING PLANS

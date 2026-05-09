@@ -22,8 +22,8 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from cors_policy import apply_standard_cors
 
 # Import lab modules
 from klajdi_lab import (
@@ -83,13 +83,7 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

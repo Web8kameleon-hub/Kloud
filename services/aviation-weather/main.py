@@ -11,10 +11,10 @@ import httpx
 from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import logging
+from cors_policy import apply_standard_cors
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -29,13 +29,7 @@ app = FastAPI(
 )
 
 # CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # Aviation Weather API sources
 AVWX_API_KEY = os.getenv("AVWX_API_KEY", "")

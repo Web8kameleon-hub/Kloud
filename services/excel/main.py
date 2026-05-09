@@ -9,7 +9,6 @@ Port: 8002
 """
 
 from fastapi import FastAPI, Response, HTTPException, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
 from pathlib import Path
@@ -18,6 +17,7 @@ import logging
 import os
 import json
 import httpx
+from cors_policy import apply_standard_cors
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(name)s | %(message)s')
@@ -34,13 +34,7 @@ app = FastAPI(
 )
 
 # CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 # Directories
 EXCEL_DIR = Path("./excel_files")
