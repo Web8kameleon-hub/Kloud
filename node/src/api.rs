@@ -6,25 +6,15 @@ use axum::{
 };
 use base64::{engine::general_purpose::STANDARD as B64, Engine as _};
 use protocol::{Message, TideLevel};
+use rand::Rng;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeSet, HashMap};
+use std::collections::HashMap;
 use std::sync::Arc;
+use std::sync::OnceLock;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::Mutex;
 
 use crate::Metrics;
-
-#[derive(Clone, Serialize, Deserialize)]
-pub struct PeerRecord {
-    pub id: u64,
-    pub api_addr: String,
-    pub gossip_addr: String,
-    pub state: String,
-    pub tide: String,
-    pub last_seen_ms: u128,
-    pub latency_ms: u64,
-    pub reachable: bool,
-}
 
 #[derive(Clone)]
 pub struct ApiState {
@@ -34,7 +24,6 @@ pub struct ApiState {
     pub external_tx: tokio::sync::mpsc::Sender<Message>,
     pub merge_sync: Arc<Mutex<super::merge_sync_engine::MergeSyncEngine>>,
     pub security_events: Arc<Mutex<Vec<SecurityEvent>>>,
-    pub peers_map: Arc<Mutex<HashMap<u64, PeerRecord>>>,
 }
 
 #[derive(Clone, Serialize)]
@@ -86,6 +75,31 @@ pub struct DashboardQuery {
     pub endpoint: Option<String>,
     pub outcome: Option<String>,
     pub limit: Option<usize>,
+}
+
+#[derive(Clone)]
+struct OtpEntry {
+    code: String,
+    expires_at_ms: u128,
+    attempts: u8,
+    last_sent_at_ms: u128,
+}
+
+#[derive(Deserialize)]
+pub struct OtpRequestPayload {
+    pub phone: String,
+}
+
+#[derive(Deserialize)]
+pub struct OtpVerifyPayload {
+    pub phone: String,
+    pub code: String,
+}
+
+#[derive(Deserialize)]
+pub struct InternalSmsPayload {
+    pub phone: String,
+    pub message: String,
 }
 
 #[derive(Serialize)]
@@ -147,44 +161,18 @@ pub struct ResonantEvent {
     pub outcome: String,
 }
 
-#[derive(Serialize)]
-pub struct InteropPulseResponse {
-    pub source: String,
-    pub channel: String,
-    pub node_id: u64,
-    pub generated_at_ms: u128,
-    pub state: String,
-    pub tide: String,
-    pub ndb_score: f32,
-    pub ndb_delta: f32,
-    pub ndb_threshold: f32,
-    pub stigma: serde_json::Value,
-    pub nanogrid: serde_json::Value,
-}
-
-#[derive(Deserialize)]
-pub struct ProjectSignalRequest {
-    pub project: String,
-    pub channel: Option<String>,
-    pub stigma_level: Option<u8>,
-    pub note: Option<String>,
-}
-
 pub fn create_router(state: ApiState) -> Router {
     Router::new()
         .route("/submit", get(get_submit_help).post(submit_op))
         .route("/status", get(get_status))
+        .route("/auth/otp/request", post(post_auth_otp_request))
+        .route("/auth/otp/verify", post(post_auth_otp_verify))
+        .route("/internal/sms/send", post(post_internal_sms_send))
         .route("/security/status", get(get_security_status))
         .route("/security/events", get(get_security_events))
-        .route("/resonant/status", get(get_resonant_status))
-        .route("/resonant/events", get(get_resonant_events))
+    .route("/resonant/status", get(get_resonant_status))
+    .route("/resonant/events", get(get_resonant_events))
         .route("/peers", get(get_peers))
-        .route("/peers/announce", post(post_peer_announce))
-        .route("/mesh/topology", get(get_mesh_topology))
-        .route("/interop/pulse", get(get_interop_pulse))
-        .route("/interop/project-signal", post(post_project_signal))
-        .route("/wwwmmm/pulse", get(get_wwwmmm_pulse))
-        .route("/wwwmmm/signal", post(post_wwwmmm_signal))
         .route("/state", get(get_state))
         .route("/dashboard", get(get_dashboard))
         .with_state(state)
@@ -207,6 +195,87 @@ fn sanitize_stigma_level(level: Option<u8>) -> u8 {
     level.unwrap_or(2).clamp(1, 3)
 }
 
+fn now_ms() -> u128 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis()
+}
+
+fn get_env_u8(name: &str, default: u8, min: u8, max: u8) -> u8 {
+    std::env::var(name)
+        .ok()
+        .and_then(|v| v.parse::<u8>().ok())
+        .unwrap_or(default)
+        .clamp(min, max)
+}
+
+fn get_env_u64(name: &str, default: u64, min: u64, max: u64) -> u64 {
+    std::env::var(name)
+        .ok()
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(default)
+        .clamp(min, max)
+}
+
+fn normalize_phone(raw: &str) -> Option<String> {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+
+    let mut out = String::new();
+    for (idx, ch) in trimmed.chars().enumerate() {
+        if ch.is_ascii_digit() {
+            out.push(ch);
+        } else if ch == '+' && idx == 0 {
+            out.push(ch);
+        }
+    }
+
+    let digit_count = out.chars().filter(|c| c.is_ascii_digit()).count();
+    if digit_count < 8 || digit_count > 15 {
+        return None;
+    }
+
+    Some(out)
+}
+
+fn mask_phone(phone: &str) -> String {
+    let digits: Vec<char> = phone.chars().collect();
+    if digits.len() <= 4 {
+        return "****".to_string();
+    }
+    let tail: String = digits[digits.len().saturating_sub(4)..].iter().collect();
+    format!("***{}", tail)
+}
+
+fn otp_store() -> &'static Arc<Mutex<HashMap<String, OtpEntry>>> {
+    static OTP_STORE: OnceLock<Arc<Mutex<HashMap<String, OtpEntry>>>> = OnceLock::new();
+    OTP_STORE.get_or_init(|| Arc::new(Mutex::new(HashMap::new())))
+}
+
+fn generate_otp_code(len: u8) -> String {
+    let mut rng = rand::thread_rng();
+    let mut code = String::with_capacity(len as usize);
+    for _ in 0..len {
+        let d: u8 = rng.gen_range(0..10);
+        code.push(char::from(b'0' + d));
+    }
+    code
+}
+
+fn generate_session_token() -> String {
+    let mut rng = rand::thread_rng();
+    let mut out = String::with_capacity(40);
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    for _ in 0..40 {
+        let idx = rng.gen_range(0..16usize);
+        out.push(HEX[idx] as char);
+    }
+    out
+}
+
 fn compute_ndb_score(metrics: &Metrics) -> f32 {
     let latency_component = (metrics.avg_latency_ms as f32 / 250.0).min(1.0);
     let load_component = metrics.load.clamp(0.0, 1.0);
@@ -226,16 +295,6 @@ fn ndb_delta(score: f32) -> f32 {
 
 fn compact_float(value: f32) -> f32 {
     (value * 1000.0).round() / 1000.0
-}
-
-fn derive_node_state(metrics: &Metrics, reachable_peers: usize) -> String {
-    if reachable_peers == 0 {
-        "Isolated".to_string()
-    } else if metrics.load >= 0.85 {
-        "Degraded".to_string()
-    } else {
-        "Active".to_string()
-    }
 }
 
 async fn append_security_event(
@@ -326,7 +385,7 @@ async fn submit_op(
         ttl: req.ttl.unwrap_or(10),
         clock: 0, // TODO: real clock
         sig: vec![], // TODO: sign
-        node_id: state.node_id,
+        node_id: 1, // TODO: real node_id
         flags: 0,
     };
 
@@ -377,19 +436,13 @@ async fn get_status(
     Query(query): Query<StatusQuery>,
 ) -> Json<serde_json::Value> {
     let stigma_level = sanitize_stigma_level(query.stigma_level);
-    let mut metrics = *state.metrics.lock().await;
-    let reachable_peers = {
-        let peers = state.peers_map.lock().await;
-        peers.values().filter(|p| p.reachable).count()
-    };
-    metrics.active_peers = reachable_peers;
+    let metrics = *state.metrics.lock().await;
     let tide = *state.tide_level.lock().await;
-    let node_state = derive_node_state(&metrics, reachable_peers);
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
 
     let rich = StatusResponse {
-        state: node_state,
+        state: "Active".to_string(), // TODO: real state
         tide: format!("{:?}", tide),
         metrics,
         ndb_score: compact_float(score),
@@ -459,14 +512,8 @@ async fn get_security_events(
 async fn get_resonant_status(
     State(state): State<ApiState>,
 ) -> Json<ResonantStatusResponse> {
-    let mut metrics = *state.metrics.lock().await;
-    let reachable_peers = {
-        let peers = state.peers_map.lock().await;
-        peers.values().filter(|p| p.reachable).count()
-    };
-    metrics.active_peers = reachable_peers;
+    let metrics = *state.metrics.lock().await;
     let tide = *state.tide_level.lock().await;
-    let node_state = derive_node_state(&metrics, reachable_peers);
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
     let threshold = ndb_threshold();
@@ -489,7 +536,7 @@ async fn get_resonant_status(
                 .as_millis(),
         },
         node_id: state.node_id,
-        state: node_state,
+        state: "Active".to_string(),
         tide: format!("{:?}", tide),
         ndb_score: compact_float(score),
         ndb_delta: compact_float(delta),
@@ -545,232 +592,12 @@ async fn get_resonant_events(
 async fn get_peers(
     State(state): State<ApiState>,
 ) -> Json<serde_json::Value> {
-    let peers = state.peers_map.lock().await;
-    let records: Vec<&PeerRecord> = peers.values().collect();
-    let reachable = records.iter().filter(|p| p.reachable).count();
-    Json(serde_json::json!({
-        "node_id": state.node_id,
-        "active_peer_count": reachable,
-        "total_known": records.len(),
-        "peers": records
-    }))
-}
-
-#[derive(Deserialize)]
-struct AnnounceRequest {
-    id: u64,
-    api_addr: String,
-    gossip_addr: String,
-}
-
-async fn post_peer_announce(
-    State(state): State<ApiState>,
-    Json(req): Json<AnnounceRequest>,
-) -> Json<serde_json::Value> {
-    let now_ms = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_millis();
-    let mut peers = state.peers_map.lock().await;
-    peers.entry(req.id)
-        .and_modify(|p| {
-            p.api_addr = req.api_addr.clone();
-            p.gossip_addr = req.gossip_addr.clone();
-            p.last_seen_ms = now_ms;
-            // Reachability must be established by health-check loop, not announce.
-            p.reachable = false;
-            p.latency_ms = 0;
-            p.state = "Unknown".to_string();
-            p.tide = "Unknown".to_string();
-        })
-        .or_insert(PeerRecord {
-            id: req.id,
-            api_addr: req.api_addr,
-            gossip_addr: req.gossip_addr,
-            state: "Unknown".to_string(),
-            tide: "Unknown".to_string(),
-            last_seen_ms: now_ms,
-            latency_ms: 0,
-            reachable: false,
-        });
-
-    // Run one immediate probe so topology is updated promptly without waiting
-    // for periodic health-check interval.
-    let (peer_id, peer_api_addr) = match peers.get(&req.id) {
-        Some(p) => (p.id, p.api_addr.clone()),
-        None => (req.id, String::new()),
-    };
-    drop(peers);
-
-    if !peer_api_addr.is_empty() {
-        let probe_url = format!("{}/status?stigma_level=2", peer_api_addr);
-        let start = std::time::Instant::now();
-        let probe = reqwest::Client::builder()
-            .timeout(std::time::Duration::from_millis(1200))
-            .build();
-
-        if let Ok(client) = probe {
-            let mut peers_after_probe = state.peers_map.lock().await;
-            match client.get(&probe_url).send().await {
-                Ok(resp) if resp.status().is_success() => {
-                    let latency_ms = start.elapsed().as_millis() as u64;
-                    let mut node_state = "Unknown".to_string();
-                    let mut tide = "Unknown".to_string();
-                    if let Ok(body) = resp.json::<serde_json::Value>().await {
-                        node_state = body
-                            .get("state")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("Unknown")
-                            .to_string();
-                        tide = body
-                            .get("tide")
-                            .and_then(|v| v.as_str())
-                            .unwrap_or("Unknown")
-                            .to_string();
-                    }
-
-                    if let Some(p) = peers_after_probe.get_mut(&peer_id) {
-                        p.reachable = true;
-                        p.latency_ms = latency_ms;
-                        p.state = node_state;
-                        p.tide = tide;
-                        p.last_seen_ms = SystemTime::now()
-                            .duration_since(UNIX_EPOCH)
-                            .unwrap_or_default()
-                            .as_millis();
-                    }
-                }
-                _ => {
-                    if let Some(p) = peers_after_probe.get_mut(&peer_id) {
-                        p.reachable = false;
-                        p.latency_ms = 0;
-                    }
-                }
-            }
-        }
-    }
-
-    Json(serde_json::json!({"ok": true, "registered": req.id}))
-}
-
-async fn get_mesh_topology(
-    State(state): State<ApiState>,
-) -> Json<serde_json::Value> {
-    let peers = state.peers_map.lock().await;
-    let all: Vec<&PeerRecord> = peers.values().collect();
-    let reachable_count = all.iter().filter(|p| p.reachable).count();
     let metrics = *state.metrics.lock().await;
-    let tide = *state.tide_level.lock().await;
-    let node_state = derive_node_state(&metrics, reachable_count);
+    let peers: Vec<u64> = (1..=metrics.active_peers as u64).collect();
     Json(serde_json::json!({
-        "node_id": state.node_id,
-        "node_state": node_state,
-        "node_tide": format!("{:?}", tide),
-        "node_load": metrics.load,
-        "total_known_peers": all.len(),
-        "reachable_peers": reachable_count,
-        "nodes": all
+        "active_peer_count": metrics.active_peers,
+        "peers": peers
     }))
-}
-
-async fn get_interop_pulse(
-    State(state): State<ApiState>,
-) -> Json<InteropPulseResponse> {
-    let mut metrics = *state.metrics.lock().await;
-    let peers = state.peers_map.lock().await;
-    let reachable_count = peers.values().filter(|p| p.reachable).count();
-    let total_known = peers.len();
-    let node_refs: Vec<&PeerRecord> = peers.values().collect();
-    let tide = *state.tide_level.lock().await;
-    metrics.active_peers = reachable_count;
-    let node_state = derive_node_state(&metrics, reachable_count);
-    let score = compute_ndb_score(&metrics);
-    let delta = ndb_delta(score);
-    let threshold = ndb_threshold();
-    let events = state.security_events.lock().await;
-
-    let stigma_l1 = events.iter().filter(|e| e.stigma_level == 1).count();
-    let stigma_l2 = events.iter().filter(|e| e.stigma_level == 2).count();
-    let stigma_l3 = events.iter().filter(|e| e.stigma_level == 3).count();
-
-    Json(InteropPulseResponse {
-        source: "kloud.interop.v1".to_string(),
-        channel: "wwwmmm-ndb-stigma-tide-nanogrid".to_string(),
-        node_id: state.node_id,
-        generated_at_ms: SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap_or_default()
-            .as_millis(),
-        state: node_state,
-        tide: format!("{:?}", tide),
-        ndb_score: compact_float(score),
-        ndb_delta: compact_float(delta),
-        ndb_threshold: threshold,
-        stigma: serde_json::json!({
-            "l1": stigma_l1,
-            "l2": stigma_l2,
-            "l3": stigma_l3,
-            "events_total": events.len()
-        }),
-        nanogrid: serde_json::json!({
-            "reachable_peers": reachable_count,
-            "total_known_peers": total_known,
-            "metrics": metrics,
-            "nodes": node_refs
-        }),
-    })
-}
-
-async fn get_wwwmmm_pulse(
-    State(state): State<ApiState>,
-) -> Json<InteropPulseResponse> {
-    get_interop_pulse(State(state)).await
-}
-
-async fn post_project_signal(
-    State(state): State<ApiState>,
-    Json(req): Json<ProjectSignalRequest>,
-) -> Json<serde_json::Value> {
-    let stigma_level = sanitize_stigma_level(req.stigma_level);
-    let mut metrics = *state.metrics.lock().await;
-    let reachable_peers = {
-        let peers = state.peers_map.lock().await;
-        peers.values().filter(|p| p.reachable).count()
-    };
-    metrics.active_peers = reachable_peers;
-    let score = compute_ndb_score(&metrics);
-
-    let endpoint = format!("/interop/project-signal:{}", req.project);
-    let action = req.channel.unwrap_or_else(|| "default".to_string());
-    let outcome = req.note.unwrap_or_else(|| "ok".to_string());
-
-    append_security_event(
-        &state,
-        &endpoint,
-        &action,
-        stigma_level,
-        score,
-        &outcome,
-    ).await;
-
-    Json(serde_json::json!({
-        "ok": true,
-        "project": req.project,
-        "stigma_level": stigma_level,
-        "ndb_score": compact_float(score),
-        "reachable_peers": reachable_peers,
-        "tide": format!("{:?}", *state.tide_level.lock().await)
-    }))
-}
-
-async fn post_wwwmmm_signal(
-    State(state): State<ApiState>,
-    Json(mut req): Json<ProjectSignalRequest>,
-) -> Json<serde_json::Value> {
-    if req.channel.is_none() {
-        req.channel = Some("wwwmmm".to_string());
-    }
-    post_project_signal(State(state), Json(req)).await
 }
 
 async fn get_state(
@@ -789,12 +616,7 @@ async fn get_dashboard(
     State(state): State<ApiState>,
     Query(query): Query<DashboardQuery>,
 ) -> Html<String> {
-    let mut metrics = state.metrics.lock().await.clone();
-    let reachable_peers = {
-        let peers = state.peers_map.lock().await;
-        peers.values().filter(|p| p.reachable).count()
-    };
-    metrics.active_peers = reachable_peers;
+    let metrics = state.metrics.lock().await.clone();
     let tide = *state.tide_level.lock().await;
     let state_map = state.merge_sync.lock().await.get_state().clone();
     let all_events = state.security_events.lock().await.clone();
@@ -822,17 +644,6 @@ async fn get_dashboard(
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis();
-    let clisonix_public_host = std::env::var("CLISONIX_PUBLIC_HOST").unwrap_or("91.98.47.131".to_string());
-    let clisonix_bridge_port = std::env::var("CLISONIX_BRIDGE_PORT").unwrap_or("8889".to_string());
-    let clisonix_runtime_port = std::env::var("CLISONIX_RUNTIME_PORT").unwrap_or("9080".to_string());
-    let clisonix_gossip_port = std::env::var("CLISONIX_GOSSIP_PORT").unwrap_or("9001".to_string());
-
-    let mut endpoint_values: BTreeSet<String> = BTreeSet::new();
-    let mut outcome_values: BTreeSet<String> = BTreeSet::new();
-    for event in &all_events {
-        endpoint_values.insert(event.endpoint.clone());
-        outcome_values.insert(event.outcome.clone());
-    }
 
     let filtered_events: Vec<SecurityEvent> = all_events
         .into_iter()
@@ -844,60 +655,6 @@ async fn get_dashboard(
         .into_iter()
         .rev()
         .collect();
-    let has_active_filters = !endpoint_filter.is_empty() || !outcome_filter.is_empty();
-
-    let mut latest_service_signals: HashMap<String, SecurityEvent> = HashMap::new();
-    for event in &all_events {
-        if event.endpoint.starts_with("/interop/project-signal:") {
-            let project = event
-                .endpoint
-                .split(':')
-                .nth(1)
-                .unwrap_or("unknown")
-                .to_string();
-            latest_service_signals.insert(project, event.clone());
-        }
-    }
-
-    let mut service_signal_cards = String::new();
-    let mut service_signal_keys: Vec<String> = latest_service_signals.keys().cloned().collect();
-    service_signal_keys.sort();
-    for key in service_signal_keys {
-        if let Some(signal) = latest_service_signals.get(&key) {
-            let (card_color, status_label, dot_color) = if signal.stigma_level >= 3 {
-                ("#2c1111", "CRITICAL", "#e53935")
-            } else if signal.stigma_level == 2 {
-                ("#1e1a0e", "DEGRADED", "#f9a825")
-            } else {
-                ("#0d1f12", "OPERATIONAL", "#43a047")
-            };
-            let age_s = {
-                let now_ms = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap_or_default()
-                    .as_millis() as u64;
-                if signal.timestamp_ms > 0 && now_ms > signal.timestamp_ms as u64 {
-                    format!("{}s ago", (now_ms - signal.timestamp_ms as u64) / 1000)
-                } else {
-                    "just now".to_string()
-                }
-            };
-            service_signal_cards.push_str(&format!(
-                "<div class=\"svc-card\" style=\"background:{card_color};border-left:4px solid {dot_color};\"><div class=\"svc-name\">{name}</div><div class=\"svc-status\"><span class=\"svc-dot\" style=\"background:{dot_color};\"></span>{label}</div><div class=\"svc-meta\">stigma L{stigma} &middot; ndb {score:.3} &middot; {age}</div><div class=\"svc-note\">{note}</div></div>",
-                card_color = card_color,
-                dot_color = dot_color,
-                name = html_escape(&key),
-                label = status_label,
-                stigma = signal.stigma_level,
-                score = signal.ndb_score,
-                age = age_s,
-                note = html_escape(&signal.outcome)
-            ));
-        }
-    }
-    if service_signal_cards.is_empty() {
-        service_signal_cards = "<div style=\"color:#555; font-size:13px; padding:18px 0;\">No service signals received yet. Signals arrive via POST /wwwmmm/signal.</div>".to_string();
-    }
 
     let mut state_html = String::new();
     for (k, v) in &state_map {
@@ -911,20 +668,6 @@ async fn get_dashboard(
     if state_html.is_empty() {
         state_html.push_str("<li><span class=\"state-key\">empty</span><code class=\"state-val\">no local keys yet</code></li>");
     }
-
-    let public_refs_html = format!(
-        "<li><span class=\"state-key\">Public TLS (no port)</span><code class=\"state-val\">https://{}:443</code></li>\
-         <li><span class=\"state-key\">Kloud Bridge</span><code class=\"state-val\">http://{}:{}</code></li>\
-         <li><span class=\"state-key\">Kloud Runtime</span><code class=\"state-val\">http://{}:{}</code></li>\
-         <li><span class=\"state-key\">Gossip Node1</span><code class=\"state-val\">{}:{}</code></li>",
-        clisonix_public_host,
-        clisonix_public_host,
-        clisonix_bridge_port,
-        clisonix_public_host,
-        clisonix_runtime_port,
-        clisonix_public_host,
-        clisonix_gossip_port,
-    );
 
     // Safety: escape HTML special characters before interpolating event fields into HTML.
     // All string fields MUST be escaped here to prevent XSS if field values ever become
@@ -958,78 +701,8 @@ async fn get_dashboard(
         ));
     }
     if events_rows.is_empty() {
-        let filter_context = if has_active_filters {
-            format!(
-                "Active filters: endpoint={}, outcome={}",
-                if endpoint_filter.is_empty() {
-                    "all".to_string()
-                } else {
-                    html_escape(&endpoint_filter)
-                },
-                if outcome_filter.is_empty() {
-                    "all".to_string()
-                } else {
-                    html_escape(&outcome_filter)
-                }
-            )
-        } else {
-            "No active filters.".to_string()
-        };
-        events_rows.push_str(&format!(
-            "<tr><td colspan=\"6\">No events match the current filters. {} Use Reset to restore full stream.</td></tr>",
-            filter_context
-        ));
+        events_rows.push_str("<tr><td colspan=\"6\">No events match the current filters.</td></tr>");
     }
-
-    let mut endpoint_options_html = String::from(
-        &format!(
-            "<option value=\"\" {}>All endpoints</option>",
-            if endpoint_filter.is_empty() { "selected" } else { "" }
-        )
-    );
-    for endpoint in endpoint_values {
-        endpoint_options_html.push_str(&format!(
-            "<option value=\"{}\" {}>{}</option>",
-            html_escape(&endpoint),
-            if endpoint_filter == endpoint { "selected" } else { "" },
-            html_escape(&endpoint)
-        ));
-    }
-
-    let mut outcome_options_html = String::from(
-        &format!(
-            "<option value=\"\" {}>All outcomes</option>",
-            if outcome_filter.is_empty() { "selected" } else { "" }
-        )
-    );
-    for outcome in outcome_values {
-        outcome_options_html.push_str(&format!(
-            "<option value=\"{}\" {}>{}</option>",
-            html_escape(&outcome),
-            if outcome_filter == outcome { "selected" } else { "" },
-            html_escape(&outcome)
-        ));
-    }
-
-    let filter_notice = if filtered_events.is_empty() && event_count > 0 && has_active_filters {
-        format!(
-            "<div class=\"sub\" style=\"margin:8px 0 10px; color:#c2382e;\">Current URL filters are hiding live events (endpoint={}, outcome={}). <a href=\"/dashboard?limit={}\" style=\"color:#0a84ff; font-weight:700;\">Reset filters</a> to see all {} events.</div>",
-            if endpoint_filter.is_empty() {
-                "all".to_string()
-            } else {
-                html_escape(&endpoint_filter)
-            },
-            if outcome_filter.is_empty() {
-                "all".to_string()
-            } else {
-                html_escape(&outcome_filter)
-            },
-            limit,
-            event_count,
-        )
-    } else {
-        String::new()
-    };
 
     let tide_label = format!("{:?}", tide);
     let (tide_color, tide_chip_bg) = match tide {
@@ -1138,13 +811,6 @@ async fn get_dashboard(
                     font-weight: 700;
                     cursor: pointer;
                 }}
-                .svc-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 4px; }}
-                .svc-card {{ border-radius: 12px; padding: 16px 18px; border: 1px solid rgba(255,255,255,.07); }}
-                .svc-name {{ font-size: .95rem; font-weight: 700; color: #e0e8f0; margin-bottom: 8px; }}
-                .svc-status {{ display: flex; align-items: center; gap: 7px; font-size: .82rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #bfcdd8; margin-bottom: 6px; }}
-                .svc-dot {{ width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }}
-                .svc-meta {{ font-size: .77rem; color: #607080; margin-bottom: 4px; }}
-                .svc-note {{ font-size: .8rem; color: #8a9db0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
                 .stigma-grid {{ display: flex; gap: 10px; margin-top: 10px; }}
                 .stigma-item {{ flex: 1; background: #f6f9fc; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--line); }}
                 .sl {{ display: block; font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }}
@@ -1257,12 +923,6 @@ async fn get_dashboard(
                     </section>
 
                     <section class="card span-12">
-                        <div class="k">Service Signals</div>
-                        <div class="sub" style="margin:8px 0 14px;">Real-time health signals from WWWMMM-linked projects and services.</div>
-                        <div class="svc-grid">__SERVICE_SIGNAL_CARDS__</div>
-                    </section>
-
-                    <section class="card span-12">
                         <div class="ops-head">
                             <div class="k">Operations Events</div>
                             <div class="ops-tools">
@@ -1273,16 +933,22 @@ async fn get_dashboard(
                         </div>
                         <form class="ops-form" method="get" action="/dashboard">
                             <select name="endpoint">
-                                __ENDPOINT_OPTIONS__
+                                <option value="" __EP_ALL__>All endpoints</option>
+                                <option value="/status" __EP_STATUS__>/status</option>
+                                <option value="/submit" __EP_SUBMIT__>/submit</option>
+                                <option value="/security/status" __EP_SECURITY_STATUS__>/security/status</option>
                             </select>
                             <select name="outcome">
-                                __OUTCOME_OPTIONS__
+                                <option value="" __OUTCOME_ALL__>All outcomes</option>
+                                <option value="ok" __OUTCOME_OK__>ok</option>
+                                <option value="accepted" __OUTCOME_ACCEPTED__>accepted</option>
+                                <option value="rejected-invalid-ops" __OUTCOME_REJECTED_OPS__>rejected-invalid-ops</option>
+                                <option value="rejected-invalid-payload" __OUTCOME_REJECTED_PAYLOAD__>rejected-invalid-payload</option>
+                                <option value="failed-channel-closed" __FAILED_CHANNEL_SELECTED__>failed-channel-closed</option>
                             </select>
                             <input type="number" min="5" max="200" name="limit" value="__LIMIT_VALUE__" />
                             <button type="submit">Apply</button>
-                            <a href="/dashboard" class="tool-btn" style="text-decoration:none; display:inline-flex; align-items:center;">Reset</a>
                         </form>
-                        __FILTER_NOTICE__
                         <div class="table-wrap">
                             <table>
                                 <thead>
@@ -1301,18 +967,6 @@ async fn get_dashboard(
                     </section>
 
                     <section class="card span-12">
-                        <div class="k">Reference Endpoints</div>
-                        <ul class="state-list">__PUBLIC_REFS_HTML__</ul>
-                    </section>
-
-                    <section class="card span-12">
-                        <div class="k">Mesh Topology</div>
-                        <div id="mesh-container" style="margin-top: 12px;">
-                            <div style="color: var(--muted); font-size: 0.9rem; margin-bottom: 12px;">Loading mesh topology...</div>
-                        </div>
-                    </section>
-
-                    <section class="card span-12">
                         <div class="k">Local State (base64)</div>
                         <ul class="state-list">__STATE_HTML__</ul>
                     </section>
@@ -1320,68 +974,16 @@ async fn get_dashboard(
             </div>
             <script>
                 (function () {{
-                    var refreshMs = 10 * 60 * 1000;
-                    var meshRefreshMs = 10 * 60 * 1000;
+                    var refreshMs = 5000;
                     var paused = false;
                     var pauseBtn = document.getElementById("pause-refresh");
                     var stateEl = document.getElementById("refresh-state");
                     var exportBtn = document.getElementById("export-csv");
-                    var meshContainer = document.getElementById("mesh-container");
-
-                    function esc(text) {{
-                        return String(text || "")
-                            .replace(/&/g, "&amp;")
-                            .replace(/</g, "&lt;")
-                            .replace(/>/g, "&gt;")
-                            .replace(/\"/g, "&quot;")
-                            .replace(/'/g, "&#x27;");
-                    }}
-
-                    function renderMesh(data) {{
-                        if (!meshContainer) return;
-                        var nodes = Array.isArray(data.nodes) ? data.nodes : [];
-                        var rows = nodes.map(function (n) {{
-                            var badge = n.reachable
-                                ? '<span style="padding:2px 8px;border-radius:999px;background:#e8f8ee;color:#0a8f5b;font-weight:700;">up</span>'
-                                : '<span style="padding:2px 8px;border-radius:999px;background:#ffecec;color:#c2382e;font-weight:700;">down</span>';
-                            return '<tr>' +
-                                '<td>' + esc(n.id) + '</td>' +
-                                '<td>' + esc(n.api_addr) + '</td>' +
-                                '<td>' + esc(n.gossip_addr) + '</td>' +
-                                '<td>' + badge + '</td>' +
-                                '<td>' + esc(n.latency_ms) + ' ms</td>' +
-                                '<td>' + esc(n.last_seen_ms) + '</td>' +
-                                '</tr>';
-                        }}).join('');
-
-                        if (!rows) {{
-                            rows = '<tr><td colspan="6">No peers announced yet.</td></tr>';
-                        }}
-
-                        meshContainer.innerHTML =
-                            '<div class="sub" style="margin-bottom:10px;">Reachable: <strong>' + esc(data.reachable_peers) + '</strong> / ' + esc(data.total_known_peers) + '</div>' +
-                            '<div class="table-wrap"><table>' +
-                            '<thead><tr><th>peer_id</th><th>api_addr</th><th>gossip_addr</th><th>status</th><th>latency</th><th>last_seen_ms</th></tr></thead>' +
-                            '<tbody>' + rows + '</tbody>' +
-                            '</table></div>';
-                    }}
-
-                    async function refreshMesh() {{
-                        if (!meshContainer) return;
-                        try {{
-                            var resp = await fetch('/mesh/topology', {{ cache: 'no-store' }});
-                            if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                            var data = await resp.json();
-                            renderMesh(data);
-                        }} catch (e) {{
-                            meshContainer.innerHTML = '<div style="color:#c2382e;">Failed to load mesh topology.</div>';
-                        }}
-                    }}
 
                     function updateState() {{
                         if (!stateEl) return;
                         var base = ((stateEl.textContent || "").split(" · ").pop() || "").trim();
-                        stateEl.textContent = (paused ? "Refresh paused" : "Auto-refresh every 10m") + " · " + base;
+                        stateEl.textContent = (paused ? "Refresh paused" : "Auto-refresh every 5s") + " · " + base;
                     }}
 
                     if (pauseBtn) {{
@@ -1415,17 +1017,11 @@ async fn get_dashboard(
                     }}
 
                     updateState();
-                    refreshMesh();
                     setInterval(function () {{
                         if (!paused) {{
                             window.location.reload();
                         }}
                     }}, refreshMs);
-                    setInterval(function () {{
-                        if (!paused) {{
-                            refreshMesh();
-                        }}
-                    }}, meshRefreshMs);
                 }})();
             </script>
         </body>
@@ -1467,14 +1063,235 @@ async fn get_dashboard(
         "__REFRESH_STATE_TEXT__",
         &format!("Showing {} / {} events", filtered_events.len(), event_count),
     )
-    .replace("__ENDPOINT_OPTIONS__", &endpoint_options_html)
-    .replace("__OUTCOME_OPTIONS__", &outcome_options_html)
-    .replace("__FILTER_NOTICE__", &filter_notice)
-    .replace("__PUBLIC_REFS_HTML__", &public_refs_html)
-    .replace("__SERVICE_SIGNAL_CARDS__", &service_signal_cards)
+    .replace("__EP_ALL__", if endpoint_filter.is_empty() { "selected" } else { "" })
+    .replace("__EP_STATUS__", if endpoint_filter == "/status" { "selected" } else { "" })
+    .replace("__EP_SUBMIT__", if endpoint_filter == "/submit" { "selected" } else { "" })
+    .replace(
+        "__EP_SECURITY_STATUS__",
+        if endpoint_filter == "/security/status" { "selected" } else { "" },
+    )
+    .replace("__OUTCOME_ALL__", if outcome_filter.is_empty() { "selected" } else { "" })
+    .replace("__OUTCOME_OK__", if outcome_filter == "ok" { "selected" } else { "" })
+    .replace(
+        "__OUTCOME_ACCEPTED__",
+        if outcome_filter == "accepted" { "selected" } else { "" },
+    )
+    .replace(
+        "__OUTCOME_REJECTED_OPS__",
+        if outcome_filter == "rejected-invalid-ops" { "selected" } else { "" },
+    )
+    .replace(
+        "__OUTCOME_REJECTED_PAYLOAD__",
+        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" },
+    )
+    .replace(
+        "__FAILED_CHANNEL_SELECTED__",
+        if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
+    )
     .replace("__LIMIT_VALUE__", &limit.to_string())
     .replace("__EVENT_ROWS__", &events_rows)
     .replace("__STATE_HTML__", &state_html);
 
     Html(html)
+}
+
+async fn post_auth_otp_request(
+    State(state): State<ApiState>,
+    Json(req): Json<OtpRequestPayload>,
+) -> Json<serde_json::Value> {
+    let provider = std::env::var("SMS_PROVIDER").unwrap_or_else(|_| "internal".to_string());
+    if provider.to_lowercase() != "internal" {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "unsupported_sms_provider",
+            "expected": "internal"
+        }));
+    }
+
+    let Some(phone) = normalize_phone(&req.phone) else {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "invalid_phone"
+        }));
+    };
+
+    let code_len = get_env_u8("OTP_CODE_LENGTH", 6, 4, 8);
+    let ttl_sec = get_env_u64("OTP_TTL_SECONDS", 300, 60, 1800);
+    let cooldown_sec = get_env_u64("OTP_RESEND_COOLDOWN_SECONDS", 30, 5, 300);
+
+    let now = now_ms();
+    let store = otp_store();
+    let mut map = store.lock().await;
+    if let Some(existing) = map.get(&phone) {
+        let elapsed_sec = ((now.saturating_sub(existing.last_sent_at_ms)) / 1000) as u64;
+        if elapsed_sec < cooldown_sec {
+            let retry_after = cooldown_sec - elapsed_sec;
+            return Json(serde_json::json!({
+                "success": false,
+                "error": "cooldown_active",
+                "retry_after_seconds": retry_after
+            }));
+        }
+    }
+
+    let code = generate_otp_code(code_len);
+    map.insert(
+        phone.clone(),
+        OtpEntry {
+            code: code.clone(),
+            expires_at_ms: now + (ttl_sec as u128 * 1000),
+            attempts: 0,
+            last_sent_at_ms: now,
+        },
+    );
+    drop(map);
+
+    let metrics = *state.metrics.lock().await;
+    let score = compute_ndb_score(&metrics);
+    append_security_event(
+        &state,
+        "/auth/otp/request",
+        "otp-request",
+        2,
+        score,
+        "otp-issued",
+    )
+    .await;
+
+    let debug_return_code = std::env::var("OTP_DEBUG_RETURN_CODE")
+        .map(|v| v.eq_ignore_ascii_case("true") || v == "1")
+        .unwrap_or(false);
+
+    Json(serde_json::json!({
+        "success": true,
+        "provider": "internal",
+        "phone": mask_phone(&phone),
+        "ttl_seconds": ttl_sec,
+        "sms_dispatch": "queued-local",
+        "otp_code": if debug_return_code { serde_json::Value::String(code) } else { serde_json::Value::Null }
+    }))
+}
+
+async fn post_auth_otp_verify(
+    State(state): State<ApiState>,
+    Json(req): Json<OtpVerifyPayload>,
+) -> Json<serde_json::Value> {
+    let Some(phone) = normalize_phone(&req.phone) else {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "invalid_phone"
+        }));
+    };
+
+    let code = req.code.trim().to_string();
+    if code.len() < 4 || code.len() > 8 || !code.chars().all(|c| c.is_ascii_digit()) {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "invalid_code_format"
+        }));
+    }
+
+    let max_attempts = get_env_u8("OTP_MAX_ATTEMPTS", 5, 1, 10);
+    let now = now_ms();
+    let store = otp_store();
+    let mut map = store.lock().await;
+
+    let Some(entry) = map.get_mut(&phone) else {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "otp_not_found"
+        }));
+    };
+
+    if now > entry.expires_at_ms {
+        map.remove(&phone);
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "otp_expired"
+        }));
+    }
+
+    if entry.code != code {
+        entry.attempts = entry.attempts.saturating_add(1);
+        let attempts_left = max_attempts.saturating_sub(entry.attempts);
+        if entry.attempts >= max_attempts {
+            map.remove(&phone);
+        }
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "otp_invalid",
+            "attempts_left": attempts_left
+        }));
+    }
+
+    map.remove(&phone);
+    drop(map);
+
+    let metrics = *state.metrics.lock().await;
+    let score = compute_ndb_score(&metrics);
+    append_security_event(
+        &state,
+        "/auth/otp/verify",
+        "otp-verify",
+        1,
+        score,
+        "otp-verified",
+    )
+    .await;
+
+    Json(serde_json::json!({
+        "success": true,
+        "phone": mask_phone(&phone),
+        "session_token": generate_session_token(),
+        "auth_method": "phone-otp-internal"
+    }))
+}
+
+async fn post_internal_sms_send(
+    State(state): State<ApiState>,
+    Json(req): Json<InternalSmsPayload>,
+) -> Json<serde_json::Value> {
+    let provider = std::env::var("SMS_PROVIDER").unwrap_or_else(|_| "internal".to_string());
+    if provider.to_lowercase() != "internal" {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "unsupported_sms_provider",
+            "expected": "internal"
+        }));
+    }
+
+    let Some(phone) = normalize_phone(&req.phone) else {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "invalid_phone"
+        }));
+    };
+
+    let message = req.message.trim();
+    if message.is_empty() {
+        return Json(serde_json::json!({
+            "success": false,
+            "error": "empty_message"
+        }));
+    }
+
+    let metrics = *state.metrics.lock().await;
+    let score = compute_ndb_score(&metrics);
+    append_security_event(
+        &state,
+        "/internal/sms/send",
+        "sms-send",
+        2,
+        score,
+        "queued-internal",
+    )
+    .await;
+
+    Json(serde_json::json!({
+        "success": true,
+        "provider": "internal",
+        "phone": mask_phone(&phone),
+        "message_length": message.len(),
+        "status": "queued-internal"
+    }))
 }
