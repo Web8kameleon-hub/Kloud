@@ -811,17 +811,17 @@ async fn get_dashboard(
                         </div>
                         <form class="ops-form" method="get" action="/dashboard">
                             <select name="endpoint">
-                                <option value="" {}>All endpoints</option>
-                                <option value="/status" {}>/status</option>
-                                <option value="/submit" {}>/submit</option>
-                                <option value="/security/status" {}>/security/status</option>
+                                <option value="" __EP_ALL__>All endpoints</option>
+                                <option value="/status" __EP_STATUS__>/status</option>
+                                <option value="/submit" __EP_SUBMIT__>/submit</option>
+                                <option value="/security/status" __EP_SECURITY_STATUS__>/security/status</option>
                             </select>
                             <select name="outcome">
-                                <option value="" {}>All outcomes</option>
-                                <option value="ok" {}>ok</option>
-                                <option value="accepted" {}>accepted</option>
-                                <option value="rejected-invalid-ops" {}>rejected-invalid-ops</option>
-                                <option value="rejected-invalid-payload" {}>rejected-invalid-payload</option>
+                                <option value="" __OUTCOME_ALL__>All outcomes</option>
+                                <option value="ok" __OUTCOME_OK__>ok</option>
+                                <option value="accepted" __OUTCOME_ACCEPTED__>accepted</option>
+                                <option value="rejected-invalid-ops" __OUTCOME_REJECTED_OPS__>rejected-invalid-ops</option>
+                                <option value="rejected-invalid-payload" __OUTCOME_REJECTED_PAYLOAD__>rejected-invalid-payload</option>
                                 <option value="failed-channel-closed" __FAILED_CHANNEL_SELECTED__>failed-channel-closed</option>
                             </select>
                             <input type="number" min="5" max="200" name="limit" value="__LIMIT_VALUE__" />
@@ -939,16 +939,28 @@ async fn get_dashboard(
         filtered_events.len(),
         event_count,
         filtered_events.len(),
-        event_count,
-        if endpoint_filter.is_empty() { "selected" } else { "" },
-        if endpoint_filter == "/status" { "selected" } else { "" },
-        if endpoint_filter == "/submit" { "selected" } else { "" },
+        event_count
+    )
+    .replace("__EP_ALL__", if endpoint_filter.is_empty() { "selected" } else { "" })
+    .replace("__EP_STATUS__", if endpoint_filter == "/status" { "selected" } else { "" })
+    .replace("__EP_SUBMIT__", if endpoint_filter == "/submit" { "selected" } else { "" })
+    .replace(
+        "__EP_SECURITY_STATUS__",
         if endpoint_filter == "/security/status" { "selected" } else { "" },
-        if outcome_filter.is_empty() { "selected" } else { "" },
-        if outcome_filter == "ok" { "selected" } else { "" },
+    )
+    .replace("__OUTCOME_ALL__", if outcome_filter.is_empty() { "selected" } else { "" })
+    .replace("__OUTCOME_OK__", if outcome_filter == "ok" { "selected" } else { "" })
+    .replace(
+        "__OUTCOME_ACCEPTED__",
         if outcome_filter == "accepted" { "selected" } else { "" },
+    )
+    .replace(
+        "__OUTCOME_REJECTED_OPS__",
         if outcome_filter == "rejected-invalid-ops" { "selected" } else { "" },
-        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" }
+    )
+    .replace(
+        "__OUTCOME_REJECTED_PAYLOAD__",
+        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" },
     )
     .replace(
         "__FAILED_CHANNEL_SELECTED__",
