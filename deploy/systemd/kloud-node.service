@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=www-data
-Group=www-data
+User=root
+Group=root
 WorkingDirectory=/opt/kloud
 Environment=NODE_ID=1
 Environment=LISTEN_PORT=8080
