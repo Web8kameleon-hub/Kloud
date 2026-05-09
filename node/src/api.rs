@@ -929,6 +929,13 @@ async fn get_dashboard(
                     </section>
 
                     <section class="card span-12">
+                        <div class="k">Mesh Topology</div>
+                        <div id="mesh-container" style="margin-top: 12px;">
+                            <div style="color: var(--muted); font-size: 0.9rem; margin-bottom: 12px;">Loading mesh topology...</div>
+                        </div>
+                    </section>
+
+                    <section class="card span-12">
                         <div class="k">Local State (base64)</div>
                         <ul class="state-list">__STATE_HTML__</ul>
                     </section>
@@ -937,10 +944,62 @@ async fn get_dashboard(
             <script>
                 (function () {{
                     var refreshMs = 5000;
+                    var meshRefreshMs = 10 * 60 * 1000;
                     var paused = false;
                     var pauseBtn = document.getElementById("pause-refresh");
                     var stateEl = document.getElementById("refresh-state");
                     var exportBtn = document.getElementById("export-csv");
+                    var meshContainer = document.getElementById("mesh-container");
+
+                    function esc(text) {{
+                        return String(text || "")
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/\"/g, "&quot;")
+                            .replace(/'/g, "&#x27;");
+                    }}
+
+                    function renderMesh(data) {{
+                        if (!meshContainer) return;
+                        var nodes = Array.isArray(data.nodes) ? data.nodes : [];
+                        var rows = nodes.map(function (n) {{
+                            var badge = n.reachable
+                                ? '<span style="padding:2px 8px;border-radius:999px;background:#e8f8ee;color:#0a8f5b;font-weight:700;">up</span>'
+                                : '<span style="padding:2px 8px;border-radius:999px;background:#ffecec;color:#c2382e;font-weight:700;">down</span>';
+                            return '<tr>' +
+                                '<td>' + esc(n.id) + '</td>' +
+                                '<td>' + esc(n.api_addr) + '</td>' +
+                                '<td>' + esc(n.gossip_addr) + '</td>' +
+                                '<td>' + badge + '</td>' +
+                                '<td>' + esc(n.latency_ms) + ' ms</td>' +
+                                '<td>' + esc(n.last_seen_ms) + '</td>' +
+                                '</tr>';
+                        }}).join('');
+
+                        if (!rows) {{
+                            rows = '<tr><td colspan="6">No peers announced yet.</td></tr>';
+                        }}
+
+                        meshContainer.innerHTML =
+                            '<div class="sub" style="margin-bottom:10px;">Reachable: <strong>' + esc(data.reachable_peers) + '</strong> / ' + esc(data.total_known_peers) + '</div>' +
+                            '<div class="table-wrap"><table>' +
+                            '<thead><tr><th>peer_id</th><th>api_addr</th><th>gossip_addr</th><th>status</th><th>latency</th><th>last_seen_ms</th></tr></thead>' +
+                            '<tbody>' + rows + '</tbody>' +
+                            '</table></div>';
+                    }}
+
+                    async function refreshMesh() {{
+                        if (!meshContainer) return;
+                        try {{
+                            var resp = await fetch('/mesh/topology', {{ cache: 'no-store' }});
+                            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                            var data = await resp.json();
+                            renderMesh(data);
+                        }} catch (e) {{
+                            meshContainer.innerHTML = '<div style="color:#c2382e;">Failed to load mesh topology.</div>';
+                        }}
+                    }}
 
                     function updateState() {{
                         if (!stateEl) return;
@@ -979,11 +1038,17 @@ async fn get_dashboard(
                     }}
 
                     updateState();
+                    refreshMesh();
                     setInterval(function () {{
                         if (!paused) {{
                             window.location.reload();
                         }}
                     }}, refreshMs);
+                    setInterval(function () {{
+                        if (!paused) {{
+                            refreshMesh();
+                        }}
+                    }}, meshRefreshMs);
                 }})();
             </script>
         </body>
