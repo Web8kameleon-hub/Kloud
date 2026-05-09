@@ -844,6 +844,60 @@ async fn get_dashboard(
         .into_iter()
         .rev()
         .collect();
+    let has_active_filters = !endpoint_filter.is_empty() || !outcome_filter.is_empty();
+
+    let mut latest_service_signals: HashMap<String, SecurityEvent> = HashMap::new();
+    for event in &all_events {
+        if event.endpoint.starts_with("/interop/project-signal:") {
+            let project = event
+                .endpoint
+                .split(':')
+                .nth(1)
+                .unwrap_or("unknown")
+                .to_string();
+            latest_service_signals.insert(project, event.clone());
+        }
+    }
+
+    let mut service_signal_cards = String::new();
+    let mut service_signal_keys: Vec<String> = latest_service_signals.keys().cloned().collect();
+    service_signal_keys.sort();
+    for key in service_signal_keys {
+        if let Some(signal) = latest_service_signals.get(&key) {
+            let (card_color, status_label, dot_color) = if signal.stigma_level >= 3 {
+                ("#2c1111", "CRITICAL", "#e53935")
+            } else if signal.stigma_level == 2 {
+                ("#1e1a0e", "DEGRADED", "#f9a825")
+            } else {
+                ("#0d1f12", "OPERATIONAL", "#43a047")
+            };
+            let age_s = {
+                let now_ms = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_millis() as u64;
+                if signal.timestamp_ms > 0 && now_ms > signal.timestamp_ms as u64 {
+                    format!("{}s ago", (now_ms - signal.timestamp_ms as u64) / 1000)
+                } else {
+                    "just now".to_string()
+                }
+            };
+            service_signal_cards.push_str(&format!(
+                "<div class=\"svc-card\" style=\"background:{card_color};border-left:4px solid {dot_color};\"><div class=\"svc-name\">{name}</div><div class=\"svc-status\"><span class=\"svc-dot\" style=\"background:{dot_color};\"></span>{label}</div><div class=\"svc-meta\">stigma L{stigma} &middot; ndb {score:.3} &middot; {age}</div><div class=\"svc-note\">{note}</div></div>",
+                card_color = card_color,
+                dot_color = dot_color,
+                name = html_escape(&key),
+                label = status_label,
+                stigma = signal.stigma_level,
+                score = signal.ndb_score,
+                age = age_s,
+                note = html_escape(&signal.outcome)
+            ));
+        }
+    }
+    if service_signal_cards.is_empty() {
+        service_signal_cards = "<div style=\"color:#555; font-size:13px; padding:18px 0;\">No service signals received yet. Signals arrive via POST /wwwmmm/signal.</div>".to_string();
+    }
 
     let mut state_html = String::new();
     for (k, v) in &state_map {
@@ -904,7 +958,27 @@ async fn get_dashboard(
         ));
     }
     if events_rows.is_empty() {
-        events_rows.push_str("<tr><td colspan=\"6\">No events match the current filters.</td></tr>");
+        let filter_context = if has_active_filters {
+            format!(
+                "Active filters: endpoint={}, outcome={}",
+                if endpoint_filter.is_empty() {
+                    "all".to_string()
+                } else {
+                    html_escape(&endpoint_filter)
+                },
+                if outcome_filter.is_empty() {
+                    "all".to_string()
+                } else {
+                    html_escape(&outcome_filter)
+                }
+            )
+        } else {
+            "No active filters.".to_string()
+        };
+        events_rows.push_str(&format!(
+            "<tr><td colspan=\"6\">No events match the current filters. {} Use Reset to restore full stream.</td></tr>",
+            filter_context
+        ));
     }
 
     let mut endpoint_options_html = String::from(
@@ -937,10 +1011,21 @@ async fn get_dashboard(
         ));
     }
 
-    let filter_notice = if filtered_events.is_empty() && event_count > 0 && (!endpoint_filter.is_empty() || !outcome_filter.is_empty()) {
+    let filter_notice = if filtered_events.is_empty() && event_count > 0 && has_active_filters {
         format!(
-            "<div class=\"sub\" style=\"margin:8px 0 10px; color:#c2382e;\">Current URL filters are hiding live events. <a href=\"/dashboard\" style=\"color:#0a84ff; font-weight:700;\">Reset filters</a> to see all {} events.</div>",
-            event_count
+            "<div class=\"sub\" style=\"margin:8px 0 10px; color:#c2382e;\">Current URL filters are hiding live events (endpoint={}, outcome={}). <a href=\"/dashboard?limit={}\" style=\"color:#0a84ff; font-weight:700;\">Reset filters</a> to see all {} events.</div>",
+            if endpoint_filter.is_empty() {
+                "all".to_string()
+            } else {
+                html_escape(&endpoint_filter)
+            },
+            if outcome_filter.is_empty() {
+                "all".to_string()
+            } else {
+                html_escape(&outcome_filter)
+            },
+            limit,
+            event_count,
         )
     } else {
         String::new()
@@ -1053,6 +1138,13 @@ async fn get_dashboard(
                     font-weight: 700;
                     cursor: pointer;
                 }}
+                .svc-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 4px; }}
+                .svc-card {{ border-radius: 12px; padding: 16px 18px; border: 1px solid rgba(255,255,255,.07); }}
+                .svc-name {{ font-size: .95rem; font-weight: 700; color: #e0e8f0; margin-bottom: 8px; }}
+                .svc-status {{ display: flex; align-items: center; gap: 7px; font-size: .82rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #bfcdd8; margin-bottom: 6px; }}
+                .svc-dot {{ width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }}
+                .svc-meta {{ font-size: .77rem; color: #607080; margin-bottom: 4px; }}
+                .svc-note {{ font-size: .8rem; color: #8a9db0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
                 .stigma-grid {{ display: flex; gap: 10px; margin-top: 10px; }}
                 .stigma-item {{ flex: 1; background: #f6f9fc; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--line); }}
                 .sl {{ display: block; font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }}
@@ -1162,6 +1254,12 @@ async fn get_dashboard(
                             <div class="stigma-item"><span class="sl">L2 Standard</span><span class="sc">{}</span></div>
                             <div class="stigma-item"><span class="sl">L3 Compact</span><span class="sc">{}</span></div>
                         </div>
+                    </section>
+
+                    <section class="card span-12">
+                        <div class="k">Service Signals</div>
+                        <div class="sub" style="margin:8px 0 14px;">Real-time health signals from WWWMMM-linked projects and services.</div>
+                        <div class="svc-grid">__SERVICE_SIGNAL_CARDS__</div>
                     </section>
 
                     <section class="card span-12">
@@ -1373,6 +1471,7 @@ async fn get_dashboard(
     .replace("__OUTCOME_OPTIONS__", &outcome_options_html)
     .replace("__FILTER_NOTICE__", &filter_notice)
     .replace("__PUBLIC_REFS_HTML__", &public_refs_html)
+    .replace("__SERVICE_SIGNAL_CARDS__", &service_signal_cards)
     .replace("__LIMIT_VALUE__", &limit.to_string())
     .replace("__EVENT_ROWS__", &events_rows)
     .replace("__STATE_HTML__", &state_html);
