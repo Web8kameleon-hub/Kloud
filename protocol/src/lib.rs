@@ -24,6 +24,7 @@ pub struct TransportMetrics {
     pub total_bytes_received: u64,
     pub avg_latency_ms: u64,
     pub bandwidth_kbps: u64,
+    pub active_connections: usize,
     pub latencies: Vec<u64>, // last 10
 }
 
@@ -106,8 +107,9 @@ impl TcpTransport {
             metrics: Arc::new(Mutex::new(TransportMetrics {
                 total_bytes_sent: 0,
                 total_bytes_received: 0,
-                avg_latency_ms: 50,
-                bandwidth_kbps: 10000,
+                avg_latency_ms: 0,
+                bandwidth_kbps: 0,
+                active_connections: 0,
                 latencies: vec![],
             })),
             connections: Arc::new(Mutex::new(std::collections::HashMap::new())),
@@ -163,6 +165,7 @@ impl TcpTransport {
                 connections.insert(peer_id, framed);
                 connections.get_mut(&peer_id).unwrap()
             };
+            let connection_count = connections.len();
             let serialized = serde_cbor::to_vec(data)?;
             let bytes_sent = serialized.len() as u64;
             framed.send(serialized.into()).await?;
@@ -170,6 +173,7 @@ impl TcpTransport {
 
             let mut metrics = self.metrics.lock().await;
             metrics.total_bytes_sent += bytes_sent;
+            metrics.active_connections = connection_count;
             metrics.latencies.push(latency);
             if metrics.latencies.len() > 10 {
                 metrics.latencies.remove(0);

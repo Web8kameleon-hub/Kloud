@@ -1,6 +1,4 @@
 use protocol::*;
-use algebra::*;
-use security::*;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use std::collections::HashMap;
@@ -102,23 +100,25 @@ async fn main() {
     let transport_metrics = transport.metrics.clone();
 
     // Create peer infos
+    let initial_tm = transport_metrics.lock().await.clone();
+
     let peer_infos: Vec<protocol::PeerInfo> = peers.iter().map(|&id| {
         let addr = peer_addresses.get(&id).unwrap().clone();
         protocol::PeerInfo {
             id,
             addr,
-            latency_ms: 50, // dummy
-            bandwidth_kbps: 10000, // dummy
-            load: 0.0, // dummy
-            reliability: 1.0, // dummy
+            latency_ms: initial_tm.avg_latency_ms,
+            bandwidth_kbps: initial_tm.bandwidth_kbps,
+            load: 0.0,
+            reliability: 1.0,
         }
     }).collect();
 
     // Initial metrics and tide
     let mut metrics = Metrics {
-        active_peers: peers.len(),
-        avg_latency_ms: 50,
-        bandwidth_kbps: 10000,
+        active_peers: initial_tm.active_connections,
+        avg_latency_ms: initial_tm.avg_latency_ms,
+        bandwidth_kbps: initial_tm.bandwidth_kbps,
         load: 0.0,
     };
     let tide_level = compute_tide(&metrics);
@@ -192,21 +192,7 @@ async fn main() {
                     merge_sync.lock().await.apply_message(&msg);
                     // TODO: Send to gossip or process locally
                 }
-                _ = tokio::time::sleep(std::time::Duration::from_millis(1000)) => {
-                    // Simulate incoming message
-                    let msg = protocol::Message {
-                        ops: vec![1, 2], // S, C
-                        payload: vec![1, 2, 3],
-                        ttl: 10,
-                        clock: 1,
-                        sig: vec![],
-                        node_id: 1,
-                        flags: 0,
-                    };
-                    println!("Simulating message: {:?}", msg.ops);
-                    merge_sync.lock().await.apply_message(&msg);
-                    // TODO: Process
-                }
+                _ = tokio::time::sleep(std::time::Duration::from_millis(1000)) => {}
             }
         }
     });
@@ -230,10 +216,11 @@ async fn main() {
                 if tide_update_counter % 10 == 0 {
                     // Get real metrics from transport
                     let tm = transport_metrics.lock().await;
-                    metrics.active_peers = (metrics.active_peers as i32 + (rand::random::<i32>() % 3 - 1)).max(1) as usize; // still simulate peers
+                    metrics.active_peers = tm.active_connections;
                     metrics.avg_latency_ms = tm.avg_latency_ms;
                     metrics.bandwidth_kbps = tm.bandwidth_kbps;
-                    metrics.load = (metrics.load + (rand::random::<f32>() - 0.5) * 0.1).max(0.0).min(1.0); // simulate load
+                    metrics.load = (((tm.avg_latency_ms as f32) / 250.0).min(1.0)
+                        + ((tm.bandwidth_kbps as f32) / 10000.0).min(1.0)) / 2.0;
                     let new_tide = compute_tide(&metrics);
                     let mut engine = gossip_engine.lock().await;
                     engine.update_tide(new_tide);
