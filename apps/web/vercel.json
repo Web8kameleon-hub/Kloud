@@ -4,6 +4,10 @@
     {
       "path": "/api/mesh/announce",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/mesh/clisonix-signal",
+      "schedule": "*/10 * * * *"
     }
   ]
 }

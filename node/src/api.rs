@@ -228,6 +228,16 @@ fn compact_float(value: f32) -> f32 {
     (value * 1000.0).round() / 1000.0
 }
 
+fn derive_node_state(metrics: &Metrics, reachable_peers: usize) -> String {
+    if reachable_peers == 0 {
+        "Isolated".to_string()
+    } else if metrics.load >= 0.85 {
+        "Degraded".to_string()
+    } else {
+        "Active".to_string()
+    }
+}
+
 async fn append_security_event(
     state: &ApiState,
     endpoint: &str,
@@ -316,7 +326,7 @@ async fn submit_op(
         ttl: req.ttl.unwrap_or(10),
         clock: 0, // TODO: real clock
         sig: vec![], // TODO: sign
-        node_id: 1, // TODO: real node_id
+        node_id: state.node_id,
         flags: 0,
     };
 
@@ -374,11 +384,12 @@ async fn get_status(
     };
     metrics.active_peers = reachable_peers;
     let tide = *state.tide_level.lock().await;
+    let node_state = derive_node_state(&metrics, reachable_peers);
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
 
     let rich = StatusResponse {
-        state: "Active".to_string(), // TODO: real state
+        state: node_state,
         tide: format!("{:?}", tide),
         metrics,
         ndb_score: compact_float(score),
@@ -448,8 +459,14 @@ async fn get_security_events(
 async fn get_resonant_status(
     State(state): State<ApiState>,
 ) -> Json<ResonantStatusResponse> {
-    let metrics = *state.metrics.lock().await;
+    let mut metrics = *state.metrics.lock().await;
+    let reachable_peers = {
+        let peers = state.peers_map.lock().await;
+        peers.values().filter(|p| p.reachable).count()
+    };
+    metrics.active_peers = reachable_peers;
     let tide = *state.tide_level.lock().await;
+    let node_state = derive_node_state(&metrics, reachable_peers);
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
     let threshold = ndb_threshold();
@@ -472,7 +489,7 @@ async fn get_resonant_status(
                 .as_millis(),
         },
         node_id: state.node_id,
-        state: "Active".to_string(),
+        state: node_state,
         tide: format!("{:?}", tide),
         ndb_score: compact_float(score),
         ndb_delta: compact_float(delta),
@@ -583,9 +600,10 @@ async fn get_mesh_topology(
     let reachable_count = all.iter().filter(|p| p.reachable).count();
     let metrics = *state.metrics.lock().await;
     let tide = *state.tide_level.lock().await;
+    let node_state = derive_node_state(&metrics, reachable_count);
     Json(serde_json::json!({
         "node_id": state.node_id,
-        "node_state": "Active",
+        "node_state": node_state,
         "node_tide": format!("{:?}", tide),
         "node_load": metrics.load,
         "total_known_peers": all.len(),
@@ -604,6 +622,7 @@ async fn get_interop_pulse(
     let node_refs: Vec<&PeerRecord> = peers.values().collect();
     let tide = *state.tide_level.lock().await;
     metrics.active_peers = reachable_count;
+    let node_state = derive_node_state(&metrics, reachable_count);
     let score = compute_ndb_score(&metrics);
     let delta = ndb_delta(score);
     let threshold = ndb_threshold();
@@ -621,7 +640,7 @@ async fn get_interop_pulse(
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_millis(),
-        state: "Active".to_string(),
+        state: node_state,
         tide: format!("{:?}", tide),
         ndb_score: compact_float(score),
         ndb_delta: compact_float(delta),
