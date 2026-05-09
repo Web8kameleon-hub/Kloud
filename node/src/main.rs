@@ -79,6 +79,14 @@ enum NodeState {
 async fn main() {
     let node_id: u64 = std::env::var("NODE_ID").unwrap_or("1".to_string()).parse().unwrap();
     let listen_port: u16 = std::env::var("LISTEN_PORT").unwrap_or("8080".to_string()).parse().unwrap();
+    let mesh_healthcheck_interval_ms: u64 = std::env::var("MESH_HEALTHCHECK_INTERVAL_MS")
+        .unwrap_or("600000".to_string())
+        .parse()
+        .unwrap_or(600000);
+    let mesh_healthcheck_timeout_ms: u64 = std::env::var("MESH_HEALTHCHECK_TIMEOUT_MS")
+        .unwrap_or("1200".to_string())
+        .parse()
+        .unwrap_or(1200);
     let peers_str = std::env::var("PEERS").unwrap_or("".to_string());
 
     // Parse PEERS: supports "id:host:gossip_port" (remote) or "id:gossip_port" (local 127.0.0.1)
@@ -202,9 +210,11 @@ async fn main() {
     {
         let peers_map_hc = peers_map.clone();
         let metrics_arc_hc = metrics_arc.clone();
+        let healthcheck_interval_ms = mesh_healthcheck_interval_ms;
+        let healthcheck_timeout_ms = mesh_healthcheck_timeout_ms;
         tokio::spawn(async move {
             let client = reqwest::Client::builder()
-                .timeout(std::time::Duration::from_secs(5))
+                .timeout(std::time::Duration::from_millis(healthcheck_timeout_ms))
                 .build()
                 .unwrap();
             loop {
@@ -253,7 +263,7 @@ async fn main() {
                         m.avg_latency_ms = total_latency / reachable_count as u64;
                     }
                 }
-                tokio::time::sleep(std::time::Duration::from_secs(15)).await;
+                tokio::time::sleep(std::time::Duration::from_millis(healthcheck_interval_ms)).await;
             }
         });
     }

@@ -11,6 +11,8 @@ WorkingDirectory=/opt/kloud
 Environment=NODE_ID=1
 Environment=LISTEN_PORT=8080
 Environment=PEERS=2:91.98.47.131:8080,3:62.238.21.125:8080,4:37.27.216.254:8080
+Environment=MESH_HEALTHCHECK_INTERVAL_MS=600000
+Environment=MESH_HEALTHCHECK_TIMEOUT_MS=1200
 ExecStart=/opt/kloud/target/release/node
 Restart=always
 RestartSec=2
