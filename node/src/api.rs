@@ -7,7 +7,7 @@ use axum::{
 use base64::{engine::general_purpose::STANDARD as B64, Engine as _};
 use protocol::{Message, TideLevel};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::Mutex;
@@ -827,6 +827,13 @@ async fn get_dashboard(
     let clisonix_runtime_port = std::env::var("CLISONIX_RUNTIME_PORT").unwrap_or("9080".to_string());
     let clisonix_gossip_port = std::env::var("CLISONIX_GOSSIP_PORT").unwrap_or("9001".to_string());
 
+    let mut endpoint_values: BTreeSet<String> = BTreeSet::new();
+    let mut outcome_values: BTreeSet<String> = BTreeSet::new();
+    for event in &all_events {
+        endpoint_values.insert(event.endpoint.clone());
+        outcome_values.insert(event.outcome.clone());
+    }
+
     let filtered_events: Vec<SecurityEvent> = all_events
         .into_iter()
         .filter(|e| endpoint_filter.is_empty() || e.endpoint == endpoint_filter)
@@ -899,6 +906,45 @@ async fn get_dashboard(
     if events_rows.is_empty() {
         events_rows.push_str("<tr><td colspan=\"6\">No events match the current filters.</td></tr>");
     }
+
+    let mut endpoint_options_html = String::from(
+        &format!(
+            "<option value=\"\" {}>All endpoints</option>",
+            if endpoint_filter.is_empty() { "selected" } else { "" }
+        )
+    );
+    for endpoint in endpoint_values {
+        endpoint_options_html.push_str(&format!(
+            "<option value=\"{}\" {}>{}</option>",
+            html_escape(&endpoint),
+            if endpoint_filter == endpoint { "selected" } else { "" },
+            html_escape(&endpoint)
+        ));
+    }
+
+    let mut outcome_options_html = String::from(
+        &format!(
+            "<option value=\"\" {}>All outcomes</option>",
+            if outcome_filter.is_empty() { "selected" } else { "" }
+        )
+    );
+    for outcome in outcome_values {
+        outcome_options_html.push_str(&format!(
+            "<option value=\"{}\" {}>{}</option>",
+            html_escape(&outcome),
+            if outcome_filter == outcome { "selected" } else { "" },
+            html_escape(&outcome)
+        ));
+    }
+
+    let filter_notice = if filtered_events.is_empty() && event_count > 0 && (!endpoint_filter.is_empty() || !outcome_filter.is_empty()) {
+        format!(
+            "<div class=\"sub\" style=\"margin:8px 0 10px; color:#c2382e;\">Current URL filters are hiding live events. <a href=\"/dashboard\" style=\"color:#0a84ff; font-weight:700;\">Reset filters</a> to see all {} events.</div>",
+            event_count
+        )
+    } else {
+        String::new()
+    };
 
     let tide_label = format!("{:?}", tide);
     let (tide_color, tide_chip_bg) = match tide {
@@ -1129,22 +1175,16 @@ async fn get_dashboard(
                         </div>
                         <form class="ops-form" method="get" action="/dashboard">
                             <select name="endpoint">
-                                <option value="" __EP_ALL__>All endpoints</option>
-                                <option value="/status" __EP_STATUS__>/status</option>
-                                <option value="/submit" __EP_SUBMIT__>/submit</option>
-                                <option value="/security/status" __EP_SECURITY_STATUS__>/security/status</option>
+                                __ENDPOINT_OPTIONS__
                             </select>
                             <select name="outcome">
-                                <option value="" __OUTCOME_ALL__>All outcomes</option>
-                                <option value="ok" __OUTCOME_OK__>ok</option>
-                                <option value="accepted" __OUTCOME_ACCEPTED__>accepted</option>
-                                <option value="rejected-invalid-ops" __OUTCOME_REJECTED_OPS__>rejected-invalid-ops</option>
-                                <option value="rejected-invalid-payload" __OUTCOME_REJECTED_PAYLOAD__>rejected-invalid-payload</option>
-                                <option value="failed-channel-closed" __FAILED_CHANNEL_SELECTED__>failed-channel-closed</option>
+                                __OUTCOME_OPTIONS__
                             </select>
                             <input type="number" min="5" max="200" name="limit" value="__LIMIT_VALUE__" />
                             <button type="submit">Apply</button>
+                            <a href="/dashboard" class="tool-btn" style="text-decoration:none; display:inline-flex; align-items:center;">Reset</a>
                         </form>
+                        __FILTER_NOTICE__
                         <div class="table-wrap">
                             <table>
                                 <thead>
@@ -1329,31 +1369,9 @@ async fn get_dashboard(
         "__REFRESH_STATE_TEXT__",
         &format!("Showing {} / {} events", filtered_events.len(), event_count),
     )
-    .replace("__EP_ALL__", if endpoint_filter.is_empty() { "selected" } else { "" })
-    .replace("__EP_STATUS__", if endpoint_filter == "/status" { "selected" } else { "" })
-    .replace("__EP_SUBMIT__", if endpoint_filter == "/submit" { "selected" } else { "" })
-    .replace(
-        "__EP_SECURITY_STATUS__",
-        if endpoint_filter == "/security/status" { "selected" } else { "" },
-    )
-    .replace("__OUTCOME_ALL__", if outcome_filter.is_empty() { "selected" } else { "" })
-    .replace("__OUTCOME_OK__", if outcome_filter == "ok" { "selected" } else { "" })
-    .replace(
-        "__OUTCOME_ACCEPTED__",
-        if outcome_filter == "accepted" { "selected" } else { "" },
-    )
-    .replace(
-        "__OUTCOME_REJECTED_OPS__",
-        if outcome_filter == "rejected-invalid-ops" { "selected" } else { "" },
-    )
-    .replace(
-        "__OUTCOME_REJECTED_PAYLOAD__",
-        if outcome_filter == "rejected-invalid-payload" { "selected" } else { "" },
-    )
-    .replace(
-        "__FAILED_CHANNEL_SELECTED__",
-        if outcome_filter == "failed-channel-closed" { "selected" } else { "" },
-    )
+    .replace("__ENDPOINT_OPTIONS__", &endpoint_options_html)
+    .replace("__OUTCOME_OPTIONS__", &outcome_options_html)
+    .replace("__FILTER_NOTICE__", &filter_notice)
     .replace("__PUBLIC_REFS_HTML__", &public_refs_html)
     .replace("__LIMIT_VALUE__", &limit.to_string())
     .replace("__EVENT_ROWS__", &events_rows)
