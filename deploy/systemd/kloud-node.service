@@ -10,7 +10,7 @@ Group=root
 WorkingDirectory=/opt/kloud
 Environment=NODE_ID=1
 Environment=LISTEN_PORT=8080
-Environment=PEERS=2:8081,3:8082
+Environment=PEERS=2:91.98.47.131:8080,3:62.238.21.125:8080,4:37.27.216.254:8080
 ExecStart=/opt/kloud/target/release/node
 Restart=always
 RestartSec=2

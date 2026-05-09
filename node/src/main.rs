@@ -1,4 +1,5 @@
 use protocol::*;
+use reqwest;
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use std::collections::HashMap;
@@ -78,15 +79,38 @@ enum NodeState {
 async fn main() {
     let node_id: u64 = std::env::var("NODE_ID").unwrap_or("1".to_string()).parse().unwrap();
     let listen_port: u16 = std::env::var("LISTEN_PORT").unwrap_or("8080".to_string()).parse().unwrap();
-    let peers_str = std::env::var("PEERS").unwrap_or("2:8081,3:8082,4:8083,5:8084".to_string());
-    let peers: Vec<u64> = peers_str.split(',').map(|s| s.split(':').next().unwrap().parse().unwrap()).collect();
+    let peers_str = std::env::var("PEERS").unwrap_or("".to_string());
 
-    let mut peer_addresses = HashMap::new();
-    for peer in peers_str.split(',') {
-        let parts: Vec<&str> = peer.split(':').collect();
-        let id: u64 = parts[0].parse().unwrap();
-        let port: u16 = parts[1].parse().unwrap();
-        peer_addresses.insert(id, format!("127.0.0.1:{}", port));
+    // Parse PEERS: supports "id:host:gossip_port" (remote) or "id:gossip_port" (local 127.0.0.1)
+    let mut peer_addresses = HashMap::new();   // id -> gossip addr (host:port)
+    let mut peer_api_addrs = HashMap::new();   // id -> HTTP API base URL
+    let mut peers: Vec<u64> = Vec::new();
+
+    if !peers_str.is_empty() {
+        for seg in peers_str.split(',') {
+            let parts: Vec<&str> = seg.trim().split(':').collect();
+            match parts.len() {
+                3 => {
+                    // id:host:gossip_port
+                    if let (Ok(id), Ok(gossip_port)) = (parts[0].parse::<u64>(), parts[2].parse::<u16>()) {
+                        let host = parts[1];
+                        let api_port = gossip_port + 1000;
+                        peer_addresses.insert(id, format!("{}:{}", host, gossip_port));
+                        peer_api_addrs.insert(id, format!("http://{}:{}", host, api_port));
+                        peers.push(id);
+                    }
+                }
+                2 => {
+                    // id:gossip_port (local)
+                    if let (Ok(id), Ok(port)) = (parts[0].parse::<u64>(), parts[1].parse::<u16>()) {
+                        peer_addresses.insert(id, format!("127.0.0.1:{}", port));
+                        peer_api_addrs.insert(id, format!("http://127.0.0.1:{}", port + 1000));
+                        peers.push(id);
+                    }
+                }
+                _ => {}
+            }
+        }
     }
 
     // Channels for gossip
@@ -94,7 +118,7 @@ async fn main() {
     let (request_tx, request_rx) = mpsc::channel(100);
     let (payload_tx, payload_rx) = mpsc::channel(100);
 
-    let transport = TcpTransport::new(peer_addresses.clone(), digest_tx, request_tx, payload_tx, &format!("127.0.0.1:{}", listen_port));
+    let transport = TcpTransport::new(peer_addresses.clone(), digest_tx, request_tx, payload_tx, &format!("0.0.0.0:{}", listen_port));
 
     // Share transport metrics
     let transport_metrics = transport.metrics.clone();
@@ -103,7 +127,7 @@ async fn main() {
     let initial_tm = transport_metrics.lock().await.clone();
 
     let peer_infos: Vec<protocol::PeerInfo> = peers.iter().map(|&id| {
-        let addr = peer_addresses.get(&id).unwrap().clone();
+        let addr = peer_addresses.get(&id).cloned().unwrap_or_default();
         protocol::PeerInfo {
             id,
             addr,
@@ -143,6 +167,23 @@ async fn main() {
         keypair.clone(),
     )));
 
+    // Build initial peers_map from parsed peer_api_addrs
+    let peers_map: Arc<Mutex<HashMap<u64, api::PeerRecord>>> = Arc::new(Mutex::new(
+        peer_api_addrs.iter().map(|(&id, api_addr)| {
+            let gossip_addr = peer_addresses.get(&id).cloned().unwrap_or_default();
+            (id, api::PeerRecord {
+                id,
+                api_addr: api_addr.clone(),
+                gossip_addr,
+                state: "Unknown".to_string(),
+                tide: "Unknown".to_string(),
+                last_seen_ms: 0,
+                latency_ms: 0,
+                reachable: false,
+            })
+        }).collect()
+    ));
+
     // External API channel
     let (external_tx, external_rx) = mpsc::channel(100);
 
@@ -154,7 +195,68 @@ async fn main() {
         external_tx: external_tx.clone(),
         merge_sync: merge_sync_arc.clone(),
         security_events: Arc::new(Mutex::new(Vec::new())),
+        peers_map: peers_map.clone(),
     };
+
+    // Background mesh peer health-check (ping every 15s)
+    {
+        let peers_map_hc = peers_map.clone();
+        let metrics_arc_hc = metrics_arc.clone();
+        tokio::spawn(async move {
+            let client = reqwest::Client::builder()
+                .timeout(std::time::Duration::from_secs(5))
+                .build()
+                .unwrap();
+            loop {
+                let entries: Vec<(u64, String)> = {
+                    let pm = peers_map_hc.lock().await;
+                    pm.iter().map(|(&id, p)| (id, p.api_addr.clone())).collect()
+                };
+                let mut reachable_count = 0usize;
+                let mut total_latency = 0u64;
+                for (id, base_url) in &entries {
+                    let url = format!("{}/status?stigma_level=2", base_url);
+                    let start = std::time::Instant::now();
+                    match client.get(&url).send().await {
+                        Ok(resp) if resp.status().is_success() => {
+                            let latency_ms = start.elapsed().as_millis() as u64;
+                            reachable_count += 1;
+                            total_latency += latency_ms;
+                            if let Ok(body) = resp.json::<serde_json::Value>().await {
+                                let now_ms = std::time::SystemTime::now()
+                                    .duration_since(std::time::UNIX_EPOCH)
+                                    .unwrap_or_default()
+                                    .as_millis();
+                                let mut pm = peers_map_hc.lock().await;
+                                if let Some(peer) = pm.get_mut(id) {
+                                    peer.reachable = true;
+                                    peer.latency_ms = latency_ms;
+                                    peer.last_seen_ms = now_ms;
+                                    peer.state = body.get("state").and_then(|v| v.as_str()).unwrap_or("Unknown").to_string();
+                                    peer.tide = body.get("tide").and_then(|v| v.as_str()).unwrap_or("Unknown").to_string();
+                                }
+                            }
+                        }
+                        _ => {
+                            let mut pm = peers_map_hc.lock().await;
+                            if let Some(peer) = pm.get_mut(id) {
+                                peer.reachable = false;
+                            }
+                        }
+                    }
+                }
+                // Push real active_peers count to metrics
+                {
+                    let mut m = metrics_arc_hc.lock().await;
+                    m.active_peers = reachable_count;
+                    if reachable_count > 0 {
+                        m.avg_latency_ms = total_latency / reachable_count as u64;
+                    }
+                }
+                tokio::time::sleep(std::time::Duration::from_secs(15)).await;
+            }
+        });
+    }
 
     // HTTP API server
     let http_handle = tokio::spawn(async move {

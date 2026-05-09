@@ -14,6 +14,18 @@ use tokio::sync::Mutex;
 
 use crate::Metrics;
 
+#[derive(Clone, Serialize, Deserialize)]
+pub struct PeerRecord {
+    pub id: u64,
+    pub api_addr: String,
+    pub gossip_addr: String,
+    pub state: String,
+    pub tide: String,
+    pub last_seen_ms: u128,
+    pub latency_ms: u64,
+    pub reachable: bool,
+}
+
 #[derive(Clone)]
 pub struct ApiState {
     pub node_id: u64,
@@ -22,6 +34,7 @@ pub struct ApiState {
     pub external_tx: tokio::sync::mpsc::Sender<Message>,
     pub merge_sync: Arc<Mutex<super::merge_sync_engine::MergeSyncEngine>>,
     pub security_events: Arc<Mutex<Vec<SecurityEvent>>>,
+    pub peers_map: Arc<Mutex<HashMap<u64, PeerRecord>>>,
 }
 
 #[derive(Clone, Serialize)]
@@ -140,9 +153,11 @@ pub fn create_router(state: ApiState) -> Router {
         .route("/status", get(get_status))
         .route("/security/status", get(get_security_status))
         .route("/security/events", get(get_security_events))
-    .route("/resonant/status", get(get_resonant_status))
-    .route("/resonant/events", get(get_resonant_events))
+        .route("/resonant/status", get(get_resonant_status))
+        .route("/resonant/events", get(get_resonant_events))
         .route("/peers", get(get_peers))
+        .route("/peers/announce", post(post_peer_announce))
+        .route("/mesh/topology", get(get_mesh_topology))
         .route("/state", get(get_state))
         .route("/dashboard", get(get_dashboard))
         .with_state(state)
@@ -481,11 +496,69 @@ async fn get_resonant_events(
 async fn get_peers(
     State(state): State<ApiState>,
 ) -> Json<serde_json::Value> {
-    let metrics = *state.metrics.lock().await;
-    let peers: Vec<u64> = (1..=metrics.active_peers as u64).collect();
+    let peers = state.peers_map.lock().await;
+    let records: Vec<&PeerRecord> = peers.values().collect();
+    let reachable = records.iter().filter(|p| p.reachable).count();
     Json(serde_json::json!({
-        "active_peer_count": metrics.active_peers,
-        "peers": peers
+        "node_id": state.node_id,
+        "active_peer_count": reachable,
+        "total_known": records.len(),
+        "peers": records
+    }))
+}
+
+#[derive(Deserialize)]
+struct AnnounceRequest {
+    id: u64,
+    api_addr: String,
+    gossip_addr: String,
+}
+
+async fn post_peer_announce(
+    State(state): State<ApiState>,
+    Json(req): Json<AnnounceRequest>,
+) -> Json<serde_json::Value> {
+    let now_ms = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis();
+    let mut peers = state.peers_map.lock().await;
+    peers.entry(req.id)
+        .and_modify(|p| {
+            p.api_addr = req.api_addr.clone();
+            p.gossip_addr = req.gossip_addr.clone();
+            p.last_seen_ms = now_ms;
+            p.reachable = true;
+        })
+        .or_insert(PeerRecord {
+            id: req.id,
+            api_addr: req.api_addr,
+            gossip_addr: req.gossip_addr,
+            state: "Unknown".to_string(),
+            tide: "Unknown".to_string(),
+            last_seen_ms: now_ms,
+            latency_ms: 0,
+            reachable: true,
+        });
+    Json(serde_json::json!({"ok": true, "registered": req.id}))
+}
+
+async fn get_mesh_topology(
+    State(state): State<ApiState>,
+) -> Json<serde_json::Value> {
+    let peers = state.peers_map.lock().await;
+    let all: Vec<&PeerRecord> = peers.values().collect();
+    let reachable_count = all.iter().filter(|p| p.reachable).count();
+    let metrics = *state.metrics.lock().await;
+    let tide = *state.tide_level.lock().await;
+    Json(serde_json::json!({
+        "node_id": state.node_id,
+        "node_state": "Active",
+        "node_tide": format!("{:?}", tide),
+        "node_load": metrics.load,
+        "total_known_peers": all.len(),
+        "reachable_peers": reachable_count,
+        "nodes": all
     }))
 }
 
