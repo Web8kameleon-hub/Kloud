@@ -943,7 +943,7 @@ async fn get_dashboard(
             </div>
             <script>
                 (function () {{
-                    var refreshMs = 5000;
+                    var refreshMs = 10 * 60 * 1000;
                     var meshRefreshMs = 10 * 60 * 1000;
                     var paused = false;
                     var pauseBtn = document.getElementById("pause-refresh");
@@ -1004,7 +1004,7 @@ async fn get_dashboard(
                     function updateState() {{
                         if (!stateEl) return;
                         var base = ((stateEl.textContent || "").split(" · ").pop() || "").trim();
-                        stateEl.textContent = (paused ? "Refresh paused" : "Auto-refresh every 5s") + " · " + base;
+                        stateEl.textContent = (paused ? "Refresh paused" : "Auto-refresh every 10m") + " · " + base;
                     }}
 
                     if (pauseBtn) {{
