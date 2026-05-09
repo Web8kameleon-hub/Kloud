@@ -147,6 +147,29 @@ pub struct ResonantEvent {
     pub outcome: String,
 }
 
+#[derive(Serialize)]
+pub struct InteropPulseResponse {
+    pub source: String,
+    pub channel: String,
+    pub node_id: u64,
+    pub generated_at_ms: u128,
+    pub state: String,
+    pub tide: String,
+    pub ndb_score: f32,
+    pub ndb_delta: f32,
+    pub ndb_threshold: f32,
+    pub stigma: serde_json::Value,
+    pub nanogrid: serde_json::Value,
+}
+
+#[derive(Deserialize)]
+pub struct ProjectSignalRequest {
+    pub project: String,
+    pub channel: Option<String>,
+    pub stigma_level: Option<u8>,
+    pub note: Option<String>,
+}
+
 pub fn create_router(state: ApiState) -> Router {
     Router::new()
         .route("/submit", get(get_submit_help).post(submit_op))
@@ -158,6 +181,10 @@ pub fn create_router(state: ApiState) -> Router {
         .route("/peers", get(get_peers))
         .route("/peers/announce", post(post_peer_announce))
         .route("/mesh/topology", get(get_mesh_topology))
+        .route("/interop/pulse", get(get_interop_pulse))
+        .route("/interop/project-signal", post(post_project_signal))
+        .route("/wwwmmm/pulse", get(get_wwwmmm_pulse))
+        .route("/wwwmmm/signal", post(post_wwwmmm_signal))
         .route("/state", get(get_state))
         .route("/dashboard", get(get_dashboard))
         .with_state(state)
@@ -565,6 +592,105 @@ async fn get_mesh_topology(
         "reachable_peers": reachable_count,
         "nodes": all
     }))
+}
+
+async fn get_interop_pulse(
+    State(state): State<ApiState>,
+) -> Json<InteropPulseResponse> {
+    let mut metrics = *state.metrics.lock().await;
+    let peers = state.peers_map.lock().await;
+    let reachable_count = peers.values().filter(|p| p.reachable).count();
+    let total_known = peers.len();
+    let node_refs: Vec<&PeerRecord> = peers.values().collect();
+    let tide = *state.tide_level.lock().await;
+    metrics.active_peers = reachable_count;
+    let score = compute_ndb_score(&metrics);
+    let delta = ndb_delta(score);
+    let threshold = ndb_threshold();
+    let events = state.security_events.lock().await;
+
+    let stigma_l1 = events.iter().filter(|e| e.stigma_level == 1).count();
+    let stigma_l2 = events.iter().filter(|e| e.stigma_level == 2).count();
+    let stigma_l3 = events.iter().filter(|e| e.stigma_level == 3).count();
+
+    Json(InteropPulseResponse {
+        source: "kloud.interop.v1".to_string(),
+        channel: "wwwmmm-ndb-stigma-tide-nanogrid".to_string(),
+        node_id: state.node_id,
+        generated_at_ms: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis(),
+        state: "Active".to_string(),
+        tide: format!("{:?}", tide),
+        ndb_score: compact_float(score),
+        ndb_delta: compact_float(delta),
+        ndb_threshold: threshold,
+        stigma: serde_json::json!({
+            "l1": stigma_l1,
+            "l2": stigma_l2,
+            "l3": stigma_l3,
+            "events_total": events.len()
+        }),
+        nanogrid: serde_json::json!({
+            "reachable_peers": reachable_count,
+            "total_known_peers": total_known,
+            "metrics": metrics,
+            "nodes": node_refs
+        }),
+    })
+}
+
+async fn get_wwwmmm_pulse(
+    State(state): State<ApiState>,
+) -> Json<InteropPulseResponse> {
+    get_interop_pulse(State(state)).await
+}
+
+async fn post_project_signal(
+    State(state): State<ApiState>,
+    Json(req): Json<ProjectSignalRequest>,
+) -> Json<serde_json::Value> {
+    let stigma_level = sanitize_stigma_level(req.stigma_level);
+    let mut metrics = *state.metrics.lock().await;
+    let reachable_peers = {
+        let peers = state.peers_map.lock().await;
+        peers.values().filter(|p| p.reachable).count()
+    };
+    metrics.active_peers = reachable_peers;
+    let score = compute_ndb_score(&metrics);
+
+    let endpoint = format!("/interop/project-signal:{}", req.project);
+    let action = req.channel.unwrap_or_else(|| "default".to_string());
+    let outcome = req.note.unwrap_or_else(|| "ok".to_string());
+
+    append_security_event(
+        &state,
+        &endpoint,
+        &action,
+        stigma_level,
+        score,
+        &outcome,
+    ).await;
+
+    Json(serde_json::json!({
+        "ok": true,
+        "project": req.project,
+        "stigma_level": stigma_level,
+        "ndb_score": compact_float(score),
+        "reachable_peers": reachable_peers,
+        "tide": format!("{:?}", *state.tide_level.lock().await)
+    }))
+}
+
+async fn post_wwwmmm_signal(
+    State(state): State<ApiState>,
+    Json(mut req): Json<ProjectSignalRequest>,
+) -> Json<serde_json::Value> {
+    if req.channel.is_none() {
+        req.channel = Some("wwwmmm".to_string());
+    }
+    post_project_signal(State(state), Json(req)).await
 }
 
 async fn get_state(
