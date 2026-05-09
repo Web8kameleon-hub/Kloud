@@ -1,4 +1,4 @@
-# Clisonix Blog Paywall Service
+# Kloud Blog Paywall Service
 
 Premium content access control with Stripe subscriptions.
 
@@ -69,10 +69,10 @@ PAYWALL_SECRET=your-secret-key
 ## Docker
 
 ```bash
-docker build -t clisonix-blog-paywall .
+docker build -t kloud-blog-paywall .
 docker run -p 8020:8020 \
   -e STRIPE_SECRET_KEY=sk_live_... \
-  clisonix-blog-paywall
+  kloud-blog-paywall
 ```
 
 ## Premium Articles Configuration
@@ -91,14 +91,14 @@ Articles are configured with required tiers:
 "distributed-inference-patterns"
 
 # Enterprise tier (199€/month)
-"clisonix-architecture-blueprint"
+"kloud-architecture-blueprint"
 "custom-integration-guide"
 ```
 
 ## Stripe Webhook Setup
 
 1. Go to Stripe Dashboard → Webhooks
-2. Add endpoint: `https://api.clisonix.com/webhook/stripe`
+2. Add endpoint: `https://api.kloud.com/webhook/stripe`
 3. Select events:
    - `checkout.session.completed`
    - `customer.subscription.deleted`
@@ -107,4 +107,5 @@ Articles are configured with required tiers:
 
 ---
 
-© 2026 Clisonix - ABA GmbH
+© 2026 Kloud - ABA GmbH
+

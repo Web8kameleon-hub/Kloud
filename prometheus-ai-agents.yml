@@ -2,11 +2,11 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    monitor: 'clisonix-cloud'
+    monitor: 'kloud-cloud'
 
 scrape_configs:
-  # Clisonix Backend API
-  - job_name: 'clisonix-api'
+  # Kloud Backend API
+  - job_name: 'kloud-api'
     static_configs:
       - targets: ['localhost:8000']
     metrics_path: '/metrics'
@@ -14,10 +14,10 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
-        replacement: 'clisonix-api:8000'
+        replacement: 'kloud-api:8000'
 
-  # Clisonix Frontend (if exposing metrics)
-  - job_name: 'clisonix-frontend'
+  # Kloud Frontend (if exposing metrics)
+  - job_name: 'kloud-frontend'
     static_configs:
       - targets: ['localhost:3000']
     metrics_path: '/metrics'
@@ -80,4 +80,5 @@ alerting:
 
 rule_files:
   - '/etc/prometheus/rules/*.yml'
+
 

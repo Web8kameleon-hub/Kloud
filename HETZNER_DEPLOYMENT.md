@@ -1,7 +1,7 @@
-# 🚀 Clisonix Cloud - Hetzner Deployment Guide
+# 🚀 Kloud Cloud - Hetzner Deployment Guide
 
 ## Overview
-Deployment architecture për Clisonix Cloud në Hetzner Cloud Infrastructure
+Deployment architecture për Kloud Cloud në Hetzner Cloud Infrastructure
 
 ## Infrastructure Requirements
 
@@ -50,8 +50,8 @@ sh get-docker.sh
 apt install -y nodejs npm python3 python3-pip python3-venv
 
 # Clone repository
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 ```
 
 ### 2. Environment Configuration
@@ -61,7 +61,7 @@ cat > .env << EOF
 NODE_ENV=production
 OCEAN_CORE_URL=http://localhost:8030
 BACKEND_API_URL=http://localhost:8000
-DATABASE_URL=postgresql://user:pass@localhost:5432/clisonix
+DATABASE_URL=postgresql://user:pass@localhost:5432/kloud
 REDIS_URL=redis://localhost:6379
 HETZNER_API_TOKEN=${HETZNER_TOKEN}
 EOF
@@ -89,11 +89,11 @@ docker-compose logs -f
 apt install -y certbot python3-certbot-nginx
 
 # Generate certificate
-certbot certonly --standalone -d clisonix.cloud
+certbot certonly --standalone -d kloud.cloud
 
 # Configure Nginx with SSL
-cp nginx.conf.ssl /etc/nginx/sites-available/clisonix
-ln -s /etc/nginx/sites-available/clisonix /etc/nginx/sites-enabled/
+cp nginx.conf.ssl /etc/nginx/sites-available/kloud
+ln -s /etc/nginx/sites-available/kloud /etc/nginx/sites-enabled/
 nginx -t
 systemctl restart nginx
 ```
@@ -104,7 +104,7 @@ systemctl restart nginx
 docker-compose -f monitoring/docker-compose.yml up -d
 
 # Access Grafana
-# URL: https://clisonix.cloud:3000
+# URL: https://kloud.cloud:3000
 # User: admin / Password: admin
 ```
 
@@ -135,19 +135,19 @@ docker-compose -f monitoring/docker-compose.yml up -d
 ### Floating IP Configuration
 ```bash
 # Assign floating IP
-hcloud floating-ip create --type ipv4 --name clisonix-ip --server <server_id>
+hcloud floating-ip create --type ipv4 --name kloud-ip --server <server_id>
 
 # Setup DNS
-# A Record: clisonix.cloud → <floating_ip>
+# A Record: kloud.cloud → <floating_ip>
 ```
 
 ### Backup Strategy
 ```bash
 # Create volume snapshots
-hcloud volume create --server <server_id> --size 100 --name clisonix-backup
+hcloud volume create --server <server_id> --size 100 --name kloud-backup
 
 # Automated daily backup script
-# Location: /usr/local/bin/backup-clisonix.sh
+# Location: /usr/local/bin/backup-kloud.sh
 ```
 
 ## Performance Tuning
@@ -229,7 +229,7 @@ curl http://localhost:8030/api/status
 
 # Check network
 docker network ls
-docker network inspect clisonix_default
+docker network inspect kloud_default
 ```
 
 ## Deployment Checklist
@@ -251,7 +251,7 @@ docker network inspect clisonix_default
 
 ```bash
 # Get previous image tag
-docker images | grep clisonix
+docker images | grep kloud
 
 # Rollback to previous version
 docker-compose down
@@ -281,3 +281,4 @@ For issues or questions:
 
 **Last Updated**: January 18, 2026
 **Deployment Version**: 1.0.0
+

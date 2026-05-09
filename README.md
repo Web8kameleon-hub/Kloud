@@ -1,4 +1,4 @@
-# 🧠 Clisonix Cloud
+# 🧠 Kloud Cloud
 
 Industrial Backend & Payment System
 
@@ -6,9 +6,9 @@ Industrial Backend & Payment System
 
 ## 📧 Contact & Support
 
-- **Email:** <contact@clisonix.com>
-- **Support:** <support@clisonix.com>
-- **Website:** [clisonix.com](https://clisonix.com)
+- **Email:** <contact@kloud.com>
+- **Support:** <support@kloud.com>
+- **Website:** [kloud.com](https://kloud.com)
 
 ## 💰 Support This Project
 
@@ -22,7 +22,7 @@ Industrial Backend & Payment System
 
 - **Email:** Configured via secrets
 
-> 💡 For real payment details, contact: <contact@clisonix.com>
+> 💡 For real payment details, contact: <contact@kloud.com>
 
 ---
 
@@ -117,7 +117,7 @@ python scripts/scan-secrets.py
 
 ## 🏗️ Architecture
 
-Clisonix-cloud/
+Kloud-cloud/
 ├── app/
 │   ├── routes/              # FastAPI route modules
 │   ├── settings.py          # Configuration with business integration
@@ -223,7 +223,7 @@ GET /auth/me              # Current user information
 
 ```bash
 # Database Configuration
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost/Clisonix
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost/Kloud
 
 # Redis Configuration  
 REDIS_URL=redis://localhost:6379
@@ -410,3 +410,4 @@ pytest tests/test_billing.py -v
 - Payment system status at `/billing/stats`
 
 **No Mock Data:** This is an industrial-grade backend using real business integration, actual system monitoring, and live payment processing. All metrics, business information, and processing capabilities are real and functional. - FastAPI + Worker + Docker Compose
+

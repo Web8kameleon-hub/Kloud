@@ -1,5 +1,5 @@
 """
-MEGA SIGNAL COLLECTOR - Të Gjitha Sinjalet e Clisonix.com
+MEGA SIGNAL COLLECTOR - Të Gjitha Sinjalet e Kloud.com
 ==========================================================
 
 Nga Git deri te file më i vogël, çdo paketë, çdo (,) çdo (.) çdo a+b=x
@@ -974,3 +974,4 @@ async def collect_all_signals(workspace: str = None) -> Dict[str, Any]:
     """Convenience function to collect all signals"""
     collector = get_mega_collector(workspace)
     return await collector.collect_all()
+

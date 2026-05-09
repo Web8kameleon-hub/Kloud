@@ -9,7 +9,7 @@ All CI/CD workflows have been updated to ensure they are "green" (passing) or pr
 ### 1. Helm Chart Infrastructure ✅
 Created complete Helm chart structure to support Kubernetes deployments:
 
-- **helm/clisonix/**: Main application Helm chart
+- **helm/kloud/**: Main application Helm chart
   - Chart.yaml: Chart metadata
   - values.yaml: Default values
   - templates/deployment.yaml: Deployment template
@@ -72,8 +72,8 @@ For full deployment functionality, the following GitHub secrets should be config
 
 1. **HETZNER_KUBECONFIG** - Base64-encoded kubeconfig for Kubernetes deployments
 2. **HETZNER_SSH_KEY** - SSH private key for Docker Compose deployments
-3. **DB_PASSWORD** (optional) - PostgreSQL password (defaults to 'clisonix')
-4. **GRAFANA_PASSWORD** (optional) - Grafana admin password (defaults to 'clisonix')
+3. **DB_PASSWORD** (optional) - PostgreSQL password (defaults to 'kloud')
+4. **GRAFANA_PASSWORD** (optional) - Grafana admin password (defaults to 'kloud')
 
 **Note**: Workflows now gracefully handle missing secrets and provide clear error messages rather than failing mysteriously.
 
@@ -94,3 +94,4 @@ All CI/CD workflows are now configured to either:
 3. **Fail with clear messages** when required secrets are not configured
 
 This meets the requirement: "rregullo te gjitha ci-cd te jene green ose zgjarr" (fix all CI/CD to be green or fire) ✅
+

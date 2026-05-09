@@ -2,7 +2,7 @@
 """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  BLERINA PILLAR CONTENT ENGINE                                                ║
-║  Part of Clisonix Cloud Industrial Backend                                    ║
+║  Part of Kloud Cloud Industrial Backend                                    ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Features:                                                                    ║
 ║  - Pillar Article Generation (3000-5000 words)                               ║
@@ -73,9 +73,9 @@ MIN_SUPPORTING_WORDS = 800
 
 # Patterns to detect fake content
 FAKE_IMPORT_PATTERNS = [
-    r"from clisonix\.alda import",
-    r"from clisonix\.liam import",
-    r"from clisonix_sdk import",
+    r"from kloud\.alda import",
+    r"from kloud\.liam import",
+    r"from kloud_sdk import",
     r"from neural_mesh import",
     r"from tide_engine import",
 ]
@@ -408,7 +408,7 @@ async def generate_pillar_article(topic: PillarTopic, title: str, sections: List
     for i, section in enumerate(sections):
         logger.info(f"Generating section {i+1}/{len(sections)}: {section}")
         
-        prompt = f"""You are an expert technical writer for Clisonix Cloud, a company that builds 
+        prompt = f"""You are an expert technical writer for Kloud Cloud, a company that builds 
 Brain-Computer Interface (BCI) and EEG processing systems.
 
 Write section "{section}" for the pillar article "{title}".
@@ -742,3 +742,4 @@ if __name__ == "__main__":
     logger.info("=" * 70)
     
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

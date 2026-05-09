@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Mesh HQ Receiver
-Industrial Real-Data Sink for Clisonix Distributed Systems
+Industrial Real-Data Sink for Kloud Distributed Systems
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 
 Pranon Ã§do tÃ« dhÃ«nÃ« nga Integrated System / Pulse Balancer
@@ -19,12 +19,12 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
 
-from Clisonix.colored_logger import setup_logger
+from Kloud.colored_logger import setup_logger
 
 # =========================================================
 # ðŸ”§ KONFIGURIMET
 # =========================================================
-BASE_DIR = Path(r"C:\Clisonix-cloud")
+BASE_DIR = Path(r"C:\Kloud-cloud")
 DATA_DIR = BASE_DIR / "mesh_data"
 LOGS_DIR = BASE_DIR / "logs"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -35,14 +35,14 @@ ERROR_FILE = LOGS_DIR / "mesh_errors.log"
 
 APP_NAME = f"MeshHQ@{platform.node()}"
 
-logger = setup_logger("ClisonixMeshHQ")
+logger = setup_logger("KloudMeshHQ")
 
 # =========================================================
 # ðŸŒ FASTAPI APP
 # =========================================================
 app = FastAPI(
     title="Mesh HQ Receiver",
-    description="Industrial endpoint for receiving Clisonix data pulses in real time.",
+    description="Industrial endpoint for receiving Kloud data pulses in real time.",
     version="1.0.0-industrial",
 )
 
@@ -53,7 +53,7 @@ app = FastAPI(
 @app.post("/metrics/upload")
 async def receive_metrics(request: Request):
     """
-    Pranon Ã§do dÃ«rgim nga sistemet Clisonix (Integrated System ose Balancer)
+    Pranon Ã§do dÃ«rgim nga sistemet Kloud (Integrated System ose Balancer)
     dhe e ruan si JSONL nÃ« disk.
     """
     try:
@@ -126,4 +126,5 @@ if __name__ == "__main__":
     logger.info("Starting Mesh HQ Receiver on http://localhost:7777")
     logger.info("Saving data to: %s", RECEIVED_FILE)
     uvicorn.run(app, host="0.0.0.0", port=7777)
+
 

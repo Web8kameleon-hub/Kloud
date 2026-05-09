@@ -1,4 +1,4 @@
-# 📋 Clisonix Cloud - Post-Deployment TODO List
+# 📋 Kloud Cloud - Post-Deployment TODO List
 
 **After Successful Deployment on Hetzner**
 
@@ -8,29 +8,29 @@
 
 - [ ] **Save all credentials from `.credentials.txt`**
   - Copy to password manager (1Password, LastPass, etc.)
-  - Delete the file: `rm /opt/clisonix/.credentials.txt`
+  - Delete the file: `rm /opt/kloud/.credentials.txt`
 
 - [ ] **Verify SSL certificates are working**
   ```bash
-  curl -I https://clisonix.com
-  curl -I https://api.clisonix.com
+  curl -I https://kloud.com
+  curl -I https://api.kloud.com
   ```
 
 - [ ] **Change default Grafana password**
-  - Login: https://clisonix.com:3001
+  - Login: https://kloud.com:3001
   - Navigate to Profile → Change Password
   - Use strong password (save to password manager)
 
 - [ ] **Configure Stripe keys**
   ```bash
-  nano /opt/clisonix/.env.production
+  nano /opt/kloud/.env.production
   # Add real Stripe keys
-  docker compose -f /opt/clisonix/docker-compose.prod.yml restart api
+  docker compose -f /opt/kloud/docker-compose.prod.yml restart api
   ```
 
 - [ ] **Test all critical endpoints**
-  - [ ] Website: https://clisonix.com
-  - [ ] API health: https://api.clisonix.com/health
+  - [ ] Website: https://kloud.com
+  - [ ] API health: https://api.kloud.com/health
   - [ ] ALBA: Check via orchestrator
   - [ ] ALBI: Check via orchestrator
   - [ ] JONA: Check via orchestrator
@@ -87,20 +87,20 @@
 - [ ] **Configure automated database backups**
   ```bash
   # See SECURITY_PRODUCTION.md for backup script
-  chmod +x /opt/clisonix/backup-db.sh
+  chmod +x /opt/kloud/backup-db.sh
   
   # Add to crontab (daily at 2 AM)
   crontab -e
-  # Add: 0 2 * * * /opt/clisonix/backup-db.sh
+  # Add: 0 2 * * * /opt/kloud/backup-db.sh
   ```
 
 - [ ] **Test backup restoration**
   ```bash
   # Create test backup
-  /opt/clisonix/backup-db.sh
+  /opt/kloud/backup-db.sh
   
   # Verify backup file exists
-  ls -lh /opt/clisonix/backups/
+  ls -lh /opt/kloud/backups/
   ```
 
 - [ ] **Set up off-site backup storage**
@@ -147,9 +147,9 @@
 
 - [ ] **Slack notifications**
   ```bash
-  nano /opt/clisonix/.env.production
+  nano /opt/kloud/.env.production
   # Add: SLACK_WEBHOOK_URL=...
-  docker compose -f /opt/clisonix/docker-compose.prod.yml restart slack
+  docker compose -f /opt/kloud/docker-compose.prod.yml restart slack
   ```
 
 - [ ] **Email notifications (SMTP)**
@@ -194,7 +194,7 @@
 
 - [ ] **Update Docker images**
   ```bash
-  cd /opt/clisonix
+  cd /opt/kloud
   docker compose -f docker-compose.prod.yml pull
   docker compose -f docker-compose.prod.yml up -d
   docker image prune -af  # cleanup old images
@@ -206,12 +206,12 @@
   tail -n 100 /var/log/nginx/error.log
   
   # Check application logs
-  docker compose -f /opt/clisonix/docker-compose.prod.yml logs --tail=100 api
+  docker compose -f /opt/kloud/docker-compose.prod.yml logs --tail=100 api
   ```
 
 - [ ] **Run security audit**
   ```bash
-  /opt/clisonix/security-check.sh
+  /opt/kloud/security-check.sh
   # See SECURITY_PRODUCTION.md
   ```
 
@@ -227,10 +227,10 @@
 - [ ] **Database optimization**
   ```bash
   # Check database size
-  docker compose exec postgres psql -U clisonix_prod -c "SELECT pg_size_pretty(pg_database_size('clisonixdb'));"
+  docker compose exec postgres psql -U kloud_prod -c "SELECT pg_size_pretty(pg_database_size('klouddb'));"
   
   # Run VACUUM (if needed)
-  docker compose exec postgres psql -U clisonix_prod -c "VACUUM ANALYZE;"
+  docker compose exec postgres psql -U kloud_prod -c "VACUUM ANALYZE;"
   ```
 
 - [ ] **Cleanup old data**
@@ -374,3 +374,4 @@ Mark when each section is complete:
 **Remember:** This is a living document. Update it as you complete tasks and add new ones as needed!
 
 **Last Updated:** December 12, 2025
+

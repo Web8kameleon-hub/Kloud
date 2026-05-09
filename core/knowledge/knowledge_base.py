@@ -7,7 +7,7 @@ Dokumente: libra, artikuj, kode, API docs.
 Indekse: vector stores, keyword, hybrid.
 Tagging: domain, level, prerequisites, code_available, lang.
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 from dataclasses import dataclass, field
@@ -557,3 +557,4 @@ __all__ = [
     "index_document",
     "query_knowledge",
 ]
+

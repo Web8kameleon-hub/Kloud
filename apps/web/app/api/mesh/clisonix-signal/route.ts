@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 })
   }
 
-  const host = req.headers.get('x-forwarded-host') || req.headers.get('host') || 'www.clisonix.com'
+  const host = req.headers.get('x-forwarded-host') || req.headers.get('host') || 'www.kloud.com'
   const proto = req.headers.get('x-forwarded-proto') || 'https'
   const baseUrl = `${proto}://${host}`
 
@@ -81,3 +81,4 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   return GET(req)
 }
+

@@ -1,5 +1,5 @@
 # =============================================================================
-# CLISONIX MICROSERVICES DOCKER COMPOSE
+# KLOUD MICROSERVICES DOCKER COMPOSE
 # =============================================================================
 # Arkitekturë e izoluar - çdo shërbim funksionon pavarësisht
 # Nëse bie një shërbim, të tjerët vazhdojnë punën
@@ -13,11 +13,11 @@ services:
   # ===========================================================================
   core:
     build: ./core
-    container_name: clisonix-core
+    container_name: kloud-core
     ports:
       - "8000:8000"
     networks:
-      - clisonix-net
+      - kloud-net
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -33,13 +33,13 @@ services:
   # ===========================================================================
   reporting:
     build: ./reporting
-    container_name: clisonix-reporting
+    container_name: kloud-reporting
     ports:
       - "8001:8001"
     networks:
-      - clisonix-net
+      - kloud-net
     environment:
-      - CORE_API_URL=http://clisonix-core:8000
+      - CORE_API_URL=http://kloud-core:8000
     depends_on:
       core:
         condition: service_healthy
@@ -58,13 +58,13 @@ services:
   # ===========================================================================
   excel:
     build: ./excel
-    container_name: clisonix-excel
+    container_name: kloud-excel
     ports:
       - "8002:8002"
     networks:
-      - clisonix-net
+      - kloud-net
     environment:
-      - CORE_API_URL=http://clisonix-core:8000
+      - CORE_API_URL=http://kloud-core:8000
     depends_on:
       core:
         condition: service_healthy
@@ -82,6 +82,7 @@ services:
 # NETWORK - Izolim dhe komunikim ndërmjet shërbimeve
 # =============================================================================
 networks:
-  clisonix-net:
+  kloud-net:
     driver: bridge
-    name: clisonix-services
+    name: kloud-services
+

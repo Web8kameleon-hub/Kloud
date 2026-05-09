@@ -1,37 +1,37 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: clisonix
+  name: kloud
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clisonix-backend
-  namespace: clisonix
+  name: kloud-backend
+  namespace: kloud
   labels:
-    app: clisonix
+    app: kloud
     component: backend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: clisonix
+      app: kloud
       component: backend
   template:
     metadata:
       labels:
-        app: clisonix
+        app: kloud
         component: backend
     spec:
       containers:
       - name: backend
-        image: ghcr.io/LedjanAhmati/clisonix-cloud:latest
+        image: ghcr.io/LedjanAhmati/kloud-cloud:latest
         ports:
         - containerPort: 8000
           name: api
         env:
         - name: OCEAN_CORE_URL
-          value: "http://clisonix-ocean-core:8030"
+          value: "http://kloud-ocean-core:8030"
         - name: NODE_ENV
           value: "production"
         resources:
@@ -51,26 +51,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clisonix-ocean-core
-  namespace: clisonix
+  name: kloud-ocean-core
+  namespace: kloud
   labels:
-    app: clisonix
+    app: kloud
     component: ocean-core
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: clisonix
+      app: kloud
       component: ocean-core
   template:
     metadata:
       labels:
-        app: clisonix
+        app: kloud
         component: ocean-core
     spec:
       containers:
       - name: ocean-core
-        image: ghcr.io/LedjanAhmati/clisonix-cloud:latest
+        image: ghcr.io/LedjanAhmati/kloud-cloud:latest
         command: ["python", "-m", "uvicorn", "ocean_api:app", "--host", "0.0.0.0", "--port", "8030"]
         ports:
         - containerPort: 8030
@@ -96,26 +96,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clisonix-frontend
-  namespace: clisonix
+  name: kloud-frontend
+  namespace: kloud
   labels:
-    app: clisonix
+    app: kloud
     component: frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: clisonix
+      app: kloud
       component: frontend
   template:
     metadata:
       labels:
-        app: clisonix
+        app: kloud
         component: frontend
     spec:
       containers:
       - name: frontend
-        image: ghcr.io/LedjanAhmati/clisonix-cloud:latest
+        image: ghcr.io/LedjanAhmati/kloud-cloud:latest
         command: ["npm", "run", "start"]
         ports:
         - containerPort: 3000
@@ -123,9 +123,9 @@ spec:
         workingDir: /app/apps/web
         env:
         - name: BACKEND_URL
-          value: "http://clisonix-backend:8000"
+          value: "http://kloud-backend:8000"
         - name: OCEAN_CORE_URL
-          value: "http://clisonix-ocean-core:8030"
+          value: "http://kloud-ocean-core:8030"
         resources:
           requests:
             memory: "256Mi"
@@ -143,11 +143,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clisonix-backend
-  namespace: clisonix
+  name: kloud-backend
+  namespace: kloud
 spec:
   selector:
-    app: clisonix
+    app: kloud
     component: backend
   ports:
   - protocol: TCP
@@ -158,11 +158,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clisonix-ocean-core
-  namespace: clisonix
+  name: kloud-ocean-core
+  namespace: kloud
 spec:
   selector:
-    app: clisonix
+    app: kloud
     component: ocean-core
   ports:
   - protocol: TCP
@@ -173,11 +173,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clisonix-frontend
-  namespace: clisonix
+  name: kloud-frontend
+  namespace: kloud
 spec:
   selector:
-    app: clisonix
+    app: kloud
     component: frontend
   ports:
   - protocol: TCP
@@ -188,32 +188,33 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clisonix-ingress
-  namespace: clisonix
+  name: kloud-ingress
+  namespace: kloud
 spec:
   ingressClassName: nginx
   rules:
-  - host: clisonix.hetzner.cloud
+  - host: kloud.hetzner.cloud
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: clisonix-frontend
+            name: kloud-frontend
             port:
               number: 80
       - path: /api
         pathType: Prefix
         backend:
           service:
-            name: clisonix-backend
+            name: kloud-backend
             port:
               number: 8000
       - path: /ocean
         pathType: Prefix
         backend:
           service:
-            name: clisonix-ocean-core
+            name: kloud-ocean-core
             port:
               number: 8030
+

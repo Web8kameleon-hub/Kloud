@@ -1,7 +1,7 @@
 /**
- * 🔍 CLISONIX API SCANNER
+ * 🔍 KLOUD API SCANNER
  * =======================
- * Scanner për zbulimin dhe analizimin e API-ve të Clisonix Cloud
+ * Scanner për zbulimin dhe analizimin e API-ve të Kloud Cloud
  *
  * Ky modul përfshin:
  * - Zbulim automatik i endpoints
@@ -18,7 +18,7 @@ import * as http from 'http';
 import { URL } from 'url';
 import { EventEmitter } from 'events';
 
-interface ClisonixEndpoint {
+interface KloudEndpoint {
     path: string;
     method: string;
     description?: string;
@@ -28,9 +28,9 @@ interface ClisonixEndpoint {
     rateLimited?: boolean;
 }
 
-interface ClisonixAPIScanResult {
+interface KloudAPIScanResult {
     baseUrl: string;
-    endpoints: ClisonixEndpoint[];
+    endpoints: KloudEndpoint[];
     openapi?: any;
     postman?: any;
     timestamp: Date;
@@ -55,10 +55,10 @@ interface ScanConfig {
     includePatterns: string[];
 }
 
-class ClisonixAPIScanner extends EventEmitter {
+class KloudAPIScanner extends EventEmitter {
     private config: ScanConfig;
     private scannedEndpoints: Set<string> = new Set();
-    private discoveredEndpoints: ClisonixEndpoint[] = [];
+    private discoveredEndpoints: KloudEndpoint[] = [];
     private requestQueue: string[] = [];
     private activeRequests: number = 0;
     private startTime: Date = new Date();
@@ -67,12 +67,12 @@ class ClisonixAPIScanner extends EventEmitter {
         super();
 
         this.config = {
-            baseUrl: config.baseUrl || 'https://api.clisonix.cloud',
+            baseUrl: config.baseUrl || 'https://api.kloud.cloud',
             timeout: config.timeout || 30000,
             maxConcurrency: config.maxConcurrency || 10,
             includeAuth: config.includeAuth || false,
             authToken: config.authToken,
-            userAgent: config.userAgent || 'Clisonix-API-Scanner/1.0',
+            userAgent: config.userAgent || 'Kloud-API-Scanner/1.0',
             followRedirects: config.followRedirects || true,
             maxRedirects: config.maxRedirects || 5,
             validateSSL: config.validateSSL || true,
@@ -85,7 +85,7 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Fillimi i skanimit të plotë të API-së
      */
-    async scanAPI(): Promise<ClisonixAPIScanResult> {
+    async scanAPI(): Promise<KloudAPIScanResult> {
         this.startTime = new Date();
         this.emit('scanStarted', { baseUrl: this.config.baseUrl, timestamp: this.startTime });
 
@@ -114,7 +114,7 @@ class ClisonixAPIScanner extends EventEmitter {
     private async discoverEndpoints(): Promise<void> {
         this.emit('discoveryStarted');
 
-        // Endpoint bazë për Clisonix
+        // Endpoint bazë për Kloud
         const baseEndpoints = [
             '/api/v1/health',
             '/api/v1/status',
@@ -244,7 +244,7 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Analizë e një endpoint specifik
      */
-    private async analyzeEndpoint(endpoint: ClisonixEndpoint): Promise<void> {
+    private async analyzeEndpoint(endpoint: KloudEndpoint): Promise<void> {
         const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'];
 
         for (const method of methods) {
@@ -283,10 +283,10 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Gjenerim i rezultateve përfundimtare
      */
-    private async generateResults(): Promise<ClisonixAPIScanResult> {
+    private async generateResults(): Promise<KloudAPIScanResult> {
         const scanDuration = Date.now() - this.startTime.getTime();
 
-        const result: ClisonixAPIScanResult = {
+        const result: KloudAPIScanResult = {
             baseUrl: this.config.baseUrl,
             endpoints: this.discoveredEndpoints,
             timestamp: new Date(),
@@ -312,13 +312,13 @@ class ClisonixAPIScanner extends EventEmitter {
         const spec: any = {
             openapi: '3.0.3',
             info: {
-                title: 'Clisonix Cloud API',
+                title: 'Kloud Cloud API',
                 version: '1.0.0',
-                description: 'API për Clisonix Cloud platform'
+                description: 'API për Kloud Cloud platform'
             },
             servers: [{
                 url: this.config.baseUrl,
-                description: 'Clisonix Cloud API Server'
+                description: 'Kloud Cloud API Server'
             }],
             paths: {},
             components: {
@@ -361,8 +361,8 @@ class ClisonixAPIScanner extends EventEmitter {
     private async generatePostmanCollection(): Promise<any> {
         const collection: any = {
             info: {
-                name: 'Clisonix Cloud API',
-                description: 'Collection për testimin e Clisonix Cloud API',
+                name: 'Kloud Cloud API',
+                description: 'Collection për testimin e Kloud Cloud API',
                 schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
             },
             item: [],
@@ -503,7 +503,7 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Shto endpoint në listën e zbuluar
      */
-    private addEndpoint(endpoint: ClisonixEndpoint): void {
+    private addEndpoint(endpoint: KloudEndpoint): void {
         const key = `${endpoint.method}:${endpoint.path}`;
         if (!this.scannedEndpoints.has(key)) {
             this.scannedEndpoints.add(key);
@@ -514,7 +514,7 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Përditëso endpoint me informacione të reja
      */
-    private updateEndpoint(endpoint: ClisonixEndpoint, method: string, response: any): void {
+    private updateEndpoint(endpoint: KloudEndpoint, method: string, response: any): void {
         // Përditëso vetëm nëse është metoda aktuale
         if (endpoint.method === method) {
             // Shto informacione shtesë nga përgjigja
@@ -524,8 +524,8 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Grupo endpoints sipas path
      */
-    private groupByPath(): { [key: string]: ClisonixEndpoint[] } {
-        const groups: { [key: string]: ClisonixEndpoint[] } = {};
+    private groupByPath(): { [key: string]: KloudEndpoint[] } {
+        const groups: { [key: string]: KloudEndpoint[] } = {};
 
         for (const endpoint of this.discoveredEndpoints) {
             const basePath = endpoint.path.split('/').slice(0, 3).join('/');
@@ -552,7 +552,7 @@ class ClisonixAPIScanner extends EventEmitter {
     /**
      * Ruaj rezultatet në file
      */
-    async saveResults(result: ClisonixAPIScanResult, outputDir: string = './scan-results'): Promise<void> {
+    async saveResults(result: KloudAPIScanResult, outputDir: string = './scan-results'): Promise<void> {
         // Krijon direktorinë nëse nuk ekziston
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
@@ -562,18 +562,18 @@ class ClisonixAPIScanner extends EventEmitter {
 
         // Ruaj OpenAPI spec
         if (result.openapi) {
-            const openapiPath = path.join(outputDir, `clisonix-api-openapi-${timestamp}.json`);
+            const openapiPath = path.join(outputDir, `kloud-api-openapi-${timestamp}.json`);
             fs.writeFileSync(openapiPath, JSON.stringify(result.openapi, null, 2));
         }
 
         // Ruaj Postman collection
         if (result.postman) {
-            const postmanPath = path.join(outputDir, `clisonix-api-postman-${timestamp}.json`);
+            const postmanPath = path.join(outputDir, `kloud-api-postman-${timestamp}.json`);
             fs.writeFileSync(postmanPath, JSON.stringify(result.postman, null, 2));
         }
 
         // Ruaj rezultatet e plota
-        const resultsPath = path.join(outputDir, `clisonix-api-scan-${timestamp}.json`);
+        const resultsPath = path.join(outputDir, `kloud-api-scan-${timestamp}.json`);
         fs.writeFileSync(resultsPath, JSON.stringify(result, null, 2));
 
         this.emit('resultsSaved', { outputDir, timestamp });
@@ -583,8 +583,8 @@ class ClisonixAPIScanner extends EventEmitter {
 /**
  * Funksioni kryesor për skanim
  */
-export async function scanClisonixAPI(config: Partial<ScanConfig> = {}): Promise<ClisonixAPIScanResult> {
-    const scanner = new ClisonixAPIScanner(config);
+export async function scanKloudAPI(config: Partial<ScanConfig> = {}): Promise<KloudAPIScanResult> {
+    const scanner = new KloudAPIScanner(config);
 
     // Event listeners për monitoring
     scanner.on('scanStarted', (data) => {
@@ -621,8 +621,8 @@ export async function scanClisonixAPI(config: Partial<ScanConfig> = {}): Promise
 /**
  * Utility për skanim të shpejtë
  */
-export async function quickScan(baseUrl: string): Promise<ClisonixAPIScanResult> {
-    return scanClisonixAPI({
+export async function quickScan(baseUrl: string): Promise<KloudAPIScanResult> {
+    return scanKloudAPI({
         baseUrl,
         timeout: 10000,
         maxConcurrency: 5,
@@ -633,4 +633,5 @@ export async function quickScan(baseUrl: string): Promise<ClisonixAPIScanResult>
 /**
  * Eksportimi i klasës për përdorim të avancuar
  */
-export { ClisonixAPIScanner, ClisonixEndpoint, ClisonixAPIScanResult, ScanConfig };
+export { KloudAPIScanner, KloudEndpoint, KloudAPIScanResult, ScanConfig };
+

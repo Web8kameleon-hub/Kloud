@@ -29,7 +29,7 @@ ALBI_URL = f"http://{os.getenv('SERVICE_ALBI_HOST', 'localhost')}:6060"
 JONA_URL = f"http://{os.getenv('SERVICE_JONA_HOST', 'localhost')}:7070"
 
 app = FastAPI(
-    title="Clisonix SAAS Orchestrator",
+    title="Kloud SAAS Orchestrator",
     version="2.0.0",
     description="Coordinates Alba/Albi/Jona + AI agents with self-documentation and scaling",
     docs_url="/docs",
@@ -381,7 +381,7 @@ async def proxy_to_service(service: str, path: str, request: Request):
 
 @app.on_event("startup")
 async def startup():
-    logger.info("🚀 Clisonix SAAS Orchestrator starting...")
+    logger.info("🚀 Kloud SAAS Orchestrator starting...")
     logger.info(f"   Instance ID: {INSTANCE_ID}")
     logger.info(f"   Alba: {ALBA_URL}")
     logger.info(f"   Albi: {ALBI_URL}")
@@ -392,4 +392,5 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", "9999"))
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+
 

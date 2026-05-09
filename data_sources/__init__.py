@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌍 CLISONIX DATA SOURCES MODULE
+🌍 KLOUD DATA SOURCES MODULE
 ===============================
 
 Comprehensive collection of 5000+ free open data sources from 200+ countries.
@@ -77,7 +77,7 @@ from .global_data_sources import (
 )
 
 __version__ = "3.0.0"
-__author__ = "Clisonix Cloud Team"
+__author__ = "Kloud Cloud Team"
 __all__ = [
     # Functions
     "get_all_sources",
@@ -101,3 +101,4 @@ __all__ = [
     "COUNTRY_TO_REGION",
     "COUNTRY_NAMES",
 ]
+

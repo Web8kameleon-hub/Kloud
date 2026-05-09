@@ -14,7 +14,7 @@ Funksionet kryesore:
 - generate_signal(): Krijon sinjal për Trinity/Ocean
 
 Author: Ledjan Ahmati (CEO, ABA GmbH)
-System: Clisonix Cloud
+System: Kloud Cloud
 """
 
 from __future__ import annotations
@@ -876,3 +876,4 @@ if __name__ == "__main__":
         print("\n✅ Blerina test complete!")
     
     asyncio.run(test_blerina())
+

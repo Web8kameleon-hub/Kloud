@@ -1,7 +1,7 @@
 /**
  * 🔮 JONA INDUSTRIAL SYSTEM MONITOR
  * =================================
- * High-performance system monitoring për clisonix
+ * High-performance system monitoring për kloud
  * REAL system data, NO Math.random(), REAL monitoring only
  */
 
@@ -338,3 +338,4 @@ export async function JonaIndustrialRouter(fastify: FastifyInstance) {
     };
   });
 }
+

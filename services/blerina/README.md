@@ -8,7 +8,7 @@ High-quality pillar article generation with quality gate.
 - **Quality Gate**: Validates content against quality standards
 - **LLM Integration**: Uses Ollama for content generation
 - **Video Integration**: Triggers video generator for supporting content
-- **YouTube Ready**: Configured for Clisonix YouTube channel
+- **YouTube Ready**: Configured for Kloud YouTube channel
 
 ## API Endpoints
 
@@ -71,3 +71,4 @@ curl -X POST http://localhost:8035/api/v1/pillars/generate \
 4. **Neural Signal Processing** - Real-time implementation
 5. **EU AI Act Compliance** - Regulatory guide
 6. **Edge AI Medical** - Medical device AI
+

@@ -11,7 +11,7 @@ Chat engine që bën gjëra reale:
 
 NO PLACEHOLDER! NO FAKE ANSWERS! VETËM FUNKSIONE REALE!
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import re
@@ -798,3 +798,4 @@ def get_real_chat_engine() -> RealChatEngine:
     if _real_chat_engine is None:
         _real_chat_engine = RealChatEngine()
     return _real_chat_engine
+

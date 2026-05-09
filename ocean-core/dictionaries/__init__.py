@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Clisonix Dictionaries - Multilingual Support
+Kloud Dictionaries - Multilingual Support
 500+ words per language for better AI understanding
 """
 
@@ -393,7 +393,7 @@ ALBANIAN_DICT = {
     "me duhet": "I need",
     "dua te": "I want to",
     
-    # AI/Clisonix specific
+    # AI/Kloud specific
     "inteligjence artificiale": "artificial intelligence",
     "asistent": "assistant",
     "algoritme": "algorithm",
@@ -430,7 +430,7 @@ ALBANIAN LANGUAGE GUIDE (Shqip):
 
 When user writes in Albanian, ALWAYS respond in Albanian!
 Example response in Albanian:
-"Pershendetje! Une jam Curiosity Ocean, nje asistent AI i krijuar nga Clisonix. Si mund t'ju ndihmoj sot?"
+"Pershendetje! Une jam Curiosity Ocean, nje asistent AI i krijuar nga Kloud. Si mund t'ju ndihmoj sot?"
 """
 
 
@@ -466,3 +466,4 @@ def detect_language_hint(text: str) -> str:
         return "spanish"
     
     return "english"
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 Clisonix Industrial Backend - Test Script
+🧠 Kloud Industrial Backend - Test Script
 ===============================================
 Test script për verifikimin e të gjithë endpoints të API-së
 """
@@ -8,7 +8,7 @@ Test script për verifikimin e të gjithë endpoints të API-së
 import requests
 import time
 import threading
-from Clisonix_industrial_api import app
+from Kloud_industrial_api import app
 import uvicorn
 import json
 
@@ -33,7 +33,7 @@ def test_endpoint(url, description):
 
 def main():
     """Main test function"""
-    print("🧠 Clisonix INDUSTRIAL BACKEND - COMPREHENSIVE TEST")
+    print("🧠 Kloud INDUSTRIAL BACKEND - COMPREHENSIVE TEST")
     print("=" * 60)
 
     # Start server in background
@@ -74,7 +74,7 @@ def main():
 
     if successful == total:
         print("\n🎉 ALL ENDPOINTS OPERATIONAL!")
-        print("🌐 Clisonix Industrial Backend is fully functional")
+        print("🌐 Kloud Industrial Backend is fully functional")
         print("📡 Server: http://localhost:8000")
 
         # Show sample data from key endpoints
@@ -101,3 +101,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

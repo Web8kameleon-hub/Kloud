@@ -1,5 +1,5 @@
 """
-CLISONIX CONTENT FACTORY API SERVICE
+KLOUD CONTENT FACTORY API SERVICE
 ======================================
 
 Complete content production pipeline API:
@@ -164,7 +164,7 @@ stats: Dict[str, Union[int, float, str]] = {
 
 # Create FastAPI app
 app = FastAPI(
-    title="Clisonix Content Factory API",
+    title="Kloud Content Factory API",
     description="Complete content production pipeline with Blerina, EAP, and Publisher",
     version="1.0.0",
     docs_url="/docs",
@@ -240,7 +240,7 @@ class PublishRequest(BaseModel):
     """Request for publishing"""
     content: str = Field(..., description="Content to publish")
     title: str = Field(..., description="Title")
-    platforms: List[str] = Field(default=["clisonix"], description="Target platforms")
+    platforms: List[str] = Field(default=["kloud"], description="Target platforms")
     quality_threshold: float = Field(0.7, ge=0.0, le=1.0)
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
@@ -261,7 +261,7 @@ class PipelineRequest(BaseModel):
     title: Optional[str] = Field(None, description="Title")
     doc_type: DocumentTypeEnum = Field(DocumentTypeEnum.TECHNICAL)
     auto_publish: bool = Field(False, description="Auto-publish if quality passes")
-    publish_platforms: List[str] = Field(default=["clisonix"])
+    publish_platforms: List[str] = Field(default=["kloud"])
     quality_threshold: float = Field(0.7, ge=0.0, le=1.0)
 
 
@@ -289,7 +289,7 @@ class PipelineResponse(BaseModel):
 async def root():
     """Root endpoint"""
     return {
-        "service": "Clisonix Content Factory API",
+        "service": "Kloud Content Factory API",
         "version": "1.0.0",
         "instance": INSTANCE_ID,
         "components": {
@@ -323,7 +323,7 @@ async def status():
     minutes, seconds = divmod(remainder, 60)
     
     return {
-        "service": "Clisonix Content Factory",
+        "service": "Kloud Content Factory",
         "version": "1.0.0",
         "instance": INSTANCE_ID,
         "uptime": f"{hours}h {minutes}m",
@@ -564,10 +564,10 @@ async def publish_content(request: PublishRequest):
     # Simulate publishing
     published_urls = []
     for platform in request.platforms:
-        if platform == "clisonix":
-            published_urls.append(f"https://clisonix.com/content/{pub_id}")
+        if platform == "kloud":
+            published_urls.append(f"https://kloud.com/content/{pub_id}")
         elif platform == "medium":
-            published_urls.append(f"https://medium.com/@clisonix/{pub_id}")
+            published_urls.append(f"https://medium.com/@kloud/{pub_id}")
         elif platform == "linkedin":
             published_urls.append(f"https://linkedin.com/pulse/{pub_id}")
     
@@ -852,7 +852,7 @@ async def sync_to_blog():
     """
     Sync generated articles to separate blog repository (Batica-Zbatica flow).
     
-    This pushes content from main repo to clisonix-blog for GitHub Pages.
+    This pushes content from main repo to kloud-blog for GitHub Pages.
     Keeps main repo clean while publishing content to the world.
     """
     if not BLOG_SYNC_AVAILABLE or not get_blog_sync:
@@ -879,7 +879,7 @@ async def get_blog_stats():
     return {
         "status": "available",
         "stats": sync.get_stats(),
-        "flow": "Clisonix-cloud → clisonix-blog → GitHub Pages",
+        "flow": "Kloud-cloud → kloud-blog → GitHub Pages",
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
@@ -920,3 +920,4 @@ async def startup_event():
         publisher = get_auto_publisher()
         logger.info("🚀 Starting Auto-Publisher on startup...")
         asyncio.create_task(publisher.run_continuous())
+

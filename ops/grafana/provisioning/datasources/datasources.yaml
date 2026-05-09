@@ -4,14 +4,14 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://clisonix-cloud-prometheus-1:9090
+    url: http://kloud-cloud-prometheus-1:9090
     isDefault: true
     editable: true
     
   - name: Loki
     type: loki
     access: proxy
-    url: http://clisonix-loki:3100
+    url: http://kloud-loki:3100
     editable: true
     jsonData:
       maxLines: 1000
@@ -19,7 +19,7 @@ datasources:
   - name: Tempo
     type: tempo
     access: proxy
-    url: http://clisonix-tempo:3200
+    url: http://kloud-tempo:3200
     editable: true
     jsonData:
       tracesToLogs:
@@ -27,3 +27,4 @@ datasources:
         filterByTraceID: true
       serviceMap:
         datasourceUid: prometheus
+

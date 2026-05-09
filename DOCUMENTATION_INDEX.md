@@ -1,4 +1,4 @@
-# 📑 CLISONIX CLOUD — INDEX I DOKUMENTAVE
+# 📑 KLOUD CLOUD — INDEX I DOKUMENTAVE
 
 **Përditësuar:** 28 Shkurt 2026  
 **Session:** Complete Audit & Status Report
@@ -46,7 +46,7 @@
 |----------|-----------|------|-----------|
 | `NEXT_STEPS_AFTER_COMPLETION.md` | PM, CTO | 30 min | Roadmap pas ndërtimit |
 | `PUBLISHING_SYSTEM_SUMMARY.md` | Admin | 15 min | 5-phase QA publishing gate |
-| `CLISONIX_ARCHITECTURE_BASELINE_2025.md` | Arch | 40 min | Complete architecture |
+| `KLOUD_ARCHITECTURE_BASELINE_2025.md` | Arch | 40 min | Complete architecture |
 
 ---
 
@@ -82,7 +82,7 @@
 ## 📊 KEY METRICS (One-Page Summary)
 
 ```
-CLISONIX CLOUD STATUS — 28 Feb 2026
+KLOUD CLOUD STATUS — 28 Feb 2026
 
 Services Running:           25+ ✅
 API Endpoints:              150+ ✅
@@ -110,7 +110,7 @@ VERDICT:                    ✅ PRODUCTION READY
 
 ---
 
-## ✅ WHAT'S INCLUDED IN CLISONIX CLOUD
+## ✅ WHAT'S INCLUDED IN KLOUD CLOUD
 
 ### **Core Systems**
 - ✅ Ocean-Core (150+ endpoints)
@@ -202,3 +202,4 @@ VERDICT:                    ✅ PRODUCTION READY
 ---
 
 _Index | 28 Feb 2026 | All documents cross-referenced_
+

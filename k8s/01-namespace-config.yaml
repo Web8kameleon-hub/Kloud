@@ -1,15 +1,15 @@
 ---
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Cloud Kubernetes Configuration
+# Kloud Cloud Kubernetes Configuration
 # Namespace and Global ConfigMap
 # ═══════════════════════════════════════════════════════════════
 
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: clisonix
+  name: kloud
   labels:
-    app: clisonix
+    app: kloud
     environment: production
 
 ---
@@ -17,8 +17,8 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: clisonix-config
-  namespace: clisonix
+  name: kloud-config
+  namespace: kloud
 data:
   ENVIRONMENT: "production"
   DEBUG: "false"
@@ -26,18 +26,18 @@ data:
   API_VERSION: "1.0.0"
   
   # Database
-  DB_HOST: "postgres-service.clisonix.svc.cluster.local"
+  DB_HOST: "postgres-service.kloud.svc.cluster.local"
   DB_PORT: "5432"
-  DB_NAME: "clisonix_db"
+  DB_NAME: "kloud_db"
   DB_POOL_SIZE: "20"
   
   # Redis
-  REDIS_HOST: "redis-service.clisonix.svc.cluster.local"
+  REDIS_HOST: "redis-service.kloud.svc.cluster.local"
   REDIS_PORT: "6379"
   REDIS_DB: "0"
   
   # API
-  CORS_ORIGINS: "http://localhost:3000,https://clisonix.com"
+  CORS_ORIGINS: "http://localhost:3000,https://kloud.com"
   CORS_CREDENTIALS: "true"
   
   # File uploads
@@ -45,13 +45,13 @@ data:
   UPLOAD_DIRECTORY: "/app/uploads"
   
   # MinIO
-  MINIO_ENDPOINT: "minio-service.clisonix.svc.cluster.local:9000"
+  MINIO_ENDPOINT: "minio-service.kloud.svc.cluster.local:9000"
   MINIO_REGION: "us-east-1"
-  MINIO_BUCKET_AUDIO: "clisonix-audio"
-  MINIO_BUCKET_DATA: "clisonix-data"
+  MINIO_BUCKET_AUDIO: "kloud-audio"
+  MINIO_BUCKET_DATA: "kloud-data"
   
   # Elasticsearch
-  ELASTICSEARCH_HOST: "elasticsearch-service.clisonix.svc.cluster.local"
+  ELASTICSEARCH_HOST: "elasticsearch-service.kloud.svc.cluster.local"
   ELASTICSEARCH_PORT: "9200"
   
   # Feature flags
@@ -68,13 +68,13 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: clisonix-secrets
-  namespace: clisonix
+  name: kloud-secrets
+  namespace: kloud
 type: Opaque
 stringData:
   # Database credentials
-  DATABASE_URL: "postgresql://clisonix:secure_password@postgres-service:5432/clisonix_db"
-  DB_USER: "clisonix"
+  DATABASE_URL: "postgresql://kloud:secure_password@postgres-service:5432/kloud_db"
+  DB_USER: "kloud"
   DB_PASSWORD: "secure_password"
   
   # Redis
@@ -101,7 +101,7 @@ stringData:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: clisonix-storage
+  name: kloud-storage
 provisioner: kubernetes.io/host-path
 parameters:
   type: pd-standard
@@ -114,8 +114,8 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: clisonix-network-policy
-  namespace: clisonix
+  name: kloud-network-policy
+  namespace: kloud
 spec:
   podSelector: {}
   policyTypes:
@@ -148,16 +148,16 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: clisonix-api
-  namespace: clisonix
+  name: kloud-api
+  namespace: kloud
 
 ---
 # RBAC - Role for API
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: clisonix-api-role
-  namespace: clisonix
+  name: kloud-api-role
+  namespace: kloud
 rules:
   - apiGroups: [""]
     resources: ["configmaps", "secrets"]
@@ -171,24 +171,24 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: clisonix-api-rolebinding
-  namespace: clisonix
+  name: kloud-api-rolebinding
+  namespace: kloud
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: clisonix-api-role
+  name: kloud-api-role
 subjects:
   - kind: ServiceAccount
-    name: clisonix-api
-    namespace: clisonix
+    name: kloud-api
+    namespace: kloud
 
 ---
 # Resource Quota for namespace
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: clisonix-quota
-  namespace: clisonix
+  name: kloud-quota
+  namespace: kloud
 spec:
   hard:
     requests.cpu: "10"
@@ -204,8 +204,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: clisonix-ingress-policy
-  namespace: clisonix
+  name: kloud-ingress-policy
+  namespace: kloud
 spec:
   podSelector:
     matchLabels:
@@ -228,13 +228,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: clisonix-api-hpa
-  namespace: clisonix
+  name: kloud-api-hpa
+  namespace: kloud
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: clisonix-api
+    name: kloud-api
   minReplicas: 3
   maxReplicas: 10
   metrics:
@@ -273,13 +273,13 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: clisonix-api-pdb
-  namespace: clisonix
+  name: kloud-api-pdb
+  namespace: kloud
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: clisonix-api
+      app: kloud-api
       tier: backend
 
 ---
@@ -287,8 +287,9 @@ spec:
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: clisonix-critical
+  name: kloud-critical
 value: 1000
 globalDefault: false
-description: "Critical services for Clisonix Cloud"
+description: "Critical services for Kloud Cloud"
+
 

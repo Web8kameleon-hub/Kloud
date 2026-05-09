@@ -41,7 +41,7 @@ else
             if [[ $secret == *"password"* ]] || [[ $secret == *"secret"* ]] || [[ $secret == *"key"* ]]; then
                 if [ ${#content} -lt 16 ]; then
                     errors+=("❌ $secret is too short (< 16 chars)")
-                elif echo "$content" | grep -qE "^(admin|password|changeme|clisonix123)"; then
+                elif echo "$content" | grep -qE "^(admin|password|changeme|kloud123)"; then
                     errors+=("❌ $secret contains weak/default password")
                 else
                     echo "✓ $secret validated"
@@ -91,7 +91,7 @@ else
     echo "✓ docker-compose.secrets.yml exists"
     
     # Validate it doesn't have hard-coded passwords
-    if grep -qE "password:\s+(clisonix|admin|changeme)" docker-compose.secrets.yml; then
+    if grep -qE "password:\s+(kloud|admin|changeme)" docker-compose.secrets.yml; then
         errors+=("❌ docker-compose.secrets.yml contains hard-coded passwords!")
     fi
 fi
@@ -153,4 +153,5 @@ else
     echo "⚠️  Validation passed with warnings. Review before deploying."
     exit 0
 fi
+
 

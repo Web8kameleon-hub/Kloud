@@ -60,7 +60,7 @@ patterns = {
             'pattern_type': 'info',
             'keywords': ['sa sherbime', 'how many services', 'microservices', 'count'],
             'regex': r'.*(sa sherbime|how many services|microservices|count).*',
-            'response_template': 'Clisonix ka 56 microservices: ALBA, ALBI, ASI, Ocean Core, JONA, dhe shume te tjere.',
+            'response_template': 'Kloud ka 56 microservices: ALBA, ALBI, ASI, Ocean Core, JONA, dhe shume te tjere.',
             'times_matched': 0,
             'success_rate': 0.95,
             'created_at': datetime.now(timezone.utc).isoformat()
@@ -70,7 +70,7 @@ patterns = {
             'pattern_type': 'company',
             'keywords': ['founder', 'themelues', 'ceo', 'ledjan'],
             'regex': r'.*(founder|themelues|ceo|ledjan).*',
-            'response_template': 'Themeluesi dhe CEO i Clisonix eshte Ledjan Ahmati.',
+            'response_template': 'Themeluesi dhe CEO i Kloud eshte Ledjan Ahmati.',
             'times_matched': 0,
             'success_rate': 1.0,
             'created_at': datetime.now(timezone.utc).isoformat()
@@ -80,7 +80,7 @@ patterns = {
             'pattern_type': 'company',
             'keywords': ['company', 'kompani', 'web8', 'euroweb', 'gmbh'],
             'regex': r'.*(company|kompani|web8|euroweb|gmbh).*',
-            'response_template': 'Clisonix eshte produkt i WEB8euroweb GmbH. Website: www.clisonix.com',
+            'response_template': 'Kloud eshte produkt i WEB8euroweb GmbH. Website: www.kloud.com',
             'times_matched': 0,
             'success_rate': 1.0,
             'created_at': datetime.now(timezone.utc).isoformat()
@@ -114,3 +114,4 @@ with open('learned_patterns.cbor', 'wb') as f:
     cbor2.dump(patterns, f)
 
 print(f"Created learned_patterns.cbor with {len(patterns['patterns'])} initial patterns")
+

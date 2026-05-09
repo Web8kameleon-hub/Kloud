@@ -24,7 +24,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: clisonix-cloud
+  IMAGE_NAME: kloud-cloud
 
 jobs:
   dependency-intelligence:
@@ -342,7 +342,7 @@ jobs:
 
       - name: Generate Security Report
         run: |
-          echo "# 🔐 Clisonix Cloud Security & Supply Chain Report" >> $GITHUB_STEP_SUMMARY
+          echo "# 🔐 Kloud Cloud Security & Supply Chain Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📋 Scan Results Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -380,3 +380,4 @@ jobs:
               body: '🔐 **Security Pipeline Complete**\n\n✅ CodeQL v3 (Jan 2025 compliant)\n✅ Secrets: Gitleaks + TruffleHog\n✅ Policy: OPA/Conftest passed\n✅ Container: Trivy scanning done\n✅ Supply Chain: SBOM + Provenance\n✅ Environment: All guardrails passed\n\n🚀 Ready to merge!'
             })
         continue-on-error: true
+

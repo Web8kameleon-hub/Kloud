@@ -4,14 +4,14 @@
 global:
   postgresql:
     auth:
-      username: clisonix
-      password: ${DB_PASSWORD:-clisonix}
-      database: clisonix
+      username: kloud
+      password: ${DB_PASSWORD:-kloud}
+      database: kloud
 
 auth:
-  username: clisonix
-  password: ${DB_PASSWORD:-clisonix}
-  database: clisonix
+  username: kloud
+  password: ${DB_PASSWORD:-kloud}
+  database: kloud
 
 primary:
   persistence:
@@ -28,3 +28,4 @@ primary:
 
 metrics:
   enabled: true
+

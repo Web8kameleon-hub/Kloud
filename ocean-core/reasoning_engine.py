@@ -2,7 +2,7 @@
 # REASONING ENGINE - Logic and Inference Without External AI
 # ============================================================================
 # Pure rule-based and pattern-matching reasoning
-# NO external LLMs - 100% Internal Clisonix Intelligence
+# NO external LLMs - 100% Internal Kloud Intelligence
 # ============================================================================
 
 import logging
@@ -127,7 +127,7 @@ class ReasoningRules:
 
 class ReasoningEngine:
     """
-    Core reasoning engine for Clisonix Internal AGI
+    Core reasoning engine for Kloud Internal AGI
     
     Provides inference capabilities without external LLMs:
     - Rule-based reasoning
@@ -424,3 +424,4 @@ def get_engine() -> ReasoningEngine:
     if _engine_instance is None:
         _engine_instance = ReasoningEngine()
     return _engine_instance
+

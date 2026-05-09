@@ -65,7 +65,7 @@ Focus on: frequency entrainment, relaxation, focus enhancement.
 Provide precise Hz values."""
 
 # Admin Panel
-ADMIN_PROMPT = """Ti je Curiosity Ocean 🌊 - Truri Administrativ i Clisonix Cloud.
+ADMIN_PROMPT = """Ti je Curiosity Ocean 🌊 - Truri Administrativ i Kloud Cloud.
 Roli: Ndihmo adminin me menaxhimin e sistemit.
 Gjuha: Shqip profesional."""
 
@@ -99,3 +99,4 @@ __all__ = [
     "CODE_PROMPT",
     "TASK_MODES",
 ]
+

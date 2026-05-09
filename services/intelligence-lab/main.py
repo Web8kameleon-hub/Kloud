@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLISONIX INTELLIGENCE LAB API
+KLOUD INTELLIGENCE LAB API
 ==============================
 
 FastAPI server për KLAJDI dhe MALI.
@@ -75,7 +75,7 @@ async def lifespan(app: FastAPI):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 app = FastAPI(
-    title="Clisonix Intelligence Lab",
+    title="Kloud Intelligence Lab",
     description="KLAJDI Detective Lab + MALI Master Intelligence",
     version="1.0.0",
     lifespan=lifespan,
@@ -128,7 +128,7 @@ class AnnouncementInput(BaseModel):
 async def root():
     """Root endpoint"""
     return {
-        "service": "Clisonix Intelligence Lab",
+        "service": "Kloud Intelligence Lab",
         "version": "1.0.0",
         "components": {
             "klajdi": "Knost-Labor-Array-Jonify-Detective-Intelligence",
@@ -547,3 +547,4 @@ async def get_article_data():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

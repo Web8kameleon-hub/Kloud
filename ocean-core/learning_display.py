@@ -27,7 +27,7 @@ class Colors:
 def print_header():
     """Print header"""
     print(f"\n{Colors.CYAN}{'='*70}{Colors.END}")
-    print(f"{Colors.BOLD}{Colors.CYAN}🧠 CLISONIX LEARNING ENGINE - LIVE PROCESS{Colors.END}")
+    print(f"{Colors.BOLD}{Colors.CYAN}🧠 KLOUD LEARNING ENGINE - LIVE PROCESS{Colors.END}")
     print(f"{Colors.CYAN}{'='*70}{Colors.END}\n")
 
 
@@ -156,3 +156,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         print(f"\n{Colors.YELLOW}Demo u ndërpre.{Colors.END}")
+

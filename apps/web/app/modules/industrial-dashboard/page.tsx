@@ -96,7 +96,7 @@ export default function IndustrialDashboard() {
         ) {
           const healthData = await (healthRes.value as Response).json();
           setBackendHealth({
-            service: 'Clisonix Backend (REAL)',
+            service: 'Kloud Backend (REAL)',
             status: healthData.healthy ? 'Operational' : 'Degraded',
             version: '2.1.0',
             uptime: healthData.components?.alba_network?.metrics?.latency_ms || 0,
@@ -162,7 +162,7 @@ export default function IndustrialDashboard() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-4 text-violet-400 hover:text-violet-300 transition-colors">
-            ← Back to Clisonix Cloud
+            ← Back to Kloud Cloud
           </Link>
           <h1 className="text-4xl font-bold text-white mb-4">
             🏭 Industrial Dashboard
@@ -335,6 +335,7 @@ export default function IndustrialDashboard() {
     </div>
   );
 }
+
 
 
 

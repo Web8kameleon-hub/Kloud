@@ -1,10 +1,10 @@
-# Clisonix Cloud SDK
+# Kloud Cloud SDK
 
-Complete client libraries for the Clisonix Cloud API (part of UltraWebThinking/Euroweb).
+Complete client libraries for the Kloud Cloud API (part of UltraWebThinking/Euroweb).
 
 ## 📦 Available SDKs
 
-### Python SDK (`clisonix_sdk.py`)
+### Python SDK (`kloud_sdk.py`)
 - **Language**: Python 3.7+
 - **Dependencies**: `requests`
 - **Type Hints**: Full type annotation support
@@ -15,7 +15,7 @@ Complete client libraries for the Clisonix Cloud API (part of UltraWebThinking/E
   - Streaming support
   - Context manager support (`with` statement)
 
-### TypeScript/JavaScript SDK (`clisonix_sdk.ts`)
+### TypeScript/JavaScript SDK (`kloud_sdk.ts`)
 - **Language**: TypeScript 4.0+ (compiled to ES2020)
 - **Dependencies**: None (uses native `fetch` API)
 - **Environment**: Node.js 18+ or modern browsers
@@ -31,11 +31,11 @@ Complete client libraries for the Clisonix Cloud API (part of UltraWebThinking/E
 ### Python
 
 ```python
-from clisonix_sdk import ClisonixClient
+from kloud_sdk import KloudClient
 
 # Initialize client
-client = ClisonixClient(
-    base_url="https://api.clisonix.com",
+client = KloudClient(
+    base_url="https://api.kloud.com",
     token="your-jwt-token-here"
 )
 
@@ -44,7 +44,7 @@ health = client.health()
 print(f"Status: {health['status']}")
 
 # Ask a question
-answer = client.ask("Çfarë është Clisonix?")
+answer = client.ask("Çfarë është Kloud?")
 print(f"Answer: {answer['answer']}")
 
 # Start data stream
@@ -66,11 +66,11 @@ client.close()
 ### TypeScript/JavaScript
 
 ```typescript
-import ClisonixClient from './clisonix_sdk';
+import KloudClient from './kloud_sdk';
 
 // Initialize client
-const client = new ClisonixClient({
-  baseUrl: "https://api.clisonix.com",
+const client = new KloudClient({
+  baseUrl: "https://api.kloud.com",
   token: "your-jwt-token-here"
 });
 
@@ -79,7 +79,7 @@ const health = await client.health();
 console.log(`Status: ${health.status}`);
 
 // Ask a question
-const answer = await client.ask("Çfarë është Clisonix?");
+const answer = await client.ask("Çfarë është Kloud?");
 console.log(`Answer: ${answer.answer}`);
 
 // Start data stream
@@ -317,12 +317,12 @@ metrics = client.alba_metrics()
 
 ```python
 # Python
-client = ClisonixClient(token="your-jwt-token")
+client = KloudClient(token="your-jwt-token")
 # Or set later
 client.set_token("new-token")
 
 # TypeScript
-const client = new ClisonixClient({ token: "your-jwt-token" });
+const client = new KloudClient({ token: "your-jwt-token" });
 client.setToken("new-token");
 ```
 
@@ -337,7 +337,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 Contact your administrator or use the login endpoint:
 ```bash
-curl -X POST https://api.clisonix.com/auth/login \
+curl -X POST https://api.kloud.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username": "user", "password": "pass"}'
 ```
@@ -385,9 +385,9 @@ try {
 npm install -D typescript
 
 # Compile to JavaScript
-tsc clisonix_sdk.ts --target ES2020 --module ESNext --declaration
+tsc kloud_sdk.ts --target ES2020 --module ESNext --declaration
 
-# Output: clisonix_sdk.js, clisonix_sdk.d.ts
+# Output: kloud_sdk.js, kloud_sdk.d.ts
 ```
 
 ### Testing SDKs
@@ -428,19 +428,19 @@ npm publish
 
 ## 🌍 Base URLs
 
-- **Production**: `https://api.clisonix.com`
-- **Staging**: `https://staging.clisonix.cloud`
+- **Production**: `https://api.kloud.com`
+- **Staging**: `https://staging.kloud.cloud`
 - **Development**: `http://localhost:8000`
-- **Sandbox**: `https://sandbox.clisonix.cloud`
+- **Sandbox**: `https://sandbox.kloud.cloud`
 
 ---
 
 ## 📞 Support
 
 For issues or questions:
-- **Documentation**: https://docs.clisonix.com
+- **Documentation**: https://docs.kloud.com
 - **API Spec**: See `openapi.yaml`, `openapi.json`, `openapi.cbor`
-- **Postman Collection**: Import `clisonix-postman-collection.json`
+- **Postman Collection**: Import `kloud-postman-collection.json`
 
 ---
 
@@ -452,4 +452,5 @@ Part of UltraWebThinking/Euroweb. See LICENSE file.
 
 **Version**: 1.0.0  
 **Last Updated**: 2024-01-15  
-**Organization**: UltraWebThinking / Euroweb / Clisonix
+**Organization**: UltraWebThinking / Euroweb / Kloud
+

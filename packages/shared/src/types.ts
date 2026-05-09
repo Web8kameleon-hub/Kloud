@@ -1,4 +1,4 @@
-// Shared types for clisonix platform
+// Shared types for kloud platform
 export interface ServiceStatus {
   name: string
   url: string
@@ -30,3 +30,4 @@ export interface DashboardConfig {
   layout: 'grid' | 'list'
   refreshInterval: number
 }
+

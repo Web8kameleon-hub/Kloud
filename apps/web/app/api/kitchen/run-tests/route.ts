@@ -13,10 +13,10 @@ const COLLECTIONS_DIR = join(process.cwd(), "postman-collections");
 // Available collections mapping
 const COLLECTIONS: Record<string, string> = {
   sovereign: "Protocol_Kitchen_Sovereign_System.postman_collection.json",
-  "ultra-mega": "clisonix-ultra-mega-collection.json",
-  "cloud-api": "Clisonix_Cloud_API.postman_collection.json",
-  "real-apis": "Clisonix-Cloud-Real-APIs.postman_collection.json",
-  main: "clisonix-cloud.postman_collection.json",
+  "ultra-mega": "kloud-ultra-mega-collection.json",
+  "cloud-api": "Kloud_Cloud_API.postman_collection.json",
+  "real-apis": "Kloud-Cloud-Real-APIs.postman_collection.json",
+  main: "kloud-cloud.postman_collection.json",
 };
 
 // Ensure jobs directory exists
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     const collectionKey = body.collection || "main";
     const collection = COLLECTIONS[collectionKey] || collectionKey;
     const baseUrl =
-      body.baseUrl || process.env.API_URL || "https://api.clisonix.cloud";
+      body.baseUrl || process.env.API_URL || "https://api.kloud.cloud";
     const environment = body.environment || "production";
     const priority = Math.min(10, Math.max(1, body.priority || 5));
 
@@ -150,7 +150,7 @@ export async function GET() {
     service: "Kitchen Test Runner",
     version: "1.0.0",
     description:
-      "API for running Postman/Newman tests against Clisonix services",
+      "API for running Postman/Newman tests against Kloud services",
     collections: Object.entries(COLLECTIONS).map(([key, file]) => ({
       key,
       file,
@@ -168,7 +168,7 @@ export async function GET() {
       headers: { Authorization: "Bearer <your-api-key>" },
       body: {
         collection: "main",
-        baseUrl: "https://api.clisonix.cloud",
+        baseUrl: "https://api.kloud.cloud",
         environment: "production",
       },
     },
@@ -185,3 +185,4 @@ function getCollectionDescription(key: string): string {
   };
   return descriptions[key] || "Postman collection";
 }
+

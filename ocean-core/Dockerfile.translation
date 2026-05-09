@@ -1,4 +1,4 @@
-# Clisonix Translation Node - Nanogrid Pulse Architecture
+# Kloud Translation Node - Nanogrid Pulse Architecture
 # Ultra-lightweight translation microservice
 
 FROM python:3.13-slim
@@ -24,3 +24,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run
 CMD ["python", "translation_node.py"]
+

@@ -1,4 +1,4 @@
-# ðŸš€ Clisonix DATABASE CONNECTION
+# ðŸš€ Kloud DATABASE CONNECTION
 # Production-Grade SQLAlchemy Engine with Real Connection Pooling
 # Industrial Redis Caching, Session Management
 
@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 class DatabaseConfig:
     def __init__(self):
         # PostgreSQL connection parameters
-        self.DB_USER = os.getenv('DB_USER', 'Clisonix')
-        self.DB_PASSWORD = os.getenv('DB_PASSWORD', 'Clisonix123')
+        self.DB_USER = os.getenv('DB_USER', 'Kloud')
+        self.DB_PASSWORD = os.getenv('DB_PASSWORD', 'Kloud123')
         self.DB_HOST = os.getenv('DB_HOST', 'localhost')
         self.DB_PORT = os.getenv('DB_PORT', '5432')
-        self.DB_NAME = os.getenv('DB_NAME', 'Clisonix')
+        self.DB_NAME = os.getenv('DB_NAME', 'Kloud')
         
         # Connection pooling
         self.POOL_SIZE = int(os.getenv('DB_POOL_SIZE', '20'))
@@ -406,5 +406,6 @@ __all__ = [
     'query_helper',
     'config'
 ]
+
 
 

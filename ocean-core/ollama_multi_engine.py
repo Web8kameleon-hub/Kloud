@@ -10,7 +10,7 @@ MODELET E DISPONUESHME:
 
  Model                    Size      Prdorimi                               
 
- clisonix-ocean:v2        4.9 GB    [TARGET] DEFAULT - Pyetje t prgjithshme    
+ kloud-ocean:v2        4.9 GB    [TARGET] DEFAULT - Pyetje t prgjithshme    
  llama3.1:8b              4.9 GB    [SYNC] BACKUP - Fallback i sigurt          
  gpt-oss:120b             65 GB     [BRAIN] DEEP - Analiza komplekse (microservice 8031) 
 
@@ -21,9 +21,9 @@ STRATEGJIT:
 3. DEEP - Prdor modelin e madh (gpt-oss:120b) - via microservice 8031
 4. FALLBACK - Provo modele n rradh nse njri dshton
 
-HEQUR: phi3:mini, clisonix-ocean:latest - nuk flasin shqip
+HEQUR: phi3:mini, kloud-ocean:latest - nuk flasin shqip
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 2.0.1 Enterprise
 """
 
@@ -45,8 +45,8 @@ logger = logging.getLogger("ollama_multi")
 
 IS_IN_DOCKER = os.path.exists("/.dockerenv") or os.environ.get("DOCKER_ENV") == "1"
 # Use environment variable first, then container name for Docker, localhost for dev
-# Container name in docker-compose.yml is "clisonix-ollama"
-OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "clisonix-ollama" if IS_IN_DOCKER else "localhost")
+# Container name in docker-compose.yml is "kloud-ollama"
+OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "kloud-ollama" if IS_IN_DOCKER else "localhost")
 # Clean up OLLAMA_HOST if it contains http://
 if OLLAMA_HOST.startswith("http://"):
     OLLAMA_HOST = OLLAMA_HOST.replace("http://", "").split(":")[0]
@@ -57,7 +57,7 @@ DEFAULT_TIMEOUT = 90.0  # Hetzner server needs more time for LLM
 class ModelTier(Enum):
     """Niveli i modelit sipas madhsis dhe fuqis"""
     FAST = "fast"          # DISABLED - modelet e hequra
-    BALANCED = "balanced"  # 4.9GB - clisonix-ocean:v2, llama3.1:8b (DEFAULT)
+    BALANCED = "balanced"  # 4.9GB - kloud-ocean:v2, llama3.1:8b (DEFAULT)
     DEEP = "deep"          # 65GB - gpt-oss:120b (microservice 8031)
 
 
@@ -90,7 +90,7 @@ class OllamaModel:
 
 
 # T gjitha modelet e instaluara
-# HEQUR: phi3:mini, clisonix-ocean:latest, llama3.2:1b - nuk flasin shqip
+# HEQUR: phi3:mini, kloud-ocean:latest, llama3.2:1b - nuk flasin shqip
 AVAILABLE_MODELS: Dict[str, OllamaModel] = {
     # ═══════════════════════════════════════════════════════════════════════════
     # TIER: BALANCED (4.9GB) - DEFAULT - Modelet e vetme që flasin mirë
@@ -103,21 +103,21 @@ AVAILABLE_MODELS: Dict[str, OllamaModel] = {
         context_length=8192,
         priority=0  # PRIMARY MODEL
     ),
-    "clisonix-ocean:v2": OllamaModel(
-        name="clisonix-ocean:v2",
+    "kloud-ocean:v2": OllamaModel(
+        name="kloud-ocean:v2",
         size_gb=4.9,
         tier=ModelTier.BALANCED,
-        description="Clisonix Ocean v2 - Backup model (~3-5s)",
+        description="Kloud Ocean v2 - Backup model (~3-5s)",
         context_length=8192,
         priority=1
     ),
 }
 
 # Fallback order - VETËM MODELE QË FLASIN MIRË
-# HEQUR: llama3.2:1b, phi3:mini, clisonix-ocean:latest - flasin përçart
+# HEQUR: llama3.2:1b, phi3:mini, kloud-ocean:latest - flasin përçart
 FALLBACK_ORDER = [
     "llama3.1:8b",            # 1st: I VETMI I BESUESHËM (4.9GB)
-    "clisonix-ocean:v2",      # 2nd: Backup (4.9GB)
+    "kloud-ocean:v2",      # 2nd: Backup (4.9GB)
 ]
 
 
@@ -367,7 +367,7 @@ class OllamaMultiEngine:
             # Try multiple possible paths for the master prompt
             possible_paths = [
                 os.path.join(os.path.dirname(__file__), '..', 'modules'),
-                'c:/Users/Admin/Desktop/Clisonix-cloud/modules',
+                'c:/Users/Admin/Desktop/Kloud-cloud/modules',
                 '/app/modules',  # Docker path
             ]
             
@@ -384,7 +384,7 @@ class OllamaMultiEngine:
             pass
         
         # Fallback system prompt if import fails
-        return """You are Curiosity Ocean, the AI of Clisonix Platform (clisonix.cloud).
+        return """You are Curiosity Ocean, the AI of Kloud Platform (kloud.cloud).
 Created by Ledjan Ahmati. Respond in the user's language. Be concise, accurate, helpful.
 Never invent facts. Admit if unsure: "Nuk e di" / "I don't know"."""
     async def _get_client(self) -> httpx.AsyncClient:
@@ -427,9 +427,9 @@ Never invent facts. Admit if unsure: "Nuk e di" / "I don't know"."""
         if "llama3.1:8b" in self._available_models:
             return "llama3.1:8b", ModelTier.BALANCED
         
-        # Backup: clisonix-ocean:v2 (4.9GB)
-        if "clisonix-ocean:v2" in self._available_models:
-            return "clisonix-ocean:v2", ModelTier.BALANCED
+        # Backup: kloud-ocean:v2 (4.9GB)
+        if "kloud-ocean:v2" in self._available_models:
+            return "kloud-ocean:v2", ModelTier.BALANCED
         
         # Last resort: first available
         if self._available_models:
@@ -725,7 +725,7 @@ if __name__ == "__main__":
             ("Hi!", Strategy.AUTO, "Should use FAST"),
             ("What is 2+2?", Strategy.AUTO, "Should use FAST/BALANCED"),
             ("Explain quantum entanglement in detail", Strategy.AUTO, "Should use DEEP"),
-            ("far sht Clisonix?", Strategy.BALANCED, "Albanian - BALANCED"),
+            ("far sht Kloud?", Strategy.BALANCED, "Albanian - BALANCED"),
         ]
         
         print("\n" + "" * 70)
@@ -756,3 +756,4 @@ if __name__ == "__main__":
         print("\n[OK] Test complete!")
     
     asyncio.run(test())
+

@@ -1,5 +1,5 @@
 """
-Clisonix Audio Synthesizer
+Kloud Audio Synthesizer
 Convert brain wave patterns into real-time audio synthesis with real audio output
 """
 
@@ -419,5 +419,6 @@ class AudioSynthesizer:
             "frequency_mappings": self.brainwave_mapping,
             "timestamp": datetime.now().isoformat()
         }
+
 
 

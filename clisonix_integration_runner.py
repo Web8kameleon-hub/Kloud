@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-🚀 CLISONIX INTELLIGENCE INTEGRATION RUNNER
+🚀 KLOUD INTELLIGENCE INTEGRATION RUNNER
 ===========================================
-Runner për integrimin e plotë të moduleve të inteligjencës Clisonix
+Runner për integrimin e plotë të moduleve të inteligjencës Kloud
 
 Ky modul përfshin:
 - Integrim i plotë i të gjithë moduleve
@@ -31,7 +31,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('clisonix_integration.log'),
+        logging.FileHandler('kloud_integration.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -83,9 +83,9 @@ class IntegrationMetrics:
     errors: List[str] = field(default_factory=list)
     performance_metrics: Dict[str, Any] = field(default_factory=dict)
 
-class ClisonixIntegrationRunner:
+class KloudIntegrationRunner:
     """
-    Runner për integrimin e plotë të Clisonix Intelligence
+    Runner për integrimin e plotë të Kloud Intelligence
 
     Ky klasë orkeston të gjithë komponentët për një ekzekutim të integruar.
     """
@@ -105,7 +105,7 @@ class ClisonixIntegrationRunner:
         # Konfiguro logging
         logging.getLogger().setLevel(getattr(logging, config.log_level))
 
-        logger.info("🚀 Clisonix Integration Runner inicializuar")
+        logger.info("🚀 Kloud Integration Runner inicializuar")
 
     async def initialize_components(self):
         """Inicializon të gjithë komponentët"""
@@ -445,7 +445,7 @@ class ClisonixIntegrationRunner:
                 # Import dhe ekzekutim i scanner TypeScript (simulim)
                 # Në praktikë, do të thirrej scanner-i TypeScript
                 scan_result = {
-                    'base_url': 'https://api.clisonix.cloud',
+                    'base_url': 'https://api.kloud.cloud',
                     'endpoints_discovered': 25,
                     'authenticated_endpoints': 15,
                     'rate_limited_endpoints': 5,
@@ -599,7 +599,7 @@ class ClisonixIntegrationRunner:
 
 async def main():
     """Funksioni kryesor"""
-    parser = argparse.ArgumentParser(description='Clisonix Intelligence Integration Runner')
+    parser = argparse.ArgumentParser(description='Kloud Intelligence Integration Runner')
     parser.add_argument('--mode', choices=[m.value for m in IntegrationMode],
                        default=IntegrationMode.FULL_INTEGRATION.value,
                        help='Modaliteti i integrimit')
@@ -624,7 +624,7 @@ async def main():
     )
 
     # Krijon dhe ekzekuto runner
-    runner = ClisonixIntegrationRunner(config)
+    runner = KloudIntegrationRunner(config)
 
     try:
         results = await runner.run_integration()
@@ -643,3 +643,4 @@ async def main():
 if __name__ == "__main__":
     # Ekzekuto integrimin
     asyncio.run(main())
+

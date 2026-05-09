@@ -1,11 +1,11 @@
 """
-CLISONIX BRAIN API ROUTER
+KLOUD BRAIN API ROUTER
 =========================
 
 Unified Brain Engine endpoints for the API Marketplace.
 Consolidates all brain/neural functionality under /api/brain prefix.
 
-Author: Clisonix Cloud
+Author: Kloud Cloud
 """
 
 import random
@@ -54,7 +54,7 @@ async def brain_info():
     Get Brain Engine API information and capabilities
     """
     return {
-        "service": "Clisonix Brain Engine",
+        "service": "Kloud Brain Engine",
         "version": "2.0.0",
         "description": "Advanced neural processing and brain-sync technology",
         "capabilities": [
@@ -177,7 +177,7 @@ async def create_brain_sync(request: BrainSyncRequest):
             "beat_frequency": freqs["primary"],
             "volume_level": {"low": 0.3, "medium": 0.5, "high": 0.7}[request.intensity]
         },
-        "stream_url": f"wss://api.clisonix.cloud/ws/brain-sync/{session_id}",
+        "stream_url": f"wss://api.kloud.cloud/ws/brain-sync/{session_id}",
         "download_url": f"/api/audio/binaural/preset/{request.target_state}"
     }
 
@@ -361,3 +361,4 @@ async def get_recommendations(goal: str = "productivity"):
         "audio_preset": f"/api/audio/binaural/preset/{target_state.replace('-', '_')}",
         "estimated_time_to_target": f"{random.randint(5, 20)} minutes"
     }
+

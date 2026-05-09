@@ -1,7 +1,7 @@
-# Clisonix Cloud - Production Deployment Checklist
+# Kloud Cloud - Production Deployment Checklist
 
 **Target:** Hetzner + STRATO  
-**Domain:** clisonix.com  
+**Domain:** kloud.com  
 **Date:** December 11, 2025
 
 ---
@@ -19,10 +19,10 @@
 - [x] Account created (K1266374525)
 - [ ] Payment method added
 - [ ] SSH key prepared
-- [ ] Project created ("Clisonix Cloud")
+- [ ] Project created ("Kloud Cloud")
 
 ### STRATO Account
-- [x] Domain registered (clisonix.com)
+- [x] Domain registered (kloud.com)
 - [x] Account accessible
 - [ ] DNS management enabled
 - [ ] Email forwarding configured (optional)
@@ -34,7 +34,7 @@
 ### Phase 1: Create Hetzner Server (5 min)
 
 1. [ ] Login to https://console.hetzner.com
-2. [ ] Create new project: "Clisonix Cloud"
+2. [ ] Create new project: "Kloud Cloud"
 3. [ ] Create server:
    - Location: **Falkenstein (FSN1)**
    - Image: **Ubuntu 22.04 LTS**
@@ -50,7 +50,7 @@
 ### Phase 2: Configure DNS at STRATO (10 min)
 
 1. [ ] Login to https://www.strato.de/apps/CustomerService
-2. [ ] Go to Domains → clisonix.com → DNS Settings
+2. [ ] Go to Domains → kloud.com → DNS Settings
 3. [ ] Add A Records:
    ```
    @ → [HETZNER_IP]
@@ -60,7 +60,7 @@
    ```
 4. [ ] Delete old STRATO hosting records
 5. [ ] Save changes
-6. [ ] Verify with: `nslookup clisonix.com`
+6. [ ] Verify with: `nslookup kloud.com`
 
 **Wait time:** 5-30 minutes for DNS propagation
 
@@ -71,11 +71,11 @@
 1. [ ] SSH into server: `ssh root@[HETZNER_IP]`
 2. [ ] Run deployment script:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/deploy-hetzner.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/deploy-hetzner.sh | bash
    ```
 3. [ ] Wait for installation (~5 min)
 4. [ ] Verify Docker: `docker --version`
-5. [ ] Check services: `cd /opt/clisonix && ls -la`
+5. [ ] Check services: `cd /opt/kloud && ls -la`
 
 ---
 
@@ -85,7 +85,7 @@
 
 1. [ ] Stop nginx temporarily:
    ```bash
-   cd /opt/clisonix
+   cd /opt/kloud
    docker compose -f docker-compose.production.yml stop nginx
    ```
 
@@ -96,22 +96,22 @@
 
 3. [ ] Get certificates:
    ```bash
-   certbot certonly --standalone -d clisonix.com -d www.clisonix.com \
+   certbot certonly --standalone -d kloud.com -d www.kloud.com \
      --email amati.ledian@gmail.com --agree-tos --non-interactive
    
-   certbot certonly --standalone -d api.clisonix.com \
+   certbot certonly --standalone -d api.kloud.com \
      --email amati.ledian@gmail.com --agree-tos --non-interactive
    ```
 
 4. [ ] Verify certificates:
    ```bash
-   ls -la /etc/letsencrypt/live/clisonix.com/
-   ls -la /etc/letsencrypt/live/api.clisonix.com/
+   ls -la /etc/letsencrypt/live/kloud.com/
+   ls -la /etc/letsencrypt/live/api.kloud.com/
    ```
 
 5. [ ] Start all services:
    ```bash
-   cd /opt/clisonix
+   cd /opt/kloud
    docker compose -f docker-compose.production.yml up -d --build
    ```
 
@@ -131,15 +131,15 @@
    ```
 
 3. [ ] Test endpoints:
-   - [ ] https://clisonix.com (Frontend)
-   - [ ] https://www.clisonix.com (Frontend)
-   - [ ] https://api.clisonix.com/health (API health)
-   - [ ] https://api.clisonix.com/docs (API documentation)
+   - [ ] https://kloud.com (Frontend)
+   - [ ] https://www.kloud.com (Frontend)
+   - [ ] https://api.kloud.com/health (API health)
+   - [ ] https://api.kloud.com/docs (API documentation)
 
 4. [ ] Test SSL:
    ```bash
-   curl -I https://clisonix.com
-   curl -I https://api.clisonix.com/health
+   curl -I https://kloud.com
+   curl -I https://api.kloud.com/health
    ```
 
 5. [ ] Check monitoring:
@@ -153,20 +153,20 @@
 ### Immediate Actions
 - [ ] Change default Grafana password:
   ```bash
-  docker exec -it clisonix_grafana grafana-cli admin reset-admin-password NEW_PASSWORD
+  docker exec -it kloud_grafana grafana-cli admin reset-admin-password NEW_PASSWORD
   ```
 
 - [ ] Configure PostgreSQL password:
   ```bash
   # Edit .env.production
-  nano /opt/clisonix/.env.production
+  nano /opt/kloud/.env.production
   # Set: DATABASE_PASSWORD=SECURE_PASSWORD
   docker compose -f docker-compose.production.yml restart postgres
   ```
 
 - [ ] Add Stripe production keys:
   ```bash
-  nano /opt/clisonix/.env.production
+  nano /opt/kloud/.env.production
   # Add: STRIPE_SECRET_KEY=sk_live_...
   # Add: STRIPE_PUBLISHABLE_KEY=pk_live_...
   docker compose -f docker-compose.production.yml restart api
@@ -175,8 +175,8 @@
 - [ ] Disable root SSH login:
   ```bash
   # Create non-root user
-  adduser clisonix
-  usermod -aG sudo clisonix
+  adduser kloud
+  usermod -aG sudo kloud
   
   # Disable root SSH
   nano /etc/ssh/sshd_config
@@ -249,7 +249,7 @@ If deployment fails:
 
 1. **Stop all containers:**
    ```bash
-   cd /opt/clisonix
+   cd /opt/kloud
    docker compose -f docker-compose.production.yml down
    ```
 
@@ -261,7 +261,7 @@ If deployment fails:
 
 3. **Point DNS back to STRATO:**
    - Remove A records
-   - Add CNAME: `clisonix.com → 570523285.swh.strato-hosting.eu`
+   - Add CNAME: `kloud.com → 570523285.swh.strato-hosting.eu`
 
 4. **Investigate logs:**
    ```bash
@@ -309,3 +309,4 @@ Deployment is successful when:
 **Next Action:** Create Hetzner server and note IP address  
 **Estimated Total Time:** 30-60 minutes  
 **Est. Monthly Cost:** €5.83 (CX22 server) + €1.40 (domain)
+

@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Binary Algebra Response
+# Kloud Binary Schema - Binary Algebra Response
 # Version: 1.0
 # Magic: BALG
 
@@ -48,3 +48,4 @@ fields:
   - name: bits
     type: uint8
     description: "Bit width (8, 16, 32, 64)"
+

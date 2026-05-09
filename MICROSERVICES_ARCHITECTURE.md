@@ -1,4 +1,4 @@
-# 🚀 CLISONIX CLOUD MICROSERVICES ARCHITECTURE
+# 🚀 KLOUD CLOUD MICROSERVICES ARCHITECTURE
 
 ## Përmbledhje
 
@@ -299,4 +299,5 @@ Stop-Process -Id <PID> -Force
 
 ---
 
-**Clisonix Cloud Team** - 2026
+**Kloud Cloud Team** - 2026
+

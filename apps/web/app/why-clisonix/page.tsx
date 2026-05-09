@@ -3,15 +3,15 @@
 import Link from 'next/link';
 
 /**
- * WHY CLISONIX - Enterprise Value Proposition
+ * WHY KLOUD - Enterprise Value Proposition
  * SEO-optimized landing page for conversions
  */
 
-export default function WhyClisonixPage() {
+export default function WhyKloudPage() {
   const competitors = [
     { name: 'Traditional Cloud', latency: '200-500ms', uptime: '99.5%', ai: '❌', price: '$$$' },
     { name: 'Generic AI APIs', latency: '300-800ms', uptime: '99.0%', ai: '✓', price: '$$$$' },
-    { name: 'Clisonix', latency: '< 100ms', uptime: '99.97%', ai: '✓✓✓', price: '$$' },
+    { name: 'Kloud', latency: '< 100ms', uptime: '99.97%', ai: '✓✓✓', price: '$$' },
   ];
 
   const benefits = [
@@ -87,7 +87,7 @@ export default function WhyClisonixPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/platform" className="text-gray-400 hover:text-white transition-colors">Platform</Link>
@@ -110,7 +110,7 @@ export default function WhyClisonixPage() {
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Why Leading Companies Choose{' '}
             <span className="bg-gradient-to-r from-violet-400 to-violet-400 bg-clip-text text-transparent">
-              Clisonix
+              Kloud
             </span>
           </h1>
           
@@ -141,7 +141,7 @@ export default function WhyClisonixPage() {
       <section className="py-20 px-6 bg-slate-900/50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">How We Compare</h2>
-          <p className="text-gray-400 text-center mb-12">See why enterprises are switching to Clisonix</p>
+          <p className="text-gray-400 text-center mb-12">See why enterprises are switching to Kloud</p>
           
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -231,7 +231,7 @@ export default function WhyClisonixPage() {
             Ready to Experience the Difference?
           </h2>
           <p className="text-xl text-gray-400 mb-10">
-            Join hundreds of teams already using Clisonix to build smarter applications.
+            Join hundreds of teams already using Kloud to build smarter applications.
             Start free, scale when ready.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -242,7 +242,7 @@ export default function WhyClisonixPage() {
               Start Building Today
             </Link>
             <Link 
-              href="mailto:support@clisonix.com"
+              href="mailto:support@kloud.com"
               className="px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-xl font-semibold text-lg transition-colors"
             >
               Contact Sales
@@ -254,7 +254,7 @@ export default function WhyClisonixPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/security" className="hover:text-violet-400 ml-2">Security</Link> | 
           <Link href="/status" className="hover:text-violet-400 ml-2">Status</Link> | 
           <Link href="/company" className="hover:text-violet-400 ml-2">Company</Link>
@@ -263,6 +263,7 @@ export default function WhyClisonixPage() {
     </div>
   );
 }
+
 
 
 

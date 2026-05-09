@@ -1,12 +1,12 @@
 [package]
-name = "clisonix-cbp"
+name = "kloud-cbp"
 version = "1.0.0"
 edition = "2021"
-authors = ["Clisonix Team"]
-description = "Clisonix Binary Protocol (CBP) SDK for Rust"
+authors = ["Kloud Team"]
+description = "Kloud Binary Protocol (CBP) SDK for Rust"
 license = "MIT"
-repository = "https://github.com/clisonix/clisonix-cloud"
-keywords = ["binary", "protocol", "clisonix", "networking"]
+repository = "https://github.com/kloud/kloud-cloud"
+keywords = ["binary", "protocol", "kloud", "networking"]
 categories = ["network-programming", "encoding"]
 
 [dependencies]
@@ -25,5 +25,6 @@ compression = []  # Enable zlib compression
 encryption = []   # Enable AES-GCM encryption
 
 [lib]
-name = "clisonix_cbp"
+name = "kloud_cbp"
 path = "src/lib.rs"
+

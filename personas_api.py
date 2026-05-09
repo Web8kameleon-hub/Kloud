@@ -1,10 +1,10 @@
-"""Personas API - Clisonix Cloud."""
+"""Personas API - Kloud Cloud."""
 import os
 
 import uvicorn
 from fastapi import FastAPI
 
-app = FastAPI(title="Clisonix Personas Engine", version="1.0.0")
+app = FastAPI(title="Kloud Personas Engine", version="1.0.0")
 
 PERSONAS = [
     "Analyst", "Developer", "Manager", "Researcher", "Strategist",
@@ -31,3 +31,4 @@ def list_personas():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8040))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

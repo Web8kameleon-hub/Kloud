@@ -1,7 +1,7 @@
 {
-  "name": "@clisonix/shared",
+  "name": "@kloud/shared",
   "version": "1.0.0",
-  "description": "Shared utilities for clisonix platform",
+  "description": "Shared utilities for kloud platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -19,3 +19,4 @@
     "typescript": "^5.0.0"
   }
 }
+

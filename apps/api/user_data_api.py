@@ -485,7 +485,7 @@ async def test_connection(
         
         elif source_type == "webhook":
             # Webhooks are incoming - provide URL
-            webhook_url = f"https://api.clisonix.com/api/user/webhook/{source_id}"
+            webhook_url = f"https://api.kloud.com/api/user/webhook/{source_id}"
             result.update({
                 "success": True,
                 "status": "ready",
@@ -497,7 +497,7 @@ async def test_connection(
         
         elif source_type == "iot":
             # IoT devices - return ingestion endpoint
-            ingest_url = f"https://api.clisonix.com/api/user/ingest"
+            ingest_url = f"https://api.kloud.com/api/user/ingest"
             result.update({
                 "success": True,
                 "status": "ready",
@@ -715,7 +715,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Clisonix User Data API",
+    title="Kloud User Data API",
     version="1.0.0",
     description="User data sources management API"
 )
@@ -737,3 +737,4 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8010)
+

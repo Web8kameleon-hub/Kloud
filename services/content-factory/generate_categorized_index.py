@@ -13,7 +13,7 @@ from pathlib import Path
 import requests
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-REPO = "LedjanAhmati/clisonix-blog"
+REPO = "LedjanAhmati/kloud-blog"
 BRANCH = "main"
 
 headers = {
@@ -50,7 +50,7 @@ def fetch_articles_from_static():
                     'filename': filename,
                     'title': title,
                     'date': date_str,
-                    'author': 'Clisonix'
+                    'author': 'Kloud'
                 })
             else:
                 # Fallback for non-standard filenames
@@ -58,7 +58,7 @@ def fetch_articles_from_static():
                     'filename': filename,
                     'title': filename.replace('.html', '').replace('-', ' ').title(),
                     'date': '2025-01-01',
-                    'author': 'Clisonix'
+                    'author': 'Kloud'
                 })
     
     # Sort by date descending
@@ -94,7 +94,7 @@ def fetch_articles_from_posts():
                     'filename': html_filename,
                     'title': title,
                     'date': date_str,
-                    'author': 'Clisonix'
+                    'author': 'Kloud'
                 })
     
     articles.sort(key=lambda x: x['date'], reverse=True)
@@ -200,9 +200,10 @@ def main():
     
     if success:
         print("\n✅ Blog updated successfully!")
-        print(f"🔗 Visit: https://ledjanahmati.github.io/clisonix-blog/")
+        print(f"🔗 Visit: https://ledjanahmati.github.io/kloud-blog/")
     else:
         print("\n❌ Failed to update blog")
 
 if __name__ == "__main__":
     main()
+

@@ -1,5 +1,5 @@
 """
-🎯 CLISONIX DASHBOARD REGISTRY
+🎯 KLOUD DASHBOARD REGISTRY
 Ultra-Professional Dashboard Management System
 
 Çdo dashboard që krijohet regjistrohet automatikisht në një tabelë qendrore Excel.
@@ -468,7 +468,7 @@ def create_data_dashboard(
         ("Description", description),
         ("Data Source", data_source),
         ("Created", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
-        ("Author", "Clisonix Cloud System"),
+        ("Author", "Kloud Cloud System"),
     ]
     
     for idx, (key, value) in enumerate(metadata, 3):
@@ -551,7 +551,7 @@ def register_existing_dashboards():
         {
             'name': 'API Enricher',
             'type': 'api',
-            'description': 'Enriches API canonical table with complete documentation including Sample_Response, cURL commands, and Python snippets for all 28+ Clisonix endpoints.',
+            'description': 'Enriches API canonical table with complete documentation including Sample_Response, cURL commands, and Python snippets for all 28+ Kloud endpoints.',
             'file': ui_path / 'api_enricher.py',
         },
         {
@@ -588,7 +588,7 @@ def register_existing_dashboards():
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Clisonix Dashboard Registry")
+    parser = argparse.ArgumentParser(description="Kloud Dashboard Registry")
     parser.add_argument('--init', action='store_true', help='Initialize registry and register existing dashboards')
     parser.add_argument('--list', action='store_true', help='List all registered dashboards')
     parser.add_argument('--create', type=str, help='Create new dashboard with given name')
@@ -631,7 +631,7 @@ if __name__ == "__main__":
     
     else:
         # Default: init and open
-        print("🚀 Clisonix Dashboard Registry")
+        print("🚀 Kloud Dashboard Registry")
         print("=" * 50)
         print("Usage:")
         print("  --init     Initialize and register dashboards")
@@ -641,3 +641,4 @@ if __name__ == "__main__":
         print()
         print("Example:")
         print("  python dashboard_registry.py --init --open")
+

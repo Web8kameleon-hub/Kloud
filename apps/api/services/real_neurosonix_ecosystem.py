@@ -1,7 +1,7 @@
 """
-ðŸ§ âš¡ REAL Clisonix ECOSYSTEM - ALBI + ALBA + JONA
+ðŸ§ âš¡ REAL Kloud ECOSYSTEM - ALBI + ALBA + JONA
 ====================================================
-Ekosistemi real i Clisonix me tÃ« tre karakteret kryesore.
+Ekosistemi real i Kloud me tÃ« tre karakteret kryesore.
 Real data processing, real monitoring, real intelligence growth.
 
 NO FAKE DATA, NO MOCK, REAL ECOSYSTEM ONLY
@@ -19,12 +19,12 @@ from .alba_real_collector import create_alba_real
 from .jona_real_monitor import create_jona_real
 
 
-class ClisonixRealEcosystem:
+class KloudRealEcosystem:
     """
     ðŸŒ Real Ecosystem qÃ« integron ALBI, ALBA dhe JONA me tÃ« dhÃ«na reale
     """
     
-    def __init__(self, base_dir="C:/Clisonix-cloud"):
+    def __init__(self, base_dir="C:/Kloud-cloud"):
         self.base_dir = Path(base_dir)
         self.ecosystem_log = self.base_dir / "data" / "ecosystem_real_log.json"
         
@@ -304,18 +304,18 @@ class ClisonixRealEcosystem:
 
 
 # Factory function pÃ«r ecosystem real
-async def create_real_Clisonix_ecosystem() -> ClisonixRealEcosystem:
-    """Krijon ekosisitemin real tÃ« Clisonix"""
-    ecosystem = ClisonixRealEcosystem()
+async def create_real_Kloud_ecosystem() -> KloudRealEcosystem:
+    """Krijon ekosisitemin real tÃ« Kloud"""
+    ecosystem = KloudRealEcosystem()
     return ecosystem
 
 
 # Main function pÃ«r testing
 async def main():
     """Test i ekosistemit real"""
-    print("ðŸ§ âš¡ Starting Real Clisonix Ecosystem...")
+    print("ðŸ§ âš¡ Starting Real Kloud Ecosystem...")
     
-    ecosystem = await create_real_Clisonix_ecosystem()
+    ecosystem = await create_real_Kloud_ecosystem()
     
     # Run one cycle for testing
     print("ðŸ”„ Running test cycle...")
@@ -332,5 +332,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 

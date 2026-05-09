@@ -17,7 +17,7 @@ Gjuhët e mbështetura:
 - mk (Македонски)
 - el (Ελληνικά)
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import re
@@ -637,3 +637,4 @@ def t(key: str, lang: Optional[str] = None) -> str:
 def detect_lang(text: str) -> str:
     """Shortcut për detektim gjuhe"""
     return get_i18n_engine().detect_language(text)
+

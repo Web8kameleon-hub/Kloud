@@ -9,7 +9,7 @@ const modules = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-900 p-4">
-      <h1 className="text-2xl text-white text-center py-6">Clisonix</h1>
+      <h1 className="text-2xl text-white text-center py-6">Kloud</h1>
       <div className="space-y-3 max-w-md mx-auto">
         {modules.map(m => (
           <Link key={m.name} href={m.href} className="block bg-slate-800 rounded-xl p-4">
@@ -22,3 +22,4 @@ export default function Home() {
     </main>
   )
 }
+

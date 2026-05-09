@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import httpx
 
-logger = logging.getLogger("clisonix.pulse_bridge")
+logger = logging.getLogger("kloud.pulse_bridge")
 
 
 class PulseState(Enum):
@@ -54,17 +54,17 @@ class PulseMetrics:
     def to_prometheus(self) -> str:
         """Eksporton si Prometheus metrics"""
         lines = [
-            f'clisonix_pulse_cpu{{node="{self.node_name}"}} {self.cpu}',
-            f'clisonix_pulse_mem{{node="{self.node_name}"}} {self.mem}',
-            f'clisonix_pulse_disk{{node="{self.node_name}"}} {self.disk}',
-            f'clisonix_pulse_net_sent_mb{{node="{self.node_name}"}} {self.net_sent_MB}',
-            f'clisonix_pulse_net_recv_mb{{node="{self.node_name}"}} {self.net_recv_MB}',
-            f'clisonix_pulse_procs{{node="{self.node_name}"}} {self.procs}',
-            f'clisonix_pulse_uptime_sec{{node="{self.node_name}"}} {self.uptime_sec}',
-            f'clisonix_pulse_is_leader{{node="{self.node_name}"}} {1 if self.is_leader else 0}',
-            f'clisonix_pulse_peer_count{{node="{self.node_name}"}} {self.peer_count}',
-            f'clisonix_pulse_capacity_score{{node="{self.node_name}"}} {self.capacity_score}',
-            f'clisonix_pulse_state{{node="{self.node_name}",state="{self.state.value}"}} 1',
+            f'kloud_pulse_cpu{{node="{self.node_name}"}} {self.cpu}',
+            f'kloud_pulse_mem{{node="{self.node_name}"}} {self.mem}',
+            f'kloud_pulse_disk{{node="{self.node_name}"}} {self.disk}',
+            f'kloud_pulse_net_sent_mb{{node="{self.node_name}"}} {self.net_sent_MB}',
+            f'kloud_pulse_net_recv_mb{{node="{self.node_name}"}} {self.net_recv_MB}',
+            f'kloud_pulse_procs{{node="{self.node_name}"}} {self.procs}',
+            f'kloud_pulse_uptime_sec{{node="{self.node_name}"}} {self.uptime_sec}',
+            f'kloud_pulse_is_leader{{node="{self.node_name}"}} {1 if self.is_leader else 0}',
+            f'kloud_pulse_peer_count{{node="{self.node_name}"}} {self.peer_count}',
+            f'kloud_pulse_capacity_score{{node="{self.node_name}"}} {self.capacity_score}',
+            f'kloud_pulse_state{{node="{self.node_name}",state="{self.state.value}"}} 1',
         ]
         return "\n".join(lines)
     
@@ -349,46 +349,46 @@ class PrometheusMetricsExporter:
         # Pulse metrics
         pulse = self.bridge.get_current_metrics()
         if pulse:
-            lines.append("# HELP clisonix_pulse_cpu CPU usage percentage")
-            lines.append("# TYPE clisonix_pulse_cpu gauge")
+            lines.append("# HELP kloud_pulse_cpu CPU usage percentage")
+            lines.append("# TYPE kloud_pulse_cpu gauge")
             lines.append(pulse.to_prometheus())
         
         # Cycle metrics
         if self.cycle_engine:
             lines.append("")
-            lines.append("# HELP clisonix_cycles_total Total cycles created")
-            lines.append("# TYPE clisonix_cycles_total counter")
-            lines.append(f'clisonix_cycles_total {self.cycle_engine.metrics.get("total_cycles", 0)}')
+            lines.append("# HELP kloud_cycles_total Total cycles created")
+            lines.append("# TYPE kloud_cycles_total counter")
+            lines.append(f'kloud_cycles_total {self.cycle_engine.metrics.get("total_cycles", 0)}')
             
-            lines.append("# HELP clisonix_cycles_active Currently active cycles")
-            lines.append("# TYPE clisonix_cycles_active gauge")
-            lines.append(f'clisonix_cycles_active {self.cycle_engine.metrics.get("active_cycles", 0)}')
+            lines.append("# HELP kloud_cycles_active Currently active cycles")
+            lines.append("# TYPE kloud_cycles_active gauge")
+            lines.append(f'kloud_cycles_active {self.cycle_engine.metrics.get("active_cycles", 0)}')
             
-            lines.append("# HELP clisonix_cycles_completed Completed cycles")
-            lines.append("# TYPE clisonix_cycles_completed counter")
-            lines.append(f'clisonix_cycles_completed {self.cycle_engine.metrics.get("completed_cycles", 0)}')
+            lines.append("# HELP kloud_cycles_completed Completed cycles")
+            lines.append("# TYPE kloud_cycles_completed counter")
+            lines.append(f'kloud_cycles_completed {self.cycle_engine.metrics.get("completed_cycles", 0)}')
             
-            lines.append("# HELP clisonix_cycles_blocked Blocked cycles")
-            lines.append("# TYPE clisonix_cycles_blocked gauge")
-            lines.append(f'clisonix_cycles_blocked {self.cycle_engine.metrics.get("blocked_cycles", 0)}')
+            lines.append("# HELP kloud_cycles_blocked Blocked cycles")
+            lines.append("# TYPE kloud_cycles_blocked gauge")
+            lines.append(f'kloud_cycles_blocked {self.cycle_engine.metrics.get("blocked_cycles", 0)}')
             
-            lines.append("# HELP clisonix_gaps_filled Knowledge gaps filled")
-            lines.append("# TYPE clisonix_gaps_filled counter")
-            lines.append(f'clisonix_gaps_filled {self.cycle_engine.metrics.get("gaps_filled", 0)}')
+            lines.append("# HELP kloud_gaps_filled Knowledge gaps filled")
+            lines.append("# TYPE kloud_gaps_filled counter")
+            lines.append(f'kloud_gaps_filled {self.cycle_engine.metrics.get("gaps_filled", 0)}')
             
             # Per-cycle status
             lines.append("")
-            lines.append("# HELP clisonix_cycle_status Cycle status (1=active)")
-            lines.append("# TYPE clisonix_cycle_status gauge")
+            lines.append("# HELP kloud_cycle_status Cycle status (1=active)")
+            lines.append("# TYPE kloud_cycle_status gauge")
             for cid, cycle in self.cycle_engine.cycles.items():
                 status_val = 1 if cycle.status.value == "active" else 0
-                lines.append(f'clisonix_cycle_status{{cycle="{cid}",domain="{cycle.domain}",task="{cycle.task}"}} {status_val}')
+                lines.append(f'kloud_cycle_status{{cycle="{cid}",domain="{cycle.domain}",task="{cycle.task}"}} {status_val}')
         
         # Bridge status
         lines.append("")
-        lines.append("# HELP clisonix_bridge_paused_cycles Cycles paused by pulse bridge")
-        lines.append("# TYPE clisonix_bridge_paused_cycles gauge")
-        lines.append(f'clisonix_bridge_paused_cycles {len(self.bridge._paused_by_pulse)}')
+        lines.append("# HELP kloud_bridge_paused_cycles Cycles paused by pulse bridge")
+        lines.append("# TYPE kloud_bridge_paused_cycles gauge")
+        lines.append(f'kloud_bridge_paused_cycles {len(self.bridge._paused_by_pulse)}')
         
         return "\n".join(lines)
 
@@ -499,3 +499,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         bridge.stop()
         print("\n✓ Bridge stopped")
+

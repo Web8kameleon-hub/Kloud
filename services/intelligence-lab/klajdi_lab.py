@@ -3,7 +3,7 @@
 KLAJDI - Knost-Labor-Array-Jonify-Detective-Intelligence
 =========================================================
 
-Laboratori hetimor i sinjaleve të Clisonix.
+Laboratori hetimor i sinjaleve të Kloud.
 Mbledh, organizon, heton, dhe zbulon anomali në sistem.
 
 Author: Ledjan Ahmati (CEO, ABA GmbH)
@@ -511,7 +511,7 @@ class KlajdiLab:
     """
     KLAJDI - Knost-Labor-Array-Jonify-Detective-Intelligence
     
-    Laboratori hetimor i brendshëm i Clisonix.
+    Laboratori hetimor i brendshëm i Kloud.
     - Mbledh sinjale nga gjithë sistemi
     - Organizon në seri dhe dosje
     - Zbërthen në njësi kuptimi
@@ -770,3 +770,4 @@ if __name__ == "__main__":
         print(json.dumps(lab.get_stats(), indent=2))
     
     asyncio.run(main())
+

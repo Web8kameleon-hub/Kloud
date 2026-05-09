@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                     CLISONIX AGENTS - AGENT POOL                             ║
+║                     KLOUD AGENTS - AGENT POOL                             ║
 ║             Autoscaling Pool for Managing Agent Instances                    ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -34,7 +34,7 @@ from .base import (
 )
 
 
-logger = logging.getLogger("clisonix.agents.pool")
+logger = logging.getLogger("kloud.agents.pool")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -729,3 +729,4 @@ async def create_pool(config: Optional[PoolConfig] = None) -> AgentPool:
     pool = AgentPool(config)
     await pool.start()
     return pool
+

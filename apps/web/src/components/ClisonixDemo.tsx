@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function ClisonixDemo() {
+export default function KloudDemo() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function ClisonixDemo() {
     <div className="w-full min-h-screen bg-gradient-to-br from-neutral-900 via-purple-900 to-neutral-900">
       <div className="container mx-auto px-4 py-20">
         <div className="text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">Clisonix Cloud Demo</h1>
+          <h1 className="text-5xl font-bold text-white mb-6">Kloud Cloud Demo</h1>
           <p className="text-xl text-purple-200 mb-12">
             Advanced Neural Intelligence Platform
           </p>
@@ -49,3 +49,4 @@ export default function ClisonixDemo() {
     </div>
   );
 }
+

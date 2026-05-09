@@ -15,7 +15,7 @@ REGION = sys.argv[2] if len(sys.argv) > 2 else "unknown"
 
 app = FastAPI(
     title=f"DataSource {REGION.title()}",
-    description=f"Clisonix DataSource for {REGION.upper()} region",
+    description=f"Kloud DataSource for {REGION.upper()} region",
     version="1.0.0"
 )
 
@@ -69,3 +69,4 @@ def get_data(source_id: str):
 if __name__ == "__main__":
     print(f"🌍 Starting DataSource {REGION.upper()} on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

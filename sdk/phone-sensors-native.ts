@@ -310,7 +310,7 @@ export class TemperatureSensor {
   async readTemperatureAndroid(): Promise<number> {
     try {
       // @ts-ignore - Android native
-      const temp = window.clisonixNative?.readTemperature?.();
+      const temp = window.kloudNative?.readTemperature?.();
       return temp || this.getEstimatedTemperature();
     } catch {
       return this.getEstimatedTemperature();
@@ -517,3 +517,4 @@ export class PhoneSensorManager {
 }
 
 export default PhoneSensorManager;
+

@@ -1,8 +1,8 @@
-# Clisonix Cloud Fitness Training Module
+# Kloud Cloud Fitness Training Module
 
 ## Overview
 
-The Fitness Training Module is an enterprise-grade personalized fitness coaching system built on the Clisonix Cloud platform. It combines real-time biometric tracking, AI-powered form analysis, and adaptive music generation to deliver personalized workout experiences.
+The Fitness Training Module is an enterprise-grade personalized fitness coaching system built on the Kloud Cloud platform. It combines real-time biometric tracking, AI-powered form analysis, and adaptive music generation to deliver personalized workout experiences.
 
 ### Key Features
 
@@ -23,7 +23,7 @@ The Fitness Training Module is an enterprise-grade personalized fitness coaching
 
 ...
 ┌─────────────────────────────────────────────────────────────┐
-│                     Clisonix Cloud                          │
+│                     Kloud Cloud                          │
 │                   Fitness Module v1.0                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
@@ -758,7 +758,7 @@ Stress Scale:
 
 ## Integration with ALBA/ALBI/JONA
 
-The fitness module integrates with existing Clisonix services:
+The fitness module integrates with existing Kloud services:
 
 - **ALBA**: Signal collection for biometric data streams
 - **ALBI**: Neural processing of workout patterns and anomalies
@@ -959,12 +959,13 @@ CREATE TABLE biometric_data (
 ## Support & Documentation
 
 - API Docs: `http://localhost:8000/docs` (Swagger UI)
-- Python SDK: `clisonix_sdk.fitness`
-- Postman Collection: `clisonix-fitness-collection.json`
-- Issues: GitHub Issues or /support@clisonix.cloud
+- Python SDK: `kloud_sdk.fitness`
+- Postman Collection: `kloud-fitness-collection.json`
+- Issues: GitHub Issues or /support@kloud.cloud
 
 ---
 
 **Version**: 1.0.0  
 **Last Updated**: January 2024  
-**Maintainer**: Clisonix Cloud Team
+**Maintainer**: Kloud Cloud Team
+

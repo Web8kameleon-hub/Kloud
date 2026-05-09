@@ -1,4 +1,4 @@
-# Clisonix Cloud Authentication System – Implementation Complete
+# Kloud Cloud Authentication System – Implementation Complete
 
 **Status**: ✅ **FULLY IMPLEMENTED**
 
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Complete authentication overhaul for Clisonix Cloud API is now production-ready. System includes:
+Complete authentication overhaul for Kloud Cloud API is now production-ready. System includes:
 
 - ✅ **OpenAPI Specification**: 3 new auth endpoints + 6 authentication schemas
 - ✅ **Python SDK**: Full authentication methods (login, refresh, create_api_key)
@@ -48,7 +48,7 @@ Complete authentication overhaul for Clisonix Cloud API is now production-ready.
 
 ---
 
-### 2. Python SDK (`clisonix_sdk.py`)
+### 2. Python SDK (`kloud_sdk.py`)
 
 **File Size**: 424 lines (clean, no duplicate code)
 
@@ -88,7 +88,7 @@ def set_api_key(api_key: str) -> None
 
 **Example Usage**:
 ```python
-client = ClisonixClient("https://api.clisonix.com")
+client = KloudClient("https://api.kloud.com")
 login_data = client.login("user@example.com", "password")
 # Token auto-stored and used in subsequent requests
 health = client.health()  # Automatically includes Bearer auth
@@ -100,7 +100,7 @@ api_key_resp = client.create_api_key("prod-server")
 
 ---
 
-### 3. TypeScript SDK (`clisonix_sdk.ts`)
+### 3. TypeScript SDK (`kloud_sdk.ts`)
 
 **File Size**: 435 lines
 
@@ -139,7 +139,7 @@ setApiKey(apiKey: string): void
 
 **Example Usage**:
 ```typescript
-const client = new ClisonixClient({baseUrl: 'https://api.clisonix.com'});
+const client = new KloudClient({baseUrl: 'https://api.kloud.com'});
 const loginData = await client.login('user@example.com', 'password');
 // Token auto-stored and used in subsequent requests
 const health = await client.health();  // Automatically includes Bearer auth
@@ -155,7 +155,7 @@ const apiKeyResp = await client.createApiKey('prod-server');
 
 **Collection Structure**:
 ```
-Clisonix Cloud API – Auth Folder
+Kloud Cloud API – Auth Folder
 ├── Auth (Folder)
 │   ├── Login
 │   ├── Refresh Token
@@ -302,8 +302,8 @@ Clisonix Cloud API – Auth Folder
 | File | Size | Status | Purpose |
 |------|------|--------|---------|
 | `openapi.yaml` | 1883 lines | ✅ | API specification with auth endpoints |
-| `clisonix_sdk.py` | 424 lines | ✅ | Python SDK with auth methods |
-| `clisonix_sdk.ts` | 435 lines | ✅ | TypeScript SDK with auth methods |
+| `kloud_sdk.py` | 424 lines | ✅ | Python SDK with auth methods |
+| `kloud_sdk.ts` | 435 lines | ✅ | TypeScript SDK with auth methods |
 | `postman_collection_auth.json` | ~450 lines | ✅ | Postman collection with auto-capture |
 | `index.html` | ~850 lines | ✅ | Landing page with pricing/examples |
 | `AUTHENTICATION.md` | ~600 lines | ✅ | Complete auth guide |
@@ -457,8 +457,8 @@ Process request
 
 - 📖 **Authentication Guide**: `AUTHENTICATION.md`
 - 🔗 **OpenAPI Spec**: `openapi.yaml`
-- 💻 **Python SDK**: `clisonix_sdk.py`
-- 🎯 **TypeScript SDK**: `clisonix_sdk.ts`
+- 💻 **Python SDK**: `kloud_sdk.py`
+- 🎯 **TypeScript SDK**: `kloud_sdk.ts`
 - 📮 **Postman Collection**: `postman_collection_auth.json`
 - 🌐 **Landing Page**: `index.html`
 
@@ -466,7 +466,7 @@ Process request
 
 ## Conclusion
 
-Clisonix Cloud API now has a complete, enterprise-grade authentication system ready for immediate deployment. All components are integrated, tested, and documented.
+Kloud Cloud API now has a complete, enterprise-grade authentication system ready for immediate deployment. All components are integrated, tested, and documented.
 
 **Key Achievements**:
 - ✅ 3 new auth endpoints (login, refresh, api-key)
@@ -480,5 +480,6 @@ Clisonix Cloud API now has a complete, enterprise-grade authentication system re
 
 ---
 
-**Clisonix Cloud** • Part of UltraWebThinking / Euroweb  
+**Kloud Cloud** • Part of UltraWebThinking / Euroweb  
 **Version**: 1.1.0 • **Date**: 2024
+

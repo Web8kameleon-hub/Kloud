@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Research Data Ecosystem is now fully integrated with the **clisonix Cycle Engine** for intelligent, automated document generation and knowledge management.
+The Research Data Ecosystem is now fully integrated with the **kloud Cycle Engine** for intelligent, automated document generation and knowledge management.
 
 ## What is the Cycle Engine?
 
@@ -359,4 +359,5 @@ auto_cycles = auto_detect_and_create_cycles(trigger="concept_gap")
 **Integration Status**: ✅ **COMPLETE**  
 **Version**: 1.0.0  
 **Last Updated**: December 15, 2025  
-**Author**: clisonix Team
+**Author**: kloud Team
+

@@ -1,5 +1,5 @@
 # Ocean-Core Requirements - BINARY FIRST (NO JSON for messages)
-# Clisonix Cloud v2.4.0 - CBP Protocol Edition
+# Kloud Cloud v2.4.0 - CBP Protocol Edition
 
 # Core Framework
 fastapi>=0.104.0
@@ -38,3 +38,4 @@ structlog>=23.2.0
 pyyaml>=6.0.0
 requests>=2.31.0
 elasticsearch>=8.0.0
+

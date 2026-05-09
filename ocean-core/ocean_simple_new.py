@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 
 app = FastAPI(title="Ocean Simple")
@@ -62,3 +62,4 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8030)
+

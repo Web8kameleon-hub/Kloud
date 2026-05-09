@@ -1,12 +1,12 @@
-# Clisonix Cloud — Observability Suite
+# Kloud Cloud — Observability Suite
 **Enterprise Monitoring · TSDB Analysis · Performance Telemetry**
 
-Clisonix Cloud përdor një arkitekturë moderne observability me:
+Kloud Cloud përdor një arkitekturë moderne observability me:
 
 - **Prometheus TSDB**
 - **Grafana Dashboards**
 - **Exporter-layer custom**
-- **Clisonix Internal Neuro-Monitor Engine**
+- **Kloud Internal Neuro-Monitor Engine**
 
 Ky dokument shërben si hyrje për:
 
@@ -20,7 +20,7 @@ Ky dokument shërben si hyrje për:
 
 ## 🔭 Overview
 
-Observability në Clisonix është ndërtuar mbi 3 shtylla:
+Observability në Kloud është ndërtuar mbi 3 shtylla:
 
 ### 1. Metrics
 
@@ -53,7 +53,7 @@ Në versionin 1.1 futet:
 
 ## 📊 Metrics Included
 
-Clisonix mbledh 5 kategori metrikash:
+Kloud mbledh 5 kategori metrikash:
 
 | Category | Description |
 |----------|-------------|
@@ -61,7 +61,7 @@ Clisonix mbledh 5 kategori metrikash:
 | **System Metrics** | CPU, RAM, disks, threads |
 | **TSDB Metrics** | Chunks, series, compaction, cardinality |
 | **Network Metrics** | Conntrack, dialer failures |
-| **Clisonix Neural Metrics** | EEG ingestion, brain-sync workloads, harmonic engines |
+| **Kloud Neural Metrics** | EEG ingestion, brain-sync workloads, harmonic engines |
 
 ---
 
@@ -82,7 +82,7 @@ Ky është një TSDB **ultra i shëndetshëm** — ideal për një startup në f
 
 Cardinality është metrika më kritike e Prometheus.
 
-Në Clisonix:
+Në Kloud:
 
 - `instance = localhost:9090` → **1013 series**
 - `job = prometheus` → **1013 series**
@@ -182,6 +182,7 @@ This documentation is available in:
 
 ---
 
-**Maintained by:** Clisonix Cloud SRE Team  
+**Maintained by:** Kloud Cloud SRE Team  
 **Last Updated:** December 11, 2025  
 **Version:** 1.0.0
+

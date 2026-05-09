@@ -1,19 +1,19 @@
 """
-Clisonix Cloud API Client
+Kloud Cloud API Client
 Generated: 2026-01-11T07:43:20.853989
 """
 
 import requests
 from typing import Dict, Any, Optional
 
-class ClisonixClient:
-    def __init__(self, base_url: str = "https://api.clisonix.com", token: str = ""):
+class KloudClient:
+    def __init__(self, base_url: str = "https://api.kloud.com", token: str = ""):
         self.base_url = base_url
         self.token = token
         self.headers = {"Authorization": f"Bearer {token}"}
 
     def health(self) -> Dict:
-        """Kontrollon gjendjen e shëndetit të sistemit. Kthen statusin e përgjithshëm të platformës Clisonix Cl..."""
+        """Kontrollon gjendjen e shëndetit të sistemit. Kthen statusin e përgjithshëm të platformës Kloud Cl..."""
         response = requests.get(f"{self.base_url}/health", headers=self.headers)
         return response.json()
 
@@ -111,4 +111,5 @@ class ClisonixClient:
         """Gjeneron muzikë brain-sync bazuar në skedarin EEG dhe modalitetin e kërkuar (relax, focus, sleep)...."""
         response = requests.post(f"{self.base_url}/brain/music/brainsync", headers=self.headers, json=data, files=files)
         return response.json()
+
 

@@ -1,5 +1,5 @@
 """
-Clisonix Cloud - API Key Management & Rate Limiting
+Kloud Cloud - API Key Management & Rate Limiting
 Enterprise-grade API authentication and throttling
 """
 
@@ -374,7 +374,7 @@ async def get_api_key(api_key: str = Depends(api_key_header)) -> APIKey:
             detail={
                 "error": "missing_api_key",
                 "message": "API key required. Include X-API-Key header.",
-                "docs": "https://clisonix.cloud/docs/authentication"
+                "docs": "https://kloud.cloud/docs/authentication"
             }
         )
     
@@ -386,7 +386,7 @@ async def get_api_key(api_key: str = Depends(api_key_header)) -> APIKey:
             detail={
                 "error": "invalid_api_key",
                 "message": error,
-                "docs": "https://clisonix.cloud/docs/authentication"
+                "docs": "https://kloud.cloud/docs/authentication"
             }
         )
     
@@ -401,7 +401,7 @@ async def get_api_key(api_key: str = Depends(api_key_header)) -> APIKey:
                 "message": limit_info.get("error"),
                 "retry_after": limit_info.get("retry_after"),
                 "limits": limit_info,
-                "upgrade_url": "https://clisonix.cloud/pricing"
+                "upgrade_url": "https://kloud.cloud/pricing"
             },
             headers={
                 "X-RateLimit-Limit": str(limit_info["limit_minute"]),
@@ -537,7 +537,7 @@ async def list_plans():
 # ============== DEMO/TEST ==============
 
 if __name__ == "__main__":
-    print("=== Clisonix API Key Manager Demo ===\n")
+    print("=== Kloud API Key Manager Demo ===\n")
     
     # Create manager
     manager = APIKeyManager(storage_path="./test_keys.json")
@@ -573,3 +573,4 @@ if __name__ == "__main__":
     
     print("\n=== Usage Stats ===")
     print(json.dumps(manager.get_usage_stats(key_obj), indent=2))
+

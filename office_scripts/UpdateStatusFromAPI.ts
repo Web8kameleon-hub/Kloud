@@ -3,7 +3,7 @@ declare const console: {
 };
 
 /**
- * 🚀 CLISONIX API STATUS CHECKER
+ * 🚀 KLOUD API STATUS CHECKER
  * Office Script për Excel Online
  * 
  * STRUKTURA E KOLONAVE:
@@ -37,7 +37,7 @@ declare const console: {
 export async function main(workbook: ExcelScript.Workbook) {
     // Konfigurimi
     const SHEET_NAME = "API_Endpoints";  // Emri i sheet-it
-    const BASE_URL = "https://api.clisonix.com";  // Base URL
+    const BASE_URL = "https://api.kloud.com";  // Base URL
     const TOKEN = "YOUR_API_TOKEN";  // Vendos token-in këtu
     
     // Kolona indexes (0-based)
@@ -115,3 +115,4 @@ export async function main(workbook: ExcelScript.Workbook) {
     console.log(`   📅 Koha: ${timestamp}`);
     console.log("═══════════════════════════════════════");
 }
+

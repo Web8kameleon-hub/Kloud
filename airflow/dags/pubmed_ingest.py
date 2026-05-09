@@ -68,7 +68,7 @@ def upsert_weaviate_pubmed(**context):
 
 
 default_args = {
-    "owner": "Clisonix",
+    "owner": "Kloud",
     "retries": 1,
 }
 
@@ -83,4 +83,5 @@ with DAG(
     upsert_task = PythonOperator(task_id="upsert_weaviate_pubmed", python_callable=upsert_weaviate_pubmed)
 
     fetch_task >> upsert_task
+
 

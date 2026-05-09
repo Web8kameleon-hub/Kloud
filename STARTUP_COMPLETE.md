@@ -192,16 +192,16 @@ axios.get('http://localhost:8888/status-report')
 ## 📋 File Locations
 
 ### Core Service Files
-- `c:\clisonix-cloud\slack_integration_service.py`
-- `c:\clisonix-cloud\start-slack.ps1`
-- `c:\clisonix-cloud\launch-all-with-slack.ps1`
+- `c:\kloud-cloud\slack_integration_service.py`
+- `c:\kloud-cloud\start-slack.ps1`
+- `c:\kloud-cloud\launch-all-with-slack.ps1`
 
 ### Documentation Files
-- `c:\clisonix-cloud\SLACK_INDEX.md` ← Start here!
-- `c:\clisonix-cloud\SLACK_INTEGRATION_GUIDE.md`
-- `c:\clisonix-cloud\SLACK_INTEGRATION_READY.md`
-- `c:\clisonix-cloud\SLACK_QUICK_REFERENCE.txt`
-- `c:\clisonix-cloud\COMPLETE_SYSTEM_GUIDE.md`
+- `c:\kloud-cloud\SLACK_INDEX.md` ← Start here!
+- `c:\kloud-cloud\SLACK_INTEGRATION_GUIDE.md`
+- `c:\kloud-cloud\SLACK_INTEGRATION_READY.md`
+- `c:\kloud-cloud\SLACK_QUICK_REFERENCE.txt`
+- `c:\kloud-cloud\COMPLETE_SYSTEM_GUIDE.md`
 
 ---
 
@@ -280,7 +280,7 @@ axios.get('http://localhost:8888/status-report')
 ```powershell
 $env:SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/..."
 $env:SLACK_BOT_TOKEN = "xoxb-..."
-$env:SLACK_CHANNEL = "#clisonix-monitoring"
+$env:SLACK_CHANNEL = "#kloud-monitoring"
 $env:SLACK_PORT = 8888
 ```
 
@@ -493,3 +493,4 @@ curl http://localhost:8888/service-health
 **Status**: ✅ Production Ready  
 **Created**: 2025-01-15  
 **All Systems Operational** 🚀
+

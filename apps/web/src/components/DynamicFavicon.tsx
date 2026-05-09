@@ -213,7 +213,7 @@ export function DynamicFavicon() {
       }
 
       // Also update title with emoji for extra visibility
-      const baseTitle = 'Clisonix';
+      const baseTitle = 'Kloud';
       document.title = `${config.emoji} ${baseTitle}`;
   }, []);
 

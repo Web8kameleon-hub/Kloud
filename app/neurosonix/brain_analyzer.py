@@ -1,7 +1,7 @@
 """
 brain_analyzer.py
 -----------------
-Clisonix Cognitive Health Analyzer
+Kloud Cognitive Health Analyzer
 
 Kjo njÃ«si analizon dhe vlerÃ«son gjendjen e arkitekturÃ«s kognitive
 nÃ« bazÃ« tÃ« metrikave tÃ« performancÃ«s, stabilitetit dhe ngarkesÃ«s neuronale.
@@ -64,4 +64,5 @@ if __name__ == "__main__":
     result = analyzer.compute_cognitive_health()
     print("ðŸ§  Cognitive Health Snapshot:")
     print(result)
+
 

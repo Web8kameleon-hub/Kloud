@@ -1,7 +1,7 @@
 # codeql-config.yml
 # Konfigurim hibrid për të fokusuar skanimin në kodin e produksionit.
 
-name: "Clisonix Production Code Scan"
+name: "Kloud Production Code Scan"
 
 # Përfshin në skanim vetëm këto direktori dhe skedarë
 paths:
@@ -14,7 +14,7 @@ paths:
   - 'asi_core.py'
   - 'cycle_engine.py'
   - 'economy_api_server.py'
-  - 'clisonix_sdk.py'
+  - 'kloud_sdk.py'
 
 # Injoron plotësisht këto direktori dhe skedarë nga analiza
 paths-ignore:
@@ -43,3 +43,4 @@ queries:
 # query-filters:
 #   - exclude:
 #       id: js/hardcoded-credentials
+

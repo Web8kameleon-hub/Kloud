@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Clisonix Cloud - Real Data APIs",
-    "description": "Complete API collection for Clisonix Cloud with REAL Prometheus metrics, CoinGecko, Weather, and OpenAI integration",
+    "name": "Kloud Cloud - Real Data APIs",
+    "description": "Complete API collection for Kloud Cloud with REAL Prometheus metrics, CoinGecko, Weather, and OpenAI integration",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -448,3 +448,4 @@
     }
   ]
 }
+

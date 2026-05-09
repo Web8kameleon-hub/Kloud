@@ -1,4 +1,4 @@
-# 🎯 QUICK ACCESS GUIDE - CLISONIX CLOUD DOCKER
+# 🎯 QUICK ACCESS GUIDE - KLOUD CLOUD DOCKER
 
 **Status**: ✅ All services running and ready!
 
@@ -51,7 +51,7 @@ curl http://localhost:8000/docs
 
 ### View Running Services
 ```bash
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 docker-compose -f docker-compose.prod.yml ps
 ```
 
@@ -61,7 +61,7 @@ docker-compose -f docker-compose.prod.yml ps
 docker-compose -f docker-compose.prod.yml logs --tail 100
 
 # Specific service
-docker-compose -f docker-compose.prod.yml logs -f clisonix-api
+docker-compose -f docker-compose.prod.yml logs -f kloud-api
 
 # Real-time logs
 docker-compose -f docker-compose.prod.yml logs -f
@@ -70,7 +70,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ### Restart Services
 ```bash
 # Single service
-docker-compose -f docker-compose.prod.yml restart clisonix-api
+docker-compose -f docker-compose.prod.yml restart kloud-api
 
 # All services
 docker-compose -f docker-compose.prod.yml restart
@@ -85,16 +85,16 @@ docker-compose -f docker-compose.prod.yml up -d
 ### Execute Commands
 ```bash
 # Run command in API
-docker exec clisonix-api python main.py
+docker exec kloud-api python main.py
 
 # Access PostgreSQL
-docker exec -it clisonix-postgres psql -U clisonix -d clisonixdb
+docker exec -it kloud-postgres psql -U kloud -d klouddb
 
 # Access Redis
-docker exec -it clisonix-redis redis-cli
+docker exec -it kloud-redis redis-cli
 
 # Check service logs
-docker logs clisonix-alba -f
+docker logs kloud-alba -f
 ```
 
 ---
@@ -113,7 +113,7 @@ docker logs clisonix-alba -f
 1. Open: http://localhost:9090
 2. Query metrics:
    ```
-   up{job="clisonix"}
+   up{job="kloud"}
    container_memory_usage_bytes
    container_cpu_usage_seconds_total
    ```
@@ -133,7 +133,7 @@ docker logs clisonix-alba -f
 ### PostgreSQL
 ```bash
 # Connect to database
-docker exec -it clisonix-postgres psql -U clisonix -d clisonixdb
+docker exec -it kloud-postgres psql -U kloud -d klouddb
 
 # Useful queries
 \dt                                          # List tables
@@ -145,7 +145,7 @@ SELECT * FROM workouts;                      # View workouts
 ### Redis
 ```bash
 # Connect to Redis
-docker exec -it clisonix-redis redis-cli
+docker exec -it kloud-redis redis-cli
 
 # Useful commands
 PING                                         # Test connection
@@ -170,13 +170,13 @@ Password: minioadmin
 ### MinIO Commands
 ```bash
 # List buckets
-docker exec clisonix-minio mc ls local/
+docker exec kloud-minio mc ls local/
 
 # Create bucket
-docker exec clisonix-minio mc mb local/bucket-name
+docker exec kloud-minio mc mb local/bucket-name
 
 # Upload file
-docker exec clisonix-minio mc cp file.txt local/bucket-name/
+docker exec kloud-minio mc cp file.txt local/bucket-name/
 ```
 
 ---
@@ -185,7 +185,7 @@ docker exec clisonix-minio mc cp file.txt local/bucket-name/
 
 ### Scenario 1: Check if Everything is Running
 ```bash
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 docker-compose -f docker-compose.prod.yml ps
 ```
 ✅ Expected: All 11 services showing "Up"
@@ -207,7 +207,7 @@ curl http://localhost:8000/docs
 curl -X POST http://localhost:8000/fitness/users/profile \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "test@clisonix.com",
+    "email": "test@kloud.com",
     "name": "Test User",
     "age": 30,
     "gender": "M",
@@ -239,25 +239,25 @@ http://localhost:3001
 ### Service Not Starting
 ```bash
 # Check logs
-docker-compose -f docker-compose.prod.yml logs clisonix-api
+docker-compose -f docker-compose.prod.yml logs kloud-api
 
 # Restart service
-docker-compose -f docker-compose.prod.yml restart clisonix-api
+docker-compose -f docker-compose.prod.yml restart kloud-api
 
 # Rebuild service
-docker-compose -f docker-compose.prod.yml up -d --no-deps --build clisonix-api
+docker-compose -f docker-compose.prod.yml up -d --no-deps --build kloud-api
 ```
 
 ### Database Connection Issues
 ```bash
 # Check PostgreSQL is running
-docker exec clisonix-postgres pg_isready -U clisonix
+docker exec kloud-postgres pg_isready -U kloud
 
 # Check Redis is running
-docker exec clisonix-redis redis-cli ping
+docker exec kloud-redis redis-cli ping
 
 # Reset database (careful!)
-docker exec clisonix-postgres psql -U clisonix -d clisonixdb -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+docker exec kloud-postgres psql -U kloud -d klouddb -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 ```
 
 ### Memory Issues
@@ -300,10 +300,10 @@ docker volume prune -f
 ### Backup Database
 ```bash
 # Backup PostgreSQL
-docker exec clisonix-postgres pg_dump -U clisonix clisonixdb > backup.sql
+docker exec kloud-postgres pg_dump -U kloud klouddb > backup.sql
 
 # Restore from backup
-docker exec -i clisonix-postgres psql -U clisonix clisonixdb < backup.sql
+docker exec -i kloud-postgres psql -U kloud klouddb < backup.sql
 ```
 
 ### View System Resources
@@ -312,7 +312,7 @@ docker exec -i clisonix-postgres psql -U clisonix clisonixdb < backup.sql
 docker stats
 
 # Container info
-docker inspect clisonix-api | findstr -i "memory\|cpu"
+docker inspect kloud-api | findstr -i "memory\|cpu"
 
 # Volume info
 docker volume ls
@@ -353,8 +353,8 @@ docker volume ls
 - [ ] Can access http://localhost:3001 (Grafana)
 - [ ] Can access http://localhost:8000/docs (API Docs)
 - [ ] API responds to `curl http://localhost:8000/health`
-- [ ] PostgreSQL responds: `docker exec clisonix-postgres pg_isready`
-- [ ] Redis responds: `docker exec clisonix-redis redis-cli ping`
+- [ ] PostgreSQL responds: `docker exec kloud-postgres pg_isready`
+- [ ] Redis responds: `docker exec kloud-redis redis-cli ping`
 - [ ] MinIO console accessible at http://localhost:9001
 - [ ] Prometheus accessible at http://localhost:9090
 - [ ] No critical errors in logs
@@ -376,3 +376,4 @@ All systems are running and ready to use!
 **Last Updated**: December 3, 2025  
 **Docker Compose File**: docker-compose.prod.yml  
 **Status**: ✅ ALL SYSTEMS OPERATIONAL
+

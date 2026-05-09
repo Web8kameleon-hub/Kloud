@@ -4,7 +4,7 @@
   "stages": [
     {
       "stage": "ALBA",
-      "source_dir": "C:\\Clisonix-cloud\\data\\alba",
+      "source_dir": "C:\\Kloud-cloud\\data\\alba",
       "processed_files": [],
       "frames_ingested": 0,
       "total_history": 0,
@@ -71,7 +71,7 @@
   ],
   "summary": {
     "alba": {
-      "source_dir": "C:\\Clisonix-cloud\\data\\alba",
+      "source_dir": "C:\\Kloud-cloud\\data\\alba",
       "processed_files": [],
       "frames_ingested": 0,
       "total_history": 0,
@@ -128,4 +128,5 @@
   "cycle_id": "1260fab7-d16b-44c7-9a2c-acc75a85e13e",
   "recorded_at": "2025-10-30T03:07:17.699361Z"
 }
+
 

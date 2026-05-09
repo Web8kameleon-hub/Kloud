@@ -1,4 +1,4 @@
-# 📚 Clisonix Cloud - Documentation Index
+# 📚 Kloud Cloud - Documentation Index
 
 > **Navigimi i shpejtë për 170+ dokumente**  
 > Organizuar sipas kategorive për qasje të lehtë
@@ -22,7 +22,7 @@
 | Dokument | Përshkrim |
 |----------|-----------|
 | [ARCHITECTURE_SUMMARY.md](ARCHITECTURE_SUMMARY.md) | Përmbledhje e arkitekturës |
-| [CLISONIX_ARCHITECTURE_BASELINE_2025.md](CLISONIX_ARCHITECTURE_BASELINE_2025.md) | Bazë e arkitekturës 2025 |
+| [KLOUD_ARCHITECTURE_BASELINE_2025.md](KLOUD_ARCHITECTURE_BASELINE_2025.md) | Bazë e arkitekturës 2025 |
 | [COMPLETE_SYSTEM_GUIDE.md](COMPLETE_SYSTEM_GUIDE.md) | Udhëzues i plotë i sistemit |
 | [CYCLE_ARCHITECTURE_DIAGRAM.md](CYCLE_ARCHITECTURE_DIAGRAM.md) | Diagrami i Cycle Engine |
 | [docs/architecture/](docs/architecture/) | Folder me dokumente arkitekture |
@@ -39,7 +39,7 @@
 | [AGENT_TELEMETRY_DOCS.md](AGENT_TELEMETRY_DOCS.md) | Dokumentacion telemetrie |
 | [OCEAN_CORE_V2_ULTRALIGHT.md](OCEAN_CORE_V2_ULTRALIGHT.md) | Ocean Core v2 |
 | [CURIOSITY_OCEAN_SETUP.md](CURIOSITY_OCEAN_SETUP.md) | Setup Curiosity Ocean |
-| [CLISONIX_INTELLIGENCE_README.md](CLISONIX_INTELLIGENCE_README.md) | Intelligence module |
+| [KLOUD_INTELLIGENCE_README.md](KLOUD_INTELLIGENCE_README.md) | Intelligence module |
 
 ---
 
@@ -230,3 +230,4 @@
 ---
 
 *Ky indeks u krijua automatikisht - Shkurt 2026*
+

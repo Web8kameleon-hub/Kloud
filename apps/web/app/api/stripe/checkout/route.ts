@@ -1,10 +1,10 @@
 /**
- * Clisonix Cloud - Stripe Checkout API
+ * Kloud Cloud - Stripe Checkout API
  *
  * Creates checkout sessions for subscription plans
  *
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -95,8 +95,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "subscription",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://clisonix.com"}/subscription?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://clisonix.com"}/pricing?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://kloud.com"}/subscription?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://kloud.com"}/pricing?cancelled=true`,
       metadata: {
         clerk_user_id: userId,
         plan: plan,
@@ -167,3 +167,4 @@ export async function GET() {
     },
   });
 }
+

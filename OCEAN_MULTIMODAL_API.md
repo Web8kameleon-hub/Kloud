@@ -484,11 +484,11 @@ ocean-multimodal:
   build:
     context: ./ocean-core
     dockerfile: Dockerfile.multimodal
-  container_name: clisonix-ocean-multimodal
+  container_name: kloud-ocean-multimodal
   ports:
     - "8031:8031"
   environment:
-    OLLAMA_HOST: http://clisonix-06-ollama:11434
+    OLLAMA_HOST: http://kloud-06-ollama:11434
     VISION_MODEL: llava:latest
     AUDIO_MODEL: whisper:latest
     REASONING_MODEL: llama3.1:8b
@@ -559,7 +559,7 @@ Error: Out of memory
 **Solution**: Use smaller models or increase container limits
 
 ```bash
-docker update --memory 8g clisonix-ocean-multimodal
+docker update --memory 8g kloud-ocean-multimodal
 
 ```
 
@@ -580,3 +580,4 @@ docker update --memory 8g clisonix-ocean-multimodal
 **Last Updated**: Feb 4, 2026  
 **Version**: 1.0.0  
 **Status**: Stable
+

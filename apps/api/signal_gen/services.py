@@ -1,5 +1,5 @@
 """
-Clisonix Signal Generation Services
+Kloud Signal Generation Services
 Real-time system metrics and signal processing
 Migrated from TypeScript backend to Python FastAPI
 """
@@ -110,5 +110,6 @@ class SignalGenService:
             },
             "timestamp": datetime.now().isoformat()
         }
+
 
 

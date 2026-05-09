@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Ocean Requirements - Ultra-Lightweight AI Engine
+# Kloud Ocean Requirements - Ultra-Lightweight AI Engine
 # ═══════════════════════════════════════════════════════════════
 # CRITICAL: NO pandas, NO numpy - uses DuckDB for data
 # Maximum performance, minimal CPU footprint
@@ -20,3 +20,4 @@ redis>=5.2.0
 
 # Monitoring
 prometheus-client>=0.21.0
+

@@ -1,5 +1,5 @@
 /**
- * CLISONIX REAL PUBLIC DATA SOURCES
+ * KLOUD REAL PUBLIC DATA SOURCES
  * ==================================
  * NO MOCK DATA - ONLY REAL PUBLIC APIs
  * If data is unavailable, return "no_data" status
@@ -68,7 +68,7 @@ async function safeFetch<T>(
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        "User-Agent": "Clisonix-Industrial-Backend/1.0",
+        "User-Agent": "Kloud-Industrial-Backend/1.0",
       },
     });
     clearTimeout(timeoutId);
@@ -518,3 +518,4 @@ export function getAvailablePublicChannels() {
     timestamp: new Date().toISOString(),
   };
 }
+

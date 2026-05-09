@@ -1,5 +1,5 @@
 /**
- * Clisonix Dashboard
+ * Kloud Dashboard
  * Professional UI inspired by Figma, Postman, Datadog, Opera
  * No emoji - clean Lucide icons only
  */
@@ -259,7 +259,7 @@ export default function DashboardPage() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-semibold tracking-tight">Clisonix</span>
+            <span className="text-lg font-semibold tracking-tight">Kloud</span>
           </Link>
         </div>
 
@@ -420,15 +420,15 @@ export default function DashboardPage() {
               <Link href="/developers" className="hover:text-black transition-colors">
                 Documentation
               </Link>
-              <a href="https://github.com/Web8kameleon-hub/clisonix.com" className="hover:text-black transition-colors">
+              <a href="https://github.com/Web8kameleon-hub/kloud.com" className="hover:text-black transition-colors">
                 GitHub
               </a>
-              <a href="mailto:support@clisonix.com" className="hover:text-black transition-colors">
+              <a href="mailto:support@kloud.com" className="hover:text-black transition-colors">
                 Support
               </a>
             </div>
             <div className="flex items-center gap-2">
-              <span>Clisonix</span>
+              <span>Kloud</span>
               <span className="text-black">·</span>
               <span className="text-black">© 2026</span>
             </div>
@@ -438,3 +438,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# 🚀 CLISONIX CLOUD - SUPER UNIVERSAL LAUNCHER
+# 🚀 KLOUD CLOUD - SUPER UNIVERSAL LAUNCHER
 # Opens each service in separate PowerShell windows to see errors live
 
 param(
@@ -13,7 +13,7 @@ $Root = 'C:\Users\Admin\Desktop\neurosonix-cloud'
 Set-Location $Root
 
 Write-Host "`n╔══════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
-Write-Host "║  🚀 CLISONIX CLOUD - script_all.ps1 🚀                  ║" -ForegroundColor Magenta
+Write-Host "║  🚀 KLOUD CLOUD - script_all.ps1 🚀                  ║" -ForegroundColor Magenta
 Write-Host "║     Each Service Opens in NEW WINDOW (See Errors)       ║" -ForegroundColor Magenta
 Write-Host "╚══════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
 
@@ -76,3 +76,4 @@ Write-Host "║  📊 http://localhost:3001 (Grafana)                     ║" -
 Write-Host "║  ⚡ http://localhost:8000/docs (API)                    ║" -ForegroundColor Cyan
 Write-Host "║  💡 Close windows to stop services                      ║" -ForegroundColor Yellow
 Write-Host "╚══════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
+

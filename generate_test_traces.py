@@ -37,7 +37,7 @@ def create_otlp_trace(service_name: str, operation: str, duration_ms: int, statu
                 "scopeSpans": [
                     {
                         "scope": {
-                            "name": "clisonix-tracer",
+                            "name": "kloud-tracer",
                             "version": "1.0.0"
                         },
                         "spans": [
@@ -133,4 +133,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

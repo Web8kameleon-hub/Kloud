@@ -1,7 +1,7 @@
 /**
- * CLISONIX VENDOR NODE - Edge Computing
+ * KLOUD VENDOR NODE - Edge Computing
  * =====================================
- * Kur user hap Clisonix, krijohet automatikisht një node vendor
+ * Kur user hap Kloud, krijohet automatikisht një node vendor
  * që proceson lokalisht pa konsumuar serverin.
  *
  * Features:
@@ -23,8 +23,8 @@ class VendorNode {
       peersConnected: 0,
       uptime: 0,
     };
-    this.masterServer = "https://api.clisonix.com";
-    this.balancerUrl = "https://api.clisonix.com:3334";
+    this.masterServer = "https://api.kloud.com";
+    this.balancerUrl = "https://api.kloud.com:3334";
   }
 
   generateNodeId() {
@@ -229,7 +229,7 @@ class VendorNode {
     if (/^(hi|hello|hey|mirëdita)/i.test(q)) {
       return {
         response:
-          "Mirëdita! Unë jam Ocean, AI i Clisonix Cloud. Si mund t'ju ndihmoj?",
+          "Mirëdita! Unë jam Ocean, AI i Kloud Cloud. Si mund t'ju ndihmoj?",
         source: "local",
         nodeId: this.nodeId,
       };
@@ -400,7 +400,7 @@ if (typeof window !== "undefined") {
     if (consent === "accepted") {
       vendorNode = new VendorNode();
       await vendorNode.init();
-      window.clisonixNode = vendorNode;
+      window.kloudNode = vendorNode;
     }
   });
 
@@ -423,7 +423,7 @@ window.enableVendorNode = async () => {
   localStorage.setItem("vendorNodeConsent", "accepted");
   vendorNode = new VendorNode();
   await vendorNode.init();
-  window.clisonixNode = vendorNode;
+  window.kloudNode = vendorNode;
   return vendorNode;
 };
 window.disableVendorNode = () => {
@@ -431,3 +431,4 @@ window.disableVendorNode = () => {
   if (vendorNode) vendorNode.destroy();
   vendorNode = null;
 };
+

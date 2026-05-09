@@ -62,9 +62,9 @@ PORT = int(os.getenv("PORT", "9999"))
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 REQUEST_TIMEOUT = float(os.getenv("REQUEST_TIMEOUT", "90"))
 
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
-OCEAN_CORE_URL = os.getenv("OCEAN_CORE_URL", "http://clisonix-ocean-core:8030")
-VIDEO_GENERATOR_URL = os.getenv("VIDEO_GENERATOR_URL", "http://clisonix-video-generator:8029")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
+OCEAN_CORE_URL = os.getenv("OCEAN_CORE_URL", "http://kloud-ocean-core:8030")
+VIDEO_GENERATOR_URL = os.getenv("VIDEO_GENERATOR_URL", "http://kloud-video-generator:8029")
 
 BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = BASE_DIR / "output"
@@ -75,7 +75,7 @@ DOCS_DIR = OUTPUT_DIR / "docs"
 for directory in [OUTPUT_DIR, MUSIC_DIR, VIDEO_DIR, IMAGE_DIR, DOCS_DIR]:
     directory.mkdir(parents=True, exist_ok=True)
 
-GLOBAL_SYSTEM_PROMPT = """You are Clisonix Global AI Orchestrator on port 9999.
+GLOBAL_SYSTEM_PROMPT = """You are Kloud Global AI Orchestrator on port 9999.
 Rules:
 1. Support all world languages fairly and respectfully.
 2. Never produce hateful, racist, discriminatory, or demeaning content.
@@ -173,7 +173,7 @@ EFFECTS = {
     "distortion": {"gain": 2.0, "threshold": 0.7},
 }
 
-app = FastAPI(title="Clisonix 9999 Gateway", version="2.0.0")
+app = FastAPI(title="Kloud 9999 Gateway", version="2.0.0")
 
 # Add CORS middleware
 app.add_middleware(
@@ -446,7 +446,7 @@ async def vision_create(req: VisionCreateRequest):
     image = Image.new("RGB", (req.width, req.height), color=(18, 24, 38))
     draw = ImageDraw.Draw(image)
     now = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    lines = ["Clisonix Vision Creator", req.prompt[:120], f"UTC: {now}"]
+    lines = ["Kloud Vision Creator", req.prompt[:120], f"UTC: {now}"]
     y = 50
     for line in lines:
         draw.text((40, y), line, fill=(235, 245, 255))
@@ -520,7 +520,7 @@ async def document_write(req: DocumentWriteRequest):
 
 @app.post("/api/v1/video/create")
 async def video_create(req: VideoCreateRequest):
-    subtitles = req.subtitles or [req.title, "Clisonix 9999 Video Creator", "Multimodal Automation"]
+    subtitles = req.subtitles or [req.title, "Kloud 9999 Video Creator", "Multimodal Automation"]
     frame_count = max(req.fps * req.seconds, len(subtitles) * req.fps)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     output_path = VIDEO_DIR / f"generated-{ts}.mp4"
@@ -927,7 +927,7 @@ async def workflows_run(req: WorkflowRunRequest):
         video_result = await video_create(
             VideoCreateRequest(
                 title=f"Workflow video: {req.prompt[:60]}",
-                subtitles=["Clisonix 9999", req.prompt[:90], "Workflow complete"],
+                subtitles=["Kloud 9999", req.prompt[:90], "Workflow complete"],
                 fps=10,
                 seconds=5,
             )
@@ -981,7 +981,7 @@ async def system_self_check():
 
 @app.post("/api/v1/publish/blog")
 async def publish_blog(req: PublishToBlogRequest):
-    """Publikim i dokumentave në GitHub clisonix-blog repo"""
+    """Publikim i dokumentave në GitHub kloud-blog repo"""
     try:
         doc_path = Path(req.doc_path)
         if not doc_path.exists():
@@ -1004,7 +1004,7 @@ async def publish_blog(req: PublishToBlogRequest):
                 "description": req.description or content[:200],
                 "tags": req.tags,
                 "date": datetime.now(timezone.utc).isoformat(),
-                "source": "clisonix-9999",
+                "source": "kloud-9999",
             }
             
             # Write to blog
@@ -1072,3 +1072,4 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="127.0.0.1", port=PORT)
+

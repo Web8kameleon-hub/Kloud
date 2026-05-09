@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-// Use Docker container name in clisonix-secure network
-const API_URL = process.env.NODE_ENV === 'production' ? 'http://clisonix-api:8000' : 'http://127.0.0.1:8000';
+// Use Docker container name in kloud-secure network
+const API_URL = process.env.NODE_ENV === 'production' ? 'http://kloud-api:8000' : 'http://127.0.0.1:8000';
 
 export async function GET() {
   try {
@@ -21,3 +21,4 @@ export async function GET() {
     return NextResponse.json({ containers: [], total: 0, running: 0 }, { status: 200 })
   }
 }
+

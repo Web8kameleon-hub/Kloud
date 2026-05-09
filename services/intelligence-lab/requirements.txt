@@ -1,4 +1,4 @@
-# Clisonix Intelligence Lab Requirements
+# Kloud Intelligence Lab Requirements
 # KLAJDI + MALI
 
 fastapi>=0.109.0
@@ -11,3 +11,4 @@ psutil>=5.9.0
 # Optional Excel support
 openpyxl>=3.1.0
 pandas>=2.0.0
+

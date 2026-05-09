@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Clisonix Server Startup Script
+Kloud Server Startup Script
 """
 
 import uvicorn
-from Clisonix_industrial_api import app
+from Kloud_industrial_api import app
 
 if __name__ == "__main__":
-    print("🚀 Starting Clisonix Industrial Backend (REAL)")
+    print("🚀 Starting Kloud Industrial Backend (REAL)")
     print("🌐 Web8 Division - EuroSonix")
     print("📡 Server starting on http://localhost:8000")
 
@@ -18,3 +18,4 @@ if __name__ == "__main__":
         port=8001,
         log_level="info"
     )
+

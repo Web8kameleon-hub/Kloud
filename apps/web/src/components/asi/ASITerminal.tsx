@@ -2,7 +2,7 @@
  * ASI Terminal Component
  * =====================
  * 
- * Interactive terminal interface for Clisonix ASI system
+ * Interactive terminal interface for Kloud ASI system
  */
 
 'use client';
@@ -120,7 +120,7 @@ export function ASITerminal({ className, maxCommands = 10 }: ASITerminalProps) {
             animate={{ opacity: 1, y: 0 }}
             className="text-gray-400 text-sm space-y-2"
           >
-            <div>🤖 <span className="text-violet-400">Clisonix ASI</span> Online</div>
+            <div>🤖 <span className="text-violet-400">Kloud ASI</span> Online</div>
             <div>🔐 <span className="text-purple-400">Jona Sandbox</span> Active</div>
             <div>🌐 <span className="text-sky-400">Alba Network</span> Monitoring</div>
             <div>💡 <span className="text-emerald-400">Albi Intelligence</span> Ready</div>
@@ -255,4 +255,5 @@ export function ASITerminal({ className, maxCommands = 10 }: ASITerminalProps) {
     </div>
   );
 }
+
 

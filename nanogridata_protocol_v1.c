@@ -1,5 +1,5 @@
 /**
- * CLISONIX NANOGRIDATA PROTOCOL v1.0 - CHIP FIRMWARE
+ * KLOUD NANOGRIDATA PROTOCOL v1.0 - CHIP FIRMWARE
  * 
  * C Implementation për ESP32, STM32, etj.
  * 
@@ -436,3 +436,4 @@ void nanogridata_main_loop(void) {
   //   delay(5000); // 5 seconds
   // }
 }
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ALBA API Server - Live ingestion endpoint for Clisonix Cloud.
+ALBA API Server - Live ingestion endpoint for Kloud Cloud.
 Receives frames via HTTP POST and saves them into /data/alba.
 """
 
@@ -14,8 +14,8 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from cors_policy import apply_standard_cors
 
 # OpenTelemetry imports
 from tracing import setup_tracing, instrument_fastapi_app, instrument_http_clients
@@ -27,11 +27,11 @@ API_V1 = "/api/v1"
 tracer = setup_tracing("alba-api")
 
 app = FastAPI(
-    title="ALBA API Server", 
+    title="ALBA API Server",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
 )
 
 # Instrument FastAPI app for automatic tracing
@@ -40,15 +40,9 @@ instrument_fastapi_app(app, "alba-api")
 # Instrument HTTP clients
 instrument_http_clients()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
-DATA_DIR = Path(r"C:\Clisonix-cloud\data\alba")
+DATA_DIR = Path(r"C:\Kloud-cloud\data\alba")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -73,7 +67,9 @@ async def post_frame(request: Request) -> JSONResponse:
         except Exception as exc:  # pragma: no cover - input validation
             span.set_attribute("error", True)
             span.set_attribute("error.message", str(exc))
-            return JSONResponse({"status": "error", "message": f"Invalid JSON: {exc}"}, status_code=400)
+            return JSONResponse(
+                {"status": "error", "message": f"Invalid JSON: {exc}"}, status_code=400
+            )
 
         try:
             saved_path = save_frame(payload)
@@ -81,7 +77,9 @@ async def post_frame(request: Request) -> JSONResponse:
         except Exception as exc:  # pragma: no cover - filesystem safety
             span.set_attribute("error", True)
             span.set_attribute("error.message", str(exc))
-            return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
+            return JSONResponse(
+                {"status": "error", "message": str(exc)}, status_code=500
+            )
 
         return JSONResponse(
             {
@@ -96,12 +94,16 @@ async def post_frame(request: Request) -> JSONResponse:
 def get_latest() -> JSONResponse:
     with tracer.start_as_current_span("get_latest") as span:
         try:
-            files = sorted(DATA_DIR.glob("frame_*.json"), key=os.path.getmtime, reverse=True)
+            files = sorted(
+                DATA_DIR.glob("frame_*.json"), key=os.path.getmtime, reverse=True
+            )
             span.set_attribute("files_found", len(files))
         except Exception as exc:  # pragma: no cover - glob failure guard
             span.set_attribute("error", True)
             span.set_attribute("error.message", str(exc))
-            return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
+            return JSONResponse(
+                {"status": "error", "message": str(exc)}, status_code=500
+            )
 
         if not files:
             return JSONResponse({"status": "no-data", "message": "No frames found"})
@@ -114,7 +116,13 @@ def get_latest() -> JSONResponse:
         except Exception as exc:
             span.set_attribute("error", True)
             span.set_attribute("error.message", str(exc))
-            return JSONResponse({"status": "error", "message": f"Failed to read {latest_file.name}: {exc}"}, status_code=500)
+            return JSONResponse(
+                {
+                    "status": "error",
+                    "message": f"Failed to read {latest_file.name}: {exc}",
+                },
+                status_code=500,
+            )
 
         return JSONResponse({"status": "ok", "frame": frame, "file": latest_file.name})
 
@@ -130,12 +138,21 @@ def root() -> dict[str, object]:
 
 @app.get("/health")
 def health():
-    return {"status": "healthy", "service": "alba", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {
+        "status": "healthy",
+        "service": "alba",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 @app.get(API_V1 + "/status")
 def api_status():
-    return {"status": "operational", "service": "alba", "api_version": "v1", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {
+        "status": "operational",
+        "service": "alba",
+        "api_version": "v1",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
 
 
 @app.get(API_V1 + "/spec")
@@ -146,4 +163,3 @@ def api_spec():
 if __name__ == "__main__":
     port = int(os.getenv("ALBA_API_PORT", 9091))
     uvicorn.run("alba_api_server:app", host="127.0.0.1", port=port, reload=False)
-

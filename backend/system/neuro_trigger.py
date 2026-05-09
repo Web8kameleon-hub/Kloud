@@ -1,5 +1,5 @@
 """
-🧠 Clisonix NeuroTrigger+
+🧠 Kloud NeuroTrigger+
 Vetë-riparim dhe instinkt inteligjent:
 - Zbulon problemet
 - Rifillon modulet automatikisht
@@ -19,7 +19,7 @@ RUNTIME.mkdir(exist_ok=True)
 HISTORY.mkdir(exist_ok=True)
 
 HQ_ENDPOINT = "http://127.0.0.1:7777/mesh/status"
-NODE_ID = os.getenv("CLISONIX_NODE_ID", "NEURO-LOCAL")
+NODE_ID = os.getenv("KLOUD_NODE_ID", "NEURO-LOCAL")
 
 class NeuroTrigger:
     def __init__(self):
@@ -117,4 +117,5 @@ class NeuroTrigger:
 if __name__ == "__main__":
     t = NeuroTrigger()
     t.detect_event("error", "Telemetry module crashed", {"module": "telemetry_service"})
+
 

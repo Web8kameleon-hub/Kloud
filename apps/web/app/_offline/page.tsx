@@ -69,12 +69,13 @@ export default function OfflinePage() {
           </Link>
         </div>
 
-        {/* Clisonix Branding */}
+        {/* Kloud Branding */}
         <div className="mt-12 flex items-center justify-center gap-2 text-gray-600">
           <span className="text-2xl">🧠</span>
-          <span className="font-medium">Clisonix Cloud</span>
+          <span className="font-medium">Kloud Cloud</span>
         </div>
       </div>
     </div>
   );
 }
+

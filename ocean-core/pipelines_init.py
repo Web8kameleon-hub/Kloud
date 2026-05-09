@@ -1,7 +1,7 @@
 """
 CURIOSITY OCEAN
 ===============
-AI Brain of Clisonix Cloud with 5 Pipelines:
+AI Brain of Kloud Cloud with 5 Pipelines:
 
 1. Core Reasoning Pipeline - Text processing & reasoning
 2. Vision Pipeline - Image/screenshot processing (future)
@@ -11,7 +11,7 @@ AI Brain of Clisonix Cloud with 5 Pipelines:
 
 Created by Ledjan Ahmati
 WEB8euroweb GmbH, Germany
-https://clisonix.cloud
+https://kloud.cloud
 """
 
 __version__ = "2.0.0"
@@ -34,3 +34,4 @@ __all__ = [
     "get_safety_filter",
     "get_system_pipeline",
 ]
+

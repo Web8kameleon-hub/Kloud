@@ -84,7 +84,7 @@ PERSONAS = {
 # Model preferences - UPDATED: phi3:mini removed (doesn't speak Albanian)
 MODEL_PREFERENCES = {
     CognitiveLevel.KIDS: "llama3.1:8b",
-    CognitiveLevel.STUDENT: "clisonix-ocean:v2",
+    CognitiveLevel.STUDENT: "kloud-ocean:v2",
     CognitiveLevel.RESEARCH: "llama3.1:8b",
     CognitiveLevel.GENIUS: "gpt-oss:120b"  # via microservice 8031
 }
@@ -189,3 +189,4 @@ if __name__ == "__main__":
     PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8011
     print(f"🎯 Starting Adaptive Persona Router on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

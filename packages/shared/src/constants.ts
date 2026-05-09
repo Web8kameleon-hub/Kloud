@@ -1,7 +1,7 @@
 // Shared constants
 export const API_ENDPOINTS = {
   AGI: '/api/agi',
-  clisonix: '/api/clisonix', 
+  kloud: '/api/kloud', 
   DASHBOARD: '/api/dashboard',
   WORLD_BRAIN: '/api/world-brain'
 } as const
@@ -35,3 +35,4 @@ export const THEME_COLORS = {
   DARK: '#1f2937',
   LIGHT: '#f9fafb'
 } as const
+

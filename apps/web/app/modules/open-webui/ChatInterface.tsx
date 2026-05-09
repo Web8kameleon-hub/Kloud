@@ -12,7 +12,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 
 export default function OpenWebUIChat() {
   const [messages, setMessages] = useState<Array<{id: number; text: string; sender: string; type?: string}>>([
-    { id: 1, text: "Hello! I'm Clisonix AI. Send text, voice, photos, or documents — everything is processed by real AI.", sender: 'bot' }
+    { id: 1, text: "Hello! I'm Kloud AI. Send text, voice, photos, or documents — everything is processed by real AI.", sender: 'bot' }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -336,7 +336,7 @@ export default function OpenWebUIChat() {
     <div className="min-h-screen bg-white flex">
       {/* Sidebar */}
       <div className="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-5 hidden md:flex flex-col">
-        <h1 className="text-xl font-bold mb-1">🧠 Clisonix AI</h1>
+        <h1 className="text-xl font-bold mb-1">🧠 Kloud AI</h1>
         <p className="text-slate-400 text-sm mb-6">Multimodal Assistant</p>
         <div className="space-y-2">
           {[
@@ -390,7 +390,7 @@ export default function OpenWebUIChat() {
               }`}>
                 {msg.sender === 'bot' && (
                   <div className="flex items-center gap-1.5 mb-1 text-xs font-medium text-slate-400">
-                    <span>🧠</span> Clisonix AI
+                    <span>🧠</span> Kloud AI
                   </div>
                 )}
                 <div className="whitespace-pre-wrap">{msg.text}</div>
@@ -498,6 +498,7 @@ export default function OpenWebUIChat() {
     </div>
   )
 }
+
 
 
 

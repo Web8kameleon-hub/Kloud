@@ -1,5 +1,5 @@
 """
-Industrial Storage System for Clisonix Cloud
+Industrial Storage System for Kloud Cloud
 S3-compatible storage with local fallback, versioning, and audit trails
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 
@@ -40,8 +40,8 @@ class StorageConfig:
     """Storage configuration management"""
     
     def __init__(self):
-        self.local_storage_root = Path("storage/Clisonix")
-        self.s3_bucket = os.getenv("Clisonix_S3_BUCKET", "Clisonix-data")
+        self.local_storage_root = Path("storage/Kloud")
+        self.s3_bucket = os.getenv("Kloud_S3_BUCKET", "Kloud-data")
         self.s3_region = os.getenv("AWS_REGION", "eu-west-1")
         self.enable_versioning = True
         self.enable_backup = True
@@ -444,5 +444,6 @@ class StorageError(Exception):
 # Initialize storage system
 storage_config = StorageConfig()
 storage_system = IndustrialStorageSystem(storage_config)
+
 
 

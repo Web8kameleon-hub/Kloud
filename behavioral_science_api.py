@@ -1,5 +1,5 @@
 """
-BEHAVIORAL SCIENCE API - Clisonix Research Engine
+BEHAVIORAL SCIENCE API - Kloud Research Engine
 
 This API collects and analyzes behavioral data from frontend modules:
 - Mood patterns and emotional trends
@@ -25,7 +25,7 @@ import hashlib
 import statistics
 
 app = FastAPI(
-    title="Clisonix Behavioral Science API",
+    title="Kloud Behavioral Science API",
     description="Research-grade behavioral analytics engine",
     version="1.0.0"
 )
@@ -100,7 +100,7 @@ class FocusLogRequest(BaseModel):
 
 def anonymize_device_id(device_id: str) -> str:
     """Create anonymous but consistent user identifier"""
-    return hashlib.sha256(f"clisonix_{device_id}".encode()).hexdigest()[:16]
+    return hashlib.sha256(f"kloud_{device_id}".encode()).hexdigest()[:16]
 
 def get_circadian_phase(hour: int) -> str:
     """Classify hour into circadian phase"""
@@ -653,3 +653,4 @@ async def api_status():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8003)
+

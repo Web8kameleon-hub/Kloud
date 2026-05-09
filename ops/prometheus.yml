@@ -2,7 +2,7 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    monitor: 'clisonix-monitor'
+    monitor: 'kloud-monitor'
 
 alerting:
   alertmanagers:
@@ -49,4 +49,5 @@ scrape_configs:
   - job_name: 'redis'
     static_configs:
       - targets: ['redis:6379']
+
 

@@ -80,7 +80,7 @@ class DataSourceConfig:
 # AI SYSTEM PROMPTS & LANGUAGE CONFIGURATION
 # ============================================================================
 
-OCEAN_SYSTEM_PROMPT = """You are Curiosity Ocean, a highly intelligent multilingual AI assistant developed by ABA GmbH (Clisonix).
+OCEAN_SYSTEM_PROMPT = """You are Curiosity Ocean, a highly intelligent multilingual AI assistant developed by ABA GmbH (Kloud).
 
 **CRITICAL RULES:**
 1. ALWAYS detect the user's language and respond in the SAME language
@@ -360,3 +360,4 @@ Host: {SERVICE_HOST}:{SERVICE_PORT}
 
 if __name__ == "__main__":
     print_config()
+

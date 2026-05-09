@@ -2,7 +2,7 @@
 """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  ANIMATED VIDEO GENERATOR — Real Motion Graphics                              ║
-║  Part of Clisonix Cloud Industrial Backend                                    ║
+║  Part of Kloud Cloud Industrial Backend                                    ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Features:                                                                    ║
 ║  - Zoom & Pan animations (Ken Burns effect)                                   ║
@@ -13,7 +13,7 @@
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
 Date: 2026-02-09
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import asyncio
@@ -30,7 +30,7 @@ from enum import Enum
 
 # Directories
 VIDEO_OUTPUT_DIR = Path("./generated_videos")
-TEMP_DIR = Path(tempfile.gettempdir()) / "clisonix_video"
+TEMP_DIR = Path(tempfile.gettempdir()) / "kloud_video"
 VIDEO_OUTPUT_DIR.mkdir(exist_ok=True)
 TEMP_DIR.mkdir(exist_ok=True)
 
@@ -111,7 +111,7 @@ Gamma waves are associated with higher cognitive functions.
 Raw EEG signals contain noise from muscles, eye movements, and electronics.
 Advanced algorithms filter and clean these signals in real-time.
 Machine learning models then classify brain patterns with high accuracy.
-At Clisonix, we process these signals with sub-millisecond latency.
+At Kloud, we process these signals with sub-millisecond latency.
             """.strip(),
             "animation": AnimationType.ZOOM_OUT
         },
@@ -126,10 +126,10 @@ Mental health applications help treat anxiety and depression.
             """.strip(),
             "animation": AnimationType.KEN_BURNS
         },
-        "clisonix": {
-            "title": "The Clisonix Approach",
+        "kloud": {
+            "title": "The Kloud Approach",
             "narration": """
-Clisonix brings industrial-grade AI to brain signal processing.
+Kloud brings industrial-grade AI to brain signal processing.
 Our edge computing solutions ensure real-time performance.
 We prioritize patient privacy with on-device processing.
 Our systems meet FDA and MDR compliance requirements.
@@ -142,8 +142,8 @@ This is the future of neural technology.
             "narration": """
 Thank you for exploring brain-computer interfaces with us.
 The future of human-machine interaction is here.
-Visit clisonix.com to learn more about our technology.
-Contact us at clisonix@pm.me for partnerships and inquiries.
+Visit kloud.com to learn more about our technology.
+Contact us at kloud@pm.me for partnerships and inquiries.
             """.strip(),
             "animation": AnimationType.FADE_IN
         }
@@ -278,9 +278,9 @@ Contact us at clisonix@pm.me for partnerships and inquiries.
             ,drawbox=x='w/2-50+20*sin(2*PI*t)':y='h-150':w=100:h=100:color={accent}@0.5:t=fill
         """
         
-        # Add Clisonix branding
+        # Add Kloud branding
         branding = f"""
-            ,drawtext=text='clisonix.com':fontcolor=gray:fontsize=30:x=50:y=h-50:
+            ,drawtext=text='kloud.com':fontcolor=gray:fontsize=30:x=50:y=h-50:
                 fontfile=/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf
         """
         
@@ -326,7 +326,7 @@ Contact us at clisonix@pm.me for partnerships and inquiries.
                 fade=t=out:st={duration-1}:d=1,
                 drawtext=text='{title}':fontcolor=white:fontsize=72:
                     x=(w-text_w)/2:y=(h-text_h)/2,
-                drawtext=text='clisonix.com':fontcolor=gray:fontsize=28:x=50:y=h-50
+                drawtext=text='kloud.com':fontcolor=gray:fontsize=28:x=50:y=h-50
             """.replace('\n', '').replace('  ', ''),
             "-c:v", "libx264",
             "-preset", "fast",
@@ -456,7 +456,7 @@ Contact us at clisonix@pm.me for partnerships and inquiries.
         """Generate complete animated video."""
         
         print("=" * 60)
-        print("ANIMATED VIDEO GENERATOR — Clisonix")
+        print("ANIMATED VIDEO GENERATOR — Kloud")
         print("=" * 60)
         
         start_time = time.time()
@@ -537,10 +537,11 @@ async def main():
     shutil.copy(video.output_path, "/var/www/videos/")
     if video.srt_path:
         shutil.copy(video.srt_path, "/var/www/videos/")
-    print(f"\n🌐 Video available at: https://api.clisonix.com/videos/")
+    print(f"\n🌐 Video available at: https://api.kloud.com/videos/")
     
     return video
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+

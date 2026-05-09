@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  CLISONIX BLOG AUTO-PUBLISHER                                                 ║
+║  KLOUD BLOG AUTO-PUBLISHER                                                 ║
 ║  Automatically publishes articles from Blerina & Dr. Albana to GitHub Pages   ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Features:                                                                    ║
@@ -11,7 +11,7 @@
 ║  - Tracks published articles to avoid duplicates                              ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
-Target: https://ledjanahmati.github.io/clisonix-blog/
+Target: https://ledjanahmati.github.io/kloud-blog/
 Port: 8041
 Author: Ledjan Ahmati (CEO, ABA GmbH)
 """
@@ -48,7 +48,7 @@ logger = logging.getLogger("BlogPublisher")
 
 PORT = int(os.getenv("PUBLISHER_PORT", "8041"))
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-GITHUB_REPO = os.getenv("GITHUB_REPO", "ledjanahmati/clisonix-blog")
+GITHUB_REPO = os.getenv("GITHUB_REPO", "ledjanahmati/kloud-blog")
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
 
 # Source directories for articles
@@ -64,7 +64,7 @@ POSTS_PER_DAY = int(os.getenv("POSTS_PER_DAY", "4"))
 # ═══════════════════════════════════════════════════════════════════════════════
 
 app = FastAPI(
-    title="Clisonix Blog Auto-Publisher",
+    title="Kloud Blog Auto-Publisher",
     description="Automatically publishes articles to GitHub Pages",
     version="1.0.0"
 )
@@ -263,7 +263,7 @@ async def publish_to_github(content: str, filename: str) -> Optional[str]:
                 # Construct blog URL
                 slug = filename.replace('.md', '').split('-', 3)[-1]
                 date_parts = filename.split('-')[:3]
-                blog_url = f"https://ledjanahmati.github.io/clisonix-blog/{'/'.join(date_parts)}/{slug}/"
+                blog_url = f"https://ledjanahmati.github.io/kloud-blog/{'/'.join(date_parts)}/{slug}/"
                 return blog_url
             else:
                 logger.error(f"GitHub API error: {response.status_code} - {response.text}")
@@ -281,7 +281,7 @@ async def fetch_blerina_article(article_id: str) -> Optional[str]:
     """Fetch article content from Blerina service"""
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(f"http://clisonix-blerina:8035/api/v1/pillars/{article_id}")
+            response = await client.get(f"http://kloud-blerina:8035/api/v1/pillars/{article_id}")
             if response.status_code == 200:
                 data = response.json()
                 return data.get("content", "")
@@ -299,7 +299,7 @@ async def fetch_dr_albana_article(article_id: str) -> Optional[str]:
     """Fetch article content from Dr. Albana service"""
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(f"http://clisonix-dr-albana:8040/api/v1/medical/pillars/{article_id}")
+            response = await client.get(f"http://kloud-dr-albana:8040/api/v1/medical/pillars/{article_id}")
             if response.status_code == 200:
                 data = response.json()
                 return data.get("content", "")
@@ -322,7 +322,7 @@ async def get_unpublished_articles() -> List[Dict[str, str]]:
     # Check Blerina articles
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get("http://clisonix-blerina:8035/api/v1/pillars")
+            response = await client.get("http://kloud-blerina:8035/api/v1/pillars")
             if response.status_code == 200:
                 pillars = response.json().get("pillars", [])
                 for p in pillars:
@@ -334,7 +334,7 @@ async def get_unpublished_articles() -> List[Dict[str, str]]:
     # Check Dr. Albana articles
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get("http://clisonix-dr-albana:8040/api/v1/medical/pillars")
+            response = await client.get("http://kloud-dr-albana:8040/api/v1/medical/pillars")
             if response.status_code == 200:
                 pillars = response.json().get("pillars", [])
                 for p in pillars:
@@ -355,7 +355,7 @@ async def root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Clisonix Blog Auto-Publisher</title>
+        <title>Kloud Blog Auto-Publisher</title>
         <style>
             body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; background: #f0f4f8; }
             .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
@@ -368,8 +368,8 @@ async def root():
     <body>
         <div class="container">
             <span class="badge">📝 AUTO-PUBLISH TO GITHUB PAGES</span>
-            <h1>📰 Clisonix Blog Auto-Publisher</h1>
-            <h2>Target: <a href="https://ledjanahmati.github.io/clisonix-blog/">ledjanahmati.github.io/clisonix-blog</a></h2>
+            <h1>📰 Kloud Blog Auto-Publisher</h1>
+            <h2>Target: <a href="https://ledjanahmati.github.io/kloud-blog/">ledjanahmati.github.io/kloud-blog</a></h2>
             
             <div class="endpoint">
                 <h3>📤 Publish Article</h3>
@@ -411,7 +411,7 @@ async def health_check():
         "service": "blog_publisher",
         "version": "1.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "target_blog": f"https://ledjanahmati.github.io/clisonix-blog/",
+        "target_blog": f"https://ledjanahmati.github.io/kloud-blog/",
         "github_configured": bool(GITHUB_TOKEN),
         "posts_per_day": POSTS_PER_DAY
     }
@@ -578,3 +578,4 @@ async def startup_event():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

@@ -1,5 +1,5 @@
 [Unit]
-Description=Clisonix Daily Report Sender
+Description=Kloud Daily Report Sender
 After=network.target
 
 [Service]
@@ -13,7 +13,8 @@ Environment="SMTP_PORT=587"
 Environment="SMTP_USER=amati.bau@gmail.com"
 Environment="SMTP_PASS=APPPASSWORD16"
 Environment="REPORT_TO=amati.bau@gmail.com"
-Environment="REPORT_FROM=Clisonix Reports <amati.bau@gmail.com>"
+Environment="REPORT_FROM=Kloud Reports <amati.bau@gmail.com>"
 
 [Install]
 WantedBy=multi-user.target
+

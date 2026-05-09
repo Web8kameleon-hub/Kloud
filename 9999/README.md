@@ -1,4 +1,4 @@
-# Clisonix 9999 Gateway
+# Kloud 9999 Gateway
 
 Dedicated `9999/app.py` service connected to core app functions.
 
@@ -25,3 +25,4 @@ docker compose up -d --build ai-global-9999
 ```powershell
 Invoke-WebRequest -Uri "http://localhost:9999/health" -UseBasicParsing
 ```
+

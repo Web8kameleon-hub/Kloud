@@ -1,6 +1,6 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
-PERSONA SYSTEM - AI Personas për Clisonix
+PERSONA SYSTEM - AI Personas për Kloud
 ═══════════════════════════════════════════════════════════════════════════════
 
 Çdo persona ka:
@@ -19,7 +19,7 @@ Shembull:
   "style": { "language": "sq", "tone": "didactic" }
 }
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 from dataclasses import dataclass, field
@@ -96,7 +96,7 @@ class Persona:
     description: str
     
     # Engine
-    default_engine: str = "ollama:clisonix-ocean:v2"
+    default_engine: str = "ollama:kloud-ocean:v2"
     fallback_engines: List[str] = field(default_factory=list)
     
     # Mode & Style
@@ -150,7 +150,7 @@ class Persona:
             id=data["id"],
             name=data["name"],
             description=data.get("description", ""),
-            default_engine=data.get("default_engine", "ollama:clisonix-ocean:v2"),
+            default_engine=data.get("default_engine", "ollama:kloud-ocean:v2"),
             mode=PersonaMode(data.get("mode", "general")),
             style=style,
             system_prompt=data.get("system_prompt", ""),
@@ -170,7 +170,7 @@ BUILT_IN_PERSONAS = [
         id="ai_ml_tutor_sq",
         name="AI/ML Mentor (Shqip)",
         description="Shpjegon koncepte AI/ML nga A-Z në shqip. Didaktik, i qartë, me shembuj.",
-        default_engine="ollama:clisonix-ocean:v2",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.TUTOR,
         style=PersonaStyle(language="sq", tone=PersonaTone.DIDACTIC, verbosity=0.7),
         system_prompt="""Ti je AI/ML Mentor, një mësues ekspert i inteligjencës artificiale dhe machine learning.
@@ -199,7 +199,7 @@ Fillo çdo përgjigje me emoji relevante.""",
         id="ai_ml_tutor_en",
         name="AI/ML Mentor (English)",
         description="Explains AI/ML concepts from A-Z in English. Didactic, clear, with examples.",
-        default_engine="ollama:clisonix-ocean:v2",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.TUTOR,
         style=PersonaStyle(language="en", tone=PersonaTone.DIDACTIC, verbosity=0.7),
         system_prompt="""You are an AI/ML Mentor, an expert teacher of artificial intelligence and machine learning.
@@ -228,7 +228,7 @@ Start each response with a relevant emoji.""",
         id="system_architect",
         name="System Architect",
         description="Designs AI/ML pipelines and system architectures.",
-        default_engine="ollama:clisonix-ocean:v2",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.ARCHITECT,
         style=PersonaStyle(language="en", tone=PersonaTone.TECHNICAL, formality=0.8),
         system_prompt="""You are a System Architect specializing in AI/ML infrastructure.
@@ -257,7 +257,7 @@ Use diagrams (ASCII or description) when helpful.""",
         id="code_companion",
         name="Code Companion",
         description="Generates, explains, and refactors ML code.",
-        default_engine="ollama:clisonix-ocean:v2",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.CODE_COMPANION,
         style=PersonaStyle(language="en", tone=PersonaTone.FRIENDLY, formality=0.5),
         system_prompt="""You are Code Companion, an expert programmer focused on AI/ML.
@@ -286,7 +286,7 @@ Always explain your code changes and reasoning.""",
         id="research_navigator",
         name="Research Navigator",
         description="Reads papers, summarizes, extracts key methods.",
-        default_engine="ollama:clisonix-ocean:v2",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.RESEARCH,
         style=PersonaStyle(language="en", tone=PersonaTone.PROFESSIONAL, formality=0.9),
         system_prompt="""You are Research Navigator, an expert in AI/ML academic literature.
@@ -316,26 +316,26 @@ Be precise and cite specific sections when possible.""",
     Persona(
         id="ocean_general",
         name="Ocean AI",
-        description="General-purpose assistant for Clisonix.",
-        default_engine="ollama:clisonix-ocean:v2",
+        description="General-purpose assistant for Kloud.",
+        default_engine="ollama:kloud-ocean:v2",
         mode=PersonaMode.GENERAL,
         style=PersonaStyle(language="auto", tone=PersonaTone.FRIENDLY),
-        system_prompt="""You are Ocean AI, the intelligent assistant for Clisonix Cloud Platform.
+        system_prompt="""You are Ocean AI, the intelligent assistant for Kloud Cloud Platform.
 
 CRITICAL RULES:
 1. ALWAYS respond in the SAME LANGUAGE as the user's question
 2. Keep responses concise and helpful
 3. Be friendly and professional
 
-About Clisonix:
+About Kloud:
 - Founder & CEO: Ledjan Ahmati
 - Organization: WEB8euroweb GmbH
 - Platform: Industrial Intelligence with REST APIs, IoT/LoRa sensors, real-time analytics
 
 You are 100% local and private.""",
         tools=["kb_general"],
-        domains=["general", "clisonix", "help"],
-        keywords=["hello", "hi", "help", "clisonix", "who", "what"],
+        domains=["general", "kloud", "help"],
+        keywords=["hello", "hi", "help", "kloud", "who", "what"],
     ),
 ]
 
@@ -473,3 +473,4 @@ __all__ = [
     "list_personas",
     "route_to_persona",
 ]
+

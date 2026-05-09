@@ -1,4 +1,4 @@
-# 🚀 CLISONIX CLOUD - MASTER LAUNCHER GUIDE
+# 🚀 KLOUD CLOUD - MASTER LAUNCHER GUIDE
 
 ## Complete System Orchestration - Two Scripts for All Needs
 
@@ -9,7 +9,7 @@
 ### 1. **MASTER-LAUNCH.ps1** (7 Operational Modes)
 Modular script with multiple execution modes for different use cases.
 
-**Location:** `c:\clisonix-cloud\MASTER-LAUNCH.ps1`
+**Location:** `c:\kloud-cloud\MASTER-LAUNCH.ps1`
 
 **Modes:**
 ```
@@ -42,7 +42,7 @@ diagnostics  - System health scan (Port check, service probes)
 ### 2. **MASTER-LAUNCH-FULL.ps1** (Complete Orchestration)
 Ultimate launcher that starts ALL 11 services in separate PowerShell windows.
 
-**Location:** `c:\clisonix-cloud\MASTER-LAUNCH-FULL.ps1`
+**Location:** `c:\kloud-cloud\MASTER-LAUNCH-FULL.ps1`
 
 **Services Launched (11 Total):**
 
@@ -282,8 +282,8 @@ psql -U postgres -h localhost
 \l
 
 # Reset database
-DROP DATABASE clisonix;
-CREATE DATABASE clisonix;
+DROP DATABASE kloud;
+CREATE DATABASE kloud;
 ```
 
 ---
@@ -343,4 +343,5 @@ For issues:
 **Last Updated:** December 3, 2025
 **Status:** ✅ Production Ready
 
-🚀 **Clisonix Cloud is ready for takeoff!**
+🚀 **Kloud Cloud is ready for takeoff!**
+

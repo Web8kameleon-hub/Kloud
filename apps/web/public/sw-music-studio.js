@@ -1,5 +1,5 @@
 // Music Studio Service Worker - PWA Support
-const CACHE_NAME = 'clisonix-music-studio-v1';
+const CACHE_NAME = 'kloud-music-studio-v1';
 const ASSETS_TO_CACHE = [
   '/modules/music-studio',
   '/manifest-music-studio.json',
@@ -23,7 +23,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name.startsWith('clisonix-music-studio-') && name !== CACHE_NAME)
+          .filter((name) => name.startsWith('kloud-music-studio-') && name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
     })
@@ -101,3 +101,4 @@ self.addEventListener('notificationclick', (event) => {
     clients.openWindow('/modules/music-studio')
   );
 });
+

@@ -11,7 +11,7 @@ export class JONAEthicsGuardian {
   }
 
   async evaluateEthicalAction(action: unknown, context: unknown) {
-    // Stub implementation for minimal Clisonix setup
+    // Stub implementation for minimal Kloud setup
     return {
       overallApproval: true,
       confidence: 0.95,
@@ -20,3 +20,4 @@ export class JONAEthicsGuardian {
     };
   }
 }
+

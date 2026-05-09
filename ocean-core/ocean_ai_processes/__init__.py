@@ -13,7 +13,7 @@ Advanced AI processing capabilities for Ocean Core:
 - Topic Modeling (keyword & LDA)
 
 Version: 1.0.0
-Author: Clisonix Team
+Author: Kloud Team
 Updated: 2026-02-23
 """
 
@@ -135,3 +135,4 @@ __all__ = [
 ]
 
 __version__ = "1.0.0"
+

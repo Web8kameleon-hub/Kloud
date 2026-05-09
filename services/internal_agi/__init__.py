@@ -1,14 +1,14 @@
 # ============================================================================
-# CLISONIX INTERNAL AGI ENGINE - 100% INTERNAL, NO EXTERNAL LLMs
+# KLOUD INTERNAL AGI ENGINE - 100% INTERNAL, NO EXTERNAL LLMs
 # ============================================================================
 # Version: 1.0.0
-# Author: Clisonix Development Team
+# Author: Kloud Development Team
 # Purpose: Complete AGI system using ONLY internal modules and data sources
-# NO Groq, OpenAI, Claude, Gemini - Pure Clisonix Intelligence
+# NO Groq, OpenAI, Claude, Gemini - Pure Kloud Intelligence
 # ============================================================================
 
 """
-INTERNAL AGI ENGINE - Pure Clisonix Intelligence
+INTERNAL AGI ENGINE - Pure Kloud Intelligence
 
 This engine provides AGI-level capabilities using:
 - 4053+ Global Data Sources (155+ countries)
@@ -19,7 +19,7 @@ This engine provides AGI-level capabilities using:
 - JONA (7777) supervision layer
 
 Architecture:
-- module_registry.py    → Registers all 23 Clisonix modules
+- module_registry.py    → Registers all 23 Kloud modules
 - knowledge_router.py   → Routes queries to appropriate data sources
 - reasoning_engine.py   → Logic and inference without external AI
 - context_builder.py    → Builds context from internal sources
@@ -33,10 +33,10 @@ Integration Points:
 """
 
 __version__ = "1.0.0"
-__author__ = "Clisonix"
+__author__ = "Kloud"
 __description__ = "Internal AGI Engine - 100% Internal, No External LLMs"
 
-from .module_registry import ModuleRegistry, ClisonixModule
+from .module_registry import ModuleRegistry, KloudModule
 from .knowledge_router import KnowledgeRouter, QueryIntent, RouteDecision
 from .reasoning_engine import ReasoningEngine, InferenceResult
 from .context_builder import ContextBuilder, ContextFrame
@@ -46,7 +46,7 @@ from .fallbacks import FallbackManager, FallbackResponse
 __all__ = [
     # Module Registry
     "ModuleRegistry",
-    "ClisonixModule",
+    "KloudModule",
     
     # Knowledge Router
     "KnowledgeRouter",
@@ -70,3 +70,4 @@ __all__ = [
     "__author__",
     "__description__",
 ]
+

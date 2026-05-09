@@ -72,9 +72,9 @@ log_success "Code updated"
 # =====================================================
 log_info "Checking Docker network..."
 
-if ! docker network ls | grep -q clisonix; then
-  log_info "Creating clisonix network..."
-  docker network create clisonix
+if ! docker network ls | grep -q kloud; then
+  log_info "Creating kloud network..."
+  docker network create kloud
 fi
 
 log_success "Network ready"
@@ -100,11 +100,11 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -p 5678:5678 \
   -p 5679:5679 \
-  --network clisonix \
+  --network kloud \
   --log-driver json-file \
   --log-opt max-size=10m \
   --log-opt max-file=3 \
-  clisonix/nanogridata-gateway:latest
+  kloud/nanogridata-gateway:latest
 
 log_success "Container started"
 
@@ -146,3 +146,4 @@ log_info "View logs:"
 echo "   docker logs -f nanogridata-gateway"
 echo ""
 echo "=========================================="
+

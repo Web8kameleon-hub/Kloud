@@ -1,4 +1,4 @@
-# 🚀 Clisonix AI Agents - Complete Integration & Testing Guide
+# 🚀 Kloud AI Agents - Complete Integration & Testing Guide
 
 **Date:** December 10, 2025  
 **Status:** Production-Ready  
@@ -52,7 +52,7 @@
 ### Step 2: Set Environment Variables
 ```
 1. Click "Environments" (top left)
-2. Create new: "Clisonix Local"
+2. Create new: "Kloud Local"
 3. Add variables:
    - base_url: http://localhost:8000
    - openai_api_key: sk-your-actual-key (optional)
@@ -112,7 +112,7 @@
 
 ### Option 1: Using Docker (Recommended)
 ```bash
-cd C:\clisonix-cloud
+cd C:\kloud-cloud
 docker-compose -f docker-compose.yml up prometheus -d
 ```
 
@@ -344,7 +344,7 @@ npm run dev
 
 - [ ] **Grafana Dashboard Imported**
   - [ ] Data source: Prometheus connected
-  - [ ] Dashboard visible at: http://localhost:3001/d/clisonix-ai-agents
+  - [ ] Dashboard visible at: http://localhost:3001/d/kloud-ai-agents
   - [ ] All 10 panels displaying data
 
 - [ ] **API Testing Complete**
@@ -374,7 +374,7 @@ npm run dev
 - **Prometheus**: https://prometheus.io
 - **Grafana**: https://grafana.com
 
-### Clisonix Documentation
+### Kloud Documentation
 - **AI Frameworks**: AI_AGENT_FRAMEWORKS.md
 - **n8n Workflows**: N8N_WORKFLOWS.json
 - **Real Data API**: API_DOCS.md
@@ -411,3 +411,4 @@ npm run dev
 **Document Version:** 1.0  
 **Last Updated:** December 10, 2025  
 **Status:** ✅ Production-Ready
+

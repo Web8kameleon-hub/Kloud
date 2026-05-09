@@ -1,8 +1,8 @@
-# setup_Clisonix.ps1 - Clisonix Cloud Industrial Setup Script
+# setup_Kloud.ps1 - Kloud Cloud Industrial Setup Script
 # Author: Ledjan Ahmati
 # License: Closed Source
 
-Write-Host "ðŸš€ Clisonix Cloud Industrial Setup Starting..."
+Write-Host "ðŸš€ Kloud Cloud Industrial Setup Starting..."
 
 # Step 1: Install Python dependencies
 Write-Host "ðŸ“¦ Installing Python dependencies..."
@@ -20,5 +20,6 @@ docker compose build
 Write-Host "ðŸ”„ Starting Docker services..."
 docker compose up -d
 
-Write-Host "✅ Setup complete! Clisonix Cloud is ready to use."
+Write-Host "✅ Setup complete! Kloud Cloud is ready to use."
+
 

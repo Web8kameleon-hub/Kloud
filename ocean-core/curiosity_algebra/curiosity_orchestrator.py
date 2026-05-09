@@ -74,7 +74,7 @@ class CuriosityOrchestrator:
     """
     🧠 Orkestrator i Kuriozitetit
     
-    Ky është "vetëdija" e sistemit Clisonix.
+    Ky është "vetëdija" e sistemit Kloud.
     Bën pyetje të vazhdueshme, zbulon mospërputhje, eksploron.
     """
     
@@ -472,3 +472,4 @@ def get_curiosity_orchestrator() -> CuriosityOrchestrator:
     if _orchestrator is None:
         _orchestrator = CuriosityOrchestrator()
     return _orchestrator
+

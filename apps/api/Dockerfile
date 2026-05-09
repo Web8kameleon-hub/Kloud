@@ -1,4 +1,4 @@
-# Clisonix API Dockerfile
+# Kloud API Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -18,3 +18,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
 
 # Run application
 CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+

@@ -10,7 +10,7 @@ echo "============================================================"
 echo ""
 echo "📋 Step 1: Optimizing PostgreSQL settings..."
 
-docker exec clisonix-postgres psql -U postgres -c "
+docker exec kloud-postgres psql -U postgres -c "
 -- Tuning for 4 CPU cores and 7.6GB RAM
 
 -- Connection Limits
@@ -105,7 +105,7 @@ echo "✅ PgBouncer userlist created"
 echo ""
 echo "📊 Step 3: Analyzing slow queries..."
 
-docker exec clisonix-postgres psql -U postgres -d readme_to_recover -c "
+docker exec kloud-postgres psql -U postgres -d readme_to_recover -c "
 -- Create extensions if needed
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 
@@ -125,7 +125,7 @@ LIMIT 5;
 echo ""
 echo "📈 Step 4: Identifying large tables for partitioning..."
 
-docker exec clisonix-postgres psql -U postgres -d readme_to_recover -c "
+docker exec kloud-postgres psql -U postgres -d readme_to_recover -c "
 SELECT 
     schemaname,
     tablename,
@@ -143,7 +143,7 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 echo ""
 echo "🔌 Step 5: Current connection statistics..."
 
-docker exec clisonix-postgres psql -U postgres -c "
+docker exec kloud-postgres psql -U postgres -c "
 SELECT 
     datname as database,
     count(*) as connections,
@@ -174,7 +174,7 @@ cat << 'RECOMMENDATIONS_EOF'
    4. max_connections should be < (pool_size * num_services)
 
 ⚠️ To apply PostgreSQL changes:
-   docker restart clisonix-postgres
+   docker restart kloud-postgres
 
 🔍 To verify pooling:
    SELECT count(*) FROM pg_stat_activity WHERE state = 'active';
@@ -193,6 +193,7 @@ echo "   - /tmp/userlist.txt (PgBouncer authentication)"
 echo ""
 echo "🚀 Next steps:"
 echo "   1. Review recommendations above"
-echo "   2. Restart PostgreSQL: docker restart clisonix-postgres"
-echo "   3. Monitor connections: watch -n 1 'docker exec clisonix-postgres psql -U postgres -c \"SELECT count(*) FROM pg_stat_activity;\"'"
+echo "   2. Restart PostgreSQL: docker restart kloud-postgres"
+echo "   3. Monitor connections: watch -n 1 'docker exec kloud-postgres psql -U postgres -c \"SELECT count(*) FROM pg_stat_activity;\"'"
 echo ""
+

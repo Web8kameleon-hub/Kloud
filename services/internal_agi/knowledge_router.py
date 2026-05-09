@@ -2,7 +2,7 @@
 # KNOWLEDGE ROUTER - Routes Queries to Appropriate Data Sources
 # ============================================================================
 # Intelligent routing using internal data sources only
-# NO external LLMs - Pure Clisonix intelligence
+# NO external LLMs - Pure Kloud intelligence
 # ============================================================================
 
 import re
@@ -92,7 +92,7 @@ class RouteDecision:
     """Decision on where to route a query"""
     primary_sources: List[str]      # Primary data sources to query
     secondary_sources: List[str]    # Fallback sources
-    modules: List[str]              # Clisonix modules to engage
+    modules: List[str]              # Kloud modules to engage
     strategy: str                   # aggregation, stream, single, parallel
     priority: int                   # 1-10 priority level
     estimated_sources: int          # How many sources will be queried
@@ -513,7 +513,7 @@ class KnowledgeRouter:
         return ["global_data_sources"]
     
     def _get_modules_for_intent(self, intent: QueryIntent) -> List[str]:
-        """Determine which Clisonix modules to engage"""
+        """Determine which Kloud modules to engage"""
         modules = ["jona"]  # JONA always supervises
         
         if intent.intent_type in [QueryIntent.STREAM]:
@@ -566,3 +566,4 @@ def get_router() -> KnowledgeRouter:
     if _router_instance is None:
         _router_instance = KnowledgeRouter()
     return _router_instance
+

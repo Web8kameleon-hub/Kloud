@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Clisonix BLERINA Core — System-Wide Quality & Documentation
+Kloud BLERINA Core — System-Wide Quality & Documentation
 =============================================================
-Central BLERINA utilities for all Clisonix services:
+Central BLERINA utilities for all Kloud services:
 - Quality Selector for output validation across all engines
 - Auto-Documentation generator for consistent reporting
 - EAP Pipeline utilities
 - Gap Detection helpers
 
 This module provides shared BLERINA functionality to ensure
-consistent quality across all Clisonix services.
+consistent quality across all Kloud services.
 
-Author: Clisonix Team
+Author: Kloud Team
 Date: 2026-02-08
 """
 
@@ -60,7 +60,7 @@ class DocumentType(Enum):
 
 
 class ServiceType(Enum):
-    """Clisonix service types."""
+    """Kloud service types."""
     OCEAN = "ocean"
     ALBA = "alba"
     ALBI = "albi"
@@ -173,7 +173,7 @@ class QualityValidation:
 
 class QualitySelector:
     """
-    System-wide Quality Selector for Clisonix.
+    System-wide Quality Selector for Kloud.
     Ensures consistent quality validation across all services.
     """
     
@@ -395,7 +395,7 @@ class QualitySelector:
 
 class GapDetector:
     """
-    System-wide Gap Detector for Clisonix.
+    System-wide Gap Detector for Kloud.
     Identifies gaps in data, knowledge, and outputs.
     """
     
@@ -523,7 +523,7 @@ class GapDetector:
 
 class AutoDocGenerator:
     """
-    System-wide Auto-Documentation Generator for Clisonix.
+    System-wide Auto-Documentation Generator for Kloud.
     Generates consistent, professional documentation.
     """
     
@@ -573,7 +573,7 @@ class AutoDocGenerator:
 
 **Generated:** {datetime.now(timezone.utc).isoformat()}
 **Service:** {self.service.value}
-**Engine:** Clisonix BLERINA v{self.version}
+**Engine:** Kloud BLERINA v{self.version}
 
 ---
 
@@ -800,7 +800,7 @@ def blerina_health() -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    print("Testing Clisonix BLERINA Core...")
+    print("Testing Kloud BLERINA Core...")
     
     # Test quality validation
     test_output = {
@@ -822,3 +822,4 @@ if __name__ == "__main__":
     print(doc[:500] + "...")
     
     print(f"\nHealth: {blerina_health()}")
+

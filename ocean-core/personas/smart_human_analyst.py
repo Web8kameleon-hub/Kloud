@@ -60,7 +60,7 @@ class SmartHumanAnalyst:
         "self": {
             "triggers": ["who are you", "about you", "yourself", "kush je", "cfare je", "per veten", "wer bist"],
             "responses": {
-                "en": """🌊 **I am Curiosity Ocean** - An Infinite Knowledge Engine built by Clisonix!
+                "en": """🌊 **I am Curiosity Ocean** - An Infinite Knowledge Engine built by Kloud!
 
 **My Architecture:**
 I combine 14 Specialist Personas with 23 Laboratories and real-time data from multiple systems.
@@ -82,7 +82,7 @@ AI Lab, Medical Lab, IoT Lab, Marine Lab, Environmental Lab, Agricultural Lab, U
 - Business KPIs and analytics
 
 Ask me anything - I understand multiple languages! 🌍""",
-                "sq": """🌊 **Unë jam Curiosity Ocean** - Motor i Njohurive të Pafundme i ndërtuar nga Clisonix!
+                "sq": """🌊 **Unë jam Curiosity Ocean** - Motor i Njohurive të Pafundme i ndërtuar nga Kloud!
 
 **Arkitektura ime:**
 Kombinoj 14 Persona Specialistësh me 23 Laboratorë dhe të dhëna real-time.
@@ -216,7 +216,7 @@ Data → Training → Model → Predictions
 ❌ No consciousness or emotions
 ❌ Requires massive data and compute
 
-**In Clisonix:**
+**In Kloud:**
 We use AI across our 23 laboratories for analysis, prediction, and automation.""",
                 "sq": """🤖 **Inteligjenca Artificiale (AI)**
 
@@ -244,7 +244,7 @@ Të dhëna → Trajnim → Model → Parashikime
 - **Deep Learning**: Rrjete neurale me shumë shtresa
 - **Transformers**: Arkitekturë me vëmendje (GPT, BERT)
 
-**Në Clisonix:**
+**Në Kloud:**
 Përdorim AI në 23 laboratorët tanë për analizë, parashikim dhe automatizim."""
             }
         },
@@ -436,7 +436,7 @@ Kompjutimi kuantik përdor mekanikën kuantike për të procesuar informacionin 
 **Neuroplasticity:**
 The brain reorganizes itself throughout life by forming new neural connections.
 
-**In Clisonix:**
+**In Kloud:**
 Our ALBI system monitors brain waves and neural patterns in real-time!""",
                 "sq": """🧠 **Truri Njerëzor**
 
@@ -557,7 +557,7 @@ Everything is operational! Ask me anything."""
         labs = data.get("laboratories", {})
         
         if lang == "sq":
-            return f"""🔬 **23 Laboratorët e Specializuar të Clisonix**
+            return f"""🔬 **23 Laboratorët e Specializuar të Kloud**
 
 **Lista e Plotë:**
 1. 🤖 **AI Lab** - Inteligjencë artificiale dhe machine learning
@@ -586,7 +586,7 @@ Everything is operational! Ask me anything."""
 
 Pyetni për cilindo laborator specifik!"""
         else:
-            return f"""🔬 **Clisonix 23 Specialized Laboratories**
+            return f"""🔬 **Kloud 23 Specialized Laboratories**
 
 **Complete List:**
 1. 🤖 **AI Lab** - Artificial intelligence & machine learning
@@ -718,3 +718,4 @@ I'm analyzing this through my knowledge base.
 **Or ask in Albanian - I understand multiple languages!**
 
 What aspect would you like to explore?"""
+

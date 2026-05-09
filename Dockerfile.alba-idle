@@ -11,7 +11,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="Alba IDLE - Technical Status Chat"
 LABEL version="1.0.0"
 
@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY <<EOF /app/alba_idle_service.py
 """
 ALBA IDLE - Technical Status Chat Interface
-Real-time monitoring and status chat for Clisonix system.
+Real-time monitoring and status chat for Kloud system.
 """
 
 import os
@@ -188,7 +188,7 @@ async def generate_response(command: Dict[str, Any], language: str = "en") -> st
 🗣️ Shqip: Mund të përdorni "statusi", "ndihme", "sherbime" etj."""
     
     elif cmd == "info":
-        return f"""ℹ️ **Clisonix Cloud System**
+        return f"""ℹ️ **Kloud Cloud System**
 • Ocean Core: 61 Alphabet Layers
 • ASI Trinity: Alba → Albi → Jona → ASI
 • Laboratories: 23 city-named labs
@@ -310,3 +310,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8031/health || exit 1
 
 CMD ["python", "alba_idle_service.py"]
+

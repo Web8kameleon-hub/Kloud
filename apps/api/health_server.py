@@ -6,7 +6,7 @@ API_V1 = os.getenv("API_V1", "/api/v1")
 START_TIME = time.time()
 
 app = FastAPI(
-    title="Clisonix Health",
+    title="Kloud Health",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -15,13 +15,13 @@ app = FastAPI(
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "Clisonix Health", "port": 8088}
+    return {"status": "ok", "service": "Kloud Health", "port": 8088}
 
 
 @app.get(API_V1 + "/status")
 def api_status():
     return {
-        "service": "Clisonix Health",
+        "service": "Kloud Health",
         "version": "1.0.0",
         "uptime_seconds": int(time.time() - START_TIME)
     }
@@ -30,5 +30,6 @@ def api_status():
 @app.get(API_V1 + "/spec")
 def api_spec():
     return app.openapi()
+
 
 

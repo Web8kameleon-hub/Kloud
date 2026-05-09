@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(
 logger = logging.getLogger("balancer")
 
 # Configuration
-CLUSTER_KEY = os.getenv("NSX_CLUSTER_KEY", "clisonix-secure-key")
+CLUSTER_KEY = os.getenv("NSX_CLUSTER_KEY", "kloud-secure-key")
 NODE_ID = str(uuid.uuid4())[:8]
 NODE_NAME = os.getenv("NSX_NODE_NAME", "BalancerNode-" + NODE_ID)
 API_PORT = int(os.getenv("NSX_API_PORT", "8091"))
@@ -175,4 +175,5 @@ if __name__ == "__main__":
         STOP_EVENT.set()
         for t in threads:
             t.join(timeout=2)
+
 

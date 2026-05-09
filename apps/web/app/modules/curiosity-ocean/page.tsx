@@ -1187,9 +1187,10 @@ export default function CuriosityOceanChat() {
             </div>
           </div>
 
-          <p className="text-center text-[10px] text-gray-300 mt-2 select-none">Curiosity Ocean by Clisonix</p>
+          <p className="text-center text-[10px] text-gray-300 mt-2 select-none">Curiosity Ocean by Kloud</p>
         </div>
       </div>
     </div>
   );
 }
+

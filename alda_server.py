@@ -123,7 +123,7 @@ class ALDAEngine:
     """
     
     def __init__(self):
-        # 23 Labs from Clisonix Network
+        # 23 Labs from Kloud Network
         self.labs = [
             "Elbasan", "Tirana", "Durrës", "Shkodër", "Vlorë", "Korçë", "Sarandë",
             "Kostur", "Prishtinë", "Rome", "Vienna", "Athens", "Sofia", "Istanbul",
@@ -476,3 +476,4 @@ if __name__ == "__main__":
     print(f"   Port: {PORT}")
     print(f"   Labs: {len(alda_engine.labs)}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

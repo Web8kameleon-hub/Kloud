@@ -1,7 +1,7 @@
 {
   "dashboard": {
-    "title": "🧠 Clisonix AI Agents - Real-Time Monitoring",
-    "uid": "clisonix-ai-agents",
+    "title": "🧠 Kloud AI Agents - Real-Time Monitoring",
+    "uid": "kloud-ai-agents",
     "timezone": "browser",
     "panels": [
       {
@@ -181,4 +181,5 @@
     }
   }
 }
+
 

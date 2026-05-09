@@ -1,8 +1,8 @@
-# 📱 CLISONIX CLOUD - SLACK INTEGRATION GUIDE
+# 📱 KLOUD CLOUD - SLACK INTEGRATION GUIDE
 
 ## Overview
 
-The Slack Integration Service provides real-time monitoring, automated alerts, and notifications for your Clisonix Cloud system. All components (ALBA, ALBI, JONA, Orchestrator, API) are monitored and can send notifications directly to your Slack workspace.
+The Slack Integration Service provides real-time monitoring, automated alerts, and notifications for your Kloud Cloud system. All components (ALBA, ALBI, JONA, Orchestrator, API) are monitored and can send notifications directly to your Slack workspace.
 
 ---
 
@@ -12,11 +12,11 @@ The Slack Integration Service provides real-time monitoring, automated alerts, a
 
 1. Go to https://api.slack.com/messaging/webhooks
 2. Click "Create New App" → "From scratch"
-3. Name your app: "Clisonix Cloud"
+3. Name your app: "Kloud Cloud"
 4. Select your workspace
 5. Enable Incoming Webhooks
 6. Create New Webhook to Workspace
-7. Select your channel (or create #clisonix-monitoring)
+7. Select your channel (or create #kloud-monitoring)
 8. Copy the Webhook URL
 
 ### 2. Start Slack Integration
@@ -143,7 +143,7 @@ curl -X POST http://localhost:8888/metric-alert \
 # Set in PowerShell before starting
 $env:SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
 $env:SLACK_BOT_TOKEN = "xoxb-your-bot-token"
-$env:SLACK_CHANNEL = "#clisonix-monitoring"
+$env:SLACK_CHANNEL = "#kloud-monitoring"
 $env:SLACK_PORT = 8888
 
 # Or set in system environment
@@ -260,7 +260,7 @@ Send custom message to Slack
 curl -X POST http://localhost:8888/send-message \
   -H "Content-Type: application/json" \
   -d '{
-    "channel": "#clisonix-monitoring",
+    "channel": "#kloud-monitoring",
     "text": "Custom message",
     "blocks": [ ... ]
   }'
@@ -533,3 +533,4 @@ For issues or questions:
 **Version:** 1.0.0  
 **Status:** Production Ready  
 **Last Updated:** 2025-01-15
+

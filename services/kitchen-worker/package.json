@@ -1,7 +1,7 @@
 {
   "name": "kitchen-worker",
   "version": "1.0.0",
-  "description": "Newman test runner worker for Clisonix Kitchen API",
+  "description": "Newman test runner worker for Kloud Kitchen API",
   "main": "worker.js",
   "scripts": {
     "start": "node worker.js",
@@ -14,6 +14,7 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "author": "Clisonix",
+  "author": "Kloud",
   "license": "MIT"
 }
+

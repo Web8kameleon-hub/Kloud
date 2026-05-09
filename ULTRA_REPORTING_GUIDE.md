@@ -18,7 +18,7 @@ The **ULTRA Reporting Module** is an enterprise-grade automated reporting system
 ## 🏗️ Architecture
 
 ```
-CLISONIX MONITORING STACK
+KLOUD MONITORING STACK
 ├── VictoriaMetrics (8428) ──┐
 ├── Prometheus (9090) ───────├──> ULTRA REPORTING MODULE
 ├── Elasticsearch (9200) ────┤   (Excel, PowerPoint, Dashboards)
@@ -76,7 +76,7 @@ POST /api/reporting/export-excel
 Content-Type: application/json
 
 {
-  "title": "Clisonix Cloud Metrics Report",
+  "title": "Kloud Cloud Metrics Report",
   "format": "xlsx",
   "include_sla": true,
   "include_alerts": true,
@@ -112,7 +112,7 @@ POST /api/reporting/export-pptx
 Content-Type: application/json
 
 {
-  "title": "Clisonix Cloud Metrics Report",
+  "title": "Kloud Cloud Metrics Report",
   "include_sla": true,
   "include_alerts": true,
   "date_range_hours": 24
@@ -566,7 +566,7 @@ Fetch log-based metrics:
 
 ```python
 async def fetch_logs_elasticsearch():
-    url = "http://elasticsearch:9200/clisonix-logs-*/_search"
+    url = "http://elasticsearch:9200/kloud-logs-*/_search"
     body = {
         "size": 0,
         "aggs": {
@@ -728,6 +728,7 @@ pip install openpyxl python-pptx pandas pillow aiohttp
 
 ## 📄 License
 
-Part of the Clisonix Cloud ecosystem. Enterprise monitoring and reporting solution.
+Part of the Kloud Cloud ecosystem. Enterprise monitoring and reporting solution.
 
-**Gjenero nga Clisonix ULTRA Reporting System** 🚀
+**Gjenero nga Kloud ULTRA Reporting System** 🚀
+

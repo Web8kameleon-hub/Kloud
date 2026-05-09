@@ -4,7 +4,7 @@
 
 set -e
 
-echo "🔑 Clisonix Cloud - Hetzner Deployment Setup"
+echo "🔑 Kloud Cloud - Hetzner Deployment Setup"
 echo "=============================================="
 echo ""
 
@@ -31,7 +31,7 @@ if [ -f "$SSH_KEY_FILE" ]; then
 fi
 
 if [ ! "$SSH_KEY_FILE_EXISTING" = "true" ]; then
-    ssh-keygen -t ed25519 -f "$SSH_KEY_FILE" -N "" -C "clisonix-hetzner-deploy"
+    ssh-keygen -t ed25519 -f "$SSH_KEY_FILE" -N "" -C "kloud-hetzner-deploy"
     chmod 600 "$SSH_KEY_FILE"
     chmod 644 "$SSH_KEY_FILE.pub"
     echo "✅ SSH key generated"
@@ -137,9 +137,10 @@ echo "2. SSH into server and setup:"
 echo "   ssh -i $SSH_KEY_FILE root@$HETZNER_IP"
 echo ""
 echo "3. Run deployment setup on server:"
-echo "   bash /opt/clisonix-cloud/scripts/hetzner-server-setup.sh"
+echo "   bash /opt/kloud-cloud/scripts/hetzner-server-setup.sh"
 echo ""
 echo "4. Verify deployment workflow secrets:"
 echo "   gh secret list -R $REPO"
 echo ""
 echo "=============================================="
+

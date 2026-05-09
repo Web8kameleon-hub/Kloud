@@ -52,7 +52,7 @@ class PolicyRequest(BaseModel):
     policy: Dict[str, Any]
 
 
-ALLOWED_PRODUCER_HOSTS = frozenset(["api.clisonix.com", "producer.clisonix.com", "localhost", "127.0.0.1"])
+ALLOWED_PRODUCER_HOSTS = frozenset(["api.kloud.com", "producer.kloud.com", "localhost", "127.0.0.1"])
 
 def validate_producer_url(url: str) -> bool:
     """Validate producer URL to prevent SSRF attacks"""
@@ -110,4 +110,5 @@ def health():
 @app.get("/policies")
 def list_policies():
     return POLICIES
+
 

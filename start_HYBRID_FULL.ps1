@@ -1,5 +1,5 @@
 # =============================================================================
-# CLISONIX CLOUD - HYBRID FULL SYSTEM LAUNCHER
+# KLOUD CLOUD - HYBRID FULL SYSTEM LAUNCHER
 # =============================================================================
 # Starts ALL microservices in external windows with proper sequencing
 # 
@@ -22,7 +22,7 @@ $VENV = "$ROOT\.venv\Scripts\Activate.ps1"
 
 Write-Host "`n" -NoNewline
 Write-Host "╔══════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║         CLISONIX CLOUD - HYBRID FULL SYSTEM LAUNCHER             ║" -ForegroundColor Cyan
+Write-Host "║         KLOUD CLOUD - HYBRID FULL SYSTEM LAUNCHER             ║" -ForegroundColor Cyan
 Write-Host "║    All Microservices + ASI Trinity + Ocean Core + Frontend       ║" -ForegroundColor Cyan
 Write-Host "╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
@@ -113,3 +113,4 @@ Write-Host ""
 Write-Host "💡 Tip: All services are running in separate windows." -ForegroundColor Gray
 Write-Host "💡 Close individual windows to stop specific services." -ForegroundColor Gray
 Write-Host ""
+

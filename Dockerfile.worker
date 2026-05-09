@@ -1,10 +1,11 @@
-﻿# Closed Source License - Clisonix Cloud
-# Copyright (c) Clisonix. All rights reserved.
+# Closed Source License - Kloud Cloud
+# Copyright (c) Kloud. All rights reserved.
 #
-# Dockerfile for Clisonix-worker (Python)
+# Dockerfile for Kloud-worker (Python)
 FROM python:3.11-slim
 WORKDIR /worker
 COPY worker/ /worker/
 COPY apps/api/requirements.txt /worker/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 CMD ["python", "-u", "main.py"]
+

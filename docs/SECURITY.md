@@ -1,4 +1,4 @@
-# 🛡️ Clisonix Cloud - Security Documentation
+# 🛡️ Kloud Cloud - Security Documentation
 
 ## Security Architecture
 
@@ -246,7 +246,7 @@ ufw enable
 ┌───────────────────────────────────────────┐
 │            Docker Network                  │
 │  ┌──────────────────────────────────────┐ │
-│  │  clisonix-cloud_default               │ │
+│  │  kloud-cloud_default               │ │
 │  │                                        │ │
 │  │  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐  │ │
 │  │  │ API │──│Redis│──│ DB  │──│Ocean│  │ │
@@ -301,7 +301,7 @@ ufw enable
 
 ### Reporting
 
-Email: security@clisonix.cloud
+Email: security@kloud.cloud
 
 Please include:
 - Description of vulnerability
@@ -339,3 +339,4 @@ Please include:
 ---
 
 *Security Documentation v2.0.0 | February 2026*
+

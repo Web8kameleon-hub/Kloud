@@ -380,7 +380,7 @@ async def analyze_harmony(file: UploadFile = File(...)):
             temp_file.write(audio_bytes)
             audio_path = temp_file.name
 
-        # Use Clisonix Core
+        # Use Kloud Core
         harmony = await cog.analyze_harmony(audio_path)
 
         return {
@@ -486,7 +486,7 @@ async def restart_brain():
     except Exception as e:
         logger.error(f"[RESTART ERROR] {e}")
         raise HTTPException(status_code=500, detail="internal_restart_failed")
-# ------------- Clisonix Cloud API (EEG to Audio) -------------
+# ------------- Kloud Cloud API (EEG to Audio) -------------
 from fastapi.responses import StreamingResponse
 import numpy as np
 import io
@@ -527,7 +527,7 @@ This software is proprietary and confidential. Unauthorized copying, distributio
 Author: Ledjan Ahmati
 License: Closed Source
 ---
-Clisonix Cloud API - Industrial Production Backend (REAL-ONLY)
+Kloud Cloud API - Industrial Production Backend (REAL-ONLY)
 Notes:
     - No mock, no random, no placeholder numbers.
     - All outputs derive from real system data, real files, or real external APIs.
@@ -618,7 +618,7 @@ import requests
 
 # ------------- Settings -------------
 class Settings(BaseSettings):
-    api_title: str = "Clisonix Industrial Backend (REAL)"
+    api_title: str = "Kloud Industrial Backend (REAL)"
     api_version: str = "1.0.0"
     environment: str = os.getenv("ENVIRONMENT", "production")
     debug: bool = os.getenv("DEBUG", "false").lower() == "true"
@@ -661,9 +661,9 @@ except Exception:  # pragma: no cover - missing module is acceptable in minimal 
 
 ALBI_ENGINE = AlbiCore() if AlbiCore else None
 ALBA_COLLECTOR_TIMEOUT = float(os.getenv("ALBA_COLLECTOR_TIMEOUT", "2.5"))
-CLISONIX_RUNTIME = ROOT_DIR / "backend" / "system" / "runtime"
-CLISONIX_TRIGGER_FILE = CLISONIX_RUNTIME / "triggers.json"
-CLISONIX_SCAN_FILE = CLISONIX_RUNTIME / "scan_results.json"
+KLOUD_RUNTIME = ROOT_DIR / "backend" / "system" / "runtime"
+KLOUD_TRIGGER_FILE = KLOUD_RUNTIME / "triggers.json"
+KLOUD_SCAN_FILE = KLOUD_RUNTIME / "scan_results.json"
 MESH_DIR = ROOT_DIR / "backend" / "mesh"
 MESH_STATUS_FILE = MESH_DIR / "nodes_status.json"
 MESH_LOG_DIR = ROOT_DIR / "logs"
@@ -677,10 +677,10 @@ def setup_logging():
         format=fmt,
         handlers=[
             logging.StreamHandler(sys.stdout),
-            logging.FileHandler("logs/Clisonix_real.log", encoding="utf-8")
+            logging.FileHandler("logs/Kloud_real.log", encoding="utf-8")
         ],
     )
-    return logging.getLogger("Clisonix_real")
+    return logging.getLogger("Kloud_real")
 
 logger = setup_logging()
 
@@ -863,7 +863,7 @@ def error_response(
 # ------------- App -------------
 
 app = FastAPI(
-    title="Clisonix Cloud API",
+    title="Kloud Cloud API",
     version=settings.api_version,
     debug=settings.debug,
 )
@@ -891,7 +891,7 @@ SERVICE_PROBES = [
     {"name": "API Core", "url": "http://127.0.0.1:8000/health"},
     {"name": "ALBA Collector", "url": f"{settings.alba_collector_url.rstrip('/')}/health"},
     {"name": "Mesh Orchestrator", "url": "http://127.0.0.1:5555/health"},
-    {"name": "Clisonix Web", "url": "http://127.0.0.1:3000"},
+    {"name": "Kloud Web", "url": "http://127.0.0.1:3000"},
 ]
 SERVICE_PORTS = [8000, 8010, 5555, 3000]
 
@@ -923,8 +923,8 @@ def _load_json(path: Path) -> Optional[Any]:
         return None
 
 
-def collect_clisonix_events(limit: int = 10) -> List[Dict[str, Any]]:
-    data = _load_json(CLISONIX_TRIGGER_FILE)
+def collect_kloud_events(limit: int = 10) -> List[Dict[str, Any]]:
+    data = _load_json(KLOUD_TRIGGER_FILE)
     if not isinstance(data, list):
         return []
     if limit <= 0:
@@ -932,8 +932,8 @@ def collect_clisonix_events(limit: int = 10) -> List[Dict[str, Any]]:
     return data[-limit:]
 
 
-def collect_clisonix_scan() -> Dict[str, Any]:
-    data = _load_json(CLISONIX_SCAN_FILE)
+def collect_kloud_scan() -> Dict[str, Any]:
+    data = _load_json(KLOUD_SCAN_FILE)
     if isinstance(data, dict):
         return data
     return {}
@@ -1176,12 +1176,12 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
         "processes": service_processes,
     }
 
-    clisonix_events = collect_clisonix_events(limit=10)
-    clisonix_scan = collect_clisonix_scan()
-    if clisonix_events or clisonix_scan:
-        details["clisonix"] = {
-            "events": clisonix_events,
-            "scan": clisonix_scan,
+    kloud_events = collect_kloud_events(limit=10)
+    kloud_scan = collect_kloud_scan()
+    if kloud_events or kloud_scan:
+        details["kloud"] = {
+            "events": kloud_events,
+            "scan": kloud_scan,
         }
 
     mesh_nodes = collect_mesh_nodes()
@@ -1192,7 +1192,7 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
     }
 
     if intents["greeting"]:
-        segments.append("Përshëndetje! Clisonix është aktiv dhe gati të asistojë.")
+        segments.append("Përshëndetje! Kloud është aktiv dhe gati të asistojë.")
 
     snapshot = system_snapshot()
     details["system"] = snapshot
@@ -1257,20 +1257,20 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
         if process_lines:
             segments.append("Procese shï¿½rbimesh aktive:\n" + "\n".join(process_lines[:6]))
 
-    if clisonix_events:
+    if kloud_events:
         modules_used.append("NEUROTRIGGER")
         event_lines = [
             f"[{ev.get('category','unknown').upper()}] {ev.get('message','')} @ {ev.get('readable_time','')}"
-            for ev in clisonix_events[-5:]
+            for ev in kloud_events[-5:]
         ]
         segments.append("NeuroTrigger event log (mï¿½ tï¿½ fundit):\n" + "\n".join(event_lines))
     else:
         segments.append("NeuroTrigger nuk ka regjistruar evente tï¿½ reja nï¿½ runtime.")
 
-    if clisonix_scan:
-        modules_used.append("CLISONIX")
+    if kloud_scan:
+        modules_used.append("KLOUD")
         scan_lines = []
-        for module, info in clisonix_scan.items():
+        for module, info in kloud_scan.items():
             cpu_val = info.get("cpu") if isinstance(info.get("cpu"), (int, float)) else info.get("cpu_percent")
             cpu_txt = f"{cpu_val}%" if cpu_val is not None else "n/a"
             ram_val = info.get("ram") if isinstance(info.get("ram"), (int, float)) else info.get("ram_percent")
@@ -1515,7 +1515,7 @@ async def health():
     redis_s = await get_redis_status()
     db_s = await get_db_status()
     return {
-        "service": "Clisonix-industrial-backend-real",
+        "service": "Kloud-industrial-backend-real",
         "status": "operational",
         "version": settings.api_version,
         "timestamp": utcnow(),
@@ -2271,7 +2271,7 @@ async def real_metrics_info():
             "1_prometheus": "http://localhost:9090 - Raw metrics",
             "2_grafana": "http://localhost:3001 - Visual dashboards (login: admin/admin)",
             "3_api": "Call /asi/status, /asi/health, or specific metric endpoints",
-            "4_frontend": "View live metrics on Clisonix homepage"
+            "4_frontend": "View live metrics on Kloud homepage"
         }
     }
 
@@ -2298,9 +2298,9 @@ async def asi_execute(payload: ASIExecuteRequest):
         alba_entries = fetch_alba_entries()
         alba_summary = summarize_alba(alba_entries)
         albi_insight = derive_albi_insight(alba_entries)
-        clisonix_data = {
-            "events": collect_clisonix_events(limit=10),
-            "scan": collect_clisonix_scan(),
+        kloud_data = {
+            "events": collect_kloud_events(limit=10),
+            "scan": collect_kloud_scan(),
         }
         mesh_info = {
             "nodes": collect_mesh_nodes(),
@@ -2312,7 +2312,7 @@ async def asi_execute(payload: ASIExecuteRequest):
             modules_used.append("ALBA")
         if albi_insight:
             modules_used.append("ALBI")
-        if clisonix_data["events"] or clisonix_data["scan"]:
+        if kloud_data["events"] or kloud_data["scan"]:
             modules_used.append("NEUROTRIGGER")
         if mesh_info["nodes"].get("count"):
             modules_used.append("MESH-HQ")
@@ -2330,7 +2330,7 @@ async def asi_execute(payload: ASIExecuteRequest):
                 "services": services,
                 "alba": alba_summary,
                 "albi": albi_insight,
-                "clisonix": clisonix_data,
+                "kloud": kloud_data,
                 "mesh": mesh_info,
             },
             "parameters": payload.parameters,
@@ -3193,7 +3193,7 @@ except Exception as e:
 @app.get("/")
 def root():
     return {
-        "service": "Clisonix Industrial Backend (REAL)",
+        "service": "Kloud Industrial Backend (REAL)",
         "version": settings.api_version,
         "environment": settings.environment,
         "instance": INSTANCE_ID,
@@ -3216,5 +3216,6 @@ def root():
             "POST /asi/execute": "Execute commands through ASI Trinity"
         }
     }
+
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Clisonix Cloud - Comprehensive Test Cycle
+    Kloud Cloud - Comprehensive Test Cycle
 .DESCRIPTION
     Tests all system endpoints and generates a detailed report
 #>
@@ -74,7 +74,7 @@ function Test-Endpoint {
 # Main test suite
 Write-Host "`n" -NoNewline
 Write-Host "========================================" -ForegroundColor Magenta
-Write-Host "CLISONIX CLOUD - TEST CYCLE" -ForegroundColor Magenta
+Write-Host "KLOUD CLOUD - TEST CYCLE" -ForegroundColor Magenta
 Write-Host "========================================" -ForegroundColor Magenta
 Write-Host "`n"
 
@@ -175,7 +175,7 @@ $results | ForEach-Object {
 
 # Save report if requested
 if ($SaveReport) {
-    $reportPath = "c:\clisonix-cloud\logs\test-cycle-$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss').json"
+    $reportPath = "c:\kloud-cloud\logs\test-cycle-$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss').json"
     $reportDir = Split-Path $reportPath
     if (-not (Test-Path $reportDir)) {
         New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
@@ -199,4 +199,5 @@ Write-Host "`n========================================`n" -ForegroundColor Magen
 
 # Exit with appropriate code
 exit $(if ($failCount -eq 0) { 0 } else { 1 })
+
 

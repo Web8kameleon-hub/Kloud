@@ -182,9 +182,9 @@ python ocean-core/test_multimodal.py
 docker ps | grep ollama
 
 # Pull required models
-docker exec clisonix-06-ollama ollama pull llava:latest
-docker exec clisonix-06-ollama ollama pull whisper:latest
-docker exec clisonix-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-ollama ollama pull llava:latest
+docker exec kloud-06-ollama ollama pull whisper:latest
+docker exec kloud-06-ollama ollama pull llama3.1:8b
 ```
 
 ### Deploy
@@ -299,7 +299,7 @@ curl -X POST http://localhost:8031/api/v1/analyze \
 
 ```javascript
 // In /api/ocean route
-const response = await fetch('http://clisonix-ocean-multimodal:8031/api/v1/analyze', {
+const response = await fetch('http://kloud-ocean-multimodal:8031/api/v1/analyze', {
   method: 'POST',
   body: JSON.stringify(request)
 });
@@ -307,14 +307,14 @@ const response = await fetch('http://clisonix-ocean-multimodal:8031/api/v1/analy
 
 ### Microservices
 
-- Call via internal Docker network: `http://clisonix-ocean-multimodal:8031`
+- Call via internal Docker network: `http://kloud-ocean-multimodal:8031`
 - Call via external API: `http://<server-ip>:8031`
 - Load-balanced access via reverse proxy
 
 ### SDK Integration
 
 ```python
-from clisonix_sdk import OceanClient
+from kloud_sdk import OceanClient
 
 client = OceanClient("http://localhost:8031")
 result = await client.analyze_vision(image_b64, prompt="What's this?")
@@ -480,3 +480,4 @@ The multimodal engine demonstrates:
 **Last Updated**: February 4, 2026  
 **Version**: 1.0.0  
 **Status**: Stable & Production-Ready
+

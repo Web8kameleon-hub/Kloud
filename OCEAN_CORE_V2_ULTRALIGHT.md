@@ -1,4 +1,4 @@
-# Clisonix Ocean Core v2 - Ultra-Light Architecture
+# Kloud Ocean Core v2 - Ultra-Light Architecture
 
 **Status:** ✅ Production Ready  
 **CPU Usage:** 5-20% (vs 200-400% before)  
@@ -299,7 +299,7 @@ Storage: 10GB (for telemetry + analytics)
 ### Step 1: Export Data
 ```python
 # Export from PostgreSQL
-pg_dump -h old-server -U postgres -d clisonix > backup.sql
+pg_dump -h old-server -U postgres -d kloud > backup.sql
 
 # Import to SQLite (using converter script)
 python migrate_postgresql_to_sqlite.py backup.sql
@@ -369,7 +369,7 @@ ocean_database_errors_total
 
 ### High CPU Usage
 1. Check Redis memory: `redis-cli INFO memory`
-2. Check SQLite WAL file size: `ls -lh /data/clisonix/clisonix_operational.db*`
+2. Check SQLite WAL file size: `ls -lh /data/kloud/kloud_operational.db*`
 3. Check DuckDB queries: Analyze slow queries in logs
 
 ### Memory Issues
@@ -411,10 +411,11 @@ The ultra-light architecture delivers:
 - **70% reduction in memory**
 - **Zero operational overhead**
 
-Perfect for Clisonix's modular, distributed design.
+Perfect for Kloud's modular, distributed design.
 
 ---
 
 **Created:** 2026-01-17  
 **Version:** 2.0.0  
 **Status:** ✅ Production Ready
+

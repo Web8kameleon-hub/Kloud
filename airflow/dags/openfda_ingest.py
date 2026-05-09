@@ -9,7 +9,7 @@ PG_CONFIG = {
     "host": os.getenv("PGHOST", "postgres"),
     "user": os.getenv("PGUSER", "postgres"),
     "password": os.getenv("PGPASSWORD", "postgres"),
-    "dbname": os.getenv("PGDATABASE", "Clisonix"),
+    "dbname": os.getenv("PGDATABASE", "Kloud"),
 }
 OPENFDA_API = "https://api.fda.gov/drug/label.json"
 
@@ -72,4 +72,5 @@ with DAG(
     catchup=False,
 ) as dag:
     PythonOperator(task_id="load_drug_labels", python_callable=load_drug_labels)
+
 

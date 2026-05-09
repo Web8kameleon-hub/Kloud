@@ -1,4 +1,4 @@
-# Clisonix Public Dashboard - Docker Container
+# Kloud Public Dashboard - Docker Container
 # Multi-stage build for optimized production image
 
 FROM node:20-alpine AS builder
@@ -47,3 +47,4 @@ ENTRYPOINT ["dumb-init", "--"]
 
 # Start Next.js in production mode
 CMD ["npm", "start"]
+

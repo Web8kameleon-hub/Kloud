@@ -26,7 +26,7 @@ ENV NSX_API_HOST=0.0.0.0
 ENV NSX_API_PORT=8091
 ENV NSX_HB_PORT=42999
 ENV NSX_NODE_NAME=BalancerNode
-ENV NSX_CLUSTER_KEY=clisonix-secure-cluster-key-2025
+ENV NSX_CLUSTER_KEY=kloud-secure-cluster-key-2025
 
 EXPOSE 8091
 EXPOSE 42999/udp
@@ -37,3 +37,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run the balancer
 CMD ["python", "balancer_simple.py"]
+

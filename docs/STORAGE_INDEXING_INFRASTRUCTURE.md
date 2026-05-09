@@ -605,7 +605,7 @@ services:
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
     environment:
-      DATA_SOURCE_NAME: "postgresql://user:password@postgres:5432/clisonix?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://user:password@postgres:5432/kloud?sslmode=disable"
     ports:
       - "9187:9187"
 
@@ -648,7 +648,7 @@ docker exec timescaledb pg_dump -U postgres telemetry \
 
 # PostgreSQL backup
 echo "Backing up PostgreSQL..."
-docker exec postgres pg_dump -U postgres clisonix \
+docker exec postgres pg_dump -U postgres kloud \
   | gzip > "$BACKUP_DIR/postgres.sql.gz"
 
 echo "✅ All backups completed: $BACKUP_DIR"
@@ -697,3 +697,4 @@ echo "✅ All backups completed: $BACKUP_DIR"
 
 **Previous**: [Ingestion Pipeline Architecture](./INGESTION_PIPELINE_ARCHITECTURE.md)  
 **Next**: [API Fabric Implementation](./API_FABRIC_IMPLEMENTATION.md)
+

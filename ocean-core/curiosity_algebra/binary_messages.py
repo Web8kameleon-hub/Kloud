@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🔷 CLISONIX BINARY MESSAGE SYSTEM
+🔷 KLOUD BINARY MESSAGE SYSTEM
 ==================================
 Full binary message encoding/decoding - NO JSON for messages.
 Uses CBOR2 as primary format, MessagePack as fallback.
@@ -16,7 +16,7 @@ Optional Checksum (if HAS_CHECKSUM flag set):
 │ Payload     │ CRC32(4) │
 └─────────────┴──────────┘
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import struct
@@ -43,8 +43,8 @@ except ImportError:
 
 # ============ CONSTANTS ============
 
-MAGIC_CMSG = b'CMSG'  # Clisonix Message
-MAGIC_CBIN = b'CBIN'  # Clisonix Binary
+MAGIC_CMSG = b'CMSG'  # Kloud Message
+MAGIC_CBIN = b'CBIN'  # Kloud Binary
 MSG_VERSION = 1
 MSG_HEADER_SIZE = 10  # magic(4) + version(1) + type(1) + len(4)
 
@@ -85,7 +85,7 @@ class MsgFlags(IntFlag):
 class CborEncoder:
     """
     Pure-Python CBOR encoder - NO JSON dependency.
-    Implements RFC 8949 subset for Clisonix messages.
+    Implements RFC 8949 subset for Kloud messages.
     """
     
     @staticmethod
@@ -632,3 +632,4 @@ def _test_binary_messages():
 
 if __name__ == '__main__':
     _test_binary_messages()
+

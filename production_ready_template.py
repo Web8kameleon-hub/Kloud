@@ -1,5 +1,5 @@
 """
-🚀 CLISONIX PRODUCTION-READY EXCEL TEMPLATE
+🚀 KLOUD PRODUCTION-READY EXCEL TEMPLATE
 Template i plotë për publikim në Hetzner me të gjitha kolonat:
 - Status Testimi, Autentikimi, Dokumentacioni
 - Monitorimi, Siguria, Versioni
@@ -43,7 +43,7 @@ def create_production_template():
     """Krijon Excel template profesional për publikim."""
     
     base_path = Path(__file__).parent
-    output_path = base_path / "Clisonix_Production_Ready.xlsx"
+    output_path = base_path / "Kloud_Production_Ready.xlsx"
     
     wb = Workbook()
     
@@ -168,9 +168,9 @@ def create_production_template():
     }
     
     # ========== NGARKO ENDPOINTS ==========
-    collection_path = base_path / "clisonix-ultra-mega-collection.json"
+    collection_path = base_path / "kloud-ultra-mega-collection.json"
     if not collection_path.exists():
-        collection_path = base_path / "clisonix-postman-collection.json"
+        collection_path = base_path / "kloud-postman-collection.json"
     
     endpoints = []
     if collection_path.exists():
@@ -209,7 +209,7 @@ def create_production_template():
     
     # ========== POPULO TABELËN ==========
     today = datetime.now().strftime("%d/%m/%Y")
-    base_url = "https://api.clisonix.com"
+    base_url = "https://api.kloud.com"
     
     for idx, ep in enumerate(endpoints, 2):
         method = ep['method'].upper()
@@ -257,7 +257,7 @@ def create_production_template():
         ws.cell(row=row, column=12, value=today)
         
         # M: Owner
-        ws.cell(row=row, column=13, value="Clisonix Team")
+        ws.cell(row=row, column=13, value="Kloud Team")
         
         # N: Status Publikimi
         ws.cell(row=row, column=14, value="✅ Ready")
@@ -290,7 +290,7 @@ def create_production_template():
     
     # ========== SHEET 2: DASHBOARD ==========
     ws2 = wb.create_sheet("Dashboard")
-    ws2['A1'] = "📊 CLISONIX PUBLICATION DASHBOARD"
+    ws2['A1'] = "📊 KLOUD PUBLICATION DASHBOARD"
     ws2['A1'].font = Font(bold=True, size=18, color='1F4E79')
     
     # Summary Stats
@@ -450,7 +450,7 @@ async function main(workbook: ExcelScript.Workbook) {
 
 
 def main():
-    print("🚀 CLISONIX PRODUCTION-READY TEMPLATE")
+    print("🚀 KLOUD PRODUCTION-READY TEMPLATE")
     print("=" * 55)
     
     output_path, count = create_production_template()
@@ -494,3 +494,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

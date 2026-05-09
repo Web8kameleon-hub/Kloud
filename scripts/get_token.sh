@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REALM=${KC_REALM:-clisonix}
+REALM=${KC_REALM:-kloud}
 CLIENT=${KC_CLIENT:-neuro-api}
 SECRET=${KC_SECRET:-changeme}
 KC=${KC_URL:-http://localhost:8089}
@@ -15,4 +15,5 @@ curl -s \
   -d username="${USER}" \
   -d password="${PASS}" \
   "${KC}/realms/${REALM}/protocol/openid-connect/token" | jq -r '.access_token'
+
 

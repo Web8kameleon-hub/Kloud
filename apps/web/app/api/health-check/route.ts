@@ -13,10 +13,10 @@ interface ServiceHealth {
 // Service configuration for Docker environment - ALL use container names
 // Only include services that are actually deployed
 const SERVICES = [
-  { name: 'Main API', host: 'clisonix-api', port: 8000, path: '/health' },
-  { name: 'Core-A (Analytics)', host: 'clisonix-alba', port: 5555, path: '/health' },
-  { name: 'Core-B (Creative)', host: 'clisonix-albi', port: 6680, path: '/health' },
-  { name: 'Frontend', host: 'clisonix-web', port: 3000, path: '/api/ping' },
+  { name: 'Main API', host: 'kloud-api', port: 8000, path: '/health' },
+  { name: 'Core-A (Analytics)', host: 'kloud-alba', port: 5555, path: '/health' },
+  { name: 'Core-B (Creative)', host: 'kloud-albi', port: 6680, path: '/health' },
+  { name: 'Frontend', host: 'kloud-web', port: 3000, path: '/api/ping' },
 ]
 
 async function checkService(name: string, host: string, port: number, path = '/health'): Promise<ServiceHealth> {
@@ -56,3 +56,4 @@ export async function GET() {
     headers: { 'Cache-Control': 'no-cache, no-store' }
   })
 }
+

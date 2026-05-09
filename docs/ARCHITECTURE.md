@@ -1,14 +1,14 @@
-# 🏗️ Clisonix Cloud Architecture
+# 🏗️ Kloud Cloud Architecture
 
 ## Overview
 
-Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence capabilities, developed by Ledjan Ahmati / ABA GmbH (Germany).
+Kloud Cloud is an AI-powered Industrial IoT platform with Neural Intelligence capabilities, developed by Ledjan Ahmati / ABA GmbH (Germany).
 
 ## System Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          CLISONIX CLOUD PLATFORM                              │
+│                          KLOUD CLOUD PLATFORM                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
 │  │                    PRESENTATION LAYER (Frontend)                       │  │
@@ -136,7 +136,7 @@ Existing REST and JSON APIs remain compatible during migration.
 
 ---
 
-Clisonix Cloud Platform © 2026 ABA GmbH - All Rights Reserved
+Kloud Cloud Platform © 2026 ABA GmbH - All Rights Reserved
 
 | Service          | Port | Purpose                                    |
 | ---------------- | ---- | ------------------------------------------ |
@@ -146,3 +146,4 @@ Clisonix Cloud Platform © 2026 ABA GmbH - All Rights Reserved
 | ASI              | 8004 | Artificial Superintelligence engine        |
 | Curiosity Ocean  | 8005 | Advanced learning and reasoning            |
 | Payment Service  | 8006 | Stripe, SEPA, PayPal webhook handling      |
+

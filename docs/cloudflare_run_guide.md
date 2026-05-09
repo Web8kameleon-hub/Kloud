@@ -3,7 +3,7 @@
 Ky dokument përmbledh hapat e shpejtë për të vendosur konfigurimin minimal urgjent në Cloudflare.
 
 1) Importo zonën
-   - Shko tek Cloudflare → DNS → Import dhe ngarko `docs/clisonix.cloudflare.zone`.
+   - Shko tek Cloudflare → DNS → Import dhe ngarko `docs/kloud.cloudflare.zone`.
 
 2) Vendos proxy për rekordet A
    - Bëj proxied (orange cloud) për `@`, `www`, `api`, `agi`.
@@ -42,3 +42,4 @@ Invoke-CFApplyAll -ZoneId '<ZONE_ID>' -ApiToken '<TOKEN>' -OfficeIp '1.2.3.4/32'
 ***
 
 Nëse dëshiron, unë mund ta propozoj versionin për GitHub Actions (idempotent) që përdor secrets për `CF_ZONE_ID` dhe `CF_API_TOKEN` dhe ekzekuton `Invoke-CFApplyAll` me `-DryRun:false`.
+

@@ -2,7 +2,7 @@
 
 ## Objective
 
-Adopt Resonant Core (NDB, Stigma, Tide, Stigma Cloud) across Clisonix/Kloud with clear contracts, measurable schemas, compatibility adapters, and gradual rollout.
+Adopt Resonant Core (NDB, Stigma, Tide, Stigma Cloud) across Kloud/Kloud with clear contracts, measurable schemas, compatibility adapters, and gradual rollout.
 
 ## Existing Adapter Foundations
 
@@ -65,3 +65,4 @@ These are reused as adapter patterns instead of introducing a parallel architect
 - All critical services expose or consume Resonant schemas.
 - Compatibility layer remains stable for one release cycle.
 - Legacy endpoints can then be marked deprecated (not removed immediately).
+

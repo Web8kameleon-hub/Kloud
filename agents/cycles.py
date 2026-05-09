@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                     CLISONIX AGENTS - CYCLES                                 ║
+║                     KLOUD AGENTS - CYCLES                                 ║
 ║              Cycle Engine Integration for Agent Operations                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -27,7 +27,7 @@ from .base import BaseAgent, Task, TaskResult, AgentCapability
 from .core import ALBAAgent, ALBIAgent, JONAAgent
 
 
-logger = logging.getLogger("clisonix.agents.cycles")
+logger = logging.getLogger("kloud.agents.cycles")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -409,3 +409,4 @@ def link_agent_to_cycle(
     
     bridge.register_handler(phase, agent, action)
     return bridge
+

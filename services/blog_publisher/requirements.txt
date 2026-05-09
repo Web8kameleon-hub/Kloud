@@ -1,5 +1,5 @@
 # ============================================================================
-# CLISONIX BLOG AUTO-PUBLISHER - Dependencies
+# KLOUD BLOG AUTO-PUBLISHER - Dependencies
 # ============================================================================
 
 # FastAPI framework
@@ -14,3 +14,4 @@ httpx>=0.26.0,<0.30.0
 
 # Environment variables
 python-dotenv>=1.0.0,<2.0.0
+

@@ -1,5 +1,5 @@
 """
-Clisonix Cloud - Monitoring Middleware  
+Kloud Cloud - Monitoring Middleware  
 Real-time performance monitoring and metrics collection
 """
 import asyncio
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class MonitoringMiddleware(BaseHTTPMiddleware):
     """
-    Industrial-grade monitoring middleware for Clisonix
+    Industrial-grade monitoring middleware for Kloud
     Collects real-time metrics, performance data, and system health
     """
     
@@ -367,5 +367,6 @@ class MonitoringMiddleware(BaseHTTPMiddleware):
                 "message": f"Health calculation failed: {str(e)}",
                 "timestamp": time.time()
             }
+
 
 

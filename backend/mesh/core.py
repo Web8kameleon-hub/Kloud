@@ -31,7 +31,7 @@ class Edge:
 
 class MeshCore:
     """
-    Clisonix Mesh Core — truri qendror i rrjetit.
+    Kloud Mesh Core — truri qendror i rrjetit.
     - Menaxhon nyjet (nodes) dhe lidhjet (edges)
     - Ruajtje e gjendjes: Redis via TelemetryService + file topology.json (persistent)
     - Pa simulime: pret telemetry reale nga node-t.
@@ -235,4 +235,5 @@ class MeshCore:
         if not required:
             return True  # nëse s’është vendosur, mos e blloko
         return key == required
+
 

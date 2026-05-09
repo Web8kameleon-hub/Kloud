@@ -8,7 +8,7 @@ except ImportError:
 
 class TelemetryService:
     def __init__(self):
-        self.ns = "clisonix:nodes"
+        self.ns = "kloud:nodes"
         self.mem = {}
         self.r = None
         url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
@@ -56,5 +56,6 @@ class TelemetryService:
                 pass
             return out
         return list(self.mem.values())
+
 
 

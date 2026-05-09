@@ -1,5 +1,5 @@
 """
-CLISONIX CLOUD - SLACK INTEGRATION SERVICE
+KLOUD CLOUD - SLACK INTEGRATION SERVICE
 Real-time monitoring, alerts, and system notifications via Slack
 Connects to: ALBA, ALBI, JONA, Orchestrator, API
 
@@ -29,7 +29,7 @@ logger = logging.getLogger("SlackIntegration")
 # ═══════════════════════════════════════════════════════════════════
 
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
-SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#clisonix-monitoring")
+SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#kloud-monitoring")
 SERVICE_MODE = os.getenv("SERVICE_MODE", "production")  # production | development
 SLACK_ENABLED = os.getenv("SLACK_INTEGRATION_ENABLED", "true").lower() == "true"
 
@@ -258,7 +258,7 @@ async def lifespan(app: FastAPI):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"✅ *Clisonix Cloud - Slack Integration* Online\n"
+                    "text": f"✅ *Kloud Cloud - Slack Integration* Online\n"
                            f"Mode: `{SERVICE_MODE}`\n"
                            f"Channel: {SLACK_CHANNEL}\n"
                            f"Time: {datetime.now(timezone.utc).isoformat()}"
@@ -288,7 +288,7 @@ async def lifespan(app: FastAPI):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"⚠️  *Clisonix Cloud* Slack Integration Offline\n"
+                    "text": f"⚠️  *Kloud Cloud* Slack Integration Offline\n"
                            f"Time: {datetime.now(timezone.utc).isoformat()}"
                 }
             }
@@ -305,9 +305,9 @@ async def lifespan(app: FastAPI):
 # ═══════════════════════════════════════════════════════════════════
 
 app = FastAPI(
-    title="Clisonix Slack Integration",
+    title="Kloud Slack Integration",
     version="2.0.0",
-    description="Real-time Slack notifications for Clisonix Cloud",
+    description="Real-time Slack notifications for Kloud Cloud",
     lifespan=lifespan  # Modern approach (replaces @on_event)
 )
 
@@ -361,7 +361,7 @@ async def status_report():
             "type": "header",
             "text": {
                 "type": "plain_text",
-                "text": "📊 CLISONIX CLOUD STATUS REPORT",
+                "text": "📊 KLOUD CLOUD STATUS REPORT",
                 "emoji": True
             }
         },
@@ -392,7 +392,7 @@ async def status_report():
         })
 
     msg = SlackMessage(
-        text="Clisonix Cloud Status Report",
+        text="Kloud Cloud Status Report",
         blocks=blocks
     )
 
@@ -524,4 +524,5 @@ if __name__ == "__main__":
 
     port = int(os.getenv("SLACK_PORT", "8888"))
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+
 

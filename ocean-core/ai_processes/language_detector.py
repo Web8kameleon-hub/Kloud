@@ -169,7 +169,7 @@ class LanguageDetector:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("🌍 LanguageDetector initialized")
     
@@ -344,3 +344,4 @@ def get_language_detector() -> LanguageDetector:
     if _language_detector is None:
         _language_detector = LanguageDetector()
     return _language_detector
+

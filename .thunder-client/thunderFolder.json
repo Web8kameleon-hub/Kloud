@@ -1,56 +1,57 @@
 [
   {
     "_id": "fldr_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "📋 Health & Status",
     "sortNum": 10000
   },
   {
     "_id": "fldr_asi",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "🧠 ASI Trinity (Prometheus)",
     "sortNum": 20000
   },
   {
     "_id": "fldr_ocean",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "🌊 Ocean AI Chat",
     "sortNum": 30000
   },
   {
     "_id": "fldr_excel",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "📊 Excel & Reporting",
     "sortNum": 40000
   },
   {
     "_id": "fldr_kitchen",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "🍳 Kitchen Worker",
     "sortNum": 45000
   },
   {
     "_id": "fldr_weather",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "🌤️ Weather APIs",
     "sortNum": 50000
   },
   {
     "_id": "fldr_crypto",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "💰 Crypto (CoinGecko)",
     "sortNum": 60000
   },
   {
     "_id": "fldr_intelligence",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "🔬 Intelligence Lab (KLAJDI+MALI)",
     "sortNum": 70000
   },
   {
     "_id": "fldr_users",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "name": "👤 User Management",
     "sortNum": 80000
   }
 ]
+

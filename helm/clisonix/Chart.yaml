@@ -1,15 +1,16 @@
 apiVersion: v2
-name: clisonix
-description: Clisonix Cloud Platform - Industrial AI & Multi-Service Backend
+name: kloud
+description: Kloud Cloud Platform - Industrial AI & Multi-Service Backend
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
 keywords:
-  - clisonix
+  - kloud
   - ai
   - microservices
   - industrial
-home: https://clisonix.com
+home: https://kloud.com
 maintainers:
-  - name: Clisonix Team
-    email: support@clisonix.com
+  - name: Kloud Team
+    email: support@kloud.com
+

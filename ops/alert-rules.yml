@@ -1,5 +1,5 @@
 groups:
-  - name: clisonix_api_alerts
+  - name: kloud_api_alerts
     interval: 30s
     rules:
       # API AVAILABILITY & PERFORMANCE
@@ -162,7 +162,7 @@ groups:
           summary: "{{ $labels.service | toUpper }} Service Down"
           description: "{{ $labels.service }} is not responding"
 
-  - name: clisonix_business_alerts
+  - name: kloud_business_alerts
     interval: 1m
     rules:
       # SLA MONITORING
@@ -211,7 +211,7 @@ groups:
           summary: "No Background Jobs Processing"
           description: "Background job processing may be stalled"
 
-  - name: clisonix_victoria_metrics
+  - name: kloud_victoria_metrics
     interval: 30s
     rules:
       - alert: VictoriaMetricsDown
@@ -368,5 +368,6 @@ groups:
         annotations:
           summary: "Redis High Client Connections ({{ $value }})"
           description: "Redis has {{ $value }} connected clients"
+
 
 

@@ -22,7 +22,7 @@ import uuid
 from pathlib import Path
 
 # ============================================================
-# IMPORTS FROM CLISONIX ECOSYSTEM
+# IMPORTS FROM KLOUD ECOSYSTEM
 # ============================================================
 
 try:
@@ -224,7 +224,7 @@ class FullSession:
     async def run_full_session(self):
         """Ekzekuton sesionin e plotë"""
         print("\n" + "="*70)
-        print("🚀 CLISONIX FULL 10-MINUTE SESSION")
+        print("🚀 KLOUD FULL 10-MINUTE SESSION")
         print("="*70)
         print(f"   Session ID: {self.session_id}")
         print(f"   Started: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
@@ -409,7 +409,7 @@ async def main():
     """Main entry point"""
     print("""
     ╔══════════════════════════════════════════════════════════════╗
-    ║  🔁 CLISONIX FULL SESSION                                   ║
+    ║  🔁 KLOUD FULL SESSION                                   ║
     ║  12 Layers • Labs • SaaS • ASI • Blerina • AGIEM           ║
     ║  Agents • Scalable Data • 5000+ Free Sources               ║
     ║  Date: 16 January 2026                                      ║
@@ -422,3 +422,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

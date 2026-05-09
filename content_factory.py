@@ -1,5 +1,5 @@
 """
-CLISONIX CONTENT FACTORY - Main Orchestrator
+KLOUD CONTENT FACTORY - Main Orchestrator
 =============================================
 
 The complete content production pipeline:
@@ -23,7 +23,7 @@ Production Capacity:
 - Publication Rate: 10-20 selected articles/day
 
 Author: Ledjan Ahmati (CEO, ABA GmbH)
-System: Clisonix Cloud
+System: Kloud Cloud
 """
 
 from __future__ import annotations
@@ -114,7 +114,7 @@ class FactoryConfig:
     quality_threshold: float = 0.7
     max_docs_per_day: int = 20
     max_publish_per_day: int = 10
-    enabled_platforms: List[str] = field(default_factory=lambda: ["clisonix"])
+    enabled_platforms: List[str] = field(default_factory=lambda: ["kloud"])
     ollama_url: str = "http://localhost:11434"
     model: str = "llama3.1:8b"
     output_dir: str = "output/content_factory"
@@ -243,7 +243,7 @@ class NewsLawWatcher:
         
         try:
             async with aiohttp.ClientSession() as session:
-                headers = {"User-Agent": "Clisonix-Bot/1.0"}
+                headers = {"User-Agent": "Kloud-Bot/1.0"}
                 if api_key:
                     headers["Authorization"] = f"Bearer {api_key}"
                 
@@ -684,7 +684,7 @@ Enhanced text:"""
 
 class ContentFactory:
     """
-    Clisonix Content Factory - Main Orchestrator
+    Kloud Content Factory - Main Orchestrator
     
     Orchestrates the complete content production pipeline:
     
@@ -1049,7 +1049,7 @@ async def quick_analyze(content: str, title: str = "Quick Analysis") -> Dict:
 if __name__ == "__main__":
     async def test_factory():
         print("=" * 80)
-        print("🏭 CLISONIX CONTENT FACTORY - Full Pipeline Test")
+        print("🏭 KLOUD CONTENT FACTORY - Full Pipeline Test")
         print("=" * 80)
         
         # Create factory
@@ -1171,3 +1171,4 @@ if __name__ == "__main__":
         """)
     
     asyncio.run(test_factory())
+

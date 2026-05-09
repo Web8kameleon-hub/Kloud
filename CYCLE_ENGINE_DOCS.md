@@ -8,7 +8,7 @@
 
 ## 📖 ÇFARË ËSHTË CYCLE ENGINE?
 
-**Cycle Engine** është **motori i kontratave inteligjente** të sistemit Clisonix/ASI.  
+**Cycle Engine** është **motori i kontratave inteligjente** të sistemit Kloud/ASI.  
 Çdo **cycle** është një **kontratë pune** që:
 - Lidhet me një **burim** (source)
 - Ekzekutohet nga një **agent** (ALBA/ALBI/JONA)
@@ -428,7 +428,7 @@ python cycle_engine.py create \
 
 ```bash
 # Data root
-export CYCLE_DATA_ROOT="/opt/clisonix/data"
+export CYCLE_DATA_ROOT="/opt/kloud/data"
 
 # Alignment mode
 export CYCLE_DEFAULT_ALIGNMENT="moderate"
@@ -502,7 +502,7 @@ python CYCLE_ENGINE_DEMO.py
 ```yaml
 services:
   cycle_engine:
-    image: clisonix/cycle-engine:latest
+    image: kloud/cycle-engine:latest
     environment:
       - CYCLE_DATA_ROOT=/data
       - CYCLE_DEFAULT_ALIGNMENT=strict
@@ -524,7 +524,7 @@ spec:
     spec:
       containers:
       - name: engine
-        image: clisonix/cycle-engine:latest
+        image: kloud/cycle-engine:latest
         env:
         - name: CYCLE_DATA_ROOT
           value: /data
@@ -556,4 +556,5 @@ spec:
 
 ---
 
-**© 2025 Clisonix Cloud - Cycle Engine v1.0.0**
+**© 2025 Kloud Cloud - Cycle Engine v1.0.0**
+

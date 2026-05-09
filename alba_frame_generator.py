@@ -34,7 +34,7 @@ def generate_frame() -> dict[str, object]:
             "weather": random.choice(["clear", "rain", "cloudy", "storm"]),
             "energy_level": round(random.uniform(70, 100), 2),
         },
-        "tags": ["simulation", "Clisonix"],
+        "tags": ["simulation", "Kloud"],
     }
     return frame
 
@@ -60,4 +60,5 @@ if __name__ == "__main__":
         frame = generate_frame()
         send_frame(frame)
         time.sleep(10)
+
 

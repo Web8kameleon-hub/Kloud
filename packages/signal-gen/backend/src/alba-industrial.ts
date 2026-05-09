@@ -86,7 +86,7 @@ export async function AlbaIndustrialRouter(fastify: FastifyInstance) {
     const startTime = Date.now();
     const collectionId = `alba_${startTime}`;
     
-    const { directory = "C:/clisonix-cloud/data", recursive = true, file_types = [] } = request.body || {};
+    const { directory = "C:/kloud-cloud/data", recursive = true, file_types = [] } = request.body || {};
     
     try {
       // REAL file system scanning
@@ -277,3 +277,4 @@ export async function AlbaIndustrialRouter(fastify: FastifyInstance) {
     };
   });
 }
+

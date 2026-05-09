@@ -23,7 +23,7 @@ async function main() {
   await initSignalCore({
     redisUrl: cfg.REDIS_URL,
     httpWebhook: cfg.SIGNAL_HTTP,
-    secretKey: process.env.SIGNAL_SECRET || "Clisonix-key",
+    secretKey: process.env.SIGNAL_SECRET || "Kloud-key",
   });
 
   const alba = new AlbaCore(cfg.ALBA_MAX_STREAMS ?? 24);
@@ -201,3 +201,4 @@ void main().catch(async (err) => {
   await shutdownSignalCore();
   process.exit(1);
 });
+

@@ -15,7 +15,7 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse, JSONResponse
 
 from .groq_ocean_integration import get_groq_client
-from .clisonix_identity import get_clisonix_identity, IdentityLanguage
+from .kloud_identity import get_kloud_identity, IdentityLanguage
 
 logger = logging.getLogger("curiosity_ocean_routes")
 
@@ -58,14 +58,14 @@ _sessions: Dict[str, OceanSession] = {}
 
 
 # ============================================================================
-# 🔷 CLISONIX IDENTITY ENDPOINTS
+# 🔷 KLOUD IDENTITY ENDPOINTS
 # ============================================================================
 
 
 @router.get("/identity")
 async def get_identity(language: str = "en") -> Dict[str, Any]:
     """
-    Get Clisonix system identity and self-awareness
+    Get Kloud system identity and self-awareness
     
     Args:
         language: Language code (sq, en, it, es, fr, de)
@@ -85,7 +85,7 @@ async def get_identity(language: str = "en") -> Dict[str, Any]:
         }
         lang = lang_map.get(language, IdentityLanguage.ENGLISH)
         
-        identity = get_clisonix_identity()
+        identity = get_kloud_identity()
         
         return {
             "success": True,
@@ -122,7 +122,7 @@ async def get_trinity_info(language: str = "en") -> Dict[str, Any]:
         Trinity architecture (ALBA, ALBI, JONA)
     """
     try:
-        identity = get_clisonix_identity()
+        identity = get_kloud_identity()
         return {
             "success": True,
             "trinity": identity.trinity_architecture,
@@ -135,7 +135,7 @@ async def get_trinity_info(language: str = "en") -> Dict[str, Any]:
 @router.get("/identity/layers")
 async def get_layers_info(language: str = "en") -> Dict[str, Any]:
     """
-    Get all 12 layers of Clisonix architecture
+    Get all 12 layers of Kloud architecture
     
     Args:
         language: Language code
@@ -154,7 +154,7 @@ async def get_layers_info(language: str = "en") -> Dict[str, Any]:
         }
         lang = lang_map.get(language, IdentityLanguage.ENGLISH)
         
-        identity = get_clisonix_identity()
+        identity = get_kloud_identity()
         
         layers = {}
         for i in range(1, 13):
@@ -487,3 +487,4 @@ Please provide insights considering this health context.
 
 
 __all__ = ["router"]
+

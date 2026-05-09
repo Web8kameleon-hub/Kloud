@@ -1,5 +1,5 @@
 """
-CLISONIX CORE API MICROSERVICE
+KLOUD CORE API MICROSERVICE
 Shërbimi kryesor - Status, Health, Metrics bazë
 Port: 8000
 """
@@ -22,7 +22,7 @@ INSTANCE_ID = uuid.uuid4().hex[:8]
 START_TIME = datetime.now(timezone.utc)
 
 app = FastAPI(
-    title="Clisonix Core API",
+    title="Kloud Core API",
     description="Core microservice - Status, Health, System Metrics",
     version="2.0.0",
     docs_url="/docs",
@@ -78,7 +78,7 @@ def get_system_metrics():
 async def root():
     """Root endpoint"""
     return {
-        "service": "Clisonix Core API",
+        "service": "Kloud Core API",
         "version": "2.0.0",
         "instance": INSTANCE_ID,
         "status": "running",
@@ -190,3 +190,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     logger.info(f"Starting Core API on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
+

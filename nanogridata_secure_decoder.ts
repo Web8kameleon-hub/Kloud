@@ -1,5 +1,5 @@
 /**
- * CLISONIX NANOGRIDATA PROTOCOL v1.0 - SECURE DECODER
+ * KLOUD NANOGRIDATA PROTOCOL v1.0 - SECURE DECODER
  * 
  * Production-grade decoder with security hardening
  * - CBOR injection prevention
@@ -736,3 +736,4 @@ export type { NanogridataHeader, ValidationResult, NanogridataPacket };
 if (require.main === module) {
   exampleSecureDecoder().catch(console.error);
 }
+

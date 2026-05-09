@@ -1,6 +1,6 @@
 {
-  "name": "Clisonix Mobile",
-  "short_name": "Clisonix",
+  "name": "Kloud Mobile",
+  "short_name": "Kloud",
   "description": "Mobile Intelligence Platform",
   "start_url": "/",
   "display": "standalone",
@@ -21,3 +21,4 @@
     }
   ]
 }
+

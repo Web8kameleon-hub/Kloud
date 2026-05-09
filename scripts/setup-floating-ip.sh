@@ -90,7 +90,7 @@ success "Detected interface: $INTERFACE"
 
 info "Creating backup of network configuration..."
 
-BACKUP_DIR="/opt/clisonix/backups/netplan"
+BACKUP_DIR="/opt/kloud/backups/netplan"
 mkdir -p "$BACKUP_DIR"
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -316,8 +316,9 @@ echo "   2. Regenerate SSL certificates (if using HTTPS)"
 echo "   3. Test website accessibility"
 echo ""
 echo "🔗 Resources:"
-echo "   Full guide: /opt/clisonix/FLOATING_IP_GUIDE.md"
+echo "   Full guide: /opt/kloud/FLOATING_IP_GUIDE.md"
 echo "   Hetzner docs: https://docs.hetzner.com/cloud/floating-ips/"
 echo ""
 echo "═══════════════════════════════════════════════════════════════"
+
 

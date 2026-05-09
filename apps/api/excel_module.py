@@ -2,12 +2,12 @@
 """
 🔷 EXCEL MODULE - FULLY ISOLATED
 ================================
-Clisonix Deterministic SaaS Protocol
+Kloud Deterministic SaaS Protocol
 
 NO PANDAS - Uses openpyxl only to avoid numpy binary conflicts
 Isolated for container deployment
 
-Author: Clisonix
+Author: Kloud
 Version: 1.0.0
 """
 
@@ -303,3 +303,4 @@ async def excel_health():
         "openpyxl": OPENPYXL_AVAILABLE,
         "timestamp": datetime.now().isoformat()
     }
+

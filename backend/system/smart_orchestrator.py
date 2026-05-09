@@ -15,7 +15,7 @@ from backend.system.email_reporter import send_daily_report
 # include NeuroReset router so /neuro/* endpoints are available on this orchestrator
 from backend.system.neuro_reset import router as neuro_reset_router
 
-app = FastAPI(title="Clisonix Orchestrator 5555")
+app = FastAPI(title="Kloud Orchestrator 5555")
 
 # mount neuro reset API
 app.include_router(neuro_reset_router)
@@ -48,7 +48,7 @@ def dashboard():
         <html>
         <head>
             <meta http-equiv="refresh" content="15" />
-            <title>Clisonix Orchestrator 5555</title>
+            <title>Kloud Orchestrator 5555</title>
             <style>
                 :root {{
                     color-scheme: dark;
@@ -147,7 +147,7 @@ def dashboard():
         <body>
             <div class="header">
                 <div>
-                    <h1>🧠 Clisonix Smart Orchestrator</h1>
+                    <h1>🧠 Kloud Smart Orchestrator</h1>
                       <p style="color:var(--muted);">NeuroTrigger Active &bull; Last refresh {now_txt}</p>
                 </div>
                 <div class="actions">
@@ -378,4 +378,5 @@ def render_report_list(reports):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5555)
+
 

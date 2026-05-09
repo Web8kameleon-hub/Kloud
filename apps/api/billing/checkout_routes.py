@@ -1,5 +1,5 @@
 """
-Clisonix Stripe billing routes with real subscription management integrations.
+Kloud Stripe billing routes with real subscription management integrations.
 """
 from typing import Dict, List, Optional, Any
 from fastapi import APIRouter, Request, HTTPException, Depends, BackgroundTasks
@@ -198,7 +198,7 @@ async def create_portal_session(
             detail="No Stripe customer found. Please subscribe to a plan first."
         )
     
-    return_url = return_url or "https://app.Clisonix.com/billing"
+    return_url = return_url or "https://app.Kloud.com/billing"
     
     try:
         portal_url = await StripeService.create_portal_session(
@@ -496,5 +496,6 @@ async def get_usage_analytics(
             "export_formats": plan_quotas.get("export_formats", ["json"])
         }
     }
+
 
 

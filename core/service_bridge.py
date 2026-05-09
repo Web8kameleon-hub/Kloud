@@ -1,5 +1,5 @@
 """
-CLISONIX SERVICE BRIDGE
+KLOUD SERVICE BRIDGE
 ========================
 Ndërlidhës i shërbimeve - mundëson komunikim midis moduleve me efikasitet absolut.
 
@@ -343,7 +343,7 @@ def get_service_url(service: str, path: str = "") -> Optional[str]:
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Clisonix Service Bridge")
+    parser = argparse.ArgumentParser(description="Kloud Service Bridge")
     parser.add_argument("--health", action="store_true", help="Kontrollo shëndetin")
     parser.add_argument("--endpoints", action="store_true", help="Listo endpoints")
     parser.add_argument("--call", type=str, help="Thirr endpoint (format: service:path)")
@@ -383,3 +383,4 @@ if __name__ == "__main__":
         await bridge.close()
     
     asyncio.run(main())
+

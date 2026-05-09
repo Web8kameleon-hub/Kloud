@@ -72,7 +72,7 @@ these signals in real-time. Machine learning models then
 
 19
 00:01:10,641 --> 00:01:14,476
-classify brain patterns with high accuracy. At Clisonix,
+classify brain patterns with high accuracy. At Kloud,
 
 20
 00:01:14,476 --> 00:01:18,311
@@ -100,7 +100,7 @@ help treat anxiety and depression.
 
 26
 00:01:38,280 --> 00:01:42,659
-Clisonix brings industrial-grade AI to brain signal processing.
+Kloud brings industrial-grade AI to brain signal processing.
 
 27
 00:01:42,659 --> 00:01:47,039
@@ -128,8 +128,9 @@ The future of human-machine interaction is here. Visit
 
 33
 00:02:07,206 --> 00:02:11,542
-clisonix.com to learn more about our technology. Contact
+kloud.com to learn more about our technology. Contact
 
 34
 00:02:11,542 --> 00:02:15,877
-us at clisonix@pm.me for partnerships and inquiries.
+us at kloud@pm.me for partnerships and inquiries.
+

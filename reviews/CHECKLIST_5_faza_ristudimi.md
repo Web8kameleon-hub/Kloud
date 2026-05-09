@@ -153,7 +153,7 @@ Kur të 5 fazat janë ✅ APPROVED:
 python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 
 # OUTPUT
-# → clisonix-blog/posts/lagter-protocols-operational-methodology.md
+# → kloud-blog/posts/lagter-protocols-operational-methodology.md
 # → LinkedIn (automatikisht)
 ```
 
@@ -171,4 +171,5 @@ python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 
 ---
 
-_Template i Plotë Ristudimi | Clisonix Cloud Quality Assurance_
+_Template i Plotë Ristudimi | Kloud Cloud Quality Assurance_
+

@@ -1,7 +1,7 @@
-//! 🔷 CLISONIX BINARY PROTOCOL (CBP) - Rust SDK
+//! 🔷 KLOUD BINARY PROTOCOL (CBP) - Rust SDK
 //! =============================================
 //!
-//! Rust library for Clisonix Binary Protocol.
+//! Rust library for Kloud Binary Protocol.
 //!
 //! # Frame Layout
 //! ```text
@@ -16,7 +16,7 @@
 //!
 //! # Example
 //! ```rust
-//! use clisonix_cbp::{Frame, Flags, MessageType};
+//! use kloud_cbp::{Frame, Flags, MessageType};
 //!
 //! let frame = Frame::new(Flags::HAS_CHECKSUM, vec![0x01, 0x42]);
 //! let encoded = frame.encode();
@@ -437,3 +437,4 @@ mod tests {
         assert_eq!(decoded.payload, vec![1, 2, 3, 4]);
     }
 }
+

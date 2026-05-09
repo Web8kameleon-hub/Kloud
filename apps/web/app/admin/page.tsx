@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 /**
- * CLISONIX ADMIN DASHBOARD
+ * KLOUD ADMIN DASHBOARD
  * ========================
  * Password-protected infrastructure monitoring
  * Only for administrators
@@ -111,8 +111,8 @@ const ADMIN_MODULES = [
     private: true
   },
   {
-    id: 'clisonix-api-collection',
-    name: 'Clisonix API Collection',
+    id: 'kloud-api-collection',
+    name: 'Kloud API Collection',
     description: 'Real-time API monitoring • No mock data',
     icon: '📡',
     color: 'from-orange-500 to-red-600',
@@ -548,12 +548,13 @@ export default function AdminDashboard() {
       <footer className="border-t border-slate-800 py-8 px-4 mt-12">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
           <p>🔒 Admin Dashboard - Infrastructure Monitoring</p>
-          <p className="mt-2">© 2026 Clisonix. All rights reserved.</p>
+          <p className="mt-2">© 2026 Kloud. All rights reserved.</p>
         </div>
       </footer>
     </div>
   );
 }
+
 
 
 

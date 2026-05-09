@@ -1,7 +1,7 @@
-# 🔍 CLISONIX CLOUD — AUDIT I PLOTË I API-VE
+# 🔍 KLOUD CLOUD — AUDIT I PLOTË I API-VE
 
 **Data e Auditit**: 28 Shkurt 2026  
-**Sistemi**: Clisonix Cloud (main branch)  
+**Sistemi**: Kloud Cloud (main branch)  
 **Statusi**: KOMPLET PËR PRODHIM
 
 ---
@@ -59,7 +59,7 @@
 | **Content Factory** | 8006 | ✅ | Blerina → EAP → LinkedIn/Twitter/Reddit |
 | **LinkedIn Poster** | 8007 | ✅ | Auto-posting (3-5 posts/day) |
 | **Video Generator** | 8029 | ✅ | BLERINA Video Pipeline |
-| **Blog Publisher** | 8041 | ✅ | Auto-publish to clisonix-blog repo |
+| **Blog Publisher** | 8041 | ✅ | Auto-publish to kloud-blog repo |
 
 ### **Shtresa 5: Administrim & Billing**
 
@@ -322,7 +322,7 @@ GET  /airports/search
 
 ### **Arsyeja**
 
-Clisonix Cloud ka në vend:
+Kloud Cloud ka në vend:
 
 1. ✅ **Knowledge Engine** (Ocean-Core me 50+ endpoints)
 2. ✅ **AI Intelligence** (ALBA, ALBI, JONA, ASI)
@@ -362,7 +362,7 @@ docker-compose up --build
 # 2. Verifikimi i healths
 curl -s http://localhost:8000/health | jq .
 curl -s http://localhost:8030/health | jq .
-curl -s http://localhost:3000/ | grep -q "Clisonix" && echo "✅ Frontend OK"
+curl -s http://localhost:3000/ | grep -q "Kloud" && echo "✅ Frontend OK"
 
 # 3. Testim pipeline
 curl -X POST http://localhost:8006/pipeline \
@@ -389,11 +389,11 @@ CLERK_SECRET_KEY=...
 
 ```
 Production URLs:
-- API:      https://api.clisonix.com (port 8000)
-- Web:      https://clisonix.com (port 3000)
-- Blog:     https://blog.clisonix.com (clisonix-blog repo)
-- Docs:     https://docs.clisonix.com
-- Grafana:  https://metrics.clisonix.com
+- API:      https://api.kloud.com (port 8000)
+- Web:      https://kloud.com (port 3000)
+- Blog:     https://blog.kloud.com (kloud-blog repo)
+- Docs:     https://docs.kloud.com
+- Grafana:  https://metrics.kloud.com
 ```
 
 ---
@@ -418,15 +418,15 @@ Production URLs:
 | Funksioni | Përgjegjes | Kontakt |
 |-----------|-----------|---------|
 | **Architecture** | Ledjan Ahmati | CEO, ABA GmbH |
-| **DevOps** | DevOps Team | <devops@clisonix.com> |
-| **API Support** | API Team | <api@clisonix.com> |
-| **Customer Support** | Support Team | <support@clisonix.com> |
+| **DevOps** | DevOps Team | <devops@kloud.com> |
+| **API Support** | API Team | <api@kloud.com> |
+| **Customer Support** | Support Team | <support@kloud.com> |
 
 ---
 
 ## ✅ PËRFUNDIM
 
-### **Clisonix Cloud është i PLOTË për prodhim.**
+### **Kloud Cloud është i PLOTË për prodhim.**
 
 ✅ **150+ API endpoints** — Të gjithë funksional  
 ✅ **25+ shërbime** — Të gjitha configured  
@@ -436,10 +436,11 @@ Production URLs:
 
 **Asnjë API shtesë nuk duhet të krijohet.**
 
-Clisonix Cloud mund të fillojë operacionet e prodhimit menjëherë.
+Kloud Cloud mund të fillojë operacionet e prodhimit menjëherë.
 
 ---
 
-_Audit i Plotë | Clisonix Cloud | 28 Shkurt 2026_  
+_Audit i Plotë | Kloud Cloud | 28 Shkurt 2026_  
 _Prepared by: AI Development Team_  
 _Status: READY FOR PRODUCTION ✅_
+

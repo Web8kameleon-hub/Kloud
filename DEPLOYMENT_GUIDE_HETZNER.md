@@ -1,8 +1,8 @@
-# Clisonix Cloud - Hetzner Deployment Guide
+# Kloud Cloud - Hetzner Deployment Guide
 
 **Server Provider:** Hetzner Cloud (console.hetzner.com)  
 **Account:** K1266374525 (amati.ledian@gmail.com)  
-**Domain:** clisonix.com (managed via STRATO)  
+**Domain:** kloud.com (managed via STRATO)  
 **Date:** December 11, 2025
 
 ---
@@ -20,7 +20,7 @@
 - [ ] Install Docker & dependencies
 
 ### Phase 3: DNS Configuration (10 min)
-- [ ] Point clisonix.com to server IP
+- [ ] Point kloud.com to server IP
 - [ ] Configure SSL certificate
 - [ ] Set up CDN (optional)
 
@@ -44,11 +44,11 @@
 ### STEP 1: Push to GitHub
 
 ```powershell
-# From C:\clisonix-cloud
+# From C:\kloud-cloud
 git push origin main
 
 # Tag the release
-git tag -a v1.0.0 -m "Clisonix Cloud v1.0 - Production Release"
+git tag -a v1.0.0 -m "Kloud Cloud v1.0 - Production Release"
 git push origin v1.0.0
 ```
 
@@ -62,7 +62,7 @@ git push origin v1.0.0
 #### 2.1 Server Configuration
 
 ```
-Name: clisonix-prod-01
+Name: kloud-prod-01
 Location: Falkenstein, Germany (eu-central)
 Image: Ubuntu 24.04 LTS
 Type: CX32 (4 vCPU, 8 GB RAM, 80 GB SSD)
@@ -119,8 +119,8 @@ apt install nginx certbot python3-certbot-nginx -y
 apt install git -y
 
 # Create deployment user
-adduser clisonix --disabled-password --gecos ""
-usermod -aG docker clisonix
+adduser kloud --disabled-password --gecos ""
+usermod -aG docker kloud
 ```
 
 ---
@@ -128,11 +128,11 @@ usermod -aG docker clisonix
 ### STEP 3: Configure DNS (STRATO)
 
 **Login:** https://www.strato.de/apps/CustomerService  
-**Domain:** clisonix.com
+**Domain:** kloud.com
 
 #### 3.1 DNS Records
 
-Navigate to: **Domains → clisonix.com → DNS Settings**
+Navigate to: **Domains → kloud.com → DNS Settings**
 
 ```
 Type    Name    Value                   TTL
@@ -147,7 +147,7 @@ CNAME   prometheus YOUR_HETZNER_IP      3600
 
 **Verify:**
 ```powershell
-nslookup clisonix.com
+nslookup kloud.com
 ```
 
 ---
@@ -157,12 +157,12 @@ nslookup clisonix.com
 #### 4.1 Clone Repository
 
 ```bash
-# As clisonix user
-su - clisonix
+# As kloud user
+su - kloud
 
 # Clone repo
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 ```
 
 #### 4.2 Configure Environment
@@ -171,7 +171,7 @@ cd Clisonix-cloud
 # Create production .env
 cat > .env << 'EOF'
 # Database
-DATABASE_URL=postgresql://clisonix:SECURE_PASSWORD@localhost:5432/clisonix_prod
+DATABASE_URL=postgresql://kloud:SECURE_PASSWORD@localhost:5432/kloud_prod
 REDIS_URL=redis://localhost:6379/0
 
 # API
@@ -186,8 +186,8 @@ STRIPE_PUBLISHABLE_KEY=pk_live_YOUR_PUBLISHABLE_KEY
 STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET
 
 # Frontend
-NEXT_PUBLIC_API_URL=https://clisonix.com/api
-NEXT_PUBLIC_DOMAIN=clisonix.com
+NEXT_PUBLIC_API_URL=https://kloud.com/api
+NEXT_PUBLIC_DOMAIN=kloud.com
 
 # Monitoring
 PROMETHEUS_RETENTION=15d
@@ -196,7 +196,7 @@ GRAFANA_ADMIN_PASSWORD=SECURE_PASSWORD
 # Email (Optional - for notifications)
 SMTP_HOST=smtp.strato.de
 SMTP_PORT=465
-SMTP_USER=info@clisonix.com
+SMTP_USER=info@kloud.com
 SMTP_PASSWORD=YOUR_EMAIL_PASSWORD
 EOF
 
@@ -235,7 +235,7 @@ npm run build
 
 # Start with PM2 (process manager)
 npm install -g pm2
-pm2 start npm --name "clisonix-web" -- start
+pm2 start npm --name "kloud-web" -- start
 pm2 save
 pm2 startup
 ```
@@ -248,10 +248,10 @@ pm2 startup
 # As root
 sudo su
 
-cat > /etc/nginx/sites-available/clisonix << 'EOF'
+cat > /etc/nginx/sites-available/kloud << 'EOF'
 server {
     listen 80;
-    server_name clisonix.com www.clisonix.com;
+    server_name kloud.com www.kloud.com;
     
     # Frontend
     location / {
@@ -289,7 +289,7 @@ server {
 EOF
 
 # Enable site
-ln -s /etc/nginx/sites-available/clisonix /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/kloud /etc/nginx/sites-enabled/
 nginx -t
 systemctl restart nginx
 ```
@@ -300,7 +300,7 @@ systemctl restart nginx
 
 ```bash
 # Install Let's Encrypt certificate
-certbot --nginx -d clisonix.com -d www.clisonix.com
+certbot --nginx -d kloud.com -d www.kloud.com
 
 # Auto-renewal (runs twice daily)
 systemctl status certbot.timer
@@ -317,32 +317,32 @@ certbot renew --dry-run
 
 ```bash
 # Frontend
-curl https://clisonix.com
+curl https://kloud.com
 # Should return Next.js homepage
 
 # Backend API
-curl https://clisonix.com/api/health
+curl https://kloud.com/api/health
 # Should return {"status": "healthy"}
 
 # ALBA Service
-curl https://clisonix.com/api/alba/status
+curl https://kloud.com/api/alba/status
 # Should return ALBA agent status
 
 # Swagger Docs
-open https://clisonix.com/api/docs
+open https://kloud.com/api/docs
 ```
 
 #### 7.2 Monitoring
 
 ```
-Grafana: https://clisonix.com/grafana
-Prometheus: https://clisonix.com/prometheus (password protected)
+Grafana: https://kloud.com/grafana
+Prometheus: https://kloud.com/prometheus (password protected)
 ```
 
 #### 7.3 SSL Check
 
 ```
-https://www.ssllabs.com/ssltest/analyze.html?d=clisonix.com
+https://www.ssllabs.com/ssltest/analyze.html?d=kloud.com
 ```
 
 ---
@@ -353,18 +353,18 @@ https://www.ssllabs.com/ssltest/analyze.html?d=clisonix.com
 
 ```bash
 # Database backup script
-cat > /home/clisonix/backup.sh << 'EOF'
+cat > /home/kloud/backup.sh << 'EOF'
 #!/bin/bash
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-pg_dump -U clisonix clisonix_prod > /backups/db_$TIMESTAMP.sql
+pg_dump -U kloud kloud_prod > /backups/db_$TIMESTAMP.sql
 find /backups -name "db_*.sql" -mtime +7 -delete
 EOF
 
-chmod +x /home/clisonix/backup.sh
+chmod +x /home/kloud/backup.sh
 
 # Cron: Daily at 2 AM
 crontab -e
-0 2 * * * /home/clisonix/backup.sh
+0 2 * * * /home/kloud/backup.sh
 ```
 
 ### Set Up Monitoring Alerts
@@ -411,7 +411,7 @@ After deployment, these URLs will be live:
 
 ### STRATO
 
-- **clisonix.com domain:** Included
+- **kloud.com domain:** Included
 - **Email:** 4 mailboxes included
 
 ### Third-Party Services
@@ -442,8 +442,8 @@ netstat -tulpn | grep LISTEN
 
 ```bash
 # Check DNS propagation
-dig clisonix.com
-nslookup clisonix.com 8.8.8.8
+dig kloud.com
+nslookup kloud.com 8.8.8.8
 
 # Force DNS refresh
 systemctl restart systemd-resolved
@@ -466,7 +466,7 @@ nginx -t
 
 ```bash
 # Check PostgreSQL
-docker compose exec postgres psql -U clisonix -d clisonix_prod
+docker compose exec postgres psql -U kloud -d kloud_prod
 
 # Check Redis
 docker compose exec redis redis-cli ping
@@ -479,7 +479,7 @@ docker compose exec redis redis-cli ping
 **Hetzner Support:** <support@hetzner.com>  
 **STRATO Support:** <https://www.strato.de/kontakt>
 
-**Clisonix SRE Team:** (your internal team contact)
+**Kloud SRE Team:** (your internal team contact)
 
 ---
 
@@ -496,10 +496,11 @@ After completing all steps:
 7. ✅ Monitoring active
 8. ✅ Backups configured
 
-**Platform is LIVE at:** <https://clisonix.com> 🚀
+**Platform is LIVE at:** <https://kloud.com> 🚀
 
 ---
 
 **Deployed:** December 11, 2025  
 **Version:** v1.0.0  
 **Environment:** Production
+

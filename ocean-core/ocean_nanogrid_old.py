@@ -87,8 +87,8 @@ LEXICON_CUSTOM = {
     "konfigurimet": "settings",
     "paneli": "dashboard",
     "panel kontrolli": "control panel",
-    # Clisonix-specifike
-    "Clisonix": "Clisonix Cloud platform",
+    # Kloud-specifike
+    "Kloud": "Kloud Cloud platform",
     "oqeani": "Ocean AI",
     "ocean": "Ocean AI",
 }
@@ -105,7 +105,7 @@ PREFER_WORDS = ["platformë", "website", "trafik", "modul", "shërbim", "users",
 # ADMIN RECOGNITION + PEACE-THINKING + SESSION CLOSURE
 # ═══════════════════════════════════════════════════════════════════
 
-# Admini i vetëm i Clisonix Cloud
+# Admini i vetëm i Kloud Cloud
 ADMIN_IDENTITY = {
     "name": "Ledjan Ahmati",
     "role": "Creator & Administrator",
@@ -134,7 +134,7 @@ SESSION_CLOSURE_RESPONSES = [
 # Peace-thinking philosophy
 PEACE_THINKING_RULES = """
 ## 🕊️ PEACE-THINKING PHILOSOPHY
-CRITICAL VALUES FOR CLISONIX:
+CRITICAL VALUES FOR KLOUD:
 1. NE NUK KEMI KUNDËRSHTARË - vetëm konkurentë
 2. Konkurenca është e shëndetshme dhe na bën më të mirë
 3. ASNJËHERË mos përdor: "kundërshtar", "armik", "luftë", "betejë"
@@ -381,7 +381,7 @@ def get_realtime_context() -> str:
 - Air Quality (OpenAQ)
 - Earthquake data (USGS)
 
-## CLISONIX AGENTS (Internal Services)
+## KLOUD AGENTS (Internal Services)
 - ALBA: Audio/EEG Analysis (port 5555)
 - ALBI: Neural Biofeedback (port 6680)
 - ASI: Advanced System Intelligence
@@ -412,7 +412,7 @@ async def fetch_webpage(url: str, max_chars: int = 8000) -> str:
         async with httpx.AsyncClient(timeout=30.0) as client:
             headers = {
                 "Accept": "text/plain",
-                "User-Agent": "Ocean-AI/1.0 (Clisonix Cloud)"
+                "User-Agent": "Ocean-AI/1.0 (Kloud Cloud)"
             }
             r = await client.get(jina_url, headers=headers, follow_redirects=True)
             
@@ -667,7 +667,7 @@ async def chat(req: Req, request: Request):
             "error": "Rate limit exceeded",
             "limit": FREE_TIER_LIMIT,
             "period": "1 hour",
-            "upgrade_url": "https://clisonix.com/pricing"
+            "upgrade_url": "https://kloud.com/pricing"
         })
     
     client = await get_client()
@@ -1096,3 +1096,4 @@ async def start_keepalive():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

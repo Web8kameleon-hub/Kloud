@@ -1,7 +1,7 @@
 [
   {
     "_id": "req_health_main",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_health",
     "name": "GET /health",
     "url": "{{base_url}}/health",
@@ -11,7 +11,7 @@
   },
   {
     "_id": "req_status_main",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_health",
     "name": "GET /status",
     "url": "{{base_url}}/status",
@@ -21,7 +21,7 @@
   },
   {
     "_id": "req_system_status",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_health",
     "name": "GET /api/system-status",
     "url": "{{base_url}}/api/system-status",
@@ -31,7 +31,7 @@
   },
   {
     "_id": "req_asi_status",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_asi",
     "name": "ASI Status (Real)",
     "url": "{{base_url}}/asi/status",
@@ -41,7 +41,7 @@
   },
   {
     "_id": "req_asi_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_asi",
     "name": "ASI Health (Real)",
     "url": "{{base_url}}/asi/health",
@@ -51,7 +51,7 @@
   },
   {
     "_id": "req_alba_metrics",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_asi",
     "name": "ALBA Network Metrics",
     "url": "{{base_url}}/asi/alba/metrics",
@@ -61,7 +61,7 @@
   },
   {
     "_id": "req_albi_metrics",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_asi",
     "name": "ALBI Neural Metrics",
     "url": "{{base_url}}/asi/albi/metrics",
@@ -71,7 +71,7 @@
   },
   {
     "_id": "req_jona_metrics",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_asi",
     "name": "JONA Coordination Metrics",
     "url": "{{base_url}}/asi/jona/metrics",
@@ -81,7 +81,7 @@
   },
   {
     "_id": "req_ocean_chat",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_ocean",
     "name": "Ocean Chat",
     "url": "{{base_url}}/ocean/chat",
@@ -95,7 +95,7 @@
   },
   {
     "_id": "req_ocean_stream",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_ocean",
     "name": "Ocean Stream Chat",
     "url": "{{base_url}}/ocean/stream",
@@ -109,7 +109,7 @@
   },
   {
     "_id": "req_excel_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Excel Service Health",
     "url": "{{excel_url}}/health",
@@ -119,7 +119,7 @@
   },
   {
     "_id": "req_excel_status",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Excel Status",
     "url": "{{excel_url}}/status",
@@ -129,7 +129,7 @@
   },
   {
     "_id": "req_excel_generate",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Generate Excel Report",
     "url": "{{excel_url}}/api/excel/generate",
@@ -139,7 +139,7 @@
   },
   {
     "_id": "req_excel_validate",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Validate Excel File",
     "url": "{{excel_url}}/api/excel/validate",
@@ -153,7 +153,7 @@
   },
   {
     "_id": "req_excel_parse",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Parse Excel File",
     "url": "{{excel_url}}/api/excel/parse",
@@ -167,7 +167,7 @@
   },
   {
     "_id": "req_excel_formulas",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Get Excel Formulas",
     "url": "{{excel_url}}/api/excel/formulas",
@@ -177,7 +177,7 @@
   },
   {
     "_id": "req_excel_scripts",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Office Scripts",
     "url": "{{excel_url}}/api/excel/office-scripts",
@@ -187,7 +187,7 @@
   },
   {
     "_id": "req_excel_run_script",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "Run Excel Script",
     "url": "{{excel_url}}/api/excel/run-script",
@@ -201,7 +201,7 @@
   },
   {
     "_id": "req_excel_templates",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_excel",
     "name": "List Templates",
     "url": "{{excel_url}}/api/excel/templates",
@@ -211,7 +211,7 @@
   },
   {
     "_id": "req_weather_current",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_weather",
     "name": "Current Weather",
     "url": "{{base_url}}/api/weather/current?city=Tirana",
@@ -221,7 +221,7 @@
   },
   {
     "_id": "req_weather_forecast",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_weather",
     "name": "Weather Forecast",
     "url": "{{base_url}}/api/weather/forecast?city=Berlin&days=5",
@@ -231,7 +231,7 @@
   },
   {
     "_id": "req_crypto_prices",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_crypto",
     "name": "Crypto Prices (CoinGecko)",
     "url": "{{base_url}}/api/crypto/prices?coins=bitcoin,ethereum",
@@ -241,7 +241,7 @@
   },
   {
     "_id": "req_crypto_market",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_crypto",
     "name": "Crypto Market Data",
     "url": "{{base_url}}/api/crypto/market",
@@ -251,7 +251,7 @@
   },
   {
     "_id": "req_intelligence_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "Intelligence Lab Health",
     "url": "{{intelligence_url}}/health",
@@ -261,7 +261,7 @@
   },
   {
     "_id": "req_klajdi_status",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "KLAJDI Status",
     "url": "{{intelligence_url}}/klajdi/status",
@@ -271,7 +271,7 @@
   },
   {
     "_id": "req_klajdi_signals",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "KLAJDI Recent Signals",
     "url": "{{intelligence_url}}/klajdi/signals?limit=10",
@@ -281,7 +281,7 @@
   },
   {
     "_id": "req_klajdi_analyze",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "KLAJDI Analyze Signal",
     "url": "{{intelligence_url}}/klajdi/analyze",
@@ -295,7 +295,7 @@
   },
   {
     "_id": "req_mali_status",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "MALI Status",
     "url": "{{intelligence_url}}/mali/status",
@@ -305,7 +305,7 @@
   },
   {
     "_id": "req_mali_announcements",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "MALI Recent Announcements",
     "url": "{{intelligence_url}}/mali/announcements?limit=10",
@@ -315,7 +315,7 @@
   },
   {
     "_id": "req_mali_announce",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_intelligence",
     "name": "MALI Create Announcement",
     "url": "{{intelligence_url}}/mali/announce",
@@ -329,7 +329,7 @@
   },
   {
     "_id": "req_users_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_users",
     "name": "User Management Health",
     "url": "{{users_url}}/health",
@@ -339,7 +339,7 @@
   },
   {
     "_id": "req_users_list",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_users",
     "name": "List Users",
     "url": "{{users_url}}/users?limit=10",
@@ -349,7 +349,7 @@
   },
   {
     "_id": "req_users_register",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_users",
     "name": "Register User",
     "url": "{{users_url}}/users/register",
@@ -358,12 +358,12 @@
     "headers": [{ "name": "Content-Type", "value": "application/json" }],
     "body": {
       "type": "json",
-      "raw": "{\n  \"email\": \"test@clisonix.com\",\n  \"username\": \"testuser\",\n  \"full_name\": \"Test User\"\n}"
+      "raw": "{\n  \"email\": \"test@kloud.com\",\n  \"username\": \"testuser\",\n  \"full_name\": \"Test User\"\n}"
     }
   },
   {
     "_id": "req_users_get",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_users",
     "name": "Get User by ID",
     "url": "{{users_url}}/users/{{user_id}}",
@@ -373,7 +373,7 @@
   },
   {
     "_id": "req_users_stats",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_users",
     "name": "User Statistics",
     "url": "{{users_url}}/users/stats",
@@ -383,7 +383,7 @@
   },
   {
     "_id": "req_kitchen_health",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_kitchen",
     "name": "Kitchen Worker Health",
     "url": "{{kitchen_url}}/health",
@@ -393,7 +393,7 @@
   },
   {
     "_id": "req_kitchen_stats",
-    "colId": "col_clisonix_main",
+    "colId": "col_kloud_main",
     "containerId": "fldr_kitchen",
     "name": "Kitchen Worker Stats",
     "url": "{{kitchen_url}}/stats",
@@ -402,3 +402,4 @@
     "headers": []
   }
 ]
+

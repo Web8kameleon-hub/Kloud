@@ -63,7 +63,7 @@ docker-compose --env-file .env.production -f docker-compose.prod.secure.yml up -
 .\scripts\setup-secrets.ps1  # Windows
 
 # 2. Deploy with secrets
-docker stack deploy -c docker-compose.secrets.yml clisonix
+docker stack deploy -c docker-compose.secrets.yml kloud
 ```
 
 **Security Features:**
@@ -89,9 +89,9 @@ sudo apt-get update && sudo apt-get install vault
 vault server -dev  # Dev mode (use proper config for prod)
 
 # 3. Store secrets
-vault kv put secret/clisonix/postgres password="$(openssl rand -hex 32)"
-vault kv put secret/clisonix/redis password="$(openssl rand -hex 32)"
-vault kv put secret/clisonix/jwt secret="$(openssl rand -hex 32)"
+vault kv put secret/kloud/postgres password="$(openssl rand -hex 32)"
+vault kv put secret/kloud/redis password="$(openssl rand -hex 32)"
+vault kv put secret/kloud/jwt secret="$(openssl rand -hex 32)"
 
 # 4. Deploy with Vault integration
 # Configure services to read from Vault API
@@ -219,8 +219,8 @@ sudo ufw enable
 ### 2. Clone Repository
 
 ```bash
-git clone https://github.com/Kameleonlife/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/Kameleonlife/Kloud-cloud.git
+cd Kloud-cloud
 
 # Switch to production branch (if exists)
 git checkout production
@@ -279,10 +279,10 @@ docker-compose --env-file .env.production -f docker-compose.prod.secure.yml ps
 curl http://localhost:8000/health
 
 # Check database connection
-docker exec clisonix-postgres pg_isready -U clisonix
+docker exec kloud-postgres pg_isready -U kloud
 
 # Check Redis
-docker exec clisonix-redis redis-cli ping
+docker exec kloud-redis redis-cli ping
 
 # View logs
 docker-compose --env-file .env.production -f docker-compose.prod.secure.yml logs -f --tail=50
@@ -300,7 +300,7 @@ NEW_POSTGRES_PASSWORD=$(openssl rand -base64 32)
 NEW_JWT_SECRET=$(openssl rand -hex 32)
 
 # 2. Update database password
-docker exec clisonix-postgres psql -U clisonix -c "ALTER USER clisonix PASSWORD '$NEW_POSTGRES_PASSWORD';"
+docker exec kloud-postgres psql -U kloud -c "ALTER USER kloud PASSWORD '$NEW_POSTGRES_PASSWORD';"
 
 # 3. Update .env.production
 sed -i "s/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$NEW_POSTGRES_PASSWORD/" .env.production
@@ -320,7 +320,7 @@ docker-compose --env-file .env.production -f docker-compose.prod.secure.yml rest
 docker-compose --env-file .env.production -f docker-compose.prod.secure.yml restart
 
 # 3. Notify team
-echo "SECURITY BREACH: All secrets rotated at $(date)" | mail -s "URGENT: Secret Rotation" security@clisonix.com
+echo "SECURITY BREACH: All secrets rotated at $(date)" | mail -s "URGENT: Secret Rotation" security@kloud.com
 
 # 4. Audit logs
 docker-compose --env-file .env.production -f docker-compose.prod.secure.yml logs --since 24h > breach-audit.log
@@ -345,7 +345,7 @@ git filter-branch --force --index-filter \
 git push origin --force --all
 
 # 4. Notify GitHub to clear cache
-# Go to: https://github.com/Kameleonlife/Clisonix-cloud/settings
+# Go to: https://github.com/Kameleonlife/Kloud-cloud/settings
 # Click "Permanently delete this repository"
 # Then re-upload without secrets
 
@@ -390,7 +390,7 @@ python scripts/scan-secrets.py > post-cleanup-audit.txt
 docker-compose --env-file .env.production -f docker-compose.prod.secure.yml config | grep -A5 "environment:"
 
 # Monitor environment variable usage
-docker inspect clisonix-api | jq '.[0].Config.Env'
+docker inspect kloud-api | jq '.[0].Config.Env'
 
 # Check for secrets in logs (should be none!)
 docker-compose --env-file .env.production -f docker-compose.prod.secure.yml logs | grep -i "password\|secret\|key" | wc -l
@@ -404,7 +404,7 @@ docker-compose --env-file .env.production -f docker-compose.prod.secure.yml logs
 
 # Alert if secrets appear in logs
 if docker-compose logs | grep -qE "(password|secret|key)="; then
-  echo "WARNING: Secrets detected in logs!" | mail -s "Security Alert" security@clisonix.com
+  echo "WARNING: Secrets detected in logs!" | mail -s "Security Alert" security@kloud.com
 fi
 ```
 
@@ -438,7 +438,7 @@ docker-compose --env-file .env.production ps | grep -q "unhealthy" && echo "❌ 
 
 # 6. TLS enabled (if applicable)
 echo "[6/7] Checking HTTPS..."
-curl -I https://api.clisonix.com 2>/dev/null | grep -q "HTTP/2 200" && echo "✅ PASS" || echo "⚠️  WARNING: HTTPS not configured"
+curl -I https://api.kloud.com 2>/dev/null | grep -q "HTTP/2 200" && echo "✅ PASS" || echo "⚠️  WARNING: HTTPS not configured"
 
 # 7. Firewall configured
 echo "[7/7] Checking firewall..."
@@ -460,4 +460,5 @@ echo "=== VALIDATION COMPLETE ==="
 
 **Last Updated**: December 16, 2025  
 **Version**: 1.0.0  
-**Maintained by**: Clisonix Security Team
+**Maintained by**: Kloud Security Team
+

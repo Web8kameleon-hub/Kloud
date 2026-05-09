@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import { AlbaCore } from "../../backend/layers/layer4-alba";
 import { ALBISystem, type LaborData } from "../../backend/layers/layer5-albi";
 import { emitSignal, nodeDiagnostics, initSignalCore, shutdownSignalCore } from "../../backend/layers/_shared/signal";
-import { AudioSynthesizer } from "../Clisonix/audio_synthesizer";
+import { AudioSynthesizer } from "../Kloud/audio_synthesizer";
 import { loadConfig, type AppConfig } from "../../backend/config";
 
 type AlbaStream = ReturnType<AlbaCore["getStreams"]>[number];
@@ -255,7 +255,7 @@ async function main() {
   await initSignalCore({
     redisUrl: cfg.REDIS_URL,
     httpWebhook: cfg.SIGNAL_HTTP,
-    secretKey: process.env.SIGNAL_SECRET || "Clisonix-key",
+    secretKey: process.env.SIGNAL_SECRET || "Kloud-key",
   });
 
   const trainer = await bootstrapTrainer(cfg, interval, loop, modeArg);
@@ -285,3 +285,4 @@ if (moduleUrl === process.argv[1]) {
     process.exit(1);
   });
 }
+

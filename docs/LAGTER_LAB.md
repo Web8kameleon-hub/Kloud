@@ -59,7 +59,7 @@ L.A.G.T.E.R studion:
 
 - Si lidhen **tretësirat natyrore** (qumësht, lot, pështymë) me **inflamacionin sistemik**?
 - Si mund të **parashikohen** këto çrregullime duke **modeluar gjurmët biologjike**?
-- Si mund të **integrohen** këto modele në **Clisonix dhe Nanogrid**?
+- Si mund të **integrohen** këto modele në **Kloud dhe Nanogrid**?
 
 ---
 
@@ -96,9 +96,9 @@ Të identifikojë **sinjalet e hershme** që trupi jep para se një çrregullim 
 - Ndryshimet në mikrobiomë si tregues i inflamacionit
 - Ndryshimet në blink-rate si tregues i lodhjes
 
-### **3. Integrimi me Clisonix**
+### **3. Integrimi me Kloud**
 
-Të ndërtojë **modele të audituara** që mund të integrohen në platformën Clisonix:
+Të ndërtojë **modele të audituara** që mund të integrohen në platformën Kloud:
 
 - Dashboard që tregon "risk i dry eye + faktorët kontribues"
 - Parashikim i overload-it para se simptomat të jenë të forta
@@ -163,7 +163,7 @@ _"Për çdo shqetësim shëndetësor, konsultohuni me një profesionist të shë
 | **1-2** | Protokolli i mbledhjes së të dhënave + setup i sensorëve + mbledhja e literaturës shkencore |
 | **3-4** | Mbledhja e të dhënave nga 20-30 përdorues testues (biologji + sjellje + ambient) |
 | **5-6** | Ndërtimi i modeleve të para të korelacionit (jo ML i rëndë në këtë fazë) |
-| **7** | Dashboard i parë Clisonix: **"Dry Eye Risk + faktorët kontribues (biologji-sjellje-ambient)"** |
+| **7** | Dashboard i parë Kloud: **"Dry Eye Risk + faktorët kontribues (biologji-sjellje-ambient)"** |
 | **8** | Raporti i parë shkencor + pitch deck për partnerë/investitorë |
 
 ---
@@ -245,4 +245,5 @@ Ndërtimi i **Ligjeve të L.A.G.T.E.R** (I, II, III) që do të veprojnë si **p
 
 _Dokumenti i krijuar: 27 Shkurt 2026_  
 _L.A.G.T.E.R — Labor Auditimi të Gjurmëve Trupore dhe Enigmave Rezultuese_  
-_Pjesë e Clisonix Cloud Platform_
+_Pjesë e Kloud Cloud Platform_
+

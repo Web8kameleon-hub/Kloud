@@ -2,7 +2,7 @@
 
 ## 🎯 Koncepti: SELF-EVOLUTION through SELF-USE
 
-**Parimi Kryesor:** Clisonix duhet të jetë konsumatori i parë i API-ve të veta. 
+**Parimi Kryesor:** Kloud duhet të jetë konsumatori i parë i API-ve të veta. 
 Çdo modul, agent, dhe shërbim duhet të përdorë infrastrukturën tonë të brendshme
 PARA se të thërrasë API të jashtme.
 
@@ -20,8 +20,8 @@ PARA se të thërrasë API të jashtme.
    - apps.api.neuro.audio_to_midi
 
 2. **Cycle Integration** → Internal API calls
-   - blerina_cycle_integration.py → http://clisonix-api:8000
-   - cycle_asi_integration.py → http://clisonix-api:8000
+   - blerina_cycle_integration.py → http://kloud-api:8000
+   - cycle_asi_integration.py → http://kloud-api:8000
 
 3. **Metrics Collection** → Internal endpoints
    - localhost:8000/api/alba/status
@@ -277,3 +277,4 @@ API_REGISTRY = {
 
 **Last Updated:** December 26, 2025
 **Status:** 🟡 Design Phase → Ready for Implementation
+

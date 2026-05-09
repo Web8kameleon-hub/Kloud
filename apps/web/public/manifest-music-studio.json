@@ -1,5 +1,5 @@
 {
-  "name": "Clisonix Music Studio",
+  "name": "Kloud Music Studio",
   "short_name": "Music Studio",
   "description": "Create music with solfège notes, waveforms, and effects",
   "start_url": "/modules/music-studio",
@@ -46,3 +46,4 @@
     }
   ]
 }
+

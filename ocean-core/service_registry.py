@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-[FIX] SERVICE REGISTRY - All 56+ Clisonix Microservices
+[FIX] SERVICE REGISTRY - All 56+ Kloud Microservices
 ====================================================
 Central registry of ALL microservices from docker-compose.microservices.yml
 
@@ -58,7 +58,7 @@ SERVICES: Dict[str, MicroService] = {
     # =========================================================================
     "postgres": MicroService(
         name="PostgreSQL", port=5432, 
-        description="Primary relational database - clisonixdb",
+        description="Primary relational database - klouddb",
         category="database", is_core=True,
         capabilities=["sql", "transactions", "persistence", "queries"]
     ),
@@ -125,7 +125,7 @@ SERVICES: Dict[str, MicroService] = {
     ),
     "ollama-multi": MicroService(
         name="Ollama Multi-Model Engine", port=4444,
-        description="3 Ollama Models Enterprise - clisonix-ocean:v2, llama3.1:8b, gpt-oss:120b (microservice 8031)",
+        description="3 Ollama Models Enterprise - kloud-ocean:v2, llama3.1:8b, gpt-oss:120b (microservice 8031)",
         category="core", is_core=True,
         file="ollama_multi_api.py",
         health_endpoint="/health",
@@ -821,7 +821,7 @@ class ServiceRegistry:
     
     def to_chat_context(self) -> str:
         """Generate context string for chat AI"""
-        lines = ["CLISONIX MICROSERVICES REGISTRY:", ""]
+        lines = ["KLOUD MICROSERVICES REGISTRY:", ""]
         
         for category in sorted(self.get_categories()):
             services = self.get_by_category(category)
@@ -854,3 +854,4 @@ if __name__ == "__main__":
     print(f"Categories: {list(summary['categories'].keys())}")
     print("\nChat Context:")
     print(reg.to_chat_context()[:2000])
+

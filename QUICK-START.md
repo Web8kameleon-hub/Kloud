@@ -1,10 +1,10 @@
-# 🚀 QUICK START - CLISONIX CLOUD
+# 🚀 QUICK START - KLOUD CLOUD
 
 ## ⚡ Fastest Way to Get Running
 
 ### Option 1: Use Master Launcher (RECOMMENDED)
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 
 # Full system with all 11 services in separate windows
 .\MASTER-LAUNCH-FULL.ps1 -Clean -Monitor
@@ -15,7 +15,7 @@ cd c:\clisonix-cloud
 
 ### Option 2: Traditional npm dev
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 npm run dev
 ```
 
@@ -25,14 +25,14 @@ npm run dev
 
 **WRONG (will fail):**
 ```powershell
-PS C:\clisonix-cloud> MASTER-LAUNCH.ps1
-PS C:\clisonix-cloud> start-all.ps1
+PS C:\kloud-cloud> MASTER-LAUNCH.ps1
+PS C:\kloud-cloud> start-all.ps1
 ```
 
 **CORRECT (use `./`):**
 ```powershell
-PS C:\clisonix-cloud> .\MASTER-LAUNCH.ps1
-PS C:\clisonix-cloud> .\MASTER-LAUNCH-FULL.ps1
+PS C:\kloud-cloud> .\MASTER-LAUNCH.ps1
+PS C:\kloud-cloud> .\MASTER-LAUNCH-FULL.ps1
 ```
 
 The `./` tells PowerShell to run scripts from the current directory.
@@ -112,6 +112,7 @@ Each service stays in its window - scroll to see output
 
 🚀 **Next Command:**
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 .\MASTER-LAUNCH-FULL.ps1 -Clean -Monitor
 ```
+

@@ -160,8 +160,9 @@
   ],
   "info": {
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Auto-generated API collection for Clisonix Cloud - Complete microservices API",
-    "name": "Clisonix Cloud API"
+    "description": "Auto-generated API collection for Kloud Cloud - Complete microservices API",
+    "name": "Kloud Cloud API"
   }
 }
+
 

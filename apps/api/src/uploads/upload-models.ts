@@ -1,5 +1,5 @@
 /**
- * ðŸš€ Clisonix INDUSTRIAL FILE UPLOAD MODELS
+ * ðŸš€ Kloud INDUSTRIAL FILE UPLOAD MODELS
  * Production-Grade File Management System
  * Real S3 Integration, Chunked Uploads, Industrial Validation
  */
@@ -340,7 +340,7 @@ export const DEFAULT_UPLOAD_CONFIG: UploadConfig = {
   uploadPath: '/uploads',
   tempPath: '/tmp/uploads',
   s3Config: {
-    bucket: 'Clisonix-uploads',
+    bucket: 'Kloud-uploads',
     region: 'eu-central-1',
     accessKeyId: process.env['AWS_ACCESS_KEY_ID'] || '',
     secretAccessKey: process.env['AWS_SECRET_ACCESS_KEY'] || '',
@@ -381,3 +381,4 @@ export const DEFAULT_UPLOAD_CONFIG: UploadConfig = {
     quarantinePath: '/quarantine'
   }
 };
+

@@ -1,5 +1,5 @@
-﻿#!/bin/bash
-# 🔍 Clisonix Production Server Diagnostic Script
+#!/bin/bash
+# 🔍 Kloud Production Server Diagnostic Script
 # Author: Ledjan Ahmati - ABA GmbH
 # Server: 46.225.14.83
 
@@ -7,7 +7,7 @@ SERVER="${1:-root@46.225.14.83}"
 SSH_KEY="$HOME/.ssh/hetzner_deploy_key"
 
 echo "════════════════════════════════════════════════"
-echo "🔍 Clisonix Production Server Diagnostic"
+echo "🔍 Kloud Production Server Diagnostic"
 echo "   Server: $SERVER"
 echo "════════════════════════════════════════════════"
 echo ""
@@ -21,7 +21,7 @@ fi
 # Execute diagnostic
 ssh $SSH_OPTS $SERVER bash << 'ENDSSH'
 echo "════════════════════════════════════════════════"
-echo "🔍 CLISONIX PRODUCTION DIAGNOSTIC"
+echo "🔍 KLOUD PRODUCTION DIAGNOSTIC"
 echo "════════════════════════════════════════════════"
 echo ""
 
@@ -30,11 +30,11 @@ docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -E "oce
 echo ""
 
 echo "🌊 2. OCEAN-CORE LOGS:"
-docker logs clisonix-ocean-core --tail 30 2>&1
+docker logs kloud-ocean-core --tail 30 2>&1
 echo ""
 
 echo "🧠 3. OLLAMA MODELS:"
-docker exec clisonix-ollama ollama list 2>&1 || echo "❌ Ollama failed"
+docker exec kloud-ollama ollama list 2>&1 || echo "❌ Ollama failed"
 echo ""
 
 echo "💾 4. RESOURCES:"
@@ -52,9 +52,10 @@ curl -s http://localhost:11434/api/tags || echo "❌ Ollama failed"
 echo ""
 
 echo "⚠️ 7. ERRORS:"
-docker logs clisonix-ocean-core 2>&1 | grep -i "error\|exception" | tail -10
+docker logs kloud-ocean-core 2>&1 | grep -i "error\|exception" | tail -10
 echo ""
 
 echo "✅ COMPLETE"
 ENDSSH
+
 

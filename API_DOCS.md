@@ -1,4 +1,4 @@
-# Clisonix Cloud API Documentation
+# Kloud Cloud API Documentation
 
 ## Endpoints
 
@@ -6,7 +6,7 @@
 
 - `GET /health`
   - Returns API health status.
-  - Response: `{ "status": "ok", "service": "Clisonix Cloud API" }`
+  - Response: `{ "status": "ok", "service": "Kloud Cloud API" }`
 
 ### ASI Trinity Status
 
@@ -63,3 +63,4 @@
 - All endpoints return real data or error (no mock values).
 - CORS enabled for all origins.
 - For more endpoints, see backend source code.
+

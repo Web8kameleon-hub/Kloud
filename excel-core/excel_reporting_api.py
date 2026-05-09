@@ -1,5 +1,5 @@
 """
-CLISONIX EXCEL CORE API
+KLOUD EXCEL CORE API
 ========================
 API ekskluzive për Excel Dashboard
 Port: 8010
@@ -18,7 +18,7 @@ from lagter_v1_excel import LagterV1ExcelBuilder
 from lagter_v1_models import LagterPayload
 
 app = FastAPI(
-    title="Clisonix Excel Core",
+    title="Kloud Excel Core",
     description="API ekskluzive për Excel Dashboard - Isolated",
     version="1.0.0"
 )
@@ -53,7 +53,7 @@ def run_docker_cmd(cmd):
 @app.get("/")
 async def root():
     return {
-        "service": "Clisonix Excel Core",
+        "service": "Kloud Excel Core",
         "version": "1.0.0",
         "status": "operational",
         "endpoints": [
@@ -258,3 +258,4 @@ async def lagter_v1_export_custom(payload: LagterPayload):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8010)
+

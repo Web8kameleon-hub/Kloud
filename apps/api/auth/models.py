@@ -1,5 +1,5 @@
 """
-Clisonix Authentication Models
+Kloud Authentication Models
 User and subscription management with SQLAlchemy
 """
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, Enum, Numeric
@@ -242,5 +242,6 @@ class APIKey(Base):
         if not self.expires_at:
             return False
         return datetime.now(timezone.utc) > self.expires_at
+
 
 

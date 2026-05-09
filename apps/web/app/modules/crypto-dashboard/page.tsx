@@ -6,7 +6,7 @@ import { Brain, TrendingUp, TrendingDown, Activity, AlertTriangle, Shield, Zap, 
 
 /**
  * NEURAL MARKET SENTIMENT ANALYZER
- * Clisonix Neuro-Trading Intelligence Module
+ * Kloud Neuro-Trading Intelligence Module
  * 
  * Combines real market data with neural stress correlation analysis
  * Real CoinGecko API + ASI Biometric Correlation Engine
@@ -383,12 +383,13 @@ export default function NeuralMarketSentiment() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-xs text-gray-600">
-          Neural Market Sentiment Analyzer • Clisonix Neuro-Trading Module • Real API Data
+          Neural Market Sentiment Analyzer • Kloud Neuro-Trading Module • Real API Data
         </div>
       </div>
     </div>
   );
 }
+
 
 
 

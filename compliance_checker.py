@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Stage Compliance Checker - Clisonix Cloud
+Stage Compliance Checker - Kloud Cloud
 ==========================================
 Kontrollon përputhshmërinë me rregullata evropiane automatikisht.
 """
@@ -231,7 +231,7 @@ class ComplianceChecker:
         checks = self.run_all_checks()
         
         print("\n" + "="*70)
-        print("🏛️  COMPLIANCE & STAGE CHECKER - CLISONIX CLOUD")
+        print("🏛️  COMPLIANCE & STAGE CHECKER - KLOUD CLOUD")
         print("="*70)
         print(f"📅 Data: {self.timestamp}\n")
         
@@ -284,3 +284,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

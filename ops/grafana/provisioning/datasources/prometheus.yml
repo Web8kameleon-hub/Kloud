@@ -47,6 +47,7 @@ datasources:
     basicAuth: true
     basicAuthUser: elastic
     secureJsonData:
-      basicAuthPassword: "clisonix123"
+      basicAuthPassword: "kloud123"
     editable: true
+
 

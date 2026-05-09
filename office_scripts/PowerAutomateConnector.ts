@@ -1,5 +1,5 @@
 /**
- * 🔌 CLISONIX POWER AUTOMATE CONNECTOR
+ * 🔌 KLOUD POWER AUTOMATE CONNECTOR
  * Ky script thirret nga Power Automate për të bërë HTTP requests të vërteta
  * 
  * FLOW NË POWER AUTOMATE:
@@ -80,3 +80,4 @@ async function updateResult(
         sheet.getCell(row, 14).setValue(`⚠️ Slow: ${latency}ms`);  // O - Komente
     }
 }
+

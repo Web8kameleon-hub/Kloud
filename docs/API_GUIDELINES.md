@@ -1,11 +1,11 @@
-# 🔌 Clisonix Cloud - API Reference
+# 🔌 Kloud Cloud - API Reference
 
 ## Base URLs
 
 | Environment | URL |
 |-------------|-----|
-| Production | `https://api.clisonix.cloud/v1` |
-| Staging | `https://staging-api.clisonix.cloud/v1` |
+| Production | `https://api.kloud.cloud/v1` |
+| Staging | `https://staging-api.kloud.cloud/v1` |
 | Development | `http://localhost:8000/v1` |
 
 ## Authentication
@@ -13,13 +13,13 @@
 All API requests require authentication via Bearer token.
 
 ```bash
-curl -X GET https://api.clisonix.cloud/v1/resources \
+curl -X GET https://api.kloud.cloud/v1/resources \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ### Getting an API Key
 
-1. Login to Clisonix Dashboard
+1. Login to Kloud Dashboard
 2. Navigate to Settings → API Keys
 3. Click "Generate New Key"
 4. Store the key securely (it's only shown once)
@@ -250,18 +250,18 @@ Rate limit headers are included in all responses:
 
 ### Python
 ```python
-from clisonix import ClisonixClient
+from kloud import KloudClient
 
-client = ClisonixClient(api_key="your-api-key")
+client = KloudClient(api_key="your-api-key")
 response = client.ocean.chat("What is AI?")
 print(response.text)
 ```
 
 ### TypeScript
 ```typescript
-import { ClisonixClient } from '@clisonix/sdk';
+import { KloudClient } from '@kloud/sdk';
 
-const client = new ClisonixClient({ apiKey: 'your-api-key' });
+const client = new KloudClient({ apiKey: 'your-api-key' });
 const response = await client.ocean.chat('What is AI?');
 console.log(response.text);
 ```
@@ -294,3 +294,4 @@ Configure webhooks to receive real-time notifications:
 ---
 
 *API Version: 1.0.0 | Last Updated: February 2026*
+

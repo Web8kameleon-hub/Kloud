@@ -13,7 +13,7 @@
 ### Step 1: Start the Docker Stack
 
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
@@ -53,7 +53,7 @@ pg_up 1
 
 ### Step 3: Run the Test Suite
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 .\test-monitoring.ps1
 ```
 
@@ -159,17 +159,17 @@ postgres-exporter job is DOWN in Prometheus targets
 **Solution**:
 1. Check postgres-exporter logs:
 ```powershell
-docker logs clisonix-postgres-exporter
+docker logs kloud-postgres-exporter
 ```
 
 2. Check PostgreSQL is running:
 ```powershell
-docker logs clisonix-postgres
+docker logs kloud-postgres
 ```
 
 3. Verify connection string (should be in docker-compose):
 ```
-DATA_SOURCE_NAME: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb?sslmode=disable"
+DATA_SOURCE_NAME: "postgresql://kloud:kloud@postgres:5432/klouddb?sslmode=disable"
 ```
 
 ---
@@ -182,17 +182,17 @@ redis-exporter job is DOWN in Prometheus targets
 **Solution**:
 1. Check redis-exporter logs:
 ```powershell
-docker logs clisonix-redis-exporter
+docker logs kloud-redis-exporter
 ```
 
 2. Check Redis is running:
 ```powershell
-docker logs clisonix-redis
+docker logs kloud-redis
 ```
 
 3. Verify Redis connection:
 ```powershell
-docker exec clisonix-redis redis-cli ping
+docker exec kloud-redis redis-cli ping
 # Should return: PONG
 ```
 
@@ -207,7 +207,7 @@ Prometheus shows 0 metrics collected
 1. Wait 30+ seconds (Prometheus needs time to scrape all targets)
 2. Check Prometheus logs:
 ```powershell
-docker logs clisonix-prometheus-collector
+docker logs kloud-prometheus-collector
 ```
 
 3. Verify scrape configs (should see in logs):
@@ -235,7 +235,7 @@ You've passed TEST A when:
 ## Output Example (SUCCESS)
 ```
 ╔════════════════════════════════════════════════════════════╗
-║  CLISONIX MONITORING STACK - PRE-DEPLOYMENT TEST          ║
+║  KLOUD MONITORING STACK - PRE-DEPLOYMENT TEST          ║
 ╚════════════════════════════════════════════════════════════╝
 
 [TEST 1/4] Prometheus Targets Status...
@@ -318,3 +318,4 @@ Invoke-WebRequest "http://localhost:9090/api/v1/targets" -UseBasicParsing | Conv
    - Prometheus graph showing `redis_up` = 1
 
 **Then I'll do the performance optimization analysis!** 🚀
+

@@ -12,9 +12,9 @@ import { NextResponse } from "next/server";
 // User profile configuration - In production, this comes from database
 // Plan is determined by Stripe subscription status (default: free)
 const USER_PROFILE = {
-  id: "usr_clisonix_001",
+  id: "usr_kloud_001",
   name: process.env.USER_NAME || "Ledjan Ahmati",
-  email: process.env.USER_EMAIL || "ledjan@clisonix.com",
+  email: process.env.USER_EMAIL || "ledjan@kloud.com",
   avatar: process.env.USER_AVATAR || null,
   plan: process.env.USER_PLAN || "free", // Will be overridden by Stripe subscription
   company: process.env.USER_COMPANY || "WEB8euroweb GmbH",
@@ -79,3 +79,4 @@ export async function PUT(request: Request) {
     );
   }
 }
+

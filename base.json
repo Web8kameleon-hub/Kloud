@@ -1,5 +1,5 @@
 {
-  "system": "Clisonix Ultra-Industrial Base",
+  "system": "Kloud Ultra-Industrial Base",
   "version": "1.0.0",
   "description": "Konfigurim bazÃ« pÃ«r tÃ« gjitha shÃ«rbimet industriale, SaaS, API, nodes, audit, tracing, compliance, backup, monitoring.",
   "modules": [
@@ -61,4 +61,5 @@
     "reports": true
   }
 }
+
 

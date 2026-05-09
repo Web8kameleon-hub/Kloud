@@ -9,7 +9,7 @@ services:
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
     networks:
-      - clisonix
+      - kloud
     command:
       - "-config.file=/etc/loki/local-config.yaml"
     healthcheck:
@@ -19,7 +19,7 @@ services:
       retries: 3
 
 networks:
-  clisonix:
+  kloud:
     driver: bridge
 
 volumes:
@@ -31,3 +31,4 @@ volumes:
   grafana_data:
   loki_data:
   tempo_data:
+

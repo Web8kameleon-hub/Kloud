@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Clisonix Cloud API – Auth Folder",
+    "name": "Kloud Cloud API – Auth Folder",
     "description": "Authentication endpoints with auto-token capture",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -192,7 +192,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "https://api.clisonix.com",
+      "value": "https://api.kloud.com",
       "type": "string"
     },
     {
@@ -212,4 +212,5 @@
     }
   ]
 }
+
 

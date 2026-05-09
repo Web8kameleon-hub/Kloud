@@ -114,7 +114,7 @@ def generate_postman_collection():
     postman_collection["item"] = list(folders.values())
     
     # Write collection
-    with open('clisonix-cloud.postman_collection.json', 'w', encoding='utf-8') as f:
+    with open('kloud-cloud.postman_collection.json', 'w', encoding='utf-8') as f:
         json.dump(postman_collection, f, indent=2, ensure_ascii=False)
     
     # Count endpoints
@@ -127,4 +127,5 @@ def generate_postman_collection():
 
 if __name__ == '__main__':
     generate_postman_collection()
+
 

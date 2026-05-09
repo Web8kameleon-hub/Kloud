@@ -3,10 +3,10 @@
 OLLAMA ADAPTER - Implementon kontratën e motorit për Ollama
 ═══════════════════════════════════════════════════════════════════════════════
 
-Ky adapter map-on kontratën unike të Clisonix në API-n e Ollama.
+Ky adapter map-on kontratën unike të Kloud në API-n e Ollama.
 Mbështet: chat, completion, embedding.
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 import asyncio
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 IS_IN_DOCKER = os.path.exists("/.dockerenv") or os.environ.get("DOCKER_ENV") == "1"
 OLLAMA_HOST = "host.docker.internal" if IS_IN_DOCKER else "localhost"
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_URL", f"http://{OLLAMA_HOST}:11434")
-DEFAULT_MODEL = os.environ.get("OLLAMA_MODEL", "clisonix-ocean:v2")
+DEFAULT_MODEL = os.environ.get("OLLAMA_MODEL", "kloud-ocean:v2")
 DEFAULT_TIMEOUT = 120.0
 
 
@@ -49,7 +49,7 @@ class OllamaAdapter(BaseEngineAdapter):
     Adapter për Ollama - LLM lokal
     
     Përdorimi:
-        adapter = OllamaAdapter("ollama:clisonix-ocean:v2")
+        adapter = OllamaAdapter("ollama:kloud-ocean:v2")
         await adapter.initialize()
         response = await adapter.generate(request)
     """
@@ -74,14 +74,14 @@ class OllamaAdapter(BaseEngineAdapter):
         self._available_models: List[str] = []
         
         # System prompt
-        self.default_system_prompt = """You are Ocean AI, the intelligent assistant for Clisonix Cloud Platform.
+        self.default_system_prompt = """You are Ocean AI, the intelligent assistant for Kloud Cloud Platform.
 
 CRITICAL RULES:
 1. ALWAYS respond in the SAME LANGUAGE as the user's question
 2. Keep responses concise and helpful
 3. Be friendly and professional
 
-About Clisonix:
+About Kloud:
 - Founder & CEO: Ledjan Ahmati
 - Organization: WEB8euroweb GmbH
 """
@@ -417,3 +417,4 @@ __all__ = [
     "OLLAMA_BASE_URL",
     "DEFAULT_MODEL",
 ]
+

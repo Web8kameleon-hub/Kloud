@@ -36,10 +36,10 @@ python -m uvicorn main:app --reload --port 8000
 ### Option 1: Move Frontend Outside Monorepo
 ```bash
 # Create standalone Next.js app
-npx create-next-app@latest clisonix-frontend
-cd clisonix-frontend
-cp -r ../Clisonix-cloud/apps/web/app ./app
-cp -r ../Clisonix-cloud/apps/web/components ./components
+npx create-next-app@latest kloud-frontend
+cd kloud-frontend
+cp -r ../Kloud-cloud/apps/web/app ./app
+cp -r ../Kloud-cloud/apps/web/components ./components
 npm install
 npm run dev
 ```
@@ -110,7 +110,7 @@ python start_server.py
 ### Environment Variables
 ```bash
 # Database
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost/Clisonix
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost/Kloud
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -129,3 +129,4 @@ REDIS_URL=redis://localhost:6379
 
 **Last Updated**: December 16, 2025  
 **Status**: Backend functional, frontend blocked by Next.js bugs
+

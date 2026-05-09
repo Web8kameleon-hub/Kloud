@@ -11,7 +11,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="Alphabet Layers - Binary Mathematical Engine"
 LABEL version="1.0.0"
 LABEL protocol="binary-only"
@@ -691,3 +691,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8061/health || exit 1
 
 CMD ["python", "alphabet_service.py"]
+

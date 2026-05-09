@@ -1,9 +1,9 @@
 #!/bin/bash
-# IPv6 Fix Script for Clisonix Server
+# IPv6 Fix Script for Kloud Server
 # Fixes UFW, NGINX, and tests both IPv4 and IPv6
 
 echo "╔═══════════════════════════════════════════════════════════════╗"
-echo "║          🔧 CLISONIX IPv6 FIX SCRIPT                         ║"
+echo "║          🔧 KLOUD IPv6 FIX SCRIPT                         ║"
 echo "╚═══════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -36,7 +36,7 @@ ufw status verbose | grep -E "(Status|IPv6|80|443)" | sed 's/^/   /'
 echo ""
 echo "4️⃣ FIXING NGINX IPv6 LISTENING..."
 
-NGINX_CONF="/etc/nginx/sites-available/clisonix.com"
+NGINX_CONF="/etc/nginx/sites-available/kloud.com"
 
 if [ -f "$NGINX_CONF" ]; then
     # Backup original
@@ -85,16 +85,16 @@ else
     echo "   ⚠️ IPv4 localhost: FAILED"
 fi
 
-if curl -4 -s -o /dev/null -w "%{http_code}" --max-time 5 http://clisonix.com | grep -q "200"; then
-    echo "   ✅ IPv4 clisonix.com: WORKING"
+if curl -4 -s -o /dev/null -w "%{http_code}" --max-time 5 http://kloud.com | grep -q "200"; then
+    echo "   ✅ IPv4 kloud.com: WORKING"
 else
-    echo "   ⚠️ IPv4 clisonix.com: FAILED"
+    echo "   ⚠️ IPv4 kloud.com: FAILED"
 fi
 
-if curl -4 -s -o /dev/null -w "%{http_code}" --max-time 5 http://www.clisonix.com | grep -q "200"; then
-    echo "   ✅ IPv4 www.clisonix.com: WORKING"
+if curl -4 -s -o /dev/null -w "%{http_code}" --max-time 5 http://www.kloud.com | grep -q "200"; then
+    echo "   ✅ IPv4 www.kloud.com: WORKING"
 else
-    echo "   ⚠️ IPv4 www.clisonix.com: FAILED"
+    echo "   ⚠️ IPv4 www.kloud.com: FAILED"
 fi
 
 # 6. Test IPv6 connectivity
@@ -108,16 +108,16 @@ else
 fi
 
 echo "   Testing external IPv6..."
-if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://clisonix.com 2>/dev/null | grep -q "200"; then
-    echo "   ✅ IPv6 clisonix.com: WORKING"
+if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://kloud.com 2>/dev/null | grep -q "200"; then
+    echo "   ✅ IPv6 kloud.com: WORKING"
 else
-    echo "   ❌ IPv6 clisonix.com: TIMEOUT (main issue!)"
+    echo "   ❌ IPv6 kloud.com: TIMEOUT (main issue!)"
 fi
 
-if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://www.clisonix.com 2>/dev/null | grep -q "200"; then
-    echo "   ✅ IPv6 www.clisonix.com: WORKING"
+if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://www.kloud.com 2>/dev/null | grep -q "200"; then
+    echo "   ✅ IPv6 www.kloud.com: WORKING"
 else
-    echo "   ❌ IPv6 www.clisonix.com: TIMEOUT"
+    echo "   ❌ IPv6 www.kloud.com: TIMEOUT"
 fi
 
 # 7. Test API endpoint
@@ -147,15 +147,15 @@ echo "║                    FIX SUMMARY                               ║"
 echo "╚═══════════════════════════════════════════════════════════════╝"
 echo ""
 
-if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://www.clisonix.com 2>/dev/null | grep -q "200"; then
+if curl -6 -s -o /dev/null -w "%{http_code}" --max-time 10 http://www.kloud.com 2>/dev/null | grep -q "200"; then
     echo "🎉 SUCCESS! IPv6 is now working!"
     echo ""
-    echo "✅ www.clisonix.com accessible via IPv6"
+    echo "✅ www.kloud.com accessible via IPv6"
     echo "✅ Browser timeout should be FIXED"
     echo "✅ Postman monitor should PASS"
     echo ""
     echo "Next steps:"
-    echo "1. Test in browser: https://www.clisonix.com"
+    echo "1. Test in browser: https://www.kloud.com"
     echo "2. Re-run Postman monitor"
     echo "3. Celebrate! 🎊"
 else

@@ -10,6 +10,7 @@ filebeat.inputs:
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
   username: elastic
-  password: clisonix123
+  password: kloud123
 
 logging.level: info
+

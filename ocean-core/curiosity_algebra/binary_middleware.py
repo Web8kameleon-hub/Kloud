@@ -9,9 +9,9 @@ Formats:
 - application/cbor (CBOR2)
 - application/msgpack (MessagePack)
 - application/octet-stream (Custom Binary CLSN)
-- application/x-clisonix (Custom Binary CLSN)
+- application/x-kloud (Custom Binary CLSN)
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 from fastapi import Request, Response
@@ -32,7 +32,7 @@ class BinaryResponseMiddleware(BaseHTTPMiddleware):
         "application/msgpack": BinaryFormat.MSGPACK,
         "application/x-msgpack": BinaryFormat.MSGPACK,
         "application/octet-stream": BinaryFormat.CUSTOM_BINARY,
-        "application/x-clisonix": BinaryFormat.CUSTOM_BINARY,
+        "application/x-kloud": BinaryFormat.CUSTOM_BINARY,
         "application/x-clsn": BinaryFormat.CUSTOM_BINARY,
     }
     
@@ -47,7 +47,7 @@ class BinaryResponseMiddleware(BaseHTTPMiddleware):
                 "cbor": "application/cbor",
                 "msgpack": "application/msgpack",
                 "binary": "application/octet-stream",
-                "clsn": "application/x-clisonix",
+                "clsn": "application/x-kloud",
                 "json": "application/json"
             }
             accept = format_map.get(format_param.lower(), accept)
@@ -110,7 +110,7 @@ class BinaryResponse(Response):
         media_type_map = {
             BinaryFormat.CBOR2: "application/cbor",
             BinaryFormat.MSGPACK: "application/msgpack",
-            BinaryFormat.CUSTOM_BINARY: "application/x-clisonix",
+            BinaryFormat.CUSTOM_BINARY: "application/x-kloud",
             BinaryFormat.COMPRESSED_CBOR: "application/gzip",
         }
         
@@ -144,3 +144,4 @@ def create_binary_response(data: Any, format: str = "clsn") -> Response:
     
     binary_format = format_map.get(format.lower(), BinaryFormat.CUSTOM_BINARY)
     return BinaryResponse(content=data, format=binary_format)
+

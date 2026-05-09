@@ -2,13 +2,13 @@
 # Author: Ledjan Ahmati
 
 param(
-    [string]$ProjectName = "Clisonix-industrial",
+    [string]$ProjectName = "Kloud-industrial",
     [string]$DockerComposeFile = "docker-compose.yml",
     [switch]$Audit,
     [switch]$Trace
 )
 
-Write-Host "[INFO] Initializing Ultra-Industrial Clisonix Cloud..." -ForegroundColor Cyan
+Write-Host "[INFO] Initializing Ultra-Industrial Kloud Cloud..." -ForegroundColor Cyan
 Write-Host "[INFO] Project Name: $ProjectName" -ForegroundColor Yellow
 Write-Host "[INFO] Docker Compose File: $DockerComposeFile" -ForegroundColor Yellow
 
@@ -56,4 +56,5 @@ if ($failed) {
 }
 
 Write-Host "[COMPLIANCE] Ultra-Industrial initialization complete." -ForegroundColor Cyan
+
 

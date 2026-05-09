@@ -1,7 +1,7 @@
 /**
  * ALBA Collector Server â€” Connected Mode
  * ------------------------------------------------------
- * Ky version i ALBA Collector lidhet direkt me backend-in e Clisonix Cloud.
+ * Ky version i ALBA Collector lidhet direkt me backend-in e Kloud Cloud.
  * Ã‡do tÃ« dhÃ«nÃ« qÃ« vjen pÃ«rpunohet, ruhet nÃ« DB pÃ«rmes /api/telemetry
  * dhe shpÃ«rndahet te tÃ« gjithÃ« klientÃ«t nÃ« kohÃ« reale.
  *
@@ -34,7 +34,7 @@ interface BroadcastMessage {
 }
 
 // ---------------- CONFIG ----------------
-const BACKEND_API = process.env.Clisonix_BACKEND ?? "http://127.0.0.1:8001";
+const BACKEND_API = process.env.Kloud_BACKEND ?? "http://127.0.0.1:8001";
 const PORT = Number(process.env.ALBA_PORT ?? 8010);
 
 // ---------------- STATE ----------------
@@ -138,7 +138,8 @@ wss.on("connection", (ws: WebSocket) => {
 
 // ---------------- START ----------------
 server.listen(PORT, () => {
-  console.log("[ALBA] Collector connected to Clisonix backend");
+  console.log("[ALBA] Collector connected to Kloud backend");
   console.log(`   -> Listening on http://localhost:${PORT}`);
   console.log(`   -> Backend: ${BACKEND_API}`);
 });
+

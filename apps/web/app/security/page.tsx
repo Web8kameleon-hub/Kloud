@@ -84,7 +84,7 @@ export default function SecurityPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/platform" className="text-gray-400 hover:text-white transition-colors">Platform</Link>
@@ -229,7 +229,7 @@ export default function SecurityPage() {
               security researchers who help keep our platform secure.
             </p>
             <Link
-              href="mailto:support@clisonix.com?subject=Security%20Vulnerability%20Report"
+              href="mailto:support@kloud.com?subject=Security%20Vulnerability%20Report"
               className="inline-flex px-6 py-3 bg-violet-600 hover:bg-violet-500 rounded-xl font-semibold transition-colors"
             >
               Report a Vulnerability
@@ -245,7 +245,7 @@ export default function SecurityPage() {
           Our security team is available to discuss your specific requirements.
         </p>
         <Link
-          href="mailto:support@clisonix.com?subject=Security%20Inquiry"
+          href="mailto:support@kloud.com?subject=Security%20Inquiry"
           className="inline-flex px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
         >
           Contact Security Team
@@ -255,7 +255,7 @@ export default function SecurityPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/status" className="hover:text-violet-400 ml-2">Status</Link> | 
           <Link href="/platform" className="hover:text-violet-400 ml-2">Platform</Link> | 
           <Link href="/company" className="hover:text-violet-400 ml-2">Company</Link>
@@ -264,6 +264,7 @@ export default function SecurityPage() {
     </div>
   );
 }
+
 
 
 

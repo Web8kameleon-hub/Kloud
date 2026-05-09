@@ -179,7 +179,7 @@ default_args = {
     'depends_on_past': False,
     'start_date': datetime(2025, 1, 1),
     'email_on_failure': True,
-    'email': ['data-eng@clisonix.com'],
+    'email': ['data-eng@kloud.com'],
     'retries': 3,
     'retry_delay': timedelta(minutes=5),
 }
@@ -202,7 +202,7 @@ def fetch_openalex_works(**context):
     params = {
         'filter': f'from_publication_date:{yesterday}',
         'per-page': 200,
-        'mailto': 'api@clisonix.com'  # OpenAlex polite pool
+        'mailto': 'api@kloud.com'  # OpenAlex polite pool
     }
     
     works = []
@@ -346,7 +346,7 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:9092
       CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: clisonix-connect
+      CONNECT_GROUP_ID: kloud-connect
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
       CONNECT_STATUS_STORAGE_TOPIC: connect-status
@@ -382,7 +382,7 @@ kafka-topics --create --topic telemetry.processed --bootstrap-server localhost:9
     "tasks.max": "1",
     "http.api.url": "http://fiware-orion:1026/v2/entities",
     "http.request.method": "GET",
-    "http.request.headers": "Fiware-Service:clisonix",
+    "http.request.headers": "Fiware-Service:kloud",
     "http.timer.interval.ms": "5000",
     "kafka.topic": "telemetry.fiware.raw",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
@@ -567,3 +567,4 @@ def embed_batch(documents: List[Dict]):
 
 **Previous**: [Catalog & Governance Setup](./CATALOG_GOVERNANCE_SETUP.md)  
 **Next**: [Storage & Indexing Infrastructure](./STORAGE_INDEXING_INFRASTRUCTURE.md)
+

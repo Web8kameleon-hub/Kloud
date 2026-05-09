@@ -1,4 +1,4 @@
-# 🚀 CLISONIX CLOUD - DOCKER STARTUP REPORT
+# 🚀 KLOUD CLOUD - DOCKER STARTUP REPORT
 
 **Date**: December 3, 2025  
 **Status**: ✅ **SUCCESSFULLY DEPLOYED**  
@@ -12,24 +12,24 @@
 
 | Service | Port | Status | Container Name | Image |
 |---------|------|--------|-----------------|-------|
-| **API** | 8000 | ✅ Running | clisonix-api | python:3.13 |
-| **ALBA** | 5555 | ✅ Running | clisonix-alba | python:3.13 |
-| **ALBI** | 6666 | ✅ Running | clisonix-albi | python:3.13 |
-| **JONA** | 7777 | ✅ Running | clisonix-jona | python:3.13 |
-| **Orchestrator** | 9999 | ✅ Running | clisonix-orchestrator | python:3.13 |
-| **PostgreSQL** | 5432 | ✅ Running (Healthy) | clisonix-postgres | postgres:16 |
-| **Redis** | 6379 | ✅ Running (Healthy) | clisonix-redis | redis:7-alpine |
-| **Slack Integration** | 8888 | ✅ Running | clisonix-slack | python:3.13 |
-| **Web UI** | 3002 | ✅ Running | clisonix-web | node:22 |
-| **MinIO** | 9000/9001 | ✅ Running | clisonix-minio | minio/minio:latest |
-| **Prometheus** | 9090 | ✅ Running | clisonix-prometheus | prom/prometheus:latest |
-| **Grafana** | 3001 | ✅ Running | clisonix-grafana | grafana/grafana:latest |
+| **API** | 8000 | ✅ Running | kloud-api | python:3.13 |
+| **ALBA** | 5555 | ✅ Running | kloud-alba | python:3.13 |
+| **ALBI** | 6666 | ✅ Running | kloud-albi | python:3.13 |
+| **JONA** | 7777 | ✅ Running | kloud-jona | python:3.13 |
+| **Orchestrator** | 9999 | ✅ Running | kloud-orchestrator | python:3.13 |
+| **PostgreSQL** | 5432 | ✅ Running (Healthy) | kloud-postgres | postgres:16 |
+| **Redis** | 6379 | ✅ Running (Healthy) | kloud-redis | redis:7-alpine |
+| **Slack Integration** | 8888 | ✅ Running | kloud-slack | python:3.13 |
+| **Web UI** | 3002 | ✅ Running | kloud-web | node:22 |
+| **MinIO** | 9000/9001 | ✅ Running | kloud-minio | minio/minio:latest |
+| **Prometheus** | 9090 | ✅ Running | kloud-prometheus | prom/prometheus:latest |
+| **Grafana** | 3001 | ✅ Running | kloud-grafana | grafana/grafana:latest |
 
 ### ⚠️ Issue (1/12)
 
 | Service | Port | Status | Issue | Container Name | Image |
 |---------|------|--------|-------|-----------------|-------|
-| **Tempo** | 4318/4317 | ⚠️ Restarting | Config parsing error | clisonix-tempo | grafana/tempo:2.4.1 |
+| **Tempo** | 4318/4317 | ⚠️ Restarting | Config parsing error | kloud-tempo | grafana/tempo:2.4.1 |
 
 **Issue Details**: 
 - The `tempo.yaml` configuration file contains fields incompatible with the current Tempo version
@@ -59,7 +59,7 @@ MinIO Console:           http://localhost:9001 (minioadmin/minioadmin)
 
 ### Databases
 ```
-PostgreSQL:              localhost:5432 (clisonix/clisonix)
+PostgreSQL:              localhost:5432 (kloud/kloud)
 Redis:                   localhost:6379
 ```
 
@@ -76,15 +76,15 @@ Slack Service:           http://localhost:8888
 - **File**: `docker-compose.prod.yml`
 - **Total Services**: 12
 - **Running Services**: 11
-- **Network Driver**: bridge (internal: clisonix)
+- **Network Driver**: bridge (internal: kloud)
 - **Volume Manager**: Docker volume driver
 
 ### Database Configuration
 - **PostgreSQL**: Version 16, 5432
 - **Redis**: Version 7-alpine, 6379
-- **Database Name**: clisonixdb
-- **Database User**: clisonix
-- **Database Password**: clisonix
+- **Database Name**: klouddb
+- **Database User**: kloud
+- **Database Password**: kloud
 
 ### Storage Configuration
 - **MinIO**: Object storage at 9000/9001
@@ -160,7 +160,7 @@ Slack Service:           http://localhost:8888
 ## 🔐 Security Status
 
 ### Network Isolation: ✅ Configured
-- Custom bridge network: `clisonix`
+- Custom bridge network: `kloud`
 - Service-to-service: DNS resolution enabled
 - External access: Port-mapped only
 
@@ -185,7 +185,7 @@ docker-compose -f docker-compose.prod.yml logs --tail 50
 
 ### View Specific Service Logs
 ```bash
-docker-compose -f docker-compose.prod.yml logs -f clisonix-api
+docker-compose -f docker-compose.prod.yml logs -f kloud-api
 ```
 
 ### Check Service Status
@@ -200,17 +200,17 @@ docker-compose -f docker-compose.prod.yml down
 
 ### Restart Specific Service
 ```bash
-docker-compose -f docker-compose.prod.yml restart clisonix-api
+docker-compose -f docker-compose.prod.yml restart kloud-api
 ```
 
 ### Execute Command in Container
 ```bash
-docker exec clisonix-api python main.py --help
+docker exec kloud-api python main.py --help
 ```
 
 ### Access Database
 ```bash
-docker exec -it clisonix-postgres psql -U clisonix -d clisonixdb
+docker exec -it kloud-postgres psql -U kloud -d klouddb
 ```
 
 ---
@@ -314,7 +314,7 @@ Open: http://localhost:8000/redoc (ReDoc)
 | **Startup Time** | ~30 seconds |
 | **Memory Usage** | ~2-3 GB |
 | **Disk Usage** | ~500 MB (logs) |
-| **Network** | clisonix bridge |
+| **Network** | kloud bridge |
 | **Status** | ✅ PRODUCTION READY |
 
 ---
@@ -322,19 +322,19 @@ Open: http://localhost:8000/redoc (ReDoc)
 ## 📞 SUPPORT
 
 ### For API Issues
-- Check logs: `docker-compose -f docker-compose.prod.yml logs -f clisonix-api`
+- Check logs: `docker-compose -f docker-compose.prod.yml logs -f kloud-api`
 - API Docs: http://localhost:8000/docs
 
 ### For Database Issues
-- Check PostgreSQL: `docker exec -it clisonix-postgres psql -U clisonix -d clisonixdb`
-- Check Redis: `docker exec -it clisonix-redis redis-cli ping`
+- Check PostgreSQL: `docker exec -it kloud-postgres psql -U kloud -d klouddb`
+- Check Redis: `docker exec -it kloud-redis redis-cli ping`
 
 ### For Monitoring Issues
 - Check Prometheus: http://localhost:9090
 - Check Grafana: http://localhost:3001
 
 ### For Integration Issues
-- Check Orchestrator logs: `docker-compose -f docker-compose.prod.yml logs clisonix-orchestrator`
+- Check Orchestrator logs: `docker-compose -f docker-compose.prod.yml logs kloud-orchestrator`
 
 ---
 
@@ -343,7 +343,7 @@ Open: http://localhost:8000/redoc (ReDoc)
 ```
 ╔════════════════════════════════════════════════════════════════╗
 ║                                                                ║
-║     🚀 CLISONIX CLOUD DOCKER DEPLOYMENT: SUCCESSFUL ✅         ║
+║     🚀 KLOUD CLOUD DOCKER DEPLOYMENT: SUCCESSFUL ✅         ║
 ║                                                                ║
 ║     11 Services Running | 91.7% Success Rate                  ║
 ║     All Core Systems Operational                              ║
@@ -361,3 +361,4 @@ Open: http://localhost:8000/redoc (ReDoc)
 **Environment**: Docker Compose Production  
 **Configuration**: docker-compose.prod.yml  
 **Deployment Status**: ✅ COMPLETE
+

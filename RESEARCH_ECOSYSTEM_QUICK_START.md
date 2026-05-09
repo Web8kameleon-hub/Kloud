@@ -21,7 +21,7 @@
 ### Step 1: Clone & Navigate (30 seconds)
 
 ```bash
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 ```
 
 ### Step 2: Install Python Dependencies (2 minutes)
@@ -316,7 +316,7 @@ python Research_Data_Ecosystem_Integration.py
 **Windows Task Scheduler**:
 ```powershell
 # Create scheduled task to run daily at 2 AM
-$action = New-ScheduledTaskAction -Execute "python" -Argument "c:\clisonix-cloud\Research_Data_Ecosystem_Integration.py"
+$action = New-ScheduledTaskAction -Execute "python" -Argument "c:\kloud-cloud\Research_Data_Ecosystem_Integration.py"
 $trigger = New-ScheduledTaskTrigger -Daily -At 2am
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "ResearchDataCollection"
 ```
@@ -324,7 +324,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "ResearchData
 **Linux Cron**:
 ```bash
 # Add to crontab (runs daily at 2 AM)
-0 2 * * * cd /opt/clisonix-cloud && /usr/bin/python3 Research_Data_Ecosystem_Integration.py
+0 2 * * * cd /opt/kloud-cloud && /usr/bin/python3 Research_Data_Ecosystem_Integration.py
 ```
 
 ## 📚 Documentation Quick Links
@@ -332,7 +332,7 @@ Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "ResearchData
 - **Full Documentation**: [RESEARCH_ECOSYSTEM_README.md](RESEARCH_ECOSYSTEM_README.md)
 - **Implementation Details**: [RESEARCH_ECOSYSTEM_IMPLEMENTATION_SUMMARY.md](RESEARCH_ECOSYSTEM_IMPLEMENTATION_SUMMARY.md)
 - **Agent Telemetry**: [AGENT_TELEMETRY_DOCS.md](AGENT_TELEMETRY_DOCS.md)
-- **Architecture**: [CLISONIX_ARCHITECTURE_BASELINE_2025.md](CLISONIX_ARCHITECTURE_BASELINE_2025.md)
+- **Architecture**: [KLOUD_ARCHITECTURE_BASELINE_2025.md](KLOUD_ARCHITECTURE_BASELINE_2025.md)
 
 ## 🆘 Getting Help
 
@@ -411,3 +411,4 @@ Ready to deploy? Follow these guides:
 **Support**: See documentation or create issue on GitHub
 
 Happy researching! 📚🔬
+

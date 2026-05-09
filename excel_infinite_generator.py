@@ -2,7 +2,7 @@
 """
 🔷 EXCEL ∞ INFINITE GENERATOR
 ==============================
-Clisonix Deterministic SaaS Protocol
+Kloud Deterministic SaaS Protocol
 
 Gjeneron Excel dashboard nga API lista me:
 - Ngjyrosje automatike sipas folders
@@ -11,7 +11,7 @@ Gjeneron Excel dashboard nga API lista me:
 - VBA-ready për pop-up notifications
 
 Usage:
-    python excel_infinite_generator.py --input apis.json --output Clisonix_API_Dashboard.xlsx
+    python excel_infinite_generator.py --input apis.json --output Kloud_API_Dashboard.xlsx
 """
 
 import json
@@ -124,7 +124,7 @@ COLUMN_WIDTHS = {
 # GENERATOR FUNCTIONS
 # ============================================================================
 
-def generate_curl(method: str, endpoint: str, base_url: str = "https://clisonix.com") -> str:
+def generate_curl(method: str, endpoint: str, base_url: str = "https://kloud.com") -> str:
     """Gjeneron cURL command për endpoint"""
     if method.upper() == "GET":
         return f'curl -X GET "{base_url}{endpoint}" -H "Authorization: Bearer $API_KEY"'
@@ -138,7 +138,7 @@ def generate_curl(method: str, endpoint: str, base_url: str = "https://clisonix.
         return f'curl -X {method.upper()} "{base_url}{endpoint}"'
 
 
-def generate_python_snippet(method: str, endpoint: str, base_url: str = "https://clisonix.com") -> str:
+def generate_python_snippet(method: str, endpoint: str, base_url: str = "https://kloud.com") -> str:
     """Gjeneron Python snippet për endpoint"""
     return f'''import requests
 
@@ -151,8 +151,8 @@ print(response.json())'''
 
 def create_excel_infinite(
     apis: List[Dict[str, Any]], 
-    output_path: str = "Clisonix_API_Dashboard.xlsx",
-    base_url: str = "https://clisonix.com"
+    output_path: str = "Kloud_API_Dashboard.xlsx",
+    base_url: str = "https://kloud.com"
 ) -> str:
     """
     Krijon Excel ∞ Dashboard nga lista e API-ve
@@ -270,7 +270,7 @@ def create_excel_infinite(
         ["Ready Count", sum(1 for a in apis if a.get("status", "").upper() in ["READY", "APPROVED", "BAKED"])],
         ["Pending Count", sum(1 for a in apis if a.get("status", "").upper() == "PENDING")],
         ["Base URL", base_url],
-        ["Generator", "Clisonix Excel ∞ Infinite Generator"],
+        ["Generator", "Kloud Excel ∞ Infinite Generator"],
         ["Version", "1.0.0"]
     ]
     for row_idx, row in enumerate(meta_data, 1):
@@ -322,7 +322,7 @@ def extract_from_postman(collection: Dict) -> List[Dict[str, Any]]:
                 if isinstance(url, dict):
                     endpoint = "/" + "/".join(url.get("path", []))
                 elif isinstance(url, str):
-                    endpoint = url.split("clisonix.com")[-1] if "clisonix.com" in url else url
+                    endpoint = url.split("kloud.com")[-1] if "kloud.com" in url else url
                 else:
                     endpoint = "/"
                 
@@ -378,10 +378,10 @@ SAMPLE_APIS = [
 # ============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Clisonix Excel ∞ Infinite Generator")
+    parser = argparse.ArgumentParser(description="Kloud Excel ∞ Infinite Generator")
     parser.add_argument("--input", "-i", help="Input JSON file with APIs")
-    parser.add_argument("--output", "-o", default="Clisonix_API_Infinite_Dashboard.xlsx", help="Output Excel file")
-    parser.add_argument("--base-url", default="https://clisonix.com", help="Base URL for API endpoints")
+    parser.add_argument("--output", "-o", default="Kloud_API_Infinite_Dashboard.xlsx", help="Output Excel file")
+    parser.add_argument("--base-url", default="https://kloud.com", help="Base URL for API endpoints")
     parser.add_argument("--demo", action="store_true", help="Generate demo dashboard with sample APIs")
     
     args = parser.parse_args()
@@ -398,3 +398,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

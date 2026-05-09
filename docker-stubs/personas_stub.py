@@ -13,7 +13,7 @@ from typing import Dict, Any, Optional
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 9200
 
 app = FastAPI(
-    title="Clisonix Personas Service",
+    title="Kloud Personas Service",
     description="4 Cognitive AI Personas: KIDS_AI, STUDENT_AI, RESEARCH_AI, GENIUS_AI",
     version="1.0.0"
 )
@@ -34,7 +34,7 @@ PERSONAS = {
         "tone": "Educational, clear, with examples",
         "complexity": "moderate",
         "example": "Light is an electromagnetic wave with wavelength λ...",
-        "model": "clisonix-ocean:v2"
+        "model": "kloud-ocean:v2"
     },
     "RESEARCH_AI": {
         "name": "RESEARCH_AI",
@@ -69,7 +69,7 @@ class PersonaResponse(BaseModel):
 @app.get("/")
 def root():
     return {
-        "service": "Clisonix Personas Service",
+        "service": "Kloud Personas Service",
         "version": "1.0.0",
         "personas": list(PERSONAS.keys()),
         "status": "operational"
@@ -141,3 +141,4 @@ def recommend_persona(complexity_score: float = 0.5):
 if __name__ == "__main__":
     print(f"👥 Starting Personas Service on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

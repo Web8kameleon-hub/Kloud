@@ -1,6 +1,6 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
-CLISONIX CORE - AI/ML Library Architecture A-Z
+KLOUD CORE - AI/ML Library Architecture A-Z
 ═══════════════════════════════════════════════════════════════════════════════
 
 Arkitektura e plotë:
@@ -10,7 +10,7 @@ Arkitektura e plotë:
 ├── knowledge/    - Knowledge Base (Vector, Keyword, Hybrid Search)
 └── capabilities/ - Capability Registry (Summarization, Translation, etc.)
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 Version: 1.0.0
 """
 
@@ -182,7 +182,7 @@ def init_core(scan_services: bool = True) -> None:
     import logging
     logger = logging.getLogger(__name__)
     
-    logger.info("🚀 Initializing Clisonix Core...")
+    logger.info("🚀 Initializing Kloud Core...")
     
     # Init all registries
     get_engine_registry()
@@ -195,7 +195,7 @@ def init_core(scan_services: bool = True) -> None:
         logger.info("🔍 Scanning services...")
         discover_all()
     
-    logger.info("✅ Clisonix Core initialized successfully!")
+    logger.info("✅ Kloud Core initialized successfully!")
 
 
 def core_status() -> dict:
@@ -215,3 +215,4 @@ def core_status() -> dict:
         "endpoints": len(registry.endpoints),
         "status": "ready",
     }
+

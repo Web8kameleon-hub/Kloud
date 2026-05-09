@@ -1,5 +1,5 @@
 """
-DuckDB Analytics Engine for Clisonix
+DuckDB Analytics Engine for Kloud
 Ultra-fast columnar analytics, zero server overhead
 
 Features:
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class DuckDBAnalyticsEngine:
     """Ultra-fast analytics on telemetry data"""
     
-    def __init__(self, data_dir: str = "/data/clisonix/analytics"):
+    def __init__(self, data_dir: str = "/data/kloud/analytics"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         
@@ -292,7 +292,7 @@ class DuckDBAnalyticsEngine:
 _analytics_instance: Optional[DuckDBAnalyticsEngine] = None
 
 
-def initialize_analytics_engine(data_dir: str = "/data/clisonix/analytics") -> DuckDBAnalyticsEngine:
+def initialize_analytics_engine(data_dir: str = "/data/kloud/analytics") -> DuckDBAnalyticsEngine:
     """Initialize DuckDB analytics engine (singleton)"""
     global _analytics_instance
     if not _analytics_instance:
@@ -303,3 +303,4 @@ def initialize_analytics_engine(data_dir: str = "/data/clisonix/analytics") -> D
 def get_analytics_engine() -> DuckDBAnalyticsEngine:
     """Get analytics engine instance"""
     return initialize_analytics_engine()
+

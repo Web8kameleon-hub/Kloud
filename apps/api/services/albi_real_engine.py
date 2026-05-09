@@ -1,7 +1,7 @@
 """
 ðŸ¤– ALBI - Artificial Labor Born Intelligence (REAL DATA ENGINE)
 ================================================================
-Real intelligence qÃ« rritet duke lexuar tÃ« dhÃ«na reale nga sistemi Clisonix.
+Real intelligence qÃ« rritet duke lexuar tÃ« dhÃ«na reale nga sistemi Kloud.
 Director i Laboratorit Neural - EEG Processing & Brain Signal Analysis
 
 NO FAKE DATA, NO MOCK, REAL METRICS ONLY
@@ -22,7 +22,7 @@ class ALBI_RealEngine:
     ðŸ§  ALBI Real Intelligence Engine qÃ« konsumon tÃ« dhÃ«na reale
     """
     
-    def __init__(self, data_dir="C:/Clisonix-cloud/data"):
+    def __init__(self, data_dir="C:/Kloud-cloud/data"):
         self.data_dir = Path(data_dir)
         self.processed_files = set()
         self.intelligence_level = 1.0
@@ -179,5 +179,6 @@ async def create_albi_real() -> ALBI_RealEngine:
     """Krijon njÃ« instance ALBI qÃ« punon me tÃ« dhÃ«na reale"""
     albi = ALBI_RealEngine()
     return albi
+
 
 

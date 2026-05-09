@@ -31,7 +31,7 @@ export default function OfflinePage() {
         {/* Description */}
         <p className="text-slate-400 mb-8">
           It looks like you&apos;ve lost your internet connection. 
-          Don&apos;t worry - Clisonix will reconnect automatically when you&apos;re back online.
+          Don&apos;t worry - Kloud will reconnect automatically when you&apos;re back online.
         </p>
 
         {/* Retry Button */}
@@ -50,3 +50,4 @@ export default function OfflinePage() {
     </div>
   );
 }
+

@@ -3,7 +3,7 @@
 
 param(
     [string]$ComposeFile = "docker-compose.yml",
-    [string]$ProjectName = "Clisonix-industrial",
+    [string]$ProjectName = "Kloud-industrial",
     [switch]$Rebuild,
     [switch]$Audit,
     [switch]$Trace
@@ -51,4 +51,5 @@ if ($failed) {
 }
 
 Write-Host "[COMPLIANCE] Ultra-Industrial Docker run complete." -ForegroundColor Cyan
+
 

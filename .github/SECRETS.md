@@ -27,7 +27,7 @@
 
 ### DB_PASSWORD
 # PostgreSQL database password
-# Default: 'clisonix' if not set
+# Default: 'kloud' if not set
 
 ### STRIPE_SECRET_KEY
 # Stripe API secret key for payment processing
@@ -53,7 +53,7 @@
 # =============================================================================
 # 
 # 1. Generate SSH key on your local machine:
-#    ssh-keygen -t ed25519 -C "github-actions-clisonix" -f ~/.ssh/github_deploy
+#    ssh-keygen -t ed25519 -C "github-actions-kloud" -f ~/.ssh/github_deploy
 #
 # 2. Copy public key to server:
 #    ssh-copy-id -i ~/.ssh/github_deploy.pub root@46.224.203.89
@@ -62,7 +62,7 @@
 #    cat ~/.ssh/github_deploy
 #
 # 4. Add to GitHub:
-#    - Go to: https://github.com/Web8kameleon-hub/clisonix.com/settings/secrets/actions
+#    - Go to: https://github.com/Web8kameleon-hub/kloud.com/settings/secrets/actions
 #    - Click "New repository secret"
 #    - Name: HETZNER_SSH_KEY
 #    - Value: Paste the entire private key (including BEGIN/END lines)
@@ -77,3 +77,4 @@
 #
 # The workflow will show ✅ if SSH connection is successful.
 #
+

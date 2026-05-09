@@ -3,7 +3,7 @@
 """
 ALBA Feeder Service
 Simulates environmental and system metrics for the ALBA ingestion layer.
-Feeds data frames every few seconds into data/alba/ for Clisonix Cloud.
+Feeds data frames every few seconds into data/alba/ for Kloud Cloud.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 import psutil
 
 # Folderi ku ALBA lexon tÃ« dhÃ«nat
-ALBA_PATH = Path(r"C:\Clisonix-cloud\data\alba")
+ALBA_PATH = Path(r"C:\Kloud-cloud\data\alba")
 ALBA_PATH.mkdir(parents=True, exist_ok=True)
 
 
@@ -85,4 +85,5 @@ def continuous_feed(interval: int = 10) -> None:
 
 if __name__ == "__main__":
     continuous_feed(interval=10)
+
 

@@ -27,7 +27,7 @@ from pydantic import BaseModel
 # ═══════════════════════════════════════════════════════════════════
 # CONFIG
 # ═══════════════════════════════════════════════════════════════════
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 PORT = int(os.getenv("PORT", "8030"))
 TRANSLATION_NODE = os.getenv("TRANSLATION_NODE", "http://localhost:8036")
@@ -72,7 +72,7 @@ def route_intent(text: str) -> Optional[str]:
 # ═══════════════════════════════════════════════════════════════════
 # SYSTEM PROMPT - Minimal
 # ═══════════════════════════════════════════════════════════════════
-SYSTEM_PROMPT = """You are Curiosity Ocean 🌊 - AI assistant of Clisonix Cloud (https://clisonix.com).
+SYSTEM_PROMPT = """You are Curiosity Ocean 🌊 - AI assistant of Kloud Cloud (https://kloud.com).
 Created by Ledjan Ahmati, ABA GmbH Germany.
 
 RULES:
@@ -308,3 +308,4 @@ if __name__ == "__main__":
     logger.info(f"📡 Ollama: {OLLAMA_HOST}")
     logger.info("✨ Streaming: enabled, 50K tokens")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

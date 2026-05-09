@@ -2,7 +2,7 @@
 
 When creating a scoped API token for the helper scripts and automated tasks, use the Minimum Privilege principle.
 
-Recommended token permissions (Scope: Zone -> select the clisonix.com zone):
+Recommended token permissions (Scope: Zone -> select the kloud.com zone):
 
 - Zone:Zone - Read
 - Zone:DNS - Edit (if you want the script to modify DNS records)
@@ -12,7 +12,7 @@ Recommended token permissions (Scope: Zone -> select the clisonix.com zone):
 
 If you manage multiple zones in one token, consider using Account-level tokens cautiously.
 
-Token name: Clisonix-cloudflare-automation
+Token name: Kloud-cloudflare-automation
 Expiry: 90 days (rotate regularly)
 
 Example usage in PowerShell:
@@ -24,3 +24,4 @@ $ApiToken = '<TOKEN>'
 ```
 
 Store the token in a secret manager (GitHub Secrets, Azure Key Vault, etc.) and never commit it to source.
+

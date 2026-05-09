@@ -1,4 +1,4 @@
-# 🧠 Clisonix Cloud — Copilot Instructions
+# 🧠 Kloud Cloud — Copilot Instructions
 
 ## Big Picture Architecture
 - **Multi-service industrial backend**: FastAPI microservices for EEG, audio, ML, payment, and monitoring. Major engines: ALBI, ALBA, JONA, Ocean, ASI, Curiosity Ocean.
@@ -16,7 +16,7 @@
 - **Dependency isolation**: Never mix ML and Excel dependencies. Use separate requirements files and containers.
 - **Secrets**: All credentials (SEPA, PayPal, Stripe) are injected via environment variables or GitHub secrets. Never hardcode.
 - **API patterns**: All APIs expose `/health` and `/status`. Payment APIs use webhooks for activation.
-- **Naming**: Service containers use `clisonix-<service>` naming. Ports are unique per service (see `docker-compose.yml`).
+- **Naming**: Service containers use `kloud-<service>` naming. Ports are unique per service (see `docker-compose.yml`).
 
 ## Integration Points & External Dependencies
 - **Payments**: Stripe, SEPA, PayPal integrated via webhooks and API endpoints. See payment logic in backend and webhook handlers.
@@ -35,3 +35,4 @@
 ---
 
 > For new agents: Always check service boundaries, dependency rules, and health endpoints before making changes. Use the provided SDKs and follow isolation patterns for reliability.
+

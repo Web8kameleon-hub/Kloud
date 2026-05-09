@@ -12,7 +12,7 @@ Burime të vërteta:
 5. API responses - të dhëna reale
 6. Environment - variables, configs
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import os
@@ -642,3 +642,4 @@ def get_real_learning() -> RealLearningEngine:
 def get_real_learning_engine() -> RealLearningEngine:
     """Alias for get_real_learning"""
     return get_real_learning()
+

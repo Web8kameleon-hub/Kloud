@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX SIGNAL ALGEBRA ENGINE
+🌊 KLOUD SIGNAL ALGEBRA ENGINE
 =================================
 Motori matematikor që kupton valët e sinjaleve.
 
@@ -12,7 +12,7 @@ OPERACIONET BAZË:
 ✅ Agregim: A(S, window) → metrics
 ✅ Korelacion: Corr(Sᵢ, Sⱼ)
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0
 """
 
@@ -532,3 +532,4 @@ if __name__ == "__main__":
     # Statistika
     stats = algebra.get_statistics()
     print(f"Statistics: {stats}")
+

@@ -1,4 +1,4 @@
-# 📰 Clisonix Content Strategy: Quality Over Quantity
+# 📰 Kloud Content Strategy: Quality Over Quantity
 
 ## 🔄 Strategy Shift (February 2026)
 
@@ -53,7 +53,7 @@ Week N:
 
 ```bash
 # In container
-docker exec clisonix-content-factory python content_pillar_strategy.py
+docker exec kloud-content-factory python content_pillar_strategy.py
 
 # Local development
 python services/content-factory/content_pillar_strategy.py
@@ -77,7 +77,7 @@ Each pillar MUST have:
 
 1. **Real Code Examples**
    - Extracted from actual repository files
-   - No fake imports like `from clisonix.alda import LaborArray`
+   - No fake imports like `from kloud.alda import LaborArray`
    - Working, tested code snippets
 
 2. **Real Production Metrics**
@@ -116,8 +116,9 @@ Instead of tracking article count, we now track:
 ## 👤 Author
 
 Ledjan Ahmati, CEO of ABA GmbH  
-Creator of Clisonix, ALDA, LIAM, BLERINA
+Creator of Kloud, ALDA, LIAM, BLERINA
 
 ---
 
 > "One deep, authoritative article builds more trust than 50 shallow ones."
+

@@ -1,7 +1,7 @@
 _format_version: "3.0"
 _transform: true
 services:
-  - name: Clisonix-api
+  - name: Kloud-api
     url: http://api:9009
     routes:
       - name: search
@@ -26,4 +26,5 @@ services:
         config:
           minute: 600
           policy: local
+
 

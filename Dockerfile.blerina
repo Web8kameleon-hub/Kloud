@@ -12,7 +12,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="BLERINA - Pillar Content Engine v2.0"
 LABEL version="2.0.0"
 
@@ -42,3 +42,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8035/health || exit 1
 
 CMD ["python", "blerina_service.py"]
+

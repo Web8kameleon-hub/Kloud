@@ -5,7 +5,7 @@ $BaseUrl = "http://localhost:8000"
 $ErrorActionPreference = "SilentlyContinue"
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "🧠 CLISONIX AI AGENTS TEST SUITE" -ForegroundColor Cyan
+Write-Host "🧠 KLOUD AI AGENTS TEST SUITE" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -120,4 +120,5 @@ Write-Host "Documentation:" -ForegroundColor Yellow
 Write-Host "  📄 AI_AGENT_FRAMEWORKS.md" -ForegroundColor Gray
 Write-Host "  📄 N8N_WORKFLOWS.json" -ForegroundColor Gray
 Write-Host ""
+
 

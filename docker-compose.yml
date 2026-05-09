@@ -4,17 +4,17 @@ services:
   # ==========================
   postgres:
     image: postgres:16-alpine
-    container_name: clisonix-postgres
+    container_name: kloud-postgres
     environment:
-      POSTGRES_USER: clisonix
+      POSTGRES_USER: kloud
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your environment or .env}
-      POSTGRES_DB: clisonixdb
+      POSTGRES_DB: klouddb
     ports:
       - "5432:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U clisonix"]
+      test: ["CMD-SHELL", "pg_isready -U kloud"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,7 +22,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: clisonix-redis
+    container_name: kloud-redis
     ports:
       - "6379:6379"
     healthcheck:
@@ -37,7 +37,7 @@ services:
   # ==========================
   neo4j:
     image: neo4j:5-community
-    container_name: clisonix-neo4j
+    container_name: kloud-neo4j
     environment:
       NEO4J_AUTH: ${NEO4J_AUTH:?Set NEO4J_AUTH in your environment or .env}
       NEO4J_PLUGINS: '["apoc"]'
@@ -58,9 +58,9 @@ services:
   # ==========================
   minio:
     image: minio/minio:latest
-    container_name: clisonix-minio
+    container_name: kloud-minio
     environment:
-      MINIO_ROOT_USER: clisonix
+      MINIO_ROOT_USER: kloud
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in your environment or .env}
     command: server /data --console-address ":9001"
     ports:
@@ -82,7 +82,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alba
-    container_name: clisonix-alba
+    container_name: kloud-alba
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -105,7 +105,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.albi
-    container_name: clisonix-albi
+    container_name: kloud-albi
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -129,7 +129,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.jona
-    container_name: clisonix-jona
+    container_name: kloud-jona
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -151,7 +151,7 @@ services:
   # ==========================
   ollama:
     image: ollama/ollama:latest
-    container_name: clisonix-ollama
+    container_name: kloud-ollama
     ports:
       - "11434:11434"
     volumes:
@@ -173,10 +173,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.ollama-multi
-    container_name: clisonix-ollama-multi-api
+    container_name: kloud-ollama-multi-api
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       PORT: "4444"
     ports:
       - "4444:4444"
@@ -197,19 +197,19 @@ services:
     build:
       context: ./ocean-core
       dockerfile: Dockerfile
-    container_name: clisonix-ocean-core
+    container_name: kloud-ocean-core
     # env_file removed - using environment variables directly
     environment:
       PYTHONUNBUFFERED: "1"
       OCEAN_PORT: "8030"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       MODEL: "llama3.1:8b"
       REDIS_URL: "redis://redis:6379/0"
       API_KEYS_FILE: "/app/config/api_keys.json"
-      CLISONIX_MODULE_MAP_PATH: "/app/CLISONIX_MODULE_MAP.md"
+      KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
     volumes:
       - ./config/api_keys.json:/app/config/api_keys.json:ro
-      - ./CLISONIX_MODULE_MAP.md:/app/CLISONIX_MODULE_MAP.md:ro
+      - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
     ports:
       - "8030:8030"
     depends_on:
@@ -229,18 +229,18 @@ services:
     build:
       context: ./9999
       dockerfile: Dockerfile
-    container_name: clisonix-ai-global-9999
+    container_name: kloud-ai-global-9999
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "9999"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       MODEL: "llama3.1:8b"
       API_KEYS_FILE: "/app/config/api_keys.json"
-      CLISONIX_MODULE_MAP_PATH: "/app/CLISONIX_MODULE_MAP.md"
+      KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
     volumes:
       - ./9999/output:/app/output
       - ./config/api_keys.json:/app/config/api_keys.json:ro
-      - ./CLISONIX_MODULE_MAP.md:/app/CLISONIX_MODULE_MAP.md:ro
+      - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
     ports:
       - "9999:9999"
     depends_on:
@@ -260,7 +260,7 @@ services:
     build:
       context: ./services/aviation-weather
       dockerfile: Dockerfile
-    container_name: clisonix-aviation
+    container_name: kloud-aviation
     environment:
       PYTHONUNBUFFERED: "1"
       AVIATION_PORT: "8080"
@@ -282,13 +282,13 @@ services:
     build:
       context: ./apps/api
       dockerfile: Dockerfile
-    container_name: clisonix-api
+    container_name: kloud-api
     env_file:
       - .env
     environment:
       PYTHONUNBUFFERED: "1"
       API_PORT: "8000"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
       REDIS_URL: "redis://redis:6379/0"
     ports:
       - "8000:8000"
@@ -311,14 +311,14 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile
-    container_name: clisonix-web
+    container_name: kloud-web
     env_file:
       - .env
     environment:
       NODE_ENV: "production"
       # Use Docker internal network for server-side API calls
-      API_INTERNAL_URL: "http://clisonix-api:8000"
-      VIDEO_GENERATOR_URL: "http://clisonix-video-generator:8029"
+      API_INTERNAL_URL: "http://kloud-api:8000"
+      VIDEO_GENERATOR_URL: "http://kloud-video-generator:8029"
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
       # Clerk Authentication
@@ -335,7 +335,7 @@ services:
       # Kitchen API
       KITCHEN_JOBS_DIR: "/app/kitchen-jobs"
       KITCHEN_REPORTS_DIR: "/app/kitchen-reports"
-      KITCHEN_RUN_API_KEY: ${KITCHEN_RUN_API_KEY:-clisonix-kitchen-secret}
+      KITCHEN_RUN_API_KEY: ${KITCHEN_RUN_API_KEY:-kloud-kitchen-secret}
     ports:
       - "3000:3000"
     volumes:
@@ -352,7 +352,7 @@ services:
   # ==========================
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.96.0
-    container_name: clisonix-victoriametrics
+    container_name: kloud-victoriametrics
     ports:
       - "8428:8428"
     volumes:
@@ -373,7 +373,7 @@ services:
   # ==========================
   prometheus:
     image: prom/prometheus:v2.48.0
-    container_name: clisonix-prometheus
+    container_name: kloud-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -395,9 +395,9 @@ services:
   # ==========================
   grafana:
     image: grafana/grafana:10.2.0
-    container_name: clisonix-grafana
+    container_name: kloud-grafana
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: clisonix123
+      GF_SECURITY_ADMIN_PASSWORD: kloud123
       GF_USERS_ALLOW_SIGN_UP: "false"
     ports:
       - "3001:3000"
@@ -418,7 +418,7 @@ services:
   # ==========================
   loki:
     image: grafana/loki:2.9.2
-    container_name: clisonix-loki
+    container_name: kloud-loki
     ports:
       - "3102:3100"
     volumes:
@@ -436,7 +436,7 @@ services:
   # ==========================
   jaeger:
     image: jaegertracing/all-in-one:1.52
-    container_name: clisonix-jaeger
+    container_name: kloud-jaeger
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports:
@@ -455,7 +455,7 @@ services:
   # ==========================
   tempo:
     image: grafana/tempo:2.3.1
-    container_name: clisonix-tempo
+    container_name: kloud-tempo
     ports:
       - "3200:3200"
       - "9095:9095"
@@ -474,7 +474,7 @@ services:
   # ==========================
   traefik:
     image: traefik:v3.0
-    container_name: clisonix-traefik
+    container_name: kloud-traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -498,7 +498,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.asi
-    container_name: clisonix-asi
+    container_name: kloud-asi
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -521,7 +521,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.marketplace
-    container_name: clisonix-marketplace
+    container_name: kloud-marketplace
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -547,20 +547,20 @@ services:
     build:
       context: .
       dockerfile: services/content-factory/Dockerfile
-    container_name: clisonix-content-factory
+    container_name: kloud-content-factory
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8006"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       GITHUB_TOKEN: "${GITHUB_TOKEN}"
-      BLOG_REPO_URL: "${BLOG_REPO_URL:-https://github.com/LedjanAhmati/clisonix-blog.git}"
+      BLOG_REPO_URL: "${BLOG_REPO_URL:-https://github.com/LedjanAhmati/kloud-blog.git}"
       # LinkedIn Integration
       LINKEDIN_CLIENT_ID: "${LINKEDIN_CLIENT_ID}"
       LINKEDIN_CLIENT_SECRET: "${LINKEDIN_CLIENT_SECRET}"
       LINKEDIN_ACCESS_TOKEN: "${LINKEDIN_ACCESS_TOKEN}"
       LINKEDIN_ORGANIZATION_URN: "${LINKEDIN_ORGANIZATION_URN:-urn:li:organization:111866162}"
       LINKEDIN_PERSON_URN: "${LINKEDIN_PERSON_URN:-urn:li:person:5KOBp94BOT}"
-      SITE_URL: "${SITE_URL:-https://clisonix.com}"
+      SITE_URL: "${SITE_URL:-https://kloud.com}"
       # Twitter/X Integration
       TWITTER_API_KEY: "${TWITTER_API_KEY}"
       TWITTER_API_SECRET: "${TWITTER_API_SECRET}"
@@ -571,7 +571,7 @@ services:
       REDDIT_CLIENT_SECRET: "${REDDIT_CLIENT_SECRET}"
       REDDIT_USERNAME: "${REDDIT_USERNAME}"
       REDDIT_PASSWORD: "${REDDIT_PASSWORD}"
-      REDDIT_SUBREDDIT: "${REDDIT_SUBREDDIT:-clisonix}"
+      REDDIT_SUBREDDIT: "${REDDIT_SUBREDDIT:-kloud}"
     ports:
       - "8006:8006"
     volumes:
@@ -593,14 +593,14 @@ services:
     build:
       context: .
       dockerfile: services/content-factory/Dockerfile.linkedin
-    container_name: clisonix-linkedin-poster
+    container_name: kloud-linkedin-poster
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8007"
       LINKEDIN_ACCESS_TOKEN: "${LINKEDIN_ACCESS_TOKEN}"
       LINKEDIN_PERSON_URN: "${LINKEDIN_PERSON_URN:-urn:li:person:5KOBp94BOT}"
-      SITE_URL: "${SITE_URL:-https://clisonix.com}"
-      BLOG_API_URL: "http://clisonix-web:3000/api/blog/articles"
+      SITE_URL: "${SITE_URL:-https://kloud.com}"
+      BLOG_API_URL: "http://kloud-web:3000/api/blog/articles"
     ports:
       - "8007:8007"
     volumes:
@@ -619,7 +619,7 @@ services:
     build:
       context: .
       dockerfile: services/video-generator/Dockerfile
-    container_name: clisonix-video-generator
+    container_name: kloud-video-generator
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8029"
@@ -644,7 +644,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alphabet-layers
-    container_name: clisonix-alphabet-layers
+    container_name: kloud-alphabet-layers
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -666,7 +666,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.liam
-    container_name: clisonix-liam
+    container_name: kloud-liam
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -688,7 +688,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alda
-    container_name: clisonix-alda
+    container_name: kloud-alda
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -710,7 +710,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alba-idle
-    container_name: clisonix-alba-idle
+    container_name: kloud-alba-idle
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -732,14 +732,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.blerina
-    container_name: clisonix-blerina
+    container_name: kloud-blerina
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       PORT: "8035"
       YOUTUBE_CHANNEL_ID: "UCuCd7kgikh6CM2hAh5eAIMA"
       YOUTUBE_API_KEY: "${YOUTUBE_API_KEY:-}"
-      VIDEO_GENERATOR_URL: "http://clisonix-video-generator:8029"
+      VIDEO_GENERATOR_URL: "http://kloud-video-generator:8029"
     ports:
       - "8035:8035"
     depends_on:
@@ -763,10 +763,10 @@ services:
     build:
       context: ./services/dr_albana
       dockerfile: Dockerfile
-    container_name: clisonix-dr-albana
+    container_name: kloud-dr-albana
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_URL: "http://clisonix-ollama:11434"
+      OLLAMA_URL: "http://kloud-ollama:11434"
       MEDICAL_MODEL: "llama3.2:1b"
       DR_ALBANA_PORT: "8040"
     ports:
@@ -788,12 +788,12 @@ services:
     build:
       context: ./services/blog_publisher
       dockerfile: Dockerfile
-    container_name: clisonix-blog-publisher
+    container_name: kloud-blog-publisher
     environment:
       PYTHONUNBUFFERED: "1"
       PUBLISHER_PORT: "8041"
       GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
-      GITHUB_REPO: "ledjanahmati/clisonix-blog"
+      GITHUB_REPO: "ledjanahmati/kloud-blog"
       GITHUB_BRANCH: "main"
       POSTS_PER_DAY: "4"
     ports:
@@ -816,7 +816,7 @@ services:
     build:
       context: .
       dockerfile: services/blog-paywall/Dockerfile
-    container_name: clisonix-blog-paywall
+    container_name: kloud-blog-paywall
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8020"
@@ -836,7 +836,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.saas-api
-    container_name: clisonix-saas-api
+    container_name: kloud-saas-api
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -858,7 +858,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.personas
-    container_name: clisonix-personas
+    container_name: kloud-personas
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -880,7 +880,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.multi-tenant
-    container_name: clisonix-multi-tenant
+    container_name: kloud-multi-tenant
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -904,7 +904,7 @@ services:
     build:
       context: ./services/user-management
       dockerfile: Dockerfile
-    container_name: clisonix-user-management
+    container_name: kloud-user-management
     environment:
       PYTHONUNBUFFERED: "1"
       USER_MANAGEMENT_PORT: "8070"
@@ -926,7 +926,7 @@ services:
     build:
       context: ./services/intelligence-lab
       dockerfile: Dockerfile
-    container_name: clisonix-intelligence-lab
+    container_name: kloud-intelligence-lab
     environment:
       PYTHONUNBUFFERED: "1"
       INTELLIGENCE_LAB_PORT: "8098"
@@ -946,7 +946,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.agiem
-    container_name: clisonix-agiem
+    container_name: kloud-agiem
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -970,7 +970,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-europe
+    container_name: kloud-datasource-europe
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "europe"
@@ -988,7 +988,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-americas
+    container_name: kloud-datasource-americas
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "americas"
@@ -1006,7 +1006,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-asia
+    container_name: kloud-datasource-asia
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "asia"
@@ -1024,7 +1024,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-india
+    container_name: kloud-datasource-india
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "india"
@@ -1042,7 +1042,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-africa
+    container_name: kloud-datasource-africa
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "africa"
@@ -1060,7 +1060,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-oceania
+    container_name: kloud-datasource-oceania
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "oceania"
@@ -1078,7 +1078,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-central-asia
+    container_name: kloud-datasource-central-asia
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "central-asia"
@@ -1096,7 +1096,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.datasource
-    container_name: clisonix-datasource-antarctica
+    container_name: kloud-datasource-antarctica
     environment:
       PYTHONUNBUFFERED: "1"
       REGION: "antarctica"
@@ -1117,7 +1117,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.agent-telemetry
-    container_name: clisonix-agent-telemetry
+    container_name: kloud-agent-telemetry
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8009"
@@ -1134,7 +1134,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.cognitive
-    container_name: clisonix-cognitive-engine
+    container_name: kloud-cognitive-engine
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8010"
@@ -1151,7 +1151,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.adaptive-router
-    container_name: clisonix-adaptive-router
+    container_name: kloud-adaptive-router
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8011"
@@ -1171,10 +1171,10 @@ services:
     build:
       context: ./services/excel
       dockerfile: Dockerfile
-    container_name: clisonix-excel
+    container_name: kloud-excel
     environment:
       PYTHONUNBUFFERED: "1"
-      CORE_API_URL: "http://clisonix-api:8000"
+      CORE_API_URL: "http://kloud-api:8000"
     ports:
       - "8002:8002"
     volumes:
@@ -1194,7 +1194,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.reporting
-    container_name: clisonix-reporting
+    container_name: kloud-reporting
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -1215,7 +1215,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.economy
-    container_name: clisonix-economy
+    container_name: kloud-economy
     environment:
       PYTHONUNBUFFERED: "1"
       ECONOMY_API_PORT: "9093"
@@ -1235,7 +1235,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.behavioral
-    container_name: clisonix-behavioral
+    container_name: kloud-behavioral
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -1254,7 +1254,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.cycle
-    container_name: clisonix-cycle
+    container_name: kloud-cycle
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -1277,7 +1277,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.neurosonix
-    container_name: clisonix-neurosonix
+    container_name: kloud-neurosonix
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8015"
@@ -1297,10 +1297,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.analytics
-    container_name: clisonix-analytics
+    container_name: kloud-analytics
     environment:
       PYTHONUNBUFFERED: "1"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
       PORT: "8016"
     ports:
       - "8016:8016"
@@ -1321,7 +1321,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.saas
-    container_name: clisonix-saas
+    container_name: kloud-saas
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -1345,7 +1345,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.biometric
-    container_name: clisonix-biometric
+    container_name: kloud-biometric
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8017"
@@ -1365,10 +1365,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.userdata
-    container_name: clisonix-userdata
+    container_name: kloud-userdata
     environment:
       PYTHONUNBUFFERED: "1"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
       REDIS_URL: "redis://redis:6379/0"
       PORT: "8018"
     ports:
@@ -1392,10 +1392,10 @@ services:
     build:
       context: ./services/curiosity_ocean
       dockerfile: Dockerfile
-    container_name: clisonix-curiosity
+    container_name: kloud-curiosity
     environment:
       PYTHONUNBUFFERED: "1"
-      OCEAN_CORE_URL: "http://clisonix-ocean-core:8030"
+      OCEAN_CORE_URL: "http://kloud-ocean-core:8030"
       PORT: "8019"
     ports:
       - "8019:8019"
@@ -1415,7 +1415,7 @@ services:
     build:
       context: ./services/knowledge_index
       dockerfile: Dockerfile
-    container_name: clisonix-knowledge
+    container_name: kloud-knowledge
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -1438,7 +1438,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-elbasan
+    container_name: kloud-lab-elbasan
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Elbasan"
@@ -1456,7 +1456,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-tirana
+    container_name: kloud-lab-tirana
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Tirana"
@@ -1474,7 +1474,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-durres
+    container_name: kloud-lab-durres
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Durres"
@@ -1492,7 +1492,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-vlore
+    container_name: kloud-lab-vlore
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Vlore"
@@ -1510,7 +1510,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-shkoder
+    container_name: kloud-lab-shkoder
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Shkoder"
@@ -1528,7 +1528,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-korce
+    container_name: kloud-lab-korce
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Korce"
@@ -1546,7 +1546,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-saranda
+    container_name: kloud-lab-saranda
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Saranda"
@@ -1564,7 +1564,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-prishtina
+    container_name: kloud-lab-prishtina
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Prishtina"
@@ -1582,7 +1582,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-kostur
+    container_name: kloud-lab-kostur
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Kostur"
@@ -1600,7 +1600,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-athens
+    container_name: kloud-lab-athens
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Athens"
@@ -1618,7 +1618,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-rome
+    container_name: kloud-lab-rome
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Rome"
@@ -1636,7 +1636,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-zurich
+    container_name: kloud-lab-zurich
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Zurich"
@@ -1654,7 +1654,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-beograd
+    container_name: kloud-lab-beograd
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Beograd"
@@ -1672,7 +1672,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-sofia
+    container_name: kloud-lab-sofia
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Sofia"
@@ -1690,7 +1690,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-zagreb
+    container_name: kloud-lab-zagreb
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Zagreb"
@@ -1708,7 +1708,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-ljubljana
+    container_name: kloud-lab-ljubljana
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Ljubljana"
@@ -1726,7 +1726,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-vienna
+    container_name: kloud-lab-vienna
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Vienna"
@@ -1744,7 +1744,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-prague
+    container_name: kloud-lab-prague
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Prague"
@@ -1762,7 +1762,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-budapest
+    container_name: kloud-lab-budapest
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Budapest"
@@ -1780,7 +1780,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-bucharest
+    container_name: kloud-lab-bucharest
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Bucharest"
@@ -1798,7 +1798,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-istanbul
+    container_name: kloud-lab-istanbul
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Istanbul"
@@ -1816,7 +1816,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-cairo
+    container_name: kloud-lab-cairo
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Cairo"
@@ -1834,7 +1834,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.lab
-    container_name: clisonix-lab-jerusalem
+    container_name: kloud-lab-jerusalem
     environment:
       PYTHONUNBUFFERED: "1"
       LAB_NAME: "Jerusalem"
@@ -1855,7 +1855,7 @@ services:
     build:
       context: ./services/kitchen-worker
       dockerfile: Dockerfile
-    container_name: clisonix-kitchen-worker
+    container_name: kloud-kitchen-worker
     environment:
       NODE_ENV: "production"
       KITCHEN_JOBS_DIR: "/app/kitchen-jobs"
@@ -1890,3 +1890,4 @@ volumes:
 networks:
   default:
     driver: bridge
+

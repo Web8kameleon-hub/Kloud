@@ -1,4 +1,4 @@
-# Dependabot Configuration for Clisonix Cloud
+# Dependabot Configuration for Kloud Cloud
 # Automatically updates dependencies and checks for vulnerabilities
 # Auto-rebase enabled to keep PRs in sync with main branch
 
@@ -121,3 +121,4 @@ updates:
     labels:
       - "dependencies"
       - "docker"
+

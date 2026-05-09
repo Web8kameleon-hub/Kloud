@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-CLISONIX Distributed Load Balancing Launcher
+KLOUD Distributed Load Balancing Launcher
 Starts 3 parallel load balancing layers
 """
 import sys, os, subprocess, threading, time
 
-sys.path.insert(0, r"C:\clisonix-cloud")
-os.chdir(r"C:\clisonix-cloud")
+sys.path.insert(0, r"C:\kloud-cloud")
+os.chdir(r"C:\kloud-cloud")
 
 # Mock setup_logger to avoid import errors
 def setup_logger(name):
     import logging
     return logging.getLogger(name)
 
-sys.modules['Clisonix'] = type(sys)('Clisonix')
-sys.modules['Clisonix'].colored_logger = type(sys)('colored_logger')
-sys.modules['Clisonix'].colored_logger.setup_logger = setup_logger
+sys.modules['Kloud'] = type(sys)('Kloud')
+sys.modules['Kloud'].colored_logger = type(sys)('colored_logger')
+sys.modules['Kloud'].colored_logger.setup_logger = setup_logger
 
 print("="*60)
-print(" CLISONIX LOAD BALANCING - 3 LAYERS STARTING")
+print(" KLOUD LOAD BALANCING - 3 LAYERS STARTING")
 print("="*60)
 
 # Layer 1: Pulse Balancer
@@ -53,4 +53,5 @@ from distributed_pulse_balancer import app
 import uvicorn
 
 uvicorn.run(app, host="0.0.0.0", port=8091, log_level="info")
+
 

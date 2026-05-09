@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════
-# START-MICROSERVICES.ps1 - Clisonix Cloud Full Microservices Startup
+# START-MICROSERVICES.ps1 - Kloud Cloud Full Microservices Startup
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════
 #
 # Script për nisjen e të gjithë microservices në Docker
@@ -97,7 +97,7 @@ $Profiles = @{
     )
 }
 
-Write-Header "🚀 CLISONIX CLOUD MICROSERVICES"
+Write-Header "🚀 KLOUD CLOUD MICROSERVICES"
 Write-Host "📅 $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "📁 Compose File: $ComposeFile"
 Write-Host ""
@@ -224,7 +224,7 @@ docker-compose -f $ComposeFile ps --format "table {{.Name}}\t{{.Status}}\t{{.Por
 
 Write-Host ""
 Write-Host ("═" * 80) -ForegroundColor $Colors.Success
-Write-Host "✅ CLISONIX CLOUD MICROSERVICES STARTED!" -ForegroundColor $Colors.Success
+Write-Host "✅ KLOUD CLOUD MICROSERVICES STARTED!" -ForegroundColor $Colors.Success
 Write-Host ("═" * 80) -ForegroundColor $Colors.Success
 Write-Host ""
 Write-Host "🔗 Quick Links:" -ForegroundColor $Colors.Info
@@ -252,3 +252,4 @@ Write-Host "   .\START-MICROSERVICES.ps1 -Status    # Check status"
 Write-Host "   .\START-MICROSERVICES.ps1 -Stop      # Stop all"
 Write-Host "   .\START-MICROSERVICES.ps1 -Logs -Service <name>  # View logs"
 Write-Host ""
+

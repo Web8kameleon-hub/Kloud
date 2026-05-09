@@ -12,7 +12,7 @@
 ## FAZA 1: KONTROLL TEKNIK ⚙️
 
 ### Saktësia e Termave Teknikë
-- [ ] Të gjithë termat janë sipas standardit Clisonix
+- [ ] Të gjithë termat janë sipas standardit Kloud
 - [ ] Nuk ka përdorim të ngatërruar të nomenklaturave
 - [ ] Akronimet janë të shpjeguar në hyrje
 
@@ -250,4 +250,5 @@
 ---
 
 _Template: Document Review v1.0_  
-_Clisonix Cloud Quality Assurance_
+_Kloud Cloud Quality Assurance_
+

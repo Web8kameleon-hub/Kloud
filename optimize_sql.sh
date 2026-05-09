@@ -7,7 +7,7 @@ echo "🚀 SQL OPTIMIZATION - PostgreSQL Container"
 echo "============================================================"
 
 # Connect to postgres container and run optimizations
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "
+docker exec kloud-postgres psql -U postgres -d kloud -c "
 
 -- Create extension
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
@@ -42,7 +42,7 @@ SELECT 'Indexes created' as status;
 
 echo ""
 echo "🔍 Top 10 Slow Queries:"
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "
+docker exec kloud-postgres psql -U postgres -d kloud -c "
 SELECT 
     query,
     calls,
@@ -56,15 +56,15 @@ LIMIT 10;
 
 echo ""
 echo "📊 Analyzing tables..."
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "ANALYZE;" 2>&1
+docker exec kloud-postgres psql -U postgres -d kloud -c "ANALYZE;" 2>&1
 
 echo ""
 echo "🧹 Running VACUUM..."
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "VACUUM ANALYZE;" 2>&1
+docker exec kloud-postgres psql -U postgres -d kloud -c "VACUUM ANALYZE;" 2>&1
 
 echo ""
 echo "📈 Table sizes:"
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "
+docker exec kloud-postgres psql -U postgres -d kloud -c "
 SELECT 
     tablename,
     pg_size_pretty(pg_total_relation_size('public.'||tablename)) as size
@@ -75,7 +75,7 @@ ORDER BY pg_total_relation_size('public.'||tablename) DESC;
 
 echo ""
 echo "🔌 Connection stats:"
-docker exec clisonix-postgres psql -U postgres -d clisonix -c "
+docker exec kloud-postgres psql -U postgres -d kloud -c "
 SELECT 
     datname,
     count(*) as connections
@@ -88,3 +88,4 @@ echo ""
 echo "============================================================"
 echo "✅ SQL OPTIMIZATION COMPLETE"
 echo "============================================================"
+

@@ -1,6 +1,6 @@
 # 📝 SESSION NOTES - 30 Janar 2026
 
-## Clisonix Cloud Platform - Development Session
+## Kloud Cloud Platform - Development Session
 
 ---
 
@@ -18,8 +18,8 @@
 | Model | Size | Tier | Përdorimi |
 | ----- | ---- | ---- | --------- |
 | phi3:mini | 2.2 GB | FAST | Pyetje të shpejta, chat |
-| clisonix-ocean:latest | 2.2 GB | FAST | Biseda normale |
-| clisonix-ocean:v2 | 4.9 GB | BALANCED | Pyetje të përgjithshme |
+| kloud-ocean:latest | 2.2 GB | FAST | Biseda normale |
+| kloud-ocean:v2 | 4.9 GB | BALANCED | Pyetje të përgjithshme |
 | llama3.1:8b | 4.9 GB | BALANCED | Backup i sigurt |
 | gpt-oss:120b | 65 GB | DEEP | Analiza komplekse, reasoning |
 
@@ -164,7 +164,7 @@ steps:
   "available_models": 5,
   "model_performance": {
     "phi3:mini": { "avg_response_ms": 4960, "success_rate": 100 },
-    "clisonix-ocean:v2": { "avg_response_ms": 10383, "success_rate": 100 }
+    "kloud-ocean:v2": { "avg_response_ms": 10383, "success_rate": 100 }
   }
 }
 ```
@@ -261,7 +261,7 @@ steps:
 **Simptoma të vërejtura:**
 
 1. Pyetje të nivelit fizikë teorike (IIT, Kolmogorov, attractor states) → përgjigje të cekëta
-2. Model po përdor `clisonix-ocean:v2` (4.9GB) në vend të `gpt-oss:120b` (65GB)
+2. Model po përdor `kloud-ocean:v2` (4.9GB) në vend të `gpt-oss:120b` (65GB)
 3. `QueryComplexityAnalyzer` nuk po dallon thellësinë e pyetjeve shkencore
 4. System prompt po mbyt përgjigjet me tone "enterprise/marketing"
 
@@ -353,7 +353,7 @@ class CognitiveSignatureEngine:
 ```python
 PERSONA_MODEL_MAPPING = {
     "kids": Strategy.FAST,       # phi3:mini
-    "student": Strategy.BALANCED, # clisonix-ocean:v2
+    "student": Strategy.BALANCED, # kloud-ocean:v2
     "research": Strategy.AUTO,    # AUTO selection
     "genius": Strategy.DEEP       # gpt-oss:120b ← KRITIKE
 }
@@ -363,7 +363,7 @@ PERSONA_MODEL_MAPPING = {
 
 1. **System Prompt Dominance**
    - Aktualisht: System prompt enterprise futet gjithmonë
-   - Problem: Edhe pyetje shkencore marrin tone "Clisonix marketing"
+   - Problem: Edhe pyetje shkencore marrin tone "Kloud marketing"
    - Zgjidhje: Adaptive System Prompt sipas nivelit kognitiv
 
 2. **Language Detection Bug**
@@ -449,3 +449,4 @@ Query → CognitiveSignatureEngine.analyze() → CognitiveSignature
 ## 👤 Author: Ledjan Ahmati / WEB8euroweb GmbH
 
 ## 🏷️ Version: 2.0.3 Enterprise (Cognitive Routing Integrated)
+

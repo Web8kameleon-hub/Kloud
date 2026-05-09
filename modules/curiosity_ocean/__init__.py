@@ -1,7 +1,7 @@
 """
 Curiosity Ocean Module
 ======================
-Core conversational intelligence for Clisonix Platform.
+Core conversational intelligence for Kloud Platform.
 Version 6.1.0 - Enterprise AI Governance (4 Critical Layers)
 
 ARCHITECTURE:
@@ -27,7 +27,7 @@ from .master_prompt import (
     QUANTUM_LAYER,
     DDOS_LAYER,
     GOVERNANCE_LAYER,
-    CLISONIX_INFO,
+    KLOUD_INFO,
     MULTILINGUAL_EXAMPLES,
     # Backward compatibility (old layer names)
     DESIRE_LAYER,
@@ -58,7 +58,7 @@ __all__ = [
     "QUANTUM_LAYER",
     "DDOS_LAYER",
     "GOVERNANCE_LAYER",
-    "CLISONIX_INFO",
+    "KLOUD_INFO",
     "MULTILINGUAL_EXAMPLES",
     # Backward compatibility
     "DESIRE_LAYER",
@@ -76,3 +76,4 @@ __all__ = [
     "get_prompt",
     "get_layer",
 ]
+

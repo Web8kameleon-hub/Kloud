@@ -1,7 +1,7 @@
 {
   "id": null,
-  "uid": "Clisonix",
-  "title": "Clisonix Observability",
+  "uid": "Kloud",
+  "title": "Kloud Observability",
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -9,4 +9,5 @@
   "templating": {"list": []},
   "time": {"from": "now-6h", "to": "now"}
 }
+
 

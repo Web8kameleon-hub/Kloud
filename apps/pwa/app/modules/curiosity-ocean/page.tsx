@@ -3,7 +3,7 @@ import { useEffect } from "react"
 
 export default function OceanPage() {
   useEffect(() => {
-    window.location.href = "https://clisonix.com/modules/curiosity-ocean"
+    window.location.href = "https://kloud.com/modules/curiosity-ocean"
   }, [])
   
   return (
@@ -12,3 +12,4 @@ export default function OceanPage() {
     </div>
   )
 }
+

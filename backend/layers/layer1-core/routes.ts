@@ -7,7 +7,7 @@ export function coreRoutes(cfg: AppConfig) {
   r.get("/health", (_req, res) => {
     res.json({
       status: "healthy",
-      service: "Clisonix Industrial Backend",
+      service: "Kloud Industrial Backend",
       version: "1.0.0",
       timestamp: new Date().toISOString(),
       hostname: os.hostname(),
@@ -24,3 +24,4 @@ export function coreRoutes(cfg: AppConfig) {
   });
   return r;
 }
+

@@ -5,16 +5,16 @@ import { NextResponse } from 'next/server';
  */
 export async function GET() {
   return NextResponse.json({
-    name: 'Clisonix Cloud API',
+    name: 'Kloud Cloud API',
     version: '1.0.0',
     status: 'operational',
     timestamp: new Date().toISOString(),
-    documentation: 'https://clisonix.com/developers',
+    documentation: 'https://kloud.com/developers',
     company: {
-      brand: 'Clisonix Cloud',
+      brand: 'Kloud Cloud',
       legal_name: 'ABA GmbH',
       owner: 'Ledjan Ahmati',
-      support: 'support@clisonix.com',
+      support: 'support@kloud.com',
     },
     billing: {
       model: 'pay-as-you-go',
@@ -46,6 +46,7 @@ export async function GET() {
         'GET /api/billing/invoices': 'List invoices',
       }
     },
-    support: 'support@clisonix.com'
+    support: 'support@kloud.com'
   });
 }
+

@@ -12,7 +12,7 @@ import {
 // Language type derived from translations
 export type Language = "en" | "sq" | "de" | "it" | "fr" | "es";
 
-const STORAGE_KEY = "clisonix_language";
+const STORAGE_KEY = "kloud_language";
 
 export function useTranslation() {
   const [language, setLanguageState] = useState<Language>(defaultLanguage);
@@ -59,3 +59,4 @@ export function useTranslation() {
 
 // Static translation function (for server-side or non-hook usage)
 export { translate as t, languageNames, defaultLanguage };
+

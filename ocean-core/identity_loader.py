@@ -1,5 +1,5 @@
 """
-Clisonix Identity Loader
+Kloud Identity Loader
 ========================
 Një file i vetëm për identitetin e platformës.
 Të gjitha modulet e lexojnë këtë - asnjë hardcode.
@@ -22,12 +22,12 @@ def load_identity() -> dict:
         return _identity_cache
 
     identity = {
-        "platforma": "Clisonix Cloud",
+        "platforma": "Kloud Cloud",
         "ai": "Ocean",
         "krijues": "Ledjan Ahmati",
         "ceo": "Ledjan Ahmati",
         "firma": "ABA GmbH",
-        "website": "clisonix.cloud"
+        "website": "kloud.cloud"
     }
 
     try:
@@ -82,3 +82,4 @@ def get_company() -> str:
 
 def get_krijues() -> str:
     return load_identity()["krijues"]
+

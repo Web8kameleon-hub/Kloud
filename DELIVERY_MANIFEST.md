@@ -1,4 +1,4 @@
-# Clisonix Cloud API – Complete Delivery Package
+# Kloud Cloud API – Complete Delivery Package
 
 **Status**: ✅ **PRODUCTION READY**  
 **Version**: 1.1.0 (Authentication System v1)  
@@ -9,15 +9,15 @@
 
 ## 📦 What's Included
 
-This delivery includes a complete, production-ready authentication system for Clisonix Cloud API with full documentation and integrations.
+This delivery includes a complete, production-ready authentication system for Kloud Cloud API with full documentation and integrations.
 
 ### Core Deliverables
 
 | Component | File | Status | Purpose |
 |-----------|------|--------|---------|
 | **OpenAPI Spec** | `openapi.yaml` | ✅ | 51 endpoints + 3 auth endpoints, 6 auth schemas |
-| **Python SDK** | `clisonix_sdk.py` | ✅ | Complete client with auth methods |
-| **TypeScript SDK** | `clisonix_sdk.ts` | ✅ | Complete client with auth methods |
+| **Python SDK** | `kloud_sdk.py` | ✅ | Complete client with auth methods |
+| **TypeScript SDK** | `kloud_sdk.ts` | ✅ | Complete client with auth methods |
 | **Postman Collection** | `postman_collection_auth.json` | ✅ | Auth folder with auto-token capture |
 | **Landing Page** | `index.html` | ✅ | Modern responsive website |
 | **Auth Guide** | `AUTHENTICATION.md` | ✅ | Complete authentication documentation |
@@ -64,10 +64,10 @@ This delivery includes a complete, production-ready authentication system for Cl
 
 ## 🛠️ SDK Features
 
-### Python SDK (`clisonix_sdk.py`)
+### Python SDK (`kloud_sdk.py`)
 
 ```python
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 
 # Authentication
 client.login(email, password)          # → token, refresh_token, api_key
@@ -85,10 +85,10 @@ client.brain_music_brainsync(...)      # Music generation
 
 **Token Management**: Automatic token storage, retrieval, and header injection
 
-### TypeScript SDK (`clisonix_sdk.ts`)
+### TypeScript SDK (`kloud_sdk.ts`)
 
 ```typescript
-const client = new ClisonixClient({baseUrl: 'https://api.clisonix.com'});
+const client = new KloudClient({baseUrl: 'https://api.kloud.com'});
 
 // Authentication
 await client.login(email, password)     // → token, refreshToken, apiKey
@@ -209,11 +209,11 @@ Technical specifications including:
 
 ```bash
 # 1. Copy SDK to project
-cp clisonix_sdk.py /your/project/
+cp kloud_sdk.py /your/project/
 
 # 2. Use it
-from clisonix_sdk import ClisonixClient
-client = ClisonixClient("https://api.clisonix.com")
+from kloud_sdk import KloudClient
+client = KloudClient("https://api.kloud.com")
 client.login("user@example.com", "password")
 health = client.health()
 ```
@@ -222,11 +222,11 @@ health = client.health()
 
 ```bash
 # 1. Copy SDK to project
-cp clisonix_sdk.ts /your/project/
+cp kloud_sdk.ts /your/project/
 
 # 2. Use it
-import { ClisonixClient } from './clisonix_sdk';
-const client = new ClisonixClient({baseUrl: 'https://api.clisonix.com'});
+import { KloudClient } from './kloud_sdk';
+const client = new KloudClient({baseUrl: 'https://api.kloud.com'});
 await client.login('user@example.com', 'password');
 const health = await client.health();
 ```
@@ -243,10 +243,10 @@ const health = await client.health();
 
 ## 📋 File Structure
 
-clisonix-cloud/
+kloud-cloud/
 ├── openapi.yaml                      (1883 lines) – API Specification
-├── clisonix_sdk.py                   (424 lines)  – Python SDK
-├── clisonix_sdk.ts                   (435 lines)  – TypeScript SDK
+├── kloud_sdk.py                   (424 lines)  – Python SDK
+├── kloud_sdk.ts                   (435 lines)  – TypeScript SDK
 ├── postman_collection_auth.json      (450 lines)  – Postman Collection
 ├── index.html                        (850 lines)  – Landing Page
 ├── AUTHENTICATION.md                 (600 lines)  – Auth Guide
@@ -390,16 +390,16 @@ POST /auth/api-key            ← Generate new API key
 **Development:**
 
 ```bash
-CLISONIX_API_URL=https://api.clisonix.com
-CLISONIX_EMAIL=dev@example.com
-CLISONIX_PASSWORD=dev_password
+KLOUD_API_URL=https://api.kloud.com
+KLOUD_EMAIL=dev@example.com
+KLOUD_PASSWORD=dev_password
 ```
 
 **Production:**
 
 ```bash
-CLISONIX_API_URL=https://api.clisonix.com
-CLISONIX_API_KEY=api_sk_xxxxxxxxxxxxx
+KLOUD_API_URL=https://api.kloud.com
+KLOUD_API_KEY=api_sk_xxxxxxxxxxxxx
 ```
 
 ### Token Settings
@@ -407,8 +407,8 @@ CLISONIX_API_KEY=api_sk_xxxxxxxxxxxxx
 - **JWT Expiration**: 3600 seconds (1 hour)
 - **Refresh Token Lifetime**: 7 days
 - **Algorithm**: HS256 (HMAC SHA-256)
-- **Issuer**: clisonix.cloud
-- **Audience**: api.clisonix.com
+- **Issuer**: kloud.cloud
+- **Audience**: api.kloud.com
 
 ---
 
@@ -423,8 +423,8 @@ CLISONIX_API_KEY=api_sk_xxxxxxxxxxxxx
 
 **SDK Files:**
 
-- 💻 `clisonix_sdk.py` – Python implementation
-- 🎯 `clisonix_sdk.ts` – TypeScript implementation
+- 💻 `kloud_sdk.py` – Python implementation
+- 🎯 `kloud_sdk.ts` – TypeScript implementation
 
 **Tools:**
 
@@ -483,7 +483,7 @@ Grade: A+ (95/100)
 
 ## 🏆 Summary
 
-**You have received a complete, enterprise-grade authentication system for Clisonix Cloud API:**
+**You have received a complete, enterprise-grade authentication system for Kloud Cloud API:**
 
 ✅ 3 new authentication endpoints  
 ✅ 6 authentication schemas  
@@ -503,7 +503,7 @@ Grade: A+ (95/100)
 
 ## 📝 License
 
-Part of **UltraWebThinking / Euroweb** – Clisonix Cloud API  
+Part of **UltraWebThinking / Euroweb** – Kloud Cloud API  
 **Version**: 1.1.0 (Authentication System v1)
 
 ---
@@ -525,5 +525,6 @@ This delivery represents a complete, professional authentication system ready fo
 
 ---
 
-**Clisonix Cloud API** – Neural Audio Engine for Modern Applications  
+**Kloud Cloud API** – Neural Audio Engine for Modern Applications  
 **Built with ❤️ by UltraWebThinking / Euroweb Team**
+

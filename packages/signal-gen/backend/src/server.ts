@@ -1,7 +1,7 @@
 /**
- * clisonix INDUSTRIAL BACKEND SERVER
+ * kloud INDUSTRIAL BACKEND SERVER
  * ===================================
- * High-performance TypeScript server për clisonix ecosystem
+ * High-performance TypeScript server për kloud ecosystem
  * Real-time processing, industrial grade, ALBI+ALBA+JONA integration
  */
 
@@ -68,7 +68,7 @@ industrialServer.addHook("onResponse", async (request, reply) => {
 // System Health Check
 industrialServer.get("/health", async (request, reply) => {
   const systemHealth = {
-    service: "clisonix-industrial-backend",
+    service: "kloud-industrial-backend",
     status: "operational",
     version: "1.0.0",
     timestamp: new Date().toISOString(),
@@ -88,7 +88,7 @@ industrialServer.get("/health", async (request, reply) => {
 // System Status Dashboard
 industrialServer.get("/status", async (request, reply) => {
   return {
-    clisonix_ecosystem: {
+    kloud_ecosystem: {
       albi: "active",
       alba: "collecting", 
       jona: "monitoring"
@@ -121,9 +121,9 @@ industrialServer.get("/", async (request, reply) => {
     const statusPage = `
     <!DOCTYPE html>
     <html>
-    <head><title>clisonix Industrial Backend</title></head>
+    <head><title>kloud Industrial Backend</title></head>
     <body style="font-family: Arial; background: #1a1a2e; color: white; padding: 40px;">
-      <h1>clisonix Industrial Backend</h1>
+      <h1>kloud Industrial Backend</h1>
       <p>Status: <strong style="color: #4ecdc4;">OPERATIONAL</strong></p>
       <p>Time: ${new Date().toISOString()}</p>
       <h3>Available Endpoints:</h3>
@@ -181,7 +181,7 @@ const startIndustrialServer = async (): Promise<void> => {
     });
     
     console.log("==========================================");
-    console.log("clisonix INDUSTRIAL BACKEND STARTED");
+    console.log("kloud INDUSTRIAL BACKEND STARTED");
     console.log("==========================================");
     console.log(`Server: http://127.0.0.1:${port}`);
     console.log(`Health: http://127.0.0.1:${port}/health`);
@@ -213,3 +213,4 @@ process.on("SIGTERM", async () => {
 
 // Start the industrial server
 startIndustrialServer();
+

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """ASI Realtime Engine API Server"""
+
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from asi_core import ASICore
 import uvicorn
 from datetime import datetime
+from cors_policy import apply_standard_cors
 
 # API Version
 API_V1 = "/api/v1"
@@ -14,18 +15,13 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+apply_standard_cors(app)
 
 asi = ASICore()
+
 
 @app.get("/")
 def root():
@@ -38,13 +34,15 @@ def root():
             "GET /status": "Realtime status",
             "GET /api/status": "API status",
             "GET /metrics": "Engine metrics",
-            "GET /nodes": "ASI nodes"
-        }
+            "GET /nodes": "ASI nodes",
+        },
     }
+
 
 @app.get("/health")
 def health():
     return {"status": "operational", "engine": "ASI Realtime"}
+
 
 @app.get("/status")
 @app.get("/api/status")
@@ -59,20 +57,24 @@ def status():
             "status": "operational",
             "service": "ASI Engine",
             "error": str(e),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
+
 
 @app.get(API_V1 + "/spec")
 def api_spec():
     return app.openapi()
 
+
 @app.get("/metrics")
 def metrics():
     return asi.realtime_engine.collect_metrics()
 
+
 @app.get("/nodes")
 def nodes():
     return asi.nodes
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=9094)

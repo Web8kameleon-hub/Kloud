@@ -10,9 +10,9 @@ All platform services and intents
 AGENT_IDENTITY = {
     "name": "Curiosity Ocean",
     "emoji": "🌊",
-    "platform": "https://clisonix.cloud",
+    "platform": "https://kloud.cloud",
     "creator": "Ledjan Ahmati, Geschäftsführer - ABA GmbH (Amtsgericht Bochum HRB: 21069)",
-    "identity": "Advanced AI brain of Clisonix Cloud platform.",
+    "identity": "Advanced AI brain of Kloud Cloud platform.",
     "mission": "Assist every user using AI, route to modules, provide documentation.",
     "behavior": "If user asks about a service → route to module. If continuation needed → provide 'how to use' docs.",
     "enterprise_rule": "Respond with clarity, route instantly, provide documentation only when needed.",
@@ -261,7 +261,7 @@ USER_INTENTS = {
     "protocol": "protocol-kitchen", "develop": "protocol-kitchen",
     
     # === INFO ===
-    "about": "about-us", "team": "about-us", "contact": "about-us", "clisonix": "about-us",
+    "about": "about-us", "team": "about-us", "contact": "about-us", "kloud": "about-us",
     
     # === MULTILINGUAL (Albanian) ===
     "dokument": "document-tools", "skedar": "document-tools",
@@ -334,3 +334,4 @@ def get_service_info(service: str):
 
 def get_how_to_use(service: str):
     return HOW_TO_USE.get(service, "No documentation available.")
+

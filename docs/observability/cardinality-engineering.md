@@ -45,7 +45,7 @@ Adding one high-cardinality label:
 
 ---
 
-## Clisonix's Current State
+## Kloud's Current State
 
 | Metric | Value | Analysis |
 |--------|-------|----------|
@@ -54,7 +54,7 @@ Adding one high-cardinality label:
 | **Top Label Cardinality** | 1,013 (`instance`) | 🟢 Expected |
 | **Risk Level** | **Minimal** | 🟢 Safe |
 
-**Interpretation:** Clisonix is operating at ~1% of recommended limits.
+**Interpretation:** Kloud is operating at ~1% of recommended limits.
 
 ---
 
@@ -273,7 +273,7 @@ metric_relabel_configs:
 | **Large** | 100K - 1M | Prometheus HA + Remote Storage |
 | **Massive** | > 1M | Thanos / Cortex / Mimir |
 
-### Clisonix Trajectory
+### Kloud Trajectory
 
 **Current:** 1K series (Small)  
 **6 months:** 5K series (Small → Medium transition)  
@@ -302,3 +302,4 @@ metric_relabel_configs:
 ---
 
 **Next:** [Alerts →](alerts.md)
+

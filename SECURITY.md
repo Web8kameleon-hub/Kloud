@@ -1,4 +1,4 @@
-# 🔐 Clisonix Cloud Security Policy
+# 🔐 Kloud Cloud Security Policy
 
 **Document Version:** 1.0  
 **Last Updated:** December 18, 2025  
@@ -41,7 +41,7 @@ Every environment variable used in production **MUST** be declared in `.env.exam
 
 ```bash
 # ===============================================
-# CLISONIX CLOUD - ENVIRONMENT VARIABLES
+# KLOUD CLOUD - ENVIRONMENT VARIABLES
 # ===============================================
 # Production: Copy to .env and fill with real values
 # Version: 1.0
@@ -50,9 +50,9 @@ Every environment variable used in production **MUST** be declared in `.env.exam
 # ===== DATABASE =====
 DB_HOST=localhost
 DB_PORT=5432
-DB_USER=clisonix_user
+DB_USER=kloud_user
 DB_PASSWORD=GENERATE_SECURE_PASSWORD_32_CHARS_MIN
-DB_NAME=clisonix_prod
+DB_NAME=kloud_prod
 DB_SSL_MODE=require
 
 # ===== REDIS CACHE =====
@@ -79,7 +79,7 @@ MINIO_ROOT_PASSWORD=GENERATE_SECURE_PASSWORD_32_CHARS_MIN
 MINIO_ENDPOINT=localhost:9000
 MINIO_ACCESS_KEY=minioadmin
 MINIO_SECRET_KEY=GENERATE_SECURE_PASSWORD_32_CHARS_MIN
-MINIO_BUCKET=clisonix-prod
+MINIO_BUCKET=kloud-prod
 MINIO_REGION=us-east-1
 
 # ===== GRAFANA DASHBOARD =====
@@ -89,7 +89,7 @@ GF_INSTALL_PLUGINS=grafana-piechart-panel
 
 # ===== HETZNER DEPLOYMENT =====
 HETZNER_IP=157.90.234.158
-HETZNER_SSH_KEY_PATH=/opt/clisonix/.ssh/id_rsa
+HETZNER_SSH_KEY_PATH=/opt/kloud/.ssh/id_rsa
 DEPLOYMENT_ENVIRONMENT=production
 
 # ===== MONITORING & LOGGING =====
@@ -103,9 +103,9 @@ SENTRY_DSN=https://xxxxx@xxxx.ingest.sentry.io/xxxxx
 ENVIRONMENT=production
 DEBUG=false
 PORT=8000
-FRONTEND_URL=https://clisonix-cloud.com
-BACKEND_URL=https://api.clisonix-cloud.com
-CORS_ORIGINS=https://clisonix-cloud.com,https://app.clisonix-cloud.com
+FRONTEND_URL=https://kloud-cloud.com
+BACKEND_URL=https://api.kloud-cloud.com
+CORS_ORIGINS=https://kloud-cloud.com,https://app.kloud-cloud.com
 
 # ===== SECURITY HEADERS =====
 SECURITY_HEADERS_CSP=default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'
@@ -170,9 +170,9 @@ All production secrets stored in GitHub Secrets, referenced as `${{ secrets.SECR
 **Hetzner VPS Deployment:**
 ```bash
 # Generated automatically by deploy-hetzner.sh
-/opt/clisonix/.env.production  # Git-ignored, 0600 perms
-/opt/clisonix/.credentials.txt # Backup of initial passwords
-/opt/clisonix/.ssh/            # SSH keys with 0600 perms
+/opt/kloud/.env.production  # Git-ignored, 0600 perms
+/opt/kloud/.credentials.txt # Backup of initial passwords
+/opt/kloud/.ssh/            # SSH keys with 0600 perms
 ```
 
 **Kubernetes Secret Objects (Future):**
@@ -180,7 +180,7 @@ All production secrets stored in GitHub Secrets, referenced as `${{ secrets.SECR
 apiVersion: v1
 kind: Secret
 metadata:
-  name: clisonix-prod-secrets
+  name: kloud-prod-secrets
   namespace: production
 type: Opaque
 data:
@@ -359,7 +359,7 @@ Every environment variable access must be logged:
 ```json
 {
   "timestamp": "2025-12-18T22:30:15Z",
-  "service": "clisonix-api",
+  "service": "kloud-api",
   "action": "SECRET_READ",
   "secret_id": "DB_PASSWORD",
   "actor": "deployment-pipeline",
@@ -576,10 +576,11 @@ Integrate with Grafana:
 
 ## 📞 Support & Questions
 
-- **Security Issues**: security@clisonix-cloud.com
-- **Environment Setup**: devops@clisonix-cloud.com
-- **Incident Reporting**: incidents@clisonix-cloud.com
+- **Security Issues**: security@kloud-cloud.com
+- **Environment Setup**: devops@kloud-cloud.com
+- **Incident Reporting**: incidents@kloud-cloud.com
 
 ---
 
 **Remember:** 🔐 **Security is everyone''s responsibility.**
+

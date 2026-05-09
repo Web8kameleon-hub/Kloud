@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 CLISONIX AUTO-LEARNING OPTIMIZED
+🧠 KLOUD AUTO-LEARNING OPTIMIZED
 ====================================
 Zero CPU/Disk stress - Memory-first, batch writes
 
@@ -12,7 +12,7 @@ Optimizations:
 5. Lazy loading - vetëm kur duhet
 6. Background thread për I/O
 
-Author: Ledjan Ahmati - Clisonix
+Author: Ledjan Ahmati - Kloud
 Version: 2.0.0 Optimized
 """
 
@@ -334,7 +334,7 @@ class AutoLearningOptimized:
     def run_optimized(self, cycles: int = 0):
         """Run optimized loop - cycles=0 means forever"""
         print("\n" + "=" * 60)
-        print("🧠 CLISONIX AUTO-LEARNING OPTIMIZED")
+        print("🧠 KLOUD AUTO-LEARNING OPTIMIZED")
         print("=" * 60)
         print(f"📊 CPU/Disk friendly mode")
         print(f"💾 Batch writes every {BATCH_WRITE_SIZE} entries")
@@ -378,3 +378,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

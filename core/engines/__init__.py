@@ -1,5 +1,5 @@
 """
-ENGINES MODULE - Engine Adapters për Clisonix
+ENGINES MODULE - Engine Adapters për Kloud
 """
 
 from .contract import (
@@ -46,3 +46,4 @@ __all__ = [
     "create_ollama_adapter",
     "test_ollama_connection",
 ]
+

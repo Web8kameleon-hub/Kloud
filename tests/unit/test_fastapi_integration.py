@@ -1,5 +1,5 @@
 """
-Test FastAPI Integration - Clisonix Cloud
+Test FastAPI Integration - Kloud Cloud
 Author: Ledjan Ahmati
 License: Closed Source
 """
@@ -30,4 +30,5 @@ def test_agi_stats():
     assert "cpu_percent" in data
 
 # Add more endpoint tests as needed
+
 

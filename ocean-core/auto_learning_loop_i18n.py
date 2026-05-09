@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 CLISONIX AUTO-LEARNING LOOP - MULTILINGUAL (i18n)
+🧠 KLOUD AUTO-LEARNING LOOP - MULTILINGUAL (i18n)
 =====================================================
 100% AUTOMATIK - Mëson pa fund në shumë gjuhë
 
@@ -44,7 +44,7 @@ LANGUAGES = {
 # Përkthime për UI
 TRANSLATIONS = {
     "en": {
-        "title": "CLISONIX AUTO-LEARNING LOOP",
+        "title": "KLOUD AUTO-LEARNING LOOP",
         "started": "Started",
         "existing_knowledge": "Existing knowledge",
         "learning_forever": "Learning forever... (Ctrl+C to stop)",
@@ -68,7 +68,7 @@ TRANSLATIONS = {
         "searching_in": "Searching in",
     },
     "sq": {
-        "title": "CLISONIX MËSIM AUTOMATIK",
+        "title": "KLOUD MËSIM AUTOMATIK",
         "started": "Filloi",
         "existing_knowledge": "Njohuri ekzistuese",
         "learning_forever": "Duke mësuar pa fund... (Ctrl+C për të ndalur)",
@@ -92,7 +92,7 @@ TRANSLATIONS = {
         "searching_in": "Duke kërkuar në",
     },
     "de": {
-        "title": "CLISONIX AUTO-LERNSCHLEIFE",
+        "title": "KLOUD AUTO-LERNSCHLEIFE",
         "started": "Gestartet",
         "existing_knowledge": "Vorhandenes Wissen",
         "learning_forever": "Lernt endlos... (Strg+C zum Stoppen)",
@@ -116,7 +116,7 @@ TRANSLATIONS = {
         "searching_in": "Suche in",
     },
     "fr": {
-        "title": "BOUCLE D'AUTO-APPRENTISSAGE CLISONIX",
+        "title": "BOUCLE D'AUTO-APPRENTISSAGE KLOUD",
         "started": "Démarré",
         "existing_knowledge": "Connaissances existantes",
         "learning_forever": "Apprentissage infini... (Ctrl+C pour arrêter)",
@@ -140,7 +140,7 @@ TRANSLATIONS = {
         "searching_in": "Recherche dans",
     },
     "es": {
-        "title": "BUCLE DE AUTO-APRENDIZAJE CLISONIX",
+        "title": "BUCLE DE AUTO-APRENDIZAJE KLOUD",
         "started": "Iniciado",
         "existing_knowledge": "Conocimiento existente",
         "learning_forever": "Aprendiendo sin fin... (Ctrl+C para parar)",
@@ -164,7 +164,7 @@ TRANSLATIONS = {
         "searching_in": "Buscando en",
     },
     "it": {
-        "title": "CICLO DI AUTO-APPRENDIMENTO CLISONIX",
+        "title": "CICLO DI AUTO-APPRENDIMENTO KLOUD",
         "started": "Iniziato",
         "existing_knowledge": "Conoscenza esistente",
         "learning_forever": "Apprendimento infinito... (Ctrl+C per fermare)",
@@ -188,7 +188,7 @@ TRANSLATIONS = {
         "searching_in": "Cercando in",
     },
     "zh": {
-        "title": "CLISONIX 自动学习循环",
+        "title": "KLOUD 自动学习循环",
         "started": "已启动",
         "existing_knowledge": "现有知识",
         "learning_forever": "无限学习中... (Ctrl+C停止)",
@@ -212,7 +212,7 @@ TRANSLATIONS = {
         "searching_in": "搜索",
     },
     "ja": {
-        "title": "CLISONIX 自動学習ループ",
+        "title": "KLOUD 自動学習ループ",
         "started": "開始",
         "existing_knowledge": "既存の知識",
         "learning_forever": "無限に学習中... (Ctrl+Cで停止)",
@@ -236,7 +236,7 @@ TRANSLATIONS = {
         "searching_in": "検索中",
     },
     "ar": {
-        "title": "CLISONIX حلقة التعلم الآلي",
+        "title": "KLOUD حلقة التعلم الآلي",
         "started": "بدأ",
         "existing_knowledge": "المعرفة الموجودة",
         "learning_forever": "التعلم بلا نهاية... (Ctrl+C للإيقاف)",
@@ -649,3 +649,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

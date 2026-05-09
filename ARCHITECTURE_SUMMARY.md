@@ -89,9 +89,9 @@
 ```yaml
 postgres-exporter:
   image: prometheuscommunity/postgres-exporter:latest
-  container_name: clisonix-postgres-exporter
+  container_name: kloud-postgres-exporter
   environment:
-    DATA_SOURCE_NAME: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb?sslmode=disable"
+    DATA_SOURCE_NAME: "postgresql://kloud:kloud@postgres:5432/klouddb?sslmode=disable"
   ports:
     - "9187:9187"
   depends_on:
@@ -106,7 +106,7 @@ postgres-exporter:
 
 redis-exporter:
   image: oliver006/redis_exporter:latest
-  container_name: clisonix-redis-exporter
+  container_name: kloud-redis-exporter
   environment:
     REDIS_ADDR: redis:6379
   ports:
@@ -285,3 +285,4 @@ Next: Send results for optimization analysis
 ```
 
 Vëlla, the architecture is now **COMPLETE** and **PRODUCTION-READY**! 💪
+

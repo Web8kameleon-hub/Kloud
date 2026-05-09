@@ -125,7 +125,7 @@ def build_report(df: pd.DataFrame, charts: Iterable[BytesIO]) -> None:
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(str(REPORT_FILE), pagesize=A4)
     elements = [
-        Paragraph("clisonix Telemetry Report", styles["Title"]),
+        Paragraph("kloud Telemetry Report", styles["Title"]),
         Paragraph(f"Generated: {datetime.utcnow().isoformat()} UTC", styles["Normal"]),
         Spacer(1, 12),
     ]
@@ -177,4 +177,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

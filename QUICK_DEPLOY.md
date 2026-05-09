@@ -1,7 +1,7 @@
-# 🚀 Clisonix Cloud - Deployment Quick Start
+# 🚀 Kloud Cloud - Deployment Quick Start
 
 **Target:** Hetzner Cloud + STRATO DNS  
-**Domain:** clisonix.com  
+**Domain:** kloud.com  
 **Estimated Time:** 30 minutes  
 **Last Updated:** December 12, 2025
 
@@ -14,7 +14,7 @@
 1. Login: https://console.hetzner.com (Account: K1266374525)
 2. Create new server:
    ```
-   Name: clisonix-prod
+   Name: kloud-prod
    Location: Falkenstein, Germany
    Image: Ubuntu 24.04 LTS
    Type: CX32 (4 vCPU, 8GB RAM) - €8.21/month
@@ -27,7 +27,7 @@
 ### **Step 2: Configure DNS (5 min)**
 
 1. Login: https://www.strato.de/apps/CustomerService
-2. Go to: **Domains → clisonix.com → DNS Settings**
+2. Go to: **Domains → kloud.com → DNS Settings**
 3. Add A Records:
    ```
    @ → [YOUR_HETZNER_IP]
@@ -44,7 +44,7 @@
 SSH to server and run ONE command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/deploy-hetzner.sh | bash
+curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/deploy-hetzner.sh | bash
 ```
 
 This will:
@@ -63,28 +63,28 @@ This will:
 After DNS propagation, run:
 
 ```bash
-cd /opt/clisonix
+cd /opt/kloud
 
 # Install certbot
 apt install -y certbot
 
 # Get certificates (do this AFTER DNS works!)
 certbot certonly --standalone \
-  -d clisonix.com \
-  -d www.clisonix.com \
-  -d api.clisonix.com \
+  -d kloud.com \
+  -d www.kloud.com \
+  -d api.kloud.com \
   --email amati.ledian@gmail.com \
   --agree-tos --non-interactive
 
 # Certificates will be at:
-# /etc/letsencrypt/live/clisonix.com/fullchain.pem
-# /etc/letsencrypt/live/clisonix.com/privkey.pem
+# /etc/letsencrypt/live/kloud.com/fullchain.pem
+# /etc/letsencrypt/live/kloud.com/privkey.pem
 ```
 
 ### **2. Start the Platform**
 
 ```bash
-cd /opt/clisonix
+cd /opt/kloud
 
 # Start all services
 docker compose -f docker-compose.prod.yml up -d --build
@@ -96,12 +96,12 @@ docker compose -f docker-compose.prod.yml logs -f
 ### **3. View Your Credentials**
 
 ```bash
-cat /opt/clisonix/.credentials.txt
+cat /opt/kloud/.credentials.txt
 ```
 
 **⚠️ IMPORTANT:** Copy these credentials to your password manager, then delete the file:
 ```bash
-rm /opt/clisonix/.credentials.txt
+rm /opt/kloud/.credentials.txt
 ```
 
 ---
@@ -111,7 +111,7 @@ rm /opt/clisonix/.credentials.txt
 ### **Check Services**
 
 ```bash
-cd /opt/clisonix
+cd /opt/kloud
 
 # View running containers
 docker compose -f docker-compose.prod.yml ps
@@ -128,13 +128,13 @@ Once DNS and SSL are ready:
 
 ```bash
 # Frontend
-curl -I https://clisonix.com
+curl -I https://kloud.com
 
 # API
-curl https://api.clisonix.com/health
+curl https://api.kloud.com/health
 
 # Grafana Dashboard
-curl -I https://clisonix.com:3001
+curl -I https://kloud.com:3001
 ```
 
 ---
@@ -143,9 +143,9 @@ curl -I https://clisonix.com:3001
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| **Website** | https://clisonix.com | Public |
-| **API** | https://api.clisonix.com | API Key required |
-| **Grafana** | https://clisonix.com:3001 | See `.credentials.txt` |
+| **Website** | https://kloud.com | Public |
+| **API** | https://api.kloud.com | API Key required |
+| **Grafana** | https://kloud.com:3001 | See `.credentials.txt` |
 | **Prometheus** | http://SERVER_IP:9090 | No auth (firewall protected) |
 | **Kibana** | http://SERVER_IP:5601 | elastic / See credentials |
 
@@ -155,7 +155,7 @@ curl -I https://clisonix.com:3001
 
 ### **View Logs**
 ```bash
-cd /opt/clisonix
+cd /opt/kloud
 
 # All services
 docker compose -f docker-compose.prod.yml logs -f
@@ -177,7 +177,7 @@ docker compose -f docker-compose.prod.yml restart api
 
 ### **Update Code**
 ```bash
-cd /opt/clisonix
+cd /opt/kloud
 
 # Pull latest code
 git pull origin main
@@ -215,8 +215,8 @@ docker system df
 ### **DNS Not Working**
 ```bash
 # Check DNS propagation
-nslookup clisonix.com
-dig clisonix.com
+nslookup kloud.com
+dig kloud.com
 
 # Wait up to 30 minutes for global propagation
 ```
@@ -224,14 +224,14 @@ dig clisonix.com
 ### **SSL Certificate Fails**
 ```bash
 # Make sure DNS is working first!
-nslookup clisonix.com
+nslookup kloud.com
 
 # Port 80 must be open
 ufw status
 
 # Stop nginx temporarily if needed
 docker compose -f docker-compose.prod.yml stop nginx
-certbot certonly --standalone -d clisonix.com -d www.clisonix.com
+certbot certonly --standalone -d kloud.com -d www.kloud.com
 docker compose -f docker-compose.prod.yml start nginx
 ```
 
@@ -275,13 +275,14 @@ docker compose -f docker-compose.prod.yml restart postgres
 ## 📞 Support
 
 - **Documentation:** Check `DEPLOYMENT_GUIDE_HETZNER.md` for detailed info
-- **Logs Location:** `/opt/clisonix/logs/`
-- **Data Location:** `/opt/clisonix/data/`
+- **Logs Location:** `/opt/kloud/logs/`
+- **Data Location:** `/opt/kloud/data/`
 
 ---
 
 ## 🎉 You're Live!
 
-Your Clisonix Cloud platform is now running in production on Hetzner!
+Your Kloud Cloud platform is now running in production on Hetzner!
 
-**Next:** Visit https://clisonix.com and start using your platform.
+**Next:** Visit https://kloud.com and start using your platform.
+

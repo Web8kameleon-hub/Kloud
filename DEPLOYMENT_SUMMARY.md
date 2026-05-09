@@ -1,4 +1,4 @@
-# ✅ Clisonix Cloud - Production Deployment Ready
+# ✅ Kloud Cloud - Production Deployment Ready
 
 **Date:** December 12, 2025  
 **Status:** Ready for Hetzner Deployment  
@@ -20,7 +20,7 @@
 ### **2. ✅ SSL/TLS Configuration**
 - Updated nginx.conf to use Let's Encrypt certificates
 - Added fallback to self-signed certificates
-- Domain-specific configuration for clisonix.com
+- Domain-specific configuration for kloud.com
 - SSL session caching for performance
 
 **File:** `nginx/nginx.conf` - Updated SSL paths and configuration
@@ -52,7 +52,7 @@
 **File:** `docker-compose.prod.yml` - Added healthcheck to all AI services
 
 ### **6. ✅ Docker Networking**
-- Created `clisonix-network` bridge network
+- Created `kloud-network` bridge network
 - All services properly networked
 - Internal communication via service names
 - Network isolation from host
@@ -84,7 +84,7 @@
 
 ### **Prerequisites:**
 - Hetzner account (K1266374525)
-- STRATO account with clisonix.com domain
+- STRATO account with kloud.com domain
 - SSH key ready
 
 ### **Deploy in 3 Steps:**
@@ -99,7 +99,7 @@ Cost: €8.21/month
 
 #### **2️⃣ Configure DNS (5 min)**
 ```
-STRATO → clisonix.com → DNS Settings
+STRATO → kloud.com → DNS Settings
 
 A Records:
   @ → [HETZNER_IP]
@@ -111,14 +111,14 @@ A Records:
 ```bash
 ssh root@[HETZNER_IP]
 
-curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/deploy-hetzner.sh | bash
+curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/deploy-hetzner.sh | bash
 
 # After deployment:
-cd /opt/clisonix
+cd /opt/kloud
 
 # Install SSL (wait for DNS first!)
 apt install -y certbot
-certbot certonly --standalone -d clisonix.com -d www.clisonix.com -d api.clisonix.com
+certbot certonly --standalone -d kloud.com -d www.kloud.com -d api.kloud.com
 
 # Start services
 docker compose -f docker-compose.prod.yml up -d --build
@@ -204,13 +204,13 @@ Monitoring Stack:
 - [ ] Environment file created
 
 ### **After Deployment:**
-- [ ] DNS propagation verified (`nslookup clisonix.com`)
+- [ ] DNS propagation verified (`nslookup kloud.com`)
 - [ ] SSL certificates installed
 - [ ] Services started (`docker compose up`)
 - [ ] Credentials saved and `.credentials.txt` deleted
 - [ ] Health checks passing
-- [ ] Website accessible (https://clisonix.com)
-- [ ] API accessible (https://api.clisonix.com)
+- [ ] Website accessible (https://kloud.com)
+- [ ] API accessible (https://api.kloud.com)
 
 ---
 
@@ -218,20 +218,20 @@ Monitoring Stack:
 
 1. **Configure Stripe Integration**
    ```bash
-   nano /opt/clisonix/.env.production
+   nano /opt/kloud/.env.production
    # Add: STRIPE_SECRET_KEY=sk_live_...
-   docker compose -f /opt/clisonix/docker-compose.prod.yml restart api
+   docker compose -f /opt/kloud/docker-compose.prod.yml restart api
    ```
 
 2. **Set Up Monitoring Alerts**
-   - Access Grafana: https://clisonix.com:3001
+   - Access Grafana: https://kloud.com:3001
    - Configure alerts for CPU, memory, disk
    - Add Slack webhook (optional)
 
 3. **Enable Database Backups**
    ```bash
    # See SECURITY_PRODUCTION.md for backup script
-   /opt/clisonix/backup-db.sh
+   /opt/kloud/backup-db.sh
    ```
 
 4. **SSL Auto-Renewal Test**
@@ -276,3 +276,4 @@ Të gjitha përmirësimet janë bërë dhe sistemi është i gatshëm për produ
 **Quick Start:** `QUICK_DEPLOY.md`
 
 Good luck me deployment! 💪
+

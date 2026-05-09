@@ -1,4 +1,4 @@
-# Clisonix Cloud - Complete API Reference (v1.0.0)
+# Kloud Cloud - Complete API Reference (v1.0.0)
 
 ## Overview
 
@@ -294,7 +294,7 @@ curl -X POST http://localhost:8000/api/uploads/audio/process \
 **Current:** Optional internal header validation
 
 ...
-x-Clisonix-internal: 1
+x-Kloud-internal: 1
 ...
 
 **Recommended Production:**
@@ -439,3 +439,4 @@ $response.Content | ConvertFrom-Json | Format-Table
 **Generated:** November 30, 2025  
 **Version:** 1.0.0  
 **Status:** ✅ All Systems Operational
+

@@ -1,5 +1,5 @@
 """
-clisonix Colored Logger
+kloud Colored Logger
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 Logs with real color-coded output for ERROR (red) and WARNING (yellow).
 """
@@ -42,7 +42,7 @@ class ColoredFormatter(logging.Formatter):
         return f"{color}{message}{reset}"
 
 
-def setup_logger(name: str = "clisonix", level: int = logging.INFO) -> logging.Logger:
+def setup_logger(name: str = "kloud", level: int = logging.INFO) -> logging.Logger:
     """Create or retrieve a color-enabled logger."""
 
     logger = logging.getLogger(name)
@@ -67,10 +67,11 @@ def setup_logger(name: str = "clisonix", level: int = logging.INFO) -> logging.L
 
 
 if __name__ == "__main__":
-    demo_logger = setup_logger("clisonix", logging.DEBUG)
+    demo_logger = setup_logger("kloud", logging.DEBUG)
     demo_logger.debug("Debug message (cyan)")
     demo_logger.info("System started successfully (green)")
     demo_logger.warning("Memory usage nearing threshold (yellow)")
     demo_logger.error("Connection to database failed (red)")
     demo_logger.critical("CRITICAL SYSTEM FAILURE (bright red)")
+
 

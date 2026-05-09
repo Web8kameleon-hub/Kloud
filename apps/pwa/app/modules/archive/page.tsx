@@ -3,7 +3,7 @@ import { useEffect } from "react"
 
 export default function ArchivePage() {
   useEffect(() => {
-    window.location.href = "https://clisonix.com/modules/archive"
+    window.location.href = "https://kloud.com/modules/archive"
   }, [])
   
   return (
@@ -12,3 +12,4 @@ export default function ArchivePage() {
     </div>
   )
 }
+

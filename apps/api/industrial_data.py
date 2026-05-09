@@ -17,7 +17,7 @@ def get_agi_stats():
         "hostname": psutil.users()[0].name if psutil.users() else "unknown"
     }
 """
-Copyright (c) Clisonix Cloud. All rights reserved.
+Copyright (c) Kloud Cloud. All rights reserved.
 Closed Source License.
 """
 
@@ -35,5 +35,6 @@ def get_industrial_data():
         "processes": len(psutil.pids()),
         "hostname": psutil.users()[0].name if psutil.users() else "unknown"
     }
+
 
 

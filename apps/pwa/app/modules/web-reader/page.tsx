@@ -3,7 +3,7 @@ import { useEffect } from "react"
 
 export default function ReaderPage() {
   useEffect(() => {
-    window.location.href = "https://clisonix.com/modules/web-reader"
+    window.location.href = "https://kloud.com/modules/web-reader"
   }, [])
   
   return (
@@ -12,3 +12,4 @@ export default function ReaderPage() {
     </div>
   )
 }
+

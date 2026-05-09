@@ -15,7 +15,7 @@ ENGINE_NAME = sys.argv[1] if len(sys.argv) > 1 else "core-engine"
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8060
 
 app = FastAPI(
-    title=f"Clisonix {ENGINE_NAME}",
+    title=f"Kloud {ENGINE_NAME}",
     description=f"Core Engine - {ENGINE_NAME}",
     version="1.0.0"
 )
@@ -92,3 +92,4 @@ def config():
 if __name__ == "__main__":
     print(f"⚙️ Starting {ENGINE_NAME} on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

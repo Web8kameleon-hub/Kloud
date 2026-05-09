@@ -1,4 +1,4 @@
-# Clisonix OpenAPI Contract Specifications
+# Kloud OpenAPI Contract Specifications
 
 **Last Updated:** December 11, 2025  
 **Platform Version:** 1.0.0  
@@ -8,7 +8,7 @@
 
 ## 📄 Overview
 
-This directory contains OpenAPI 3.1.0 specifications for all Clisonix agent services. These contracts serve as the authoritative API documentation and enable:
+This directory contains OpenAPI 3.1.0 specifications for all Kloud agent services. These contracts serve as the authoritative API documentation and enable:
 
 - **API Documentation:** Auto-generated interactive docs (Swagger UI, ReDoc)
 - **Client Generation:** Auto-generated SDKs for Python, TypeScript, Go, etc.
@@ -84,7 +84,7 @@ All agent services use **API Key authentication** via the `x-api-key` header.
 
 ### Example Request:
 ```bash
-curl -X POST https://api.clisonix.com/alba/content/generate \
+curl -X POST https://api.kloud.com/alba/content/generate \
   -H "x-api-key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"type": "animation", "format": "mp4", "duration": 30}'
@@ -138,18 +138,18 @@ Services that perform long-running operations (Alba, Jona) follow the async task
 ### Example Flow:
 ```bash
 # Step 1: Submit task
-curl -X POST https://api.clisonix.com/jona/audio/generate \
+curl -X POST https://api.kloud.com/jona/audio/generate \
   -H "x-api-key: YOUR_API_KEY" \
   -d '{"signal_type": "eeg", "duration": 60}'
 # Response: {"task_id": "550e8400-e29b-41d4-a716-446655440000", "status": "pending"}
 
 # Step 2: Check status (poll every 2-5 seconds)
-curl https://api.clisonix.com/jona/tasks/550e8400-e29b-41d4-a716-446655440000 \
+curl https://api.kloud.com/jona/tasks/550e8400-e29b-41d4-a716-446655440000 \
   -H "x-api-key: YOUR_API_KEY"
 # Response: {"task_id": "...", "status": "processing", "progress": 45.2}
 
 # Step 3: Retrieve result
-curl https://api.clisonix.com/jona/tasks/550e8400-e29b-41d4-a716-446655440000 \
+curl https://api.kloud.com/jona/tasks/550e8400-e29b-41d4-a716-446655440000 \
   -H "x-api-key: YOUR_API_KEY"
 # Response: {"task_id": "...", "status": "completed", "result": {"audio_url": "https://..."}}
 ```
@@ -327,9 +327,10 @@ dredd openapi/jona-api-v1.yaml http://localhost:7777
 
 **Documentation:** API_DOCS.md  
 **Contract Issues:** Open GitHub issue with `openapi` label  
-**Contact:** Ledjan Ahmati (LedjanAhmati/Clisonix-cloud)  
+**Contact:** Ledjan Ahmati (LedjanAhmati/Kloud-cloud)  
 
 ---
 
 **Last Updated:** December 11, 2025  
-**Maintained By:** Clisonix Engineering Team
+**Maintained By:** Kloud Engineering Team
+

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX MEGA SIGNAL INTEGRATOR
+🌊 KLOUD MEGA SIGNAL INTEGRATOR
 ===================================
 Integron TË GJITHA sinjalet e sistemit në një orkestrator të vetëm.
 
@@ -31,7 +31,7 @@ BURIMET E INTEGRUARA:
 💱 Crypto: CoinGecko
 🌡️ Weather: OpenWeatherMap
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 2.0.0 - Full Integration
 """
 
@@ -409,16 +409,16 @@ class DevOpsSignalManager:
     def get_kubernetes_status(self) -> Signal:
         """Merr statusin e Kubernetes"""
         status = {
-            "namespace": "clisonix",
+            "namespace": "kloud",
             "pods": {
-                "clisonix-api": {"status": "Running", "replicas": 3},
-                "clisonix-web": {"status": "Running", "replicas": 2},
+                "kloud-api": {"status": "Running", "replicas": 3},
+                "kloud-web": {"status": "Running", "replicas": 2},
                 "ocean-core": {"status": "Running", "replicas": 1},
                 "redis": {"status": "Running", "replicas": 1},
                 "postgres": {"status": "Running", "replicas": 1}
             },
             "services": ["api-service", "web-service", "ocean-service"],
-            "ingress": "api.clisonix.cloud"
+            "ingress": "api.kloud.cloud"
         }
         
         self.k8s_status = status
@@ -1006,7 +1006,7 @@ class MegaSignalIntegrator:
             results["sources_checked"].append("system_overview")
             results["signals"].append({"type": "overview", "data": overview})
             results["response"] = f"""
-🌊 **Clisonix Mega System Overview**
+🌊 **Kloud Mega System Overview**
 
 📊 **Cycles**: {overview['managers']['cycles']['active']} aktive
 🛡️ **Alignments**: {len(overview['managers']['alignments']['policies'])} policies
@@ -1070,3 +1070,4 @@ if __name__ == "__main__":
             print(f"💬 Response: {result['response']}")
     
     asyncio.run(test())
+

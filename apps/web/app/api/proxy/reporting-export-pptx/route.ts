@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const isDev = process.env.NODE_ENV !== 'production';
-const API_INTERNAL = process.env.API_INTERNAL_URL || (isDev ? 'http://localhost:8000' : 'http://clisonix-api:8000');
+const API_INTERNAL = process.env.API_INTERNAL_URL || (isDev ? 'http://localhost:8000' : 'http://kloud-api:8000');
 
 // Generate filename with date and time to avoid conflicts
 function generateFilename(): string {
@@ -12,7 +12,7 @@ function generateFilename(): string {
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `clisonix-report-${year}${month}${day}-${hours}${minutes}${seconds}.pptx`;
+  return `kloud-report-${year}${month}${day}-${hours}${minutes}${seconds}.pptx`;
 }
 
 export async function GET() {
@@ -46,3 +46,4 @@ export async function GET() {
     );
   }
 }
+

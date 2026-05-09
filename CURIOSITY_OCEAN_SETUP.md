@@ -256,7 +256,7 @@ services:
     environment:
       - ENVIRONMENT=production
     networks:
-      - clisonix-network
+      - kloud-network
 
   # Main API with Ocean
   api:
@@ -272,10 +272,10 @@ services:
       - HYBRID_BIOMETRIC_API=http://hybrid-biometric:8000
       - ENVIRONMENT=production
     networks:
-      - clisonix-network
+      - kloud-network
 
 networks:
-  clisonix-network:
+  kloud-network:
     driver: bridge
 ```
 
@@ -295,8 +295,8 @@ For Hetzner server deployment:
 ssh root@YOUR_SERVER_IP
 
 # 2. Clone repository
-git clone https://github.com/Kameleonlife/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/Kameleonlife/Kloud-cloud.git
+cd Kloud-cloud
 
 # 3. Set environment
 export GROQ_API_KEY="gsk_YOUR_KEY"
@@ -428,3 +428,4 @@ For issues or questions:
 **License:** Closed Source  
 **Version:** 1.0.0  
 **Last Updated:** January 10, 2025
+

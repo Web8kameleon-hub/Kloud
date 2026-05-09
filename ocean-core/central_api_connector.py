@@ -4,7 +4,7 @@ CENTRAL API CONNECTOR
 Connects Ocean-Core to the Central API (port 8000)
 Gets REAL data from ALL 23 laboratories and ALL APIs
 
-This is the bridge between Ocean-Core and the main Clisonix API.
+This is the bridge between Ocean-Core and the main Kloud API.
 """
 
 import logging
@@ -23,7 +23,7 @@ CENTRAL_API_URL = os.getenv("CENTRAL_API_URL", "http://localhost:8000")
 
 class CentralAPIConnector:
     """
-    Connects to Central Clisonix API (port 8000) 
+    Connects to Central Kloud API (port 8000) 
     to get real data from all services.
     """
     
@@ -504,3 +504,4 @@ if __name__ == "__main__":
         await connector.close()
     
     asyncio.run(test())
+

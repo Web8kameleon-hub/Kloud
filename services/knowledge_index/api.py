@@ -17,7 +17,7 @@ import json
 # ============================================================================
 
 app = FastAPI(
-    title="Clisonix Knowledge Index API",
+    title="Kloud Knowledge Index API",
     description="Search 200,000+ knowledge links across 155 countries",
     version="1.0.0",
     docs_url="/docs",
@@ -111,7 +111,7 @@ def load_index():
 async def root():
     """API root"""
     return {
-        "service": "Clisonix Knowledge Index",
+        "service": "Kloud Knowledge Index",
         "version": "1.0.0",
         "description": "Search 200,000+ knowledge links",
         "endpoints": {
@@ -358,3 +358,4 @@ if __name__ == "__main__":
     # Port 8008 - Knowledge Index (HQ is 8000, ALBA 5555, ALBI 6680, JONA 7777, Ocean 8009)
     # This is a SUB-SERVICE - can be accessed via HQ at /knowledge-index/*
     uvicorn.run(app, host="0.0.0.0", port=8008)
+

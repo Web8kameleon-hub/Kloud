@@ -2,7 +2,7 @@
 <#
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║           🚀 CLISONIX CLOUD - ULTIMATE MASTER LAUNCHER v3.0 🚀              ║
+║           🚀 KLOUD CLOUD - ULTIMATE MASTER LAUNCHER v3.0 🚀              ║
 ║                  "Complete Orchestration - All Services"                      ║
 ║                                                                               ║
 ║  Launches ALL services in separate PowerShell windows:                        ║
@@ -31,7 +31,7 @@ param(
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-$Root = 'c:\clisonix-cloud'
+$Root = 'c:\kloud-cloud'
 Set-Location $Root
 
 $Colors = @{
@@ -52,7 +52,7 @@ $Services = @(
         Port = 5432; 
         Icon = '🗄️'; 
         Color = 'Blue'
-        Command = 'docker run --name clisonix-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:14'
+        Command = 'docker run --name kloud-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:14'
         Type = 'docker'
     }
     @{ 
@@ -60,7 +60,7 @@ $Services = @(
         Port = 6379; 
         Icon = '⚡'; 
         Color = 'Red'
-        Command = 'docker run --name clisonix-redis -p 6379:6379 redis:7'
+        Command = 'docker run --name kloud-redis -p 6379:6379 redis:7'
         Type = 'docker'
     }
     @{ 
@@ -68,7 +68,7 @@ $Services = @(
         Port = 9000; 
         Icon = '📦'; 
         Color = 'Yellow'
-        Command = 'docker run --name clisonix-minio -e MINIO_ROOT_USER=minioadmin -e MINIO_ROOT_PASSWORD=minioadmin -p 9000:9000 -p 9001:9001 minio/minio server /data --console-address ":9001"'
+        Command = 'docker run --name kloud-minio -e MINIO_ROOT_USER=minioadmin -e MINIO_ROOT_PASSWORD=minioadmin -p 9000:9000 -p 9001:9001 minio/minio server /data --console-address ":9001"'
         Type = 'docker'
     }
     
@@ -130,7 +130,7 @@ $Services = @(
         Port = 9090; 
         Icon = '📊'; 
         Color = 'Red'
-        Command = 'docker run --name clisonix-prometheus -p 9090:9090 -v c:\clisonix-cloud\prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus'
+        Command = 'docker run --name kloud-prometheus -p 9090:9090 -v c:\kloud-cloud\prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus'
         Type = 'docker'
     }
     @{ 
@@ -138,7 +138,7 @@ $Services = @(
         Port = 3001; 
         Icon = '📈'; 
         Color = 'Yellow'
-        Command = 'docker run --name clisonix-grafana -e GF_SECURITY_ADMIN_PASSWORD=admin -p 3001:3000 grafana/grafana'
+        Command = 'docker run --name kloud-grafana -e GF_SECURITY_ADMIN_PASSWORD=admin -p 3001:3000 grafana/grafana'
         Type = 'docker'
     }
 )
@@ -150,7 +150,7 @@ $Services = @(
 function Show-Banner {
     Write-Host "`n╔═══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor $Colors.Title
     Write-Host "║                                                                               ║" -ForegroundColor $Colors.Title
-    Write-Host "║         🚀 CLISONIX CLOUD - ULTIMATE MASTER LAUNCHER v3.0 🚀                 ║" -ForegroundColor $Colors.Title
+    Write-Host "║         🚀 KLOUD CLOUD - ULTIMATE MASTER LAUNCHER v3.0 🚀                 ║" -ForegroundColor $Colors.Title
     Write-Host "║              « All Services in Separate Windows »                             ║" -ForegroundColor $Colors.Title
     Write-Host "║                                                                               ║" -ForegroundColor $Colors.Title
     Write-Host "╚═══════════════════════════════════════════════════════════════════════════════╝`n" -ForegroundColor $Colors.Title
@@ -173,7 +173,7 @@ function Show-Help {
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
 DESCRIPTION:
-  Launches ALL Clisonix Cloud services in separate PowerShell windows with 
+  Launches ALL Kloud Cloud services in separate PowerShell windows with 
   intelligent sequencing and health monitoring.
 
   Services Launched:
@@ -250,7 +250,7 @@ function Launch-Service {
     
     $cmdString = @"
 Set-Location '$Root'
-`$host.UI.RawUI.WindowTitle = '$Icon Clisonix - $ServiceName (Port $Port)'
+`$host.UI.RawUI.WindowTitle = '$Icon Kloud - $ServiceName (Port $Port)'
 Write-Host '╔════════════════════════════════════════════╗' -ForegroundColor Cyan
 Write-Host '║ $Icon $ServiceName - Port $Port' -ForegroundColor Cyan
 Write-Host '╚════════════════════════════════════════════╝' -ForegroundColor Cyan
@@ -396,5 +396,6 @@ if (-not $DryRun) {
 
 Show-Dashboard
 
-Write-Host "🚀 Clisonix Cloud is ready for FULL OPERATION!`n" -ForegroundColor $Colors.Success
+Write-Host "🚀 Kloud Cloud is ready for FULL OPERATION!`n" -ForegroundColor $Colors.Success
+
 

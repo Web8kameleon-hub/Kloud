@@ -1,4 +1,4 @@
-# Clisonix Production Services Inventory
+# Kloud Production Services Inventory
 
 **Last Updated:** December 11, 2025  
 **Platform Version:** 1.0.0  
@@ -8,7 +8,7 @@
 
 ## 🎯 Service Architecture Overview
 
-Clisonix operates as a **microservices-based AI platform** with the following layers:
+Kloud operates as a **microservices-based AI platform** with the following layers:
 
 1. **Agent Services** - 7 specialized AI agents running on dedicated ports
 2. **API Gateway** - Unified FastAPI backend exposing all functionality
@@ -68,7 +68,7 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 **Location:** `apps/api/main.py` (3,219 lines)  
 **Port:** 8000 (default)  
 **Framework:** FastAPI  
-**Description:** Unified API gateway exposing all Clisonix functionality
+**Description:** Unified API gateway exposing all Kloud functionality
 
 **Key Modules:**
 - **Brain Router** (`/brain/*`)
@@ -147,7 +147,7 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 ### Daily Scheduler
 **Location:** `backend/system/daily_scheduler.py`  
 **Purpose:** Automated daily reports at 08:00 Europe/Berlin  
-**Deployment:** Systemd service (`clisonix_daily.service`)
+**Deployment:** Systemd service (`kloud_daily.service`)
 
 ### Additional System Tools
 - `backend/system/auto_monitor.py` - Autonomous monitoring agent
@@ -175,7 +175,7 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 - **`mesh_hq_receiver.py`** - Central mesh telemetry receiver
 - **`metrics_realtime.py`** - Real-time metrics collection
 - **`slack_integration_service.py`** - Slack notifications
-- **`clisonix_sdk.py`** - Python SDK for Clisonix API
+- **`kloud_sdk.py`** - Python SDK for Kloud API
 - **`convert_openapi.py`** - OpenAPI schema converter
 - **`favicon_fixer.py`** - Static asset management
 
@@ -295,7 +295,7 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 **Location:** `/archive/`
 
 ### Old Services
-- `clisonix_*.py` (8 files) - Legacy clisonix modules
+- `kloud_*.py` (8 files) - Legacy kloud modules
 - `saas_api.py` - Old Flask-based SaaS API
 - `saas_services_orchestrator.py` - Deprecated orchestrator
 - `industrial_dashboard_demo.py` - Demo application
@@ -303,8 +303,8 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 - `main_minimal.py` - Lightweight API variant
 
 ### Old Frontends
-- `archive/frontends/clisonix-web-nextjs/` - Previous Next.js app
-- `archive/frontends/clisonix-frontend-nextjs/` - Earlier version
+- `archive/frontends/kloud-web-nextjs/` - Previous Next.js app
+- `archive/frontends/kloud-frontend-nextjs/` - Earlier version
 
 ### Launchers
 - 6 archived launcher scripts in `archive/launchers/`
@@ -423,7 +423,7 @@ Clisonix operates as a **microservices-based AI platform** with the following la
 ## 📝 Documentation
 
 - **API Documentation:** `API_DOCS.md` (comprehensive API guide)
-- **Architecture Baseline:** `CLISONIX_ARCHITECTURE_BASELINE_2025.md`
+- **Architecture Baseline:** `KLOUD_ARCHITECTURE_BASELINE_2025.md`
 - **Metrics Monitoring:** `metrics_monitoring.md`
 - **Integration Report:** `INTEGRATION_COMPLETE_REPORT.md`
 - **Optimization Summary:** `OPTIMIZATION_SUMMARY.md`
@@ -461,5 +461,6 @@ python backend/system/smart_orchestrator.py
 ---
 
 **Document Version:** 1.0.0  
-**Maintained By:** Clisonix Engineering Team  
-**Contact:** Ledjan Ahmati (LedjanAhmati/Clisonix-cloud)
+**Maintained By:** Kloud Engineering Team  
+**Contact:** Ledjan Ahmati (LedjanAhmati/Kloud-cloud)
+

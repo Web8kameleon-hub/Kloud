@@ -1,5 +1,5 @@
 """
-Clisonix Ocean Core v2 - Ultra-Light Architecture
+Kloud Ocean Core v2 - Ultra-Light Architecture
 Redis → Ocean Core → SQLite/DuckDB
 Zero PostgreSQL, Zero MySQL
 
@@ -82,10 +82,10 @@ class SystemStatus(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize engines on startup, cleanup on shutdown"""
-    logger.info("🚀 Initializing Ultra-Light Clisonix Ocean Core v2...")
+    logger.info("🚀 Initializing Ultra-Light Kloud Ocean Core v2...")
     
     # Initialize data engine
-    data_engine = initialize_ultra_light_engine("/data/clisonix")
+    data_engine = initialize_ultra_light_engine("/data/kloud")
     logger.info(f"✓ Data engine initialized")
     
     # Initialize Redis buffer
@@ -93,7 +93,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"✓ Redis buffer initialized")
     
     # Initialize analytics engine
-    analytics_engine = initialize_analytics_engine("/data/clisonix/analytics")
+    analytics_engine = initialize_analytics_engine("/data/kloud/analytics")
     logger.info(f"✓ Analytics engine initialized")
     
     logger.info("✓✓✓ Ultra-Light Ocean Core READY - CPU-Efficient Mode ✓✓✓")
@@ -107,7 +107,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Clisonix Ocean Core v2",
+    title="Kloud Ocean Core v2",
     description="Ultra-light, zero-server data infrastructure",
     version="2.0.0",
     lifespan=lifespan
@@ -479,7 +479,7 @@ async def get_metadata(key: str, db=Depends(get_db)):
 async def architecture_docs():
     """Get architecture documentation"""
     return {
-        "system": "Clisonix Ocean Core v2",
+        "system": "Kloud Ocean Core v2",
         "architecture": "Ultra-Light, Zero-Server",
         "layers": {
             "1_ingestion": "Redis/KeyDB (streaming buffer)",
@@ -506,7 +506,7 @@ async def architecture_docs():
 if __name__ == "__main__":
     import uvicorn
     
-    logger.info("🚀 Starting Clisonix Ocean Core v2...")
+    logger.info("🚀 Starting Kloud Ocean Core v2...")
     logger.info("📊 Ultra-Light Architecture: Redis → Ocean → SQLite/DuckDB")
     logger.info("⚡ CPU Efficient Mode ENABLED")
     logger.info("🔥 Expected Performance: 5-20% CPU, <5ms latency, 50k+ throughput")
@@ -519,3 +519,4 @@ if __name__ == "__main__":
         loop="uvloop",  # Use uvloop for better performance
         log_level="info"
     )
+

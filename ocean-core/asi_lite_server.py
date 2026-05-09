@@ -20,7 +20,7 @@ try:
     KNOWLEDGE_LAYER_LOADED = True
 except ImportError:
     KNOWLEDGE_LAYER_LOADED = False
-    SYSTEM_PROMPT = """You are Curiosity Ocean, the AI assistant of Clisonix Cloud (https://clisonix.cloud).
+    SYSTEM_PROMPT = """You are Curiosity Ocean, the AI assistant of Kloud Cloud (https://kloud.cloud).
 You help users explore knowledge and use the platform. Be friendly, helpful, and respond in the user's language."""
 
 # Logging
@@ -167,3 +167,4 @@ if __name__ == "__main__":
     logger.info(f"📡 Ollama: {OLLAMA_HOST}")
     logger.info(f"🤖 Model: {MODEL}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

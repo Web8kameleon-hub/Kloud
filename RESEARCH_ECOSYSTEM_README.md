@@ -18,7 +18,7 @@ This project demonstrates a comprehensive **research data collection and monitor
 
 ### 🔁 Cycle Engine Integration (NEW)
 
-The Research Data Ecosystem is now connected to the **clisonix Cycle Engine** for intelligent, automated document generation:
+The Research Data Ecosystem is now connected to the **kloud Cycle Engine** for intelligent, automated document generation:
 
 - ✅ **Automatic Cycles**: Daily PubMed/ArXiv monitoring, hourly weather, real-time news
 - ✅ **Document Generation**: Weekly/monthly research summaries and reports
@@ -42,8 +42,8 @@ The Research Data Ecosystem is now connected to the **clisonix Cycle Engine** fo
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/clisonix-cloud.git
-cd clisonix-cloud
+git clone https://github.com/your-org/kloud-cloud.git
+cd kloud-cloud
 
 # 2. Create virtual environment
 python -m venv venv
@@ -478,11 +478,12 @@ MIT License - see `LICENSE` file for details
 ## 📞 Support
 
 - **Documentation**: See `AGENT_TELEMETRY_DOCS.md`
-- **Issues**: https: //github.com/your-org/clisonix-cloud/issues
-- **Discussions**: https: //github.com/your-org/clisonix-cloud/discussions
+- **Issues**: https: //github.com/your-org/kloud-cloud/issues
+- **Discussions**: https: //github.com/your-org/kloud-cloud/discussions
 
 ---
 
-**Built with ❤️ by the Clisonix Team **
+**Built with ❤️ by the Kloud Team **
 
 🌟 Star this repo if you find it useful!
+

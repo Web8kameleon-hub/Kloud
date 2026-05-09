@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# 🚀 CLISONIX CLOUD - EXTERNAL WINDOWS LAUNCHER
+# 🚀 KLOUD CLOUD - EXTERNAL WINDOWS LAUNCHER
 # Hap çdo shërbim në dritare të jashtme PowerShell
 # Kështu VS Code terminali mbetet i lirë për teste
 
@@ -8,11 +8,11 @@ param(
     [switch]$DryRun
 )
 
-$Root = 'C:\Users\Admin\Desktop\Clisonix-cloud'
+$Root = 'C:\Users\Admin\Desktop\Kloud-cloud'
 Set-Location $Root
 
 Write-Host "`n╔══════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
-Write-Host "║  🚀 CLISONIX CLOUD - EXTERNAL WINDOWS LAUNCHER          ║" -ForegroundColor Magenta
+Write-Host "║  🚀 KLOUD CLOUD - EXTERNAL WINDOWS LAUNCHER          ║" -ForegroundColor Magenta
 Write-Host "║     Çdo shërbim hapet në dritare të veçantë             ║" -ForegroundColor Magenta
 Write-Host "║     VS Code terminali mbetet i lirë për teste!          ║" -ForegroundColor Magenta
 Write-Host "╚══════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
@@ -95,3 +95,4 @@ Write-Host "╚═════════════════════�
 
 Write-Host "Test Binary Algebra:" -ForegroundColor Cyan
 Write-Host "  http://localhost:8030/api/curiosity/algebra/op?a=255&b=170&op=xor" -ForegroundColor White
+

@@ -1,5 +1,5 @@
 """
-Test Alba, Albi, Jona API Integration - Clisonix Cloud
+Test Alba, Albi, Jona API Integration - Kloud Cloud
 Author: Ledjan Ahmati
 License: Closed Source
 """
@@ -36,4 +36,5 @@ def test_jona_status():
     assert "timestamp" in data
 
 # Add more endpoint tests as needed
+
 

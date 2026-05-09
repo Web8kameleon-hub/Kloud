@@ -21,7 +21,7 @@ class HumanAnalyst:
     ABOUT_ME = """🌊 **Unë jam Curiosity Ocean** - Motori i Njohurive të Pafundme!
 
 **Çfarë jam unë:**
-Jam një sistem inteligjent i ndërtuar nga Clisonix që kombinon 14 Persona Specialistësh për t'ju dhënë përgjigje të sakta dhe të detajuara.
+Jam një sistem inteligjent i ndërtuar nga Kloud që kombinon 14 Persona Specialistësh për t'ju dhënë përgjigje të sakta dhe të detajuara.
 
 **14 Personat e mia:**
 1. 🧠 **Neuroscience Expert** - Truri dhe mendja
@@ -41,7 +41,7 @@ Jam një sistem inteligjent i ndërtuar nga Clisonix që kombinon 14 Persona Spe
 
 **Burimet e mia:**
 - 23 laboratorë të specializuar
-- Të dhëna real-time nga sistemet Clisonix
+- Të dhëna real-time nga sistemet Kloud
 - Njohuri të gjera në shumë fusha
 
 Pyetni çdo gjë - jam këtu për ju!"""
@@ -196,7 +196,7 @@ The brain can reorganize itself throughout life, forming new neural connections.
 5. Evaluate and tune
 6. Deploy and monitor""",
 
-        "clisonix": """🌐 **Clisonix** is an advanced technology ecosystem.
+        "kloud": """🌐 **Kloud** is an advanced technology ecosystem.
 
 **Core Components:**
 - **Curiosity Ocean**: Knowledge aggregation engine (that's me!)
@@ -300,4 +300,5 @@ I'm your Human Analyst, here to make complex topics accessible and understandabl
 {chr(10).join(f"• {s}" for s in random.sample(suggestions, 3))}
 
 What would you like to explore?"""
+
 

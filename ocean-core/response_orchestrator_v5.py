@@ -50,7 +50,7 @@ except ImportError:
 
 # Import Albanian Dictionary
 try:
-    from albanian_dictionary import ALL_ALBANIAN_WORDS, CLISONIX_TERMS, SENTENCE_PATTERNS, detect_albanian, get_albanian_response
+    from albanian_dictionary import ALL_ALBANIAN_WORDS, KLOUD_TERMS, SENTENCE_PATTERNS, detect_albanian, get_albanian_response
     ALBANIAN_DICT_AVAILABLE = True
 except ImportError:
     ALBANIAN_DICT_AVAILABLE = False
@@ -867,3 +867,4 @@ if __name__ == "__main__":
         print("📊 Stats:", orch.get_stats())
     
     asyncio.run(test())
+

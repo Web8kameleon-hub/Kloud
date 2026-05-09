@@ -1,4 +1,4 @@
-# CLISONIX INTELLIGENCE SYSTEM v1.0.0
+# KLOUD INTELLIGENCE SYSTEM v1.0.0
 
 ## Overview
 
@@ -8,7 +8,7 @@ Internal AI/AGI system that operates **100% internally** without external LLM de
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                    CLISONIX INTELLIGENCE HUB                         │
+│                    KLOUD INTELLIGENCE HUB                         │
 ├──────────────────────────────────────────────────────────────────────┤
 │                                                                       │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐       │
@@ -34,7 +34,7 @@ Internal AI/AGI system that operates **100% internally** without external LLM de
 
 | Service | Port | Description |
 |---------|------|-------------|
-| HQ Server | 8000 | Main Clisonix API |
+| HQ Server | 8000 | Main Kloud API |
 | ALBA | 5555 | Frame generation service |
 | ALBI | 6666 | AI processing service |
 | JONA | 7777 | Orchestration service |
@@ -266,3 +266,4 @@ python -m services.knowledge_index.index_builder
 ---
 
 **NO EXTERNAL AI DEPENDENCIES** - 100% Internal Processing
+

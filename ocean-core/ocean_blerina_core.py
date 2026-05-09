@@ -11,7 +11,7 @@ Integrates BLERINA-level capabilities into Ocean:
 
 This module enhances Ocean's responses with professional-grade output.
 
-Author: Clisonix Team
+Author: Kloud Team
 Date: 2026-02-08
 """
 
@@ -148,17 +148,17 @@ OCEAN_KNOWLEDGE_BASE = {
         "role": "Creator & CEO",
         "company": "ABA GmbH",
         "title": None,  # No "Doktor" title - don't fabricate
-        "created": ["Clisonix Cloud", "Ocean AI", "ALBA", "ALBI", "JONA", "ASI Trinity"],
-        "blog": "https://ledjanahmati.github.io/clisonix-blog/",
+        "created": ["Kloud Cloud", "Ocean AI", "ALBA", "ALBI", "JONA", "ASI Trinity"],
+        "blog": "https://ledjanahmati.github.io/kloud-blog/",
         "publications": True,  # Has 150+ blog articles on EEG, AI, healthcare
         "verified": True
     },
     
     # Platform Information - VERIFIED
-    "clisonix": {
-        "name": "Clisonix Cloud",
+    "kloud": {
+        "name": "Kloud Cloud",
         "type": "Industrial IoT & Neural Analysis Platform",
-        "website": "clisonix.cloud",
+        "website": "kloud.cloud",
         "features": [
             "EEG Analysis (ALBA, ALBI)",
             "Audio Analysis",
@@ -227,7 +227,7 @@ FORBIDDEN_FABRICATIONS = [
     ("Professor Ledjan", "Ledjan Ahmati"),
     
     # Don't claim publications that don't exist
-    ("published in Nature", "publishes on clisonix-blog"),
+    ("published in Nature", "publishes on kloud-blog"),
     ("peer-reviewed journal", "technical blog articles"),
     ("scientific paper on consciousness", "blog articles on EEG and AI"),
     
@@ -312,7 +312,7 @@ class OceanEAPPipeline:
             topics.append("agents")
         if any(w in query_lower for w in ["ledjan", "krijues", "creator", "ceo"]):
             topics.append("creator")
-        if any(w in query_lower for w in ["clisonix", "platform", "cloud"]):
+        if any(w in query_lower for w in ["kloud", "platform", "cloud"]):
             topics.append("platform")
         if any(w in query_lower for w in ["weather", "time", "date", "moti"]):
             topics.append("realtime")
@@ -386,7 +386,7 @@ VERIFIED CREATOR INFO:
             agent_info = []
             for name, info in agents.items():
                 agent_info.append(f"- {name}: {info.get('function', info.get('name', 'Agent'))}")
-            knowledge_context.append("CLISONIX AGENTS:\n" + "\n".join(agent_info))
+            knowledge_context.append("KLOUD AGENTS:\n" + "\n".join(agent_info))
         
         if "neural" in topics:
             eeg = OCEAN_KNOWLEDGE_BASE["eeg_bands"]
@@ -396,9 +396,9 @@ VERIFIED CREATOR INFO:
             knowledge_context.append("EEG BANDS:\n" + "\n".join(eeg_info))
         
         if "platform" in topics:
-            platform = OCEAN_KNOWLEDGE_BASE["clisonix"]
+            platform = OCEAN_KNOWLEDGE_BASE["kloud"]
             knowledge_context.append(f"""
-CLISONIX PLATFORM:
+KLOUD PLATFORM:
 - Name: {platform['name']}
 - Type: {platform['type']}
 - Website: {platform['website']}
@@ -598,7 +598,7 @@ def build_enhanced_system_prompt(
     """
     prompt = f"""{base_identity}
 
-When asked who you are, say: "I am Ocean 🌊, AI of Clisonix Cloud, created by Ledjan Ahmati."
+When asked who you are, say: "I am Ocean 🌊, AI of Kloud Cloud, created by Ledjan Ahmati."
 NEVER say you are ChatGPT, Llama, or any other AI.
 
 {realtime_context}
@@ -607,10 +607,10 @@ NEVER say you are ChatGPT, Llama, or any other AI.
 
 ### 1. FACTUAL ACCURACY — NO HALLUCINATIONS
 - About Ledjan Ahmati: Use ONLY these facts:
-  • Creator & CEO of Clisonix Cloud
+  • Creator & CEO of Kloud Cloud
   • Founder of ABA GmbH
   • NO doctorate, NO professor title — just "Ledjan Ahmati"
-  • Has blog at ledjanahmati.github.io/clisonix-blog with 150+ articles
+  • Has blog at ledjanahmati.github.io/kloud-blog with 150+ articles
   • Created: Ocean, ALBA, ALBI, JONA, ASI Trinity, BLERINA
   
 - NEVER fabricate:
@@ -779,3 +779,4 @@ if __name__ == "__main__":
     print(f"Final: {validation['final_response']}")
     
     print(f"\nHealth: {health()}")
+

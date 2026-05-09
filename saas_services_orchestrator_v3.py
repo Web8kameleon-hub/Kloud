@@ -1,6 +1,6 @@
 """
 ╔════════════════════════════════════════════════════════════════════╗
-║     CLISONIX CLOUD - UNIFIED SAAS ORCHESTRATOR v3.0               ║
+║     KLOUD CLOUD - UNIFIED SAAS ORCHESTRATOR v3.0               ║
 ║     Features: Service Registry + Agent Scaling + Auto API Docs    ║
 ║     Coordinates: Alba/Albi/Jona + AI Agents + Inter-Service Mesh  ║
 ╚════════════════════════════════════════════════════════════════════╝
@@ -64,7 +64,7 @@ INSTANCE_ID = uuid.uuid4().hex[:8]
 # ═══════════════════════════════════════════════════════════════════
 
 app = FastAPI(
-    title="Clisonix Unified SAAS Orchestrator",
+    title="Kloud Unified SAAS Orchestrator",
     version="3.0.0",
     description="Service Registry + Agent Scaling + Auto API Docs + Inter-Service Mesh",
     docs_url="/docs",
@@ -364,7 +364,7 @@ async def generate_api_docs(agent_id: str, doc_request: Dict[str, Any]):
         },
         "servers": [
             {"url": "http://localhost:9999", "description": "Orchestrator (local)"},
-            {"url": f"http://{os.getenv('PUBLIC_HOST', 'api.clisonix.com')}", "description": "Production"}
+            {"url": f"http://{os.getenv('PUBLIC_HOST', 'api.kloud.com')}", "description": "Production"}
         ],
         "paths": {},
         "components": {"schemas": {}}
@@ -542,7 +542,7 @@ async def execute_service_action(service: str, request_data: ServiceRequest):
 
 @app.on_event("startup")
 async def startup():
-    logger.info("🚀 Clisonix Unified SAAS Orchestrator v3.0 starting...")
+    logger.info("🚀 Kloud Unified SAAS Orchestrator v3.0 starting...")
     logger.info(f"   Instance ID: {INSTANCE_ID}")
     logger.info(f"   Alba: {ALBA_URL}")
     logger.info(f"   Albi: {ALBI_URL}")
@@ -575,7 +575,7 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", "9999"))
     
     print("\n╔═══════════════════════════════════════════════════════════════╗")
-    print("║  CLISONIX UNIFIED SAAS ORCHESTRATOR v3.0                     ║")
+    print("║  KLOUD UNIFIED SAAS ORCHESTRATOR v3.0                     ║")
     print("║  ──────────────────────────────────────────────────────────  ║")
     print(f"║  Port: {port}                                                    ║")
     print(f"║  API Docs: http://localhost:{port}/docs                          ║")
@@ -591,4 +591,5 @@ if __name__ == "__main__":
     print("╚═══════════════════════════════════════════════════════════════╝\n")
     
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+
 

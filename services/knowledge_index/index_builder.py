@@ -141,7 +141,7 @@ class IndexBuilder:
         index_data = {
             "version": "1.0.0",
             "generated_at": datetime.now().isoformat(),
-            "generator": "Clisonix IndexBuilder",
+            "generator": "Kloud IndexBuilder",
             "statistics": {
                 "total_links": len(all_links),
                 "countries": len(countries_seen),
@@ -373,7 +373,7 @@ def main():
     """CLI interface for building the index"""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Build Clisonix Knowledge Index")
+    parser = argparse.ArgumentParser(description="Build Kloud Knowledge Index")
     parser.add_argument("--output", "-o", help="Output directory")
     parser.add_argument("--modules", "-m", nargs="+", help="Specific modules to include")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
@@ -405,3 +405,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

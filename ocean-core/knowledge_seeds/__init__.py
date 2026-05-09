@@ -1,7 +1,7 @@
 """
 Knowledge Seeds Module
 ======================
-Njohuri bazë të kuruar për Clisonix Ocean.
+Njohuri bazë të kuruar për Kloud Ocean.
 """
 
 from .core_knowledge import (
@@ -19,3 +19,4 @@ __all__ = [
     "KnowledgeSeed",
     "ALL_KNOWLEDGE_SEEDS"
 ]
+

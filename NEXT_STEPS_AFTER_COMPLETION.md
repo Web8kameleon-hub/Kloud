@@ -1,4 +1,4 @@
-# 🎯 CLISONIX CLOUD — HAPI TJETËR PAS KOMPLETTIMIT
+# 🎯 KLOUD CLOUD — HAPI TJETËR PAS KOMPLETTIMIT
 
 **Data**: 28 Shkurt 2026  
 **Statusi**: Sistem Komplet ✅ → Tani Çfarë?
@@ -62,14 +62,14 @@ locust -f tests/load/locustfile.py --host=http://localhost:8000
 
 ```bash
 # Invito 50-100 beta users
-# - Internal Clisonix team
+# - Internal Kloud team
 # - Partner organizations
 # - LinkedIn influencers (early access)
 
 # Endpoints për beta:
-GET  https://beta.clisonix.com/
-POST https://api.beta.clisonix.com/auth/login
-GET  https://api.beta.clisonix.com/api/v1/status
+GET  https://beta.kloud.com/
+POST https://api.beta.kloud.com/auth/login
+GET  https://api.beta.kloud.com/api/v1/status
 ```
 
 #### Feedback Collection
@@ -240,7 +240,7 @@ ALB                  (Load balancer)
 CloudWatch           (Monitoring)
 
 # Deployment
-docker push 111111111.dkr.ecr.us-east-1.amazonaws.com/clisonix:latest
+docker push 111111111.dkr.ecr.us-east-1.amazonaws.com/kloud:latest
 # ECS auto-deploys via ECR hook
 ```
 
@@ -330,7 +330,7 @@ Year 2 MRR Target: $50K+
 ### **Positioning**
 
 ```
-"Clisonix = Enterprise AI Platform that Knows Everything"
+"Kloud = Enterprise AI Platform that Knows Everything"
 
 Tagline:     "Your AI that actually understands"
 Audience:    Enterprises, SMBs, Developers
@@ -437,7 +437,7 @@ Value Prop:  150+ AI endpoints + Global knowledge + Zero DevOps
 
 ## 💬 PËRFUNDIMI
 
-**Clisonix Cloud nuk ka nevojë për API shtesë.**
+**Kloud Cloud nuk ka nevojë për API shtesë.**
 
 ✅ Sistemi është **funksionalisht komplet**  
 ✅ Të gjitha **integrimet janë në vend**  
@@ -452,9 +452,10 @@ Ajo që mbetet:
 4. Monitorim 24/7
 5. Customer support
 
-**CLISONIX CLOUD ËSHTË GATA PËR BOTËN.**
+**KLOUD CLOUD ËSHTË GATA PËR BOTËN.**
 
 ---
 
-_Hapi Tjetër | Clisonix Cloud | 28 Shkurt 2026_  
+_Hapi Tjetër | Kloud Cloud | 28 Shkurt 2026_  
 _Status: READY TO LAUNCH ✅_
+

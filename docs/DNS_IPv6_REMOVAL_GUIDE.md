@@ -9,7 +9,7 @@
 ## Hapi 2: Gjej Domain Management
 
 1. Dashboard → **Pakete & Domains** (ose "Packages & Domains")
-2. Gjej: **clisonix.com**
+2. Gjej: **kloud.com**
 3. Kliko: **Verwalten** (Manage) ose **DNS Einstellungen** (DNS Settings)
 
 ## Hapi 3: DNS Records Management
@@ -19,20 +19,20 @@ Duhet të shohësh diçka si kjo:
 \\\
 Type    Name                    Value
 ────────────────────────────────────────────────────────
-A       clisonix.com            157.90.234.158        ← MBAJE
-AAAA    clisonix.com            2a01:4f8:c0c:a9fb::1  ← FSHIJE
-CNAME   www.clisonix.com        clisonix.com          ← MBAJE
+A       kloud.com            157.90.234.158        ← MBAJE
+AAAA    kloud.com            2a01:4f8:c0c:a9fb::1  ← FSHIJE
+CNAME   www.kloud.com        kloud.com          ← MBAJE
 \\\
 
 ## Hapi 4: Fshij AAAA Records
 
-### Për clisonix.com:
-1. Gjej rreshtin: **AAAA | clisonix.com | 2a01:4f8:c0c:a9fb::1**
+### Për kloud.com:
+1. Gjej rreshtin: **AAAA | kloud.com | 2a01:4f8:c0c:a9fb::1**
 2. Kliko: **Löschen** (Delete) ose **❌** (X icon)
 3. Konfirmo: **Ja** (Yes)
 
-### Për www.clisonix.com (nëse ka):
-1. Gjej rreshtin: **AAAA | www.clisonix.com | ...**
+### Për www.kloud.com (nëse ka):
+1. Gjej rreshtin: **AAAA | www.kloud.com | ...**
 2. Kliko: **Löschen** (Delete)
 3. Konfirmo: **Ja**
 
@@ -49,8 +49,8 @@ CNAME   www.clisonix.com        clisonix.com          ← MBAJE
 Kontrollo që ke VETËM këto:
 
 \\\
-✅ A     clisonix.com          157.90.234.158
-✅ CNAME www.clisonix.com      clisonix.com
+✅ A     kloud.com          157.90.234.158
+✅ CNAME www.kloud.com      kloud.com
 
 ❌ AAAA  (NOTHING - should be DELETED)
 \\\
@@ -75,10 +75,10 @@ Kontrollo që ke VETËM këto:
 
 \\\powershell
 # Test 1: DNS Lookup
-nslookup www.clisonix.com
+nslookup www.kloud.com
 
 # Duhet të shohësh VETËM:
-# - CNAME: clisonix.com
+# - CNAME: kloud.com
 # - A: 157.90.234.158
 # - NO AAAA!
 
@@ -89,7 +89,7 @@ nslookup www.clisonix.com
 ### Në Browser:
 
 1. Open **Incognito/Private window** (të shmangësh cache)
-2. Shko te: **https://www.clisonix.com**
+2. Shko te: **https://www.kloud.com**
 3. Duhet të hapet INSTANTLY pa timeout ✅
 
 ---
@@ -114,12 +114,12 @@ Disa versione të Strato kanë "Advanced DNS Editor":
 Strato Kunden-Login
   └─ Übersicht (Overview)
       └─ Pakete & Domains
-          └─ clisonix.com [Verwalten]
+          └─ kloud.com [Verwalten]
 \\\
 
 ### DNS Settings:
 \\\
-clisonix.com Management
+kloud.com Management
   └─ DNS Einstellungen (DNS Settings)
       └─ DNS Records Tabelle
           ├─ A Records       ← MBAJE
@@ -134,7 +134,7 @@ clisonix.com Management
 ### MOS FSHI KËTO:
 
 ❌ **A Record** (157.90.234.158) ← Kjo është IP e serverit tënd!
-❌ **CNAME Record** (www → clisonix.com) ← Kjo redirect-on www
+❌ **CNAME Record** (www → kloud.com) ← Kjo redirect-on www
 ❌ **MX Records** (nëse ke email)
 ❌ **TXT Records** (nëse ke SPF/DKIM)
 
@@ -164,14 +164,14 @@ clisonix.com Management
 
 - **Telefon:** +49 30 300 146 0
 - **Email:** support@strato.de
-- **Thuaj:** "Ich möchte die AAAA Records für clisonix.com löschen"
-  (Dua të fshij AAAA records për clisonix.com)
+- **Thuaj:** "Ich möchte die AAAA Records für kloud.com löschen"
+  (Dua të fshij AAAA records për kloud.com)
 
 ---
 
 ## 🎉 Pas Suksesit
 
-Kur www.clisonix.com hapet në browser:
+Kur www.kloud.com hapet në browser:
 
 1. ✅ AAAA records hequr
 2. ✅ IPv4-only DNS
@@ -184,3 +184,4 @@ Më thuaj: "DONE! www hapet!" dhe kalojmë te next phase 🚀
 
 **Last Updated:** December 26, 2025
 **Estimated Time:** 15 minutes total (include propagation)
+

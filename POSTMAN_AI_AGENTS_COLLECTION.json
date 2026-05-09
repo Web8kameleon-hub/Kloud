@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Clisonix Cloud - AI Agents API Testing",
+    "name": "Kloud Cloud - AI Agents API Testing",
     "description": "Complete Postman collection for testing all AI agent framework endpoints",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "2.0",
@@ -307,4 +307,5 @@
     }
   ]
 }
+
 

@@ -7,7 +7,7 @@ import path from "path";
 const ALLOWED_INPUT_DIRS = [
   path.resolve(process.cwd(), 'data'),
   path.resolve(process.cwd(), 'uploads'),
-  '/tmp/clisonix'
+  '/tmp/kloud'
 ];
 
 function isPathSafe(filePath: string): boolean {
@@ -64,3 +64,4 @@ export async function eegAnalyze(cfg: AppConfig, filePath: string):
     }, 30000);
   });
 }
+

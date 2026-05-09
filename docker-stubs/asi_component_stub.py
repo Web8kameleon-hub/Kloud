@@ -15,7 +15,7 @@ SERVICE_NAME = sys.argv[1] if len(sys.argv) > 1 else "asi-component"
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 9094
 
 app = FastAPI(
-    title=f"Clisonix {SERVICE_NAME.upper()}",
+    title=f"Kloud {SERVICE_NAME.upper()}",
     description=f"ASI Trinity Component - {SERVICE_NAME.upper()}",
     version="1.0.0"
 )
@@ -67,7 +67,7 @@ def info():
         "role": ROLES.get(SERVICE_NAME.lower(), "ASI Component"),
         "capabilities": ["query", "analyze", "learn", "respond"],
         "connected_components": ["ALBA", "ALBI", "JONA", "ASI"],
-        "models": ["llama3.1:8b", "clisonix-ocean:v2"]
+        "models": ["llama3.1:8b", "kloud-ocean:v2"]
     }
 
 @app.post("/query")
@@ -109,3 +109,4 @@ def analyze(data: Dict[str, Any]):
 if __name__ == "__main__":
     print(f"🤖 Starting {SERVICE_NAME.upper()} on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

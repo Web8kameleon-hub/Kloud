@@ -16,7 +16,7 @@ import psutil
 from localization import DEFAULT_LOCALIZATION, LocalizationManager
 
 try:
-    from Clisonix.colored_logger import setup_logger
+    from Kloud.colored_logger import setup_logger
 except Exception:  # pragma: no cover - fallback when optional dependency missing
     def setup_logger(name: str) -> logging.Logger:
         logging.basicConfig(
@@ -283,4 +283,5 @@ def _main() -> None:
 
 if __name__ == "__main__":
     _main()
+
 

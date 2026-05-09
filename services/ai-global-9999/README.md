@@ -1,6 +1,6 @@
-# Clisonix AI Global 9999
+# Kloud AI Global 9999
 
-CPU-first multilingual orchestration gateway for Clisonix.
+CPU-first multilingual orchestration gateway for Kloud.
 
 ## What it does
 
@@ -37,3 +37,4 @@ docker compose up -d --build ai-global-9999
 $body = @{ message = 'Hola, responde en español y resume en inglés.'; language_hint = 'Spanish' } | ConvertTo-Json
 Invoke-RestMethod -Uri "http://localhost:9999/api/v1/chat" -Method Post -ContentType "application/json" -Body $body
 ```
+

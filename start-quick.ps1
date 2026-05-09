@@ -1,14 +1,14 @@
 #!/usr/bin/env pwsh
 # ═══════════════════════════════════════════════════════════════════════════════
-# CLISONIX CLOUD - QUICK START (Ocean Core + Backend + Frontend)
+# KLOUD CLOUD - QUICK START (Ocean Core + Backend + Frontend)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 $ErrorActionPreference = "Continue"
-$Root = "c:\Users\Admin\Desktop\Clisonix-cloud"
+$Root = "c:\Users\Admin\Desktop\Kloud-cloud"
 
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "              CLISONIX CLOUD - QUICK START                     " -ForegroundColor Cyan
+Write-Host "              KLOUD CLOUD - QUICK START                     " -ForegroundColor Cyan
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
 Write-Host ""
 
@@ -29,7 +29,7 @@ Start-Sleep -Seconds 3
 
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
-Write-Host "              [OK] CLISONIX CLOUD STARTED                      " -ForegroundColor Green
+Write-Host "              [OK] KLOUD CLOUD STARTED                      " -ForegroundColor Green
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Services:" -ForegroundColor Cyan
@@ -42,3 +42,4 @@ Write-Host "    curl http://127.0.0.1:8030/api/info" -ForegroundColor DarkGray
 Write-Host "    curl http://127.0.0.1:8000/health" -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
+

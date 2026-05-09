@@ -24,11 +24,11 @@ Features:
 - All categories: Government, Education, Health, Finance, Sports, Entertainment, Tourism
 - Powered by Internal AGI Engine (NO external LLMs)
 
-Portal: https://clisonix.com/modules/curiosity-ocean
+Portal: https://kloud.com/modules/curiosity-ocean
 """
 
 __version__ = "1.0.0"
-__author__ = "Clisonix"
+__author__ = "Kloud"
 __description__ = "Curiosity Ocean - Global Knowledge Portal"
 
 from .api import CuriosityOceanAPI, create_app
@@ -47,3 +47,4 @@ __all__ = [
     "DiscoveryItem",
     "__version__",
 ]
+

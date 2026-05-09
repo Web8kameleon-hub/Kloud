@@ -6,8 +6,9 @@
       "schedule": "*/10 * * * *"
     },
     {
-      "path": "/api/mesh/clisonix-signal",
+      "path": "/api/mesh/kloud-signal",
       "schedule": "*/10 * * * *"
     }
   ]
 }
+

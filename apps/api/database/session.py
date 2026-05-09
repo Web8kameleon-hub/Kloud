@@ -1,5 +1,5 @@
 """
-Clisonix Database Session Management
+Kloud Database Session Management
 Async SQLAlchemy configuration with connection pooling
 """
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
@@ -21,7 +21,7 @@ engine = create_async_engine(
     pool_recycle=3600,  # Recycle connections after 1 hour
     connect_args={
         "server_settings": {
-            "application_name": "Clisonix-api",
+            "application_name": "Kloud-api",
         }
     }
 )
@@ -77,5 +77,6 @@ async def check_db_health() -> bool:
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         return False
+
 
 

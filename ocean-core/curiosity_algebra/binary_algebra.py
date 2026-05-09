@@ -14,7 +14,7 @@ Operacione:
 - Fourier në binary
 - Polynomial në GF(2)
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import struct
@@ -774,3 +774,4 @@ def get_binary_algebra() -> BinaryAlgebraEngine:
     if _binary_algebra is None:
         _binary_algebra = BinaryAlgebraEngine()
     return _binary_algebra
+

@@ -25,7 +25,7 @@ export async function GET() {
     });
 
     // Get customer email from session/auth (in production, get from authenticated user)
-    const customerEmail = process.env.USER_EMAIL || "customer@clisonix.com";
+    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
 
     // Search for customer by email
     const customers = await stripe.customers.list({
@@ -66,7 +66,7 @@ export async function GET() {
       description:
         invoice.description ||
         invoice.lines?.data?.[0]?.description ||
-        "Clisonix Subscription",
+        "Kloud Subscription",
     }));
 
     return NextResponse.json({
@@ -84,4 +84,5 @@ export async function GET() {
     );
   }
 }
+
 

@@ -4,7 +4,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Root = "C:\clisonix-cloud"
+$Root = "C:\kloud-cloud"
 $ComposeFile = Join-Path $Root "docker-compose.prod.yml"
 
 Set-Location $Root
@@ -90,7 +90,7 @@ function Auto-Heal {
         
         foreach ($s in $services) {
             try {
-                $state = docker inspect -f '{{.State.Health.Status}}' "clisonix-$s" 2>$null
+                $state = docker inspect -f '{{.State.Health.Status}}' "kloud-$s" 2>$null
                 
                 if (-not $state) {
                     continue
@@ -182,4 +182,5 @@ switch ($Action) {
     "telemetry-unifim"    { Telemetry-Unifim }
     "dashboard-prod-ready" { Dashboard-ProdReady }
 }
+
 

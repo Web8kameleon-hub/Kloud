@@ -103,7 +103,7 @@ class TextSummarizer:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("📝 TextSummarizer initialized")
     
@@ -419,3 +419,4 @@ def get_text_summarizer() -> TextSummarizer:
     if _text_summarizer is None:
         _text_summarizer = TextSummarizer()
     return _text_summarizer
+

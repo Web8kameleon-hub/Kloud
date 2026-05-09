@@ -7,7 +7,7 @@ from typing import Dict, List
 import subprocess
 import socket
 
-class ClisonixRealMetrics:
+class KloudRealMetrics:
     def __init__(self):
         self.start_time = datetime.datetime.utcnow()
         
@@ -33,8 +33,8 @@ class ClisonixRealMetrics:
             # Temperatura nÃ«se Ã«shtÃ« e mundur
             temperatures = self.get_temperatures()
             
-            # Proceset e Clisonix
-            Clisonix_processes = self.get_Clisonix_processes()
+            # Proceset e Kloud
+            Kloud_processes = self.get_Kloud_processes()
             
             return {
                 "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
@@ -67,9 +67,9 @@ class ClisonixRealMetrics:
                     "temperatures": temperatures,
                     "uptime_seconds": round((datetime.datetime.utcnow() - self.start_time).total_seconds(), 2)
                 },
-                "Clisonix": {
-                    "process_count": len(Clisonix_processes),
-                    "processes": Clisonix_processes,
+                "Kloud": {
+                    "process_count": len(Kloud_processes),
+                    "processes": Kloud_processes,
                     "alba_status": self.check_alba_status(),
                     "asi_status": self.check_asi_status(),
                     "api_endpoints_active": self.check_api_endpoints()
@@ -116,17 +116,17 @@ class ClisonixRealMetrics:
             pass
         return {"available_sensors": []}
 
-    def get_Clisonix_processes(self) -> List[Dict]:
-        """Gjen proceset aktive tÃ« Clisonix"""
-        Clisonix_processes = []
+    def get_Kloud_processes(self) -> List[Dict]:
+        """Gjen proceset aktive tÃ« Kloud"""
+        Kloud_processes = []
         try:
             for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
                 try:
                     proc_info = proc.info
-                    # Kontrollo nÃ«se Ã«shtÃ« proces Clisonix
+                    # Kontrollo nÃ«se Ã«shtÃ« proces Kloud
                     if any(keyword in proc_info['name'].lower() for keyword in 
-                          ['python', 'Clisonix', 'alba', 'asi', 'fastapi', 'uvicorn']):
-                        Clisonix_processes.append({
+                          ['python', 'Kloud', 'alba', 'asi', 'fastapi', 'uvicorn']):
+                        Kloud_processes.append({
                             "pid": proc_info['pid'],
                             "name": proc_info['name'],
                             "cpu_percent": round(proc_info['cpu_percent'] or 0, 2),
@@ -136,7 +136,7 @@ class ClisonixRealMetrics:
                     continue
         except:
             pass
-        return Clisonix_processes
+        return Kloud_processes
 
     def check_alba_status(self) -> Dict:
         """Kontrollon statusin real tÃ« ALBA"""
@@ -239,17 +239,18 @@ class ClisonixRealMetrics:
 
 # âœ… PÃ‹RDORIMI:
 if __name__ == "__main__":
-    metrics_collector = ClisonixRealMetrics()
+    metrics_collector = KloudRealMetrics()
     
     # Merr metrika reale
     real_metrics = metrics_collector.get_system_metrics()
     
     # Printo rezultatet
-    print("ðŸš€ Clisonix REAL METRICS:")
+    print("ðŸš€ Kloud REAL METRICS:")
     print(json.dumps(real_metrics, indent=2))
     
     # Gjendja e shÃ«ndetit
     health = real_metrics['health_score']
     status = "âœ… OPTIMAL" if health > 90 else "âš ï¸ ATTENTION" if health > 70 else "ðŸš¨ CRITICAL"
     print(f"\nðŸ¥ SYSTEM HEALTH: {health}% - {status}")
+
 

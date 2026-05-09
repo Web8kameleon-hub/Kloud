@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-  CLISONIX CLOUD - COMPLETE SYSTEM LAUNCHER WITH SLACK
+  KLOUD CLOUD - COMPLETE SYSTEM LAUNCHER WITH SLACK
   Launch all services: ALBA, ALBI, JONA, Orchestrator, API, Frontend, Slack Integration
 
 .DESCRIPTION
@@ -27,7 +27,7 @@ param(
     [string]$WebhookUrl = $env:SLACK_WEBHOOK_URL,
     
     [Parameter(Mandatory = $false)]
-    [string]$Channel = "#clisonix-monitoring",
+    [string]$Channel = "#kloud-monitoring",
     
     [Parameter(Mandatory = $false)]
     [bool]$Slack = $true,
@@ -46,7 +46,7 @@ param(
 function Write-Header {
     Write-Host ""
     Write-Host "╔════════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║  CLISONIX CLOUD - COMPLETE SYSTEM LAUNCHER                       ║" -ForegroundColor Cyan
+    Write-Host "║  KLOUD CLOUD - COMPLETE SYSTEM LAUNCHER                       ║" -ForegroundColor Cyan
     Write-Host "║  All Components + Slack Integration + Real-time Monitoring       ║" -ForegroundColor Cyan
     Write-Host "╚════════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
@@ -84,7 +84,7 @@ function Show-Help {
     Write-Host "OPTIONS:" -ForegroundColor Yellow
     Write-Host "  -Mode <string>        Launch mode: full|saas-only|app-only|docker|slack-test"
     Write-Host "  -WebhookUrl <string>  Slack webhook URL (optional)"
-    Write-Host "  -Channel <string>     Slack channel (default: #clisonix-monitoring)"
+    Write-Host "  -Channel <string>     Slack channel (default: #kloud-monitoring)"
     Write-Host "  -Slack <bool>         Enable Slack integration (default: true)"
     Write-Host "  -DryRun               Show what would execute"
     Write-Host "  -Help                 Show this help"
@@ -146,13 +146,13 @@ if ($Mode -eq "slack-test") {
     Write-Item "Testing webhook connectivity..."
     
     $testPayload = @{
-        text = "✅ Clisonix Cloud Slack Integration Test"
+        text = "✅ Kloud Cloud Slack Integration Test"
         blocks = @(
             @{
                 type = "section"
                 text = @{
                     type = "mrkdwn"
-                    text = "✅ *Clisonix Cloud* Slack Integration`n*Status:* Connected`n*Time:* $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    text = "✅ *Kloud Cloud* Slack Integration`n*Status:* Connected`n*Time:* $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
                 }
             }
         )
@@ -236,7 +236,7 @@ Write-Divider
 
 Write-Host ""
 Write-Host "╔════════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  ✅ CLISONIX CLOUD - ALL COMPONENTS ONLINE & INTERCONNECTED       ║" -ForegroundColor Green
+Write-Host "║  ✅ KLOUD CLOUD - ALL COMPONENTS ONLINE & INTERCONNECTED       ║" -ForegroundColor Green
 Write-Host "╚════════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
 
 Write-Host ""
@@ -302,4 +302,5 @@ Write-Host "✅ System is fully operational and all components are interconnecte
 Write-Host "✅ Services monitoring active via Slack integration"
 Write-Host "✅ Ready for production deployment"
 Write-Host ""
+
 

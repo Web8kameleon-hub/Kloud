@@ -1,7 +1,7 @@
-// 🔷 CLISONIX BINARY PROTOCOL (CBP) - Go SDK
+// 🔷 KLOUD BINARY PROTOCOL (CBP) - Go SDK
 // ===========================================
 //
-// Go library for Clisonix Binary Protocol.
+// Go library for Kloud Binary Protocol.
 //
 // Frame Layout:
 //   Offset | Size | Field
@@ -12,7 +12,7 @@
 //   6      | 2    | Payload length (big-endian)
 //   8      | N    | Payload
 //
-// Author: Clisonix Team
+// Author: Kloud Team
 // License: MIT
 
 package cbp
@@ -371,3 +371,4 @@ type Client struct {
 func NewClient(endpoint string) *Client {
 	return &Client{endpoint: endpoint}
 }
+

@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                   CLISONIX AGENTS - TELEMETRY                                ║
+║                   KLOUD AGENTS - TELEMETRY                                ║
 ║             Logging, Metrics, and Observability for Agents                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -28,7 +28,7 @@ from collections import defaultdict
 import threading
 
 
-logger = logging.getLogger("clisonix.agents.telemetry")
+logger = logging.getLogger("kloud.agents.telemetry")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -547,3 +547,4 @@ def log_task_completed(
 def log_task_failed(task_id: str, agent_name: str, error: str) -> None:
     """Log task failed to global telemetry"""
     get_telemetry().task_failed(task_id, agent_name, error)
+

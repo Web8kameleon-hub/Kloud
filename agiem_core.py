@@ -2,7 +2,7 @@
 """
 AGIEM Core (real-only)
 
-Location: C:\\Clisonix-cloud\\agiem_core.py
+Location: C:\\Kloud-cloud\\agiem_core.py
 
 Purpose:
 - Real-time, production-ready core for ASI/AGIEM operations.
@@ -22,8 +22,8 @@ Features:
 
 Run examples:
   python agiem_core.py status
-  python agiem_core.py analyze --logs C:\\Clisonix-cloud\\logs
-  python agiem_core.py backup --path C:\\Clisonix-cloud\\data --out backup.zip
+  python agiem_core.py analyze --logs C:\\Kloud-cloud\\logs
+  python agiem_core.py backup --path C:\\Kloud-cloud\\data --out backup.zip
   python agiem_core.py register --hq http://localhost:7777/mesh/register
 
 Note: this module does not alter system configuration or install services.
@@ -1060,7 +1060,7 @@ class ReproductionScheduler:
 
 
 class NodeReal:
-    """Represents a real Clisonix/ASI node that reports metrics and can upload files.
+    """Represents a real Kloud/ASI node that reports metrics and can upload files.
 
     This class does not synthesize data; it reads PSUTIL and local files.
     """
@@ -1074,8 +1074,8 @@ class NodeReal:
         except Exception:
             self.ip = "127.0.0.1"
         # endpoints can be configured externally
-        self.api_audio = os.getenv("AGIEM_API_AUDIO", "https://clisonix.com/api/uploads/audio/process")
-        self.api_eeg = os.getenv("AGIEM_API_EEG", "https://clisonix.com/api/uploads/eeg/process")
+        self.api_audio = os.getenv("AGIEM_API_AUDIO", "https://kloud.com/api/uploads/audio/process")
+        self.api_eeg = os.getenv("AGIEM_API_EEG", "https://kloud.com/api/uploads/eeg/process")
 
     def collect_metrics(self) -> Dict[str, Any]:
         if psutil is None:
@@ -1357,4 +1357,5 @@ def main(argv: Optional[List[str]] = None):
 
 if __name__ == "__main__":
     sys.exit(main())
+
 

@@ -1,6 +1,6 @@
 'use client'
 
-// Clisonix Industrial Cloud Client Layout
+// Kloud Industrial Cloud Client Layout
 // Author: Ledjan Ahmati
 // All interactive logic moved here
 
@@ -142,7 +142,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <header className={`${statusColor} text-white py-4 px-8 flex items-center justify-between shadow-lg`}>
         <div className="flex items-center gap-4 flex-1">
           <div className="flex items-center gap-2">
-            <div className="text-3xl font-black tracking-tight">Clisonix</div>
+            <div className="text-3xl font-black tracking-tight">Kloud</div>
             <span className="text-xs font-bold px-2 py-1 bg-black/30 rounded-full">Cloud</span>
           </div>
           <div className="flex gap-2 ml-4">
@@ -238,7 +238,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Footer */}
       <footer className="bg-gray-900 border-t border-gray-700 text-gray-400 py-6 px-8 text-center text-xs mt-8">
         <div className="mb-2 text-gray-500">
-          © 2025 Clisonix Industrial Cloud Platform. Enterprise Grade Monitoring & Orchestration.
+          © 2025 Kloud Industrial Cloud Platform. Enterprise Grade Monitoring & Orchestration.
         </div>
         <div className="flex justify-center gap-4 mb-2 text-gray-600">
           <span>Compliance: {status?.complianceStatus}</span>
@@ -256,3 +256,4 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     </div>
   )
 }
+

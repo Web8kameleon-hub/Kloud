@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
 <#
 ===============================================================================
-                CLISONIX CLOUD - START ALL SERVICES v3.0
+                KLOUD CLOUD - START ALL SERVICES v3.0
                    Ultimate Service Launcher & Orchestrator
 
-  Comprehensive launcher for all Clisonix Cloud services with:
+  Comprehensive launcher for all Kloud Cloud services with:
   - Intelligent startup sequencing
   - Health monitoring & auto-recovery
   - Multiple deployment modes
@@ -119,7 +119,7 @@ function Show-Banner {
     Clear-Host
     Write-Host "`n===============================================================================" -ForegroundColor $Script:Colors.Title
     Write-Host "                                                                               " -ForegroundColor $Script:Colors.Title
-    Write-Host "              CLISONIX CLOUD - START ALL SERVICES                              " -ForegroundColor $Script:Colors.Title
+    Write-Host "              KLOUD CLOUD - START ALL SERVICES                              " -ForegroundColor $Script:Colors.Title
     Write-Host "                    Ultimate Service Orchestrator                              " -ForegroundColor $Script:Colors.Title
     Write-Host "                                                                               " -ForegroundColor $Script:Colors.Title
     Write-Host "  Mode: $($Mode.ToUpper())" -ForegroundColor $Script:Colors.Title
@@ -127,7 +127,7 @@ function Show-Banner {
     Write-Host "                                                                               " -ForegroundColor $Script:Colors.Title
     Write-Host "===============================================================================`n" -ForegroundColor $Script:Colors.Title
     
-    Write-Log "Starting Clisonix Cloud in $Mode mode"
+    Write-Log "Starting Kloud Cloud in $Mode mode"
 }
 
 function Show-Status {
@@ -383,7 +383,7 @@ function Start-ServiceWindow {
     
     $scriptBlock = @"
 Set-Location '$($Script:Root)'
-`$host.UI.RawUI.WindowTitle = 'CLISONIX - $Name $(if($Port -gt 0){"($Port)"})'
+`$host.UI.RawUI.WindowTitle = 'KLOUD - $Name $(if($Port -gt 0){"($Port)"})'
 Write-Host '================================================================' -ForegroundColor $Color
 Write-Host '  $($Name.PadRight(60))' -ForegroundColor $Color
 if ($Port -gt 0) {
@@ -814,5 +814,6 @@ if ($Monitor -and -not $DryRun) {
     Start-ContinuousMonitoring
 }
 
-Write-Host "Clisonix Cloud is ready! Happy coding!`n" -ForegroundColor $Script:Colors.Success
+Write-Host "Kloud Cloud is ready! Happy coding!`n" -ForegroundColor $Script:Colors.Success
 Write-Log "Startup completed successfully in $Mode mode"
+

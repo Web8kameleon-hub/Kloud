@@ -18,7 +18,7 @@ from datetime import datetime
 
 # Connection parameters
 DB_HOST = "postgres"  # Docker container name
-DB_NAME = "clisonix"
+DB_NAME = "kloud"
 DB_USER = "postgres"
 DB_PASSWORD = "postgres"
 DB_PORT = 5432
@@ -345,3 +345,4 @@ if __name__ == "__main__":
     optimizer = SQLOptimizer()
     optimizer.run_all_optimizations()
     optimizer.save_report()
+

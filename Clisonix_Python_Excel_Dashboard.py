@@ -1,5 +1,5 @@
 """
-🎯 CLISONIX PYTHON + EXCEL INTEGRATION
+🎯 KLOUD PYTHON + EXCEL INTEGRATION
 Krijon Excel workbook me Python formulas që ekzekutohen brenda Excel
 
 KËRKON: Microsoft 365 me Python in Excel (Preview/Beta feature)
@@ -107,7 +107,7 @@ def create_python_excel_workbook(output_path: str = None):
         return None
     
     base_path = Path(__file__).parent
-    output_path = output_path or base_path / "Clisonix_Python_Dashboard.xlsx"
+    output_path = output_path or base_path / "Kloud_Python_Dashboard.xlsx"
     
     wb = Workbook()
     
@@ -304,7 +304,7 @@ def create_api_analysis_workbook(api_data_path: str = None, output_path: str = N
         return None
     
     base_path = Path(__file__).parent
-    output_path = output_path or base_path / "Clisonix_API_Analysis.xlsx"
+    output_path = output_path or base_path / "Kloud_API_Analysis.xlsx"
     
     # Load API data if available
     api_data = []
@@ -342,26 +342,26 @@ def create_api_analysis_workbook(api_data_path: str = None, output_path: str = N
         {
             'endpoint': '/health',
             'method': 'GET',
-            'description': 'Kontrollon gjendjen e shëndetit të sistemit Clisonix Cloud',
+            'description': 'Kontrollon gjendjen e shëndetit të sistemit Kloud Cloud',
             'sample': '{"status": "healthy", "version": "2.1.0", "uptime": 86400}',
-            'curl': 'curl -X GET "https://api.clisonix.com/health" -H "Authorization: Bearer $TOKEN"',
-            'python': 'response = requests.get("https://api.clisonix.com/health", headers={"Authorization": f"Bearer {TOKEN}"})'
+            'curl': 'curl -X GET "https://api.kloud.com/health" -H "Authorization: Bearer $TOKEN"',
+            'python': 'response = requests.get("https://api.kloud.com/health", headers={"Authorization": f"Bearer {TOKEN}"})'
         },
         {
             'endpoint': '/api/alba/health',
             'method': 'GET',
             'description': 'Status i ALBA Network shërbimit për audio streaming',
             'sample': '{"service": "alba", "status": "active", "connections": 42}',
-            'curl': 'curl -X GET "https://api.clisonix.com/api/alba/health"',
-            'python': 'response = requests.get("https://api.clisonix.com/api/alba/health")'
+            'curl': 'curl -X GET "https://api.kloud.com/api/alba/health"',
+            'python': 'response = requests.get("https://api.kloud.com/api/alba/health")'
         },
         {
             'endpoint': '/asi/trinity/status',
             'method': 'GET',
             'description': 'ASI Trinity Engine status dhe metrika',
             'sample': '{"trinity": "active", "goroutines": 156, "memory_mb": 512}',
-            'curl': 'curl -X GET "https://api.clisonix.com/asi/trinity/status"',
-            'python': 'response = requests.get("https://api.clisonix.com/asi/trinity/status")'
+            'curl': 'curl -X GET "https://api.kloud.com/asi/trinity/status"',
+            'python': 'response = requests.get("https://api.kloud.com/asi/trinity/status")'
         },
     ]
     
@@ -401,7 +401,7 @@ def create_api_analysis_workbook(api_data_path: str = None, output_path: str = N
 # ============================================================
 
 if __name__ == "__main__":
-    print("🎯 Clisonix Python + Excel Dashboard Creator")
+    print("🎯 Kloud Python + Excel Dashboard Creator")
     print("=" * 50)
     
     # Create Python Excel dashboard
@@ -417,3 +417,4 @@ if __name__ == "__main__":
     print()
     print("💡 Hap këto file në Excel 365 dhe aktivizo Python in Excel")
     print("   për të përdorur =PY() formulas!")
+

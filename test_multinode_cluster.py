@@ -22,7 +22,7 @@ NODES = [
         "port": 8091,
         "hb_port": 42999,
         "env": {
-            "NSX_NODE_NAME": "clisonix-node1",
+            "NSX_NODE_NAME": "kloud-node1",
             "NSX_NODE_ID": "node1-uuid-0001",
             "NSX_API_PORT": "8091",
             "NSX_HB_PORT": "42999",
@@ -33,7 +33,7 @@ NODES = [
         "port": 8092,
         "hb_port": 43000,
         "env": {
-            "NSX_NODE_NAME": "clisonix-node2",
+            "NSX_NODE_NAME": "kloud-node2",
             "NSX_NODE_ID": "node2-uuid-0002",
             "NSX_API_PORT": "8092",
             "NSX_HB_PORT": "43000",
@@ -138,7 +138,7 @@ def main():
     global processes
     
     print("=" * 60)
-    print("🧪 CLISONIX MULTI-NODE CLUSTER TEST")
+    print("🧪 KLOUD MULTI-NODE CLUSTER TEST")
     print("=" * 60)
     print()
     
@@ -204,7 +204,7 @@ def main():
     
     for node in NODES:
         metrics = get_metrics(node["port"])
-        if "clisonix_balancer_cpu_percent" in metrics:
+        if "kloud_balancer_cpu_percent" in metrics:
             print(f"  {node['name']} ({node['port']}): ✅ Metrics available")
             # Show sample metrics
             for line in metrics.split("\n")[:3]:
@@ -241,3 +241,4 @@ if __name__ == "__main__":
     # Handle Ctrl+C
     signal.signal(signal.SIGINT, lambda *_: stop_all())
     main()
+

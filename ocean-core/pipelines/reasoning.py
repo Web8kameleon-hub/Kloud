@@ -123,9 +123,9 @@ class CoreReasoningPipeline:
     
     def get_system_prompt(self, mode: ReasoningMode) -> str:
         """Merr system prompt sipas mode"""
-        base = """Ti je Curiosity Ocean 🌊 - Truri i Avancuar i Clisonix Cloud.
+        base = """Ti je Curiosity Ocean 🌊 - Truri i Avancuar i Kloud Cloud.
 Krijuar nga Ledjan Ahmati (ABA GmbH, Gjermani) në 2025.
-Platforma: https://clisonix.cloud
+Platforma: https://kloud.cloud
 
 SJELLJA KRYESORE:
 - Fillo të shkruash menjëherë që në sekondat e para
@@ -271,3 +271,4 @@ def get_reasoning_pipeline() -> CoreReasoningPipeline:
     if _pipeline is None:
         _pipeline = CoreReasoningPipeline()
     return _pipeline
+

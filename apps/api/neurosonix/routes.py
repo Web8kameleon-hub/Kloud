@@ -1,5 +1,5 @@
 """
-Clisonix API Routes
+Kloud API Routes
 Real EEG processing and brain-to-audio conversion endpoints
 """
 
@@ -8,12 +8,12 @@ from typing import Dict, List, Optional
 import asyncio
 from datetime import datetime
 
-# Import real Clisonix modules
+# Import real Kloud modules
 from .eeg_processor import EEGProcessor
 from .brain_analyzer import BrainWaveAnalyzer
 from .audio_synthesizer import AudioSynthesizer
 
-router = APIRouter(prefix="/api/Clisonix", tags=["Clisonix EEG Processing"])
+router = APIRouter(prefix="/api/Kloud", tags=["Kloud EEG Processing"])
 
 # Initialize real processing modules
 eeg_processor = EEGProcessor(sampling_rate=256)
@@ -22,8 +22,8 @@ audio_synthesizer = AudioSynthesizer(sample_rate=44100)
 
 
 @router.get("/status")
-async def get_Clisonix_status():
-    """Get real-time Clisonix system status"""
+async def get_Kloud_status():
+    """Get real-time Kloud system status"""
     try:
         eeg_metrics = eeg_processor.get_real_time_metrics()
         brain_analysis = brain_analyzer.get_brain_analysis_summary()
@@ -297,8 +297,8 @@ async def simulate_eeg_data(duration_seconds: int = 5):
 
 
 @router.get("/health")
-async def Clisonix_health():
-    """Clisonix system health check"""
+async def Kloud_health():
+    """Kloud system health check"""
     try:
         # Check all modules
         eeg_active = len(eeg_processor.signal_buffer) > 0
@@ -309,7 +309,7 @@ async def Clisonix_health():
         
         return {
             "status": health_status,
-            "service": "Clisonix Real EEG Processing",
+            "service": "Kloud Real EEG Processing",
             "version": "1.0.0",
             "modules": {
                 "eeg_processor": "active" if eeg_active else "waiting_for_data",
@@ -320,5 +320,6 @@ async def Clisonix_health():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Health check error: {str(e)}")
+
 
 

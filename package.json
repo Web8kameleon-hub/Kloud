@@ -1,7 +1,7 @@
 {
-  "name": "clisonix-cloud",
+  "name": "kloud-cloud",
   "version": "1.2.3",
-  "description": "Clisonix AI Platform - Unified Mono Repository",
+  "description": "Kloud AI Platform - Unified Mono Repository",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -23,18 +23,18 @@
     "test": "npm run test:web && npm run test:api",
     "test:web": "cd apps/web && npm test",
     "test:api": "cd apps/api && python -m pytest",
-    "test:postman": "newman run Clisonix-Cloud-Real-APIs.postman_collection.json --env-var base_url=http://46.225.14.83:8000",
-    "test:postman:prod": "newman run Clisonix-Cloud-Real-APIs.postman_collection.json --env-var base_url=http://46.225.14.83:8000",
+    "test:postman": "newman run Kloud-Cloud-Real-APIs.postman_collection.json --env-var base_url=http://46.225.14.83:8000",
+    "test:postman:prod": "newman run Kloud-Cloud-Real-APIs.postman_collection.json --env-var base_url=http://46.225.14.83:8000",
     "lint": "npm run lint:web",
     "lint:web": "cd apps/web && npm run lint",
     "clean": "rimraf node_modules apps/*/node_modules packages/*/node_modules apps/*/.next",
     "reset": "npm run clean && npm install",
     "setup": "npm install && npm run setup:packages",
-    "setup:packages": "npm run setup:shared && npm run setup:ui && npm run setup:agi-brain && npm run setup:Clisonix",
+    "setup:packages": "npm run setup:shared && npm run setup:ui && npm run setup:agi-brain && npm run setup:Kloud",
     "setup:shared": "cd packages/shared && npm install",
     "setup:ui": "cd packages/ui && npm install",
     "setup:agi-brain": "cd packages/agi-brain && npm install",
-    "setup:Clisonix": "cd packages/Clisonix && npm install"
+    "setup:Kloud": "cd packages/Kloud && npm install"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -103,3 +103,4 @@
     "zod": "3.24.1"
   }
 }
+

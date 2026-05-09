@@ -143,7 +143,7 @@ class HybridDataCollector:
         endpoint: str,
         params: Optional[Dict] = None
     ) -> Optional[Dict[str, Any]]:
-        \"\"\"Query internal Clisonix API\"\"\"
+        \"\"\"Query internal Kloud API\"\"\"
         try:
             result = await self.internal_client.get(endpoint, params=params)
             self.stats['internal_api_queries'] += 1
@@ -408,3 +408,4 @@ async def demo_hybrid_collection():
 
 if __name__ == '__main__':
     asyncio.run(demo_hybrid_collection())
+

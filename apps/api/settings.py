@@ -1,5 +1,5 @@
 """
-Clisonix Cloud Settings
+Kloud Cloud Settings
 Industrial-grade configuration with Stripe integration and plan quotas
 """
 import os
@@ -27,13 +27,13 @@ class Settings(BaseSettings):
     debug: bool = Field(default=True)
     
     # API Configuration
-    api_title: str = "Clisonix Cloud API"
+    api_title: str = "Kloud Cloud API"
     api_version: str = "1.0.0"
     api_description: str = "Industrial AI-Powered Neurological Analysis Platform"
     
     # Database
     database_url: str = Field(
-        default="postgresql+asyncpg://Clisonix:secure123@localhost:5432/Clisonix_db"
+        default="postgresql+asyncpg://Kloud:secure123@localhost:5432/Kloud_db"
     )
     database_echo: bool = Field(default=False)
     
@@ -52,8 +52,8 @@ class Settings(BaseSettings):
     stripe_publishable_key: str = Field(default="pk_test_...")
     stripe_secret_key: str = Field(default="sk_test_...")
     stripe_webhook_secret: str = Field(default="whsec_...")
-    stripe_success_url: str = Field(default="https://app.Clisonix.com/success")
-    stripe_cancel_url: str = Field(default="https://app.Clisonix.com/cancel")
+    stripe_success_url: str = Field(default="https://app.Kloud.com/success")
+    stripe_cancel_url: str = Field(default="https://app.Kloud.com/cancel")
     
     # Stripe Price IDs (Set these in your environment or .env file)
     stripe_price_standard: str = Field(default="price_standard_monthly")
@@ -61,7 +61,7 @@ class Settings(BaseSettings):
     stripe_price_enterprise: str = Field(default="price_enterprise_monthly")
     
     # File Storage
-    s3_bucket: str = Field(default="Clisonix-uploads")
+    s3_bucket: str = Field(default="Kloud-uploads")
     s3_access_key: str = Field(default="")
     s3_secret_key: str = Field(default="")
     s3_endpoint_url: Optional[str] = Field(default="http://localhost:9000")  # MinIO for local dev
@@ -211,5 +211,6 @@ REDIS_URL = settings.redis_url
 SECRET_KEY = settings.secret_key
 STRIPE_SECRET_KEY = settings.stripe_secret_key
 STRIPE_PUBLISHABLE_KEY = settings.stripe_publishable_key
+
 
 

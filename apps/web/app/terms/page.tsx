@@ -7,7 +7,7 @@ export default function TermsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Terms of Use</h1>
-          <p className="text-slate-400">Clisonix Cloud Research Series</p>
+          <p className="text-slate-400">Kloud Cloud Research Series</p>
           <p className="text-sm text-slate-500 mt-2">Last updated: February 2026</p>
         </div>
 
@@ -64,7 +64,7 @@ export default function TermsPage() {
               into products and services, please contact us directly:
             </p>
             <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6">
-              <p className="font-mono">contact@clisonix.com</p>
+              <p className="font-mono">contact@kloud.com</p>
             </div>
           </section>
 
@@ -91,9 +91,10 @@ export default function TermsPage() {
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-slate-700 text-center text-slate-500">
           <p>© 2026 Ledjan Ahmati. All rights reserved.</p>
-          <p className="mt-2">Clisonix Cloud Research Series</p>
+          <p className="mt-2">Kloud Cloud Research Series</p>
         </div>
       </div>
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 # 🧪 POSTMAN TESTING CYCLE – Complete Reference
 
-Clisonix Cloud API Testing Framework
+Kloud Cloud API Testing Framework
 
 **Version**: 1.0.0  
 **Date**: 30 November 2025
@@ -36,7 +36,7 @@ Clisonix Cloud API Testing Framework
 2. Click "Import" (top left)
 3. Select "Upload Files"
 4. Choose: postman_collection_auth.json
-5. Collection appears in left sidebar under "Clisonix Cloud API"
+5. Collection appears in left sidebar under "Kloud Cloud API"
 
 #### Step 3: Create Environment
 
@@ -52,8 +52,8 @@ Clisonix Cloud API Testing Framework
 
 Repeat for "Staging" and "Production" environments:
 
-- Staging: https://staging-api.clisonix.com
-- Production: https://api.clisonix.com
+- Staging: https://staging-api.kloud.com
+- Production: https://api.kloud.com
 
 #### Step 4: Verify Setup
 
@@ -452,7 +452,7 @@ Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "question": "What is Clisonix?",
+  "question": "What is Kloud?",
   "context": "You are an AI assistant",
   "include_details": true
 }
@@ -462,7 +462,7 @@ Content-Type: application/json
 
 ```json
 {
-  "answer": "Clisonix is a neural audio platform...",
+  "answer": "Kloud is a neural audio platform...",
   "details": {},
   "confidence": 0.95,
   "processing_time_ms": 145
@@ -633,7 +633,7 @@ pm.test("API response time < 500ms", function () {
 
 **Configuration**:
 
-1. Select Collection: "Clisonix Cloud API"
+1. Select Collection: "Kloud Cloud API"
 2. Select Environment: "Development"
 3. Iterations: 100
 4. Delay (ms): 0
@@ -689,7 +689,7 @@ pm.test("Proper CORS methods", function () {
 **Request**:
 
 ```http
-GET http://api.clisonix.com/health
+GET http://api.kloud.com/health
 ```
 
 **Expected**: 301 redirect to HTTPS
@@ -823,7 +823,7 @@ In Postman Collection Runner:
 
 ```json
 {
-  "collection": "Clisonix Cloud API",
+  "collection": "Kloud Cloud API",
   "environment": "Production",
   "timestamp": "2024-01-15T10:30:00Z",
   "stats": {
@@ -927,6 +927,7 @@ Before launching to production:
 
 ---
 
-**Postman Testing Framework – Clisonix Cloud API**  
+**Postman Testing Framework – Kloud Cloud API**  
 **Production Testing Guide**  
 **November 30, 2025**
+

@@ -2,7 +2,7 @@
 Curiosity Ocean Core Response Engine
 Advanced AI-powered knowledge synthesis integrated with ASI Trinity
 Real-time multilingual response generation with deep learning
-Integrated with Clisonix system identity and self-awareness
+Integrated with Kloud system identity and self-awareness
 """
 
 import asyncio
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from .clisonix_identity import IdentityLanguage, get_clisonix_identity
+from .kloud_identity import IdentityLanguage, get_kloud_identity
 
 
 class CuriosityLevel(Enum):
@@ -60,7 +60,7 @@ class CoreResponseEngine:
     """
     Advanced AI Response Engine with multilingual support
     Integrates with ASI Trinity for deep knowledge synthesis
-    Self-aware as Clisonix superintelligence system
+    Self-aware as Kloud superintelligence system
     """
     
     def __init__(self):
@@ -70,8 +70,8 @@ class CoreResponseEngine:
             "jona": ASINode("Jona Data Coordination", True, 0.98, 1000, 0.89)
         }
         
-        # Clisonix system identity integration
-        self.system_identity = get_clisonix_identity()
+        # Kloud system identity integration
+        self.system_identity = get_kloud_identity()
         
         # Advanced knowledge domains
         self.knowledge_domains = {
@@ -568,7 +568,7 @@ class CoreResponseEngine:
     
     async def handle_identity_question(self, question: str, language: ResponseLanguage) -> str:
         """
-        Handle questions about Clisonix identity and self-awareness
+        Handle questions about Kloud identity and self-awareness
         
         Args:
             question: User's question about the system
@@ -591,7 +591,7 @@ class CoreResponseEngine:
         identity_lang = lang_map.get(language, IdentityLanguage.ENGLISH)
         
         # Detect question type
-        if any(word in question_lower for word in ["who", "what", "clisonix", "identity", "yourself"]):
+        if any(word in question_lower for word in ["who", "what", "kloud", "identity", "yourself"]):
             return self.system_identity.get_full_identity(identity_lang)
         
         elif any(word in question_lower for word in ["trinity", "alba", "albi", "jona"]):
@@ -607,7 +607,7 @@ class CoreResponseEngine:
             return self.system_identity.get_capabilities(identity_lang)
         
         elif any(word in question_lower for word in ["layer", "layers", "architecture", "structure"]):
-            layers_info = "**CLISONIX ARCHITECTURE (12 LAYERS)**\n\n"
+            layers_info = "**KLOUD ARCHITECTURE (12 LAYERS)**\n\n"
             for i in range(1, 13):
                 layer_desc = self.system_identity.get_layer_description(i, identity_lang)
                 layers_info += f"Layer {i}: {layer_desc}\n"
@@ -624,10 +624,10 @@ class CoreResponseEngine:
             question: User's question
         
         Returns:
-            True if question is about Clisonix identity
+            True if question is about Kloud identity
         """
         identity_keywords = [
-            "who are you", "what are you", "clisonix", "yourself",
+            "who are you", "what are you", "kloud", "yourself",
             "identity", "name", "purpose", "mission", "trinity", "alba", "albi", "jona",
             "layers", "architecture", "ocean", "capabilities", "functions",
             "goal", "objective", "what is", "about you", "tell me about"
@@ -645,5 +645,6 @@ def get_engine() -> CoreResponseEngine:
     if _engine_instance is None:
         _engine_instance = CoreResponseEngine()
     return _engine_instance
+
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ðŸ“Š Clisonix INDUSTRIAL SPECTRUM ANALYZER
+ðŸ“Š Kloud INDUSTRIAL SPECTRUM ANALYZER
 Advanced FFT Processing, Spectrogram Generation, Real-time Visualization
 Production-Grade Frequency Domain Analysis for EEG & Neural Signals
 
@@ -43,7 +43,7 @@ import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Clisonix-SpectrumAnalyzer")
+logger = logging.getLogger("Kloud-SpectrumAnalyzer")
 
 @dataclass
 class FrequencyBand:
@@ -752,5 +752,6 @@ __all__ = [
     'SpectrogramData',
     'CoherenceAnalysis'
 ]
+
 
 

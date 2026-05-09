@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 /**
- * CLISONIX HOME PAGE
+ * KLOUD HOME PAGE
  * User-facing tools and modules
  */
 
@@ -155,7 +155,7 @@ export default function HomePage() {
               </div>
               <div>
                 <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
-                  Clisonix
+                  Kloud
                 </span>
                 <span className="text-xs text-gray-600 block -mt-1">Neural Intelligence</span>
               </div>
@@ -201,7 +201,7 @@ export default function HomePage() {
           {/* Main Headline */}
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-clip-text text-transparent">
-              Clisonix
+              Kloud
             </span>
             <br />
             <span className="text-3xl md:text-5xl text-gray-700">
@@ -350,7 +350,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">
-              Why Clisonix?
+              Why Kloud?
             </h2>
             <p className="text-gray-600 text-lg">
               Built for you, powered by innovation
@@ -424,7 +424,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-2xl">🧠</span>
-                <span className="text-lg font-bold text-black">Clisonix</span>
+                <span className="text-lg font-bold text-black">Kloud</span>
               </div>
               <p className="text-gray-600 text-sm">
                 Neural Intelligence Platform<br />
@@ -451,15 +451,16 @@ export default function HomePage() {
               <ul className="space-y-2 text-gray-600 text-sm">
                 <li><span className="text-gray-700">Ledjan Ahmati</span></li>
                 <li><span className="text-gray-700">WEB8euroweb GmbH</span></li>
-                <li><a href="mailto:support@clisonix.com" className="hover:text-emerald-600 transition-colors">Contact</a></li>
+                <li><a href="mailto:support@kloud.com" className="hover:text-emerald-600 transition-colors">Contact</a></li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-gray-200 text-center text-gray-500 text-sm">
-            © 2026 Clisonix. All rights reserved.
+            © 2026 Kloud. All rights reserved.
           </div>
         </div>
       </footer>
     </div>
   );
 }
+

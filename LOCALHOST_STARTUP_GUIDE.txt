@@ -1,4 +1,4 @@
-🚀 LOCALHOST STARTUP GUIDE - CLISONIX CLOUD
+🚀 LOCALHOST STARTUP GUIDE - KLOUD CLOUD
 ============================================
 
 SERVICES & PORTS:
@@ -274,15 +274,15 @@ FILE LOCATIONS IN REPO
 ═══════════════════════════════════════════════════════════════════════════
 
 Backend:
-  C:\Users\Admin\Desktop\Clisonix-cloud\apps\api\main.py
+  C:\Users\Admin\Desktop\Kloud-cloud\apps\api\main.py
 
 Frontend:
-  C:\Users\Admin\Desktop\Clisonix-cloud\apps\web\
+  C:\Users\Admin\Desktop\Kloud-cloud\apps\web\
 
 Ocean-Core (Chat):
-  C:\Users\Admin\Desktop\Clisonix-cloud\ocean-core\ocean_api.py
-  C:\Users\Admin\Desktop\Clisonix-cloud\ocean-core\specialized_chat_engine.py
-  C:\Users\Admin\Desktop\Clisonix-cloud\ocean-core\specialized_chat.html
+  C:\Users\Admin\Desktop\Kloud-cloud\ocean-core\ocean_api.py
+  C:\Users\Admin\Desktop\Kloud-cloud\ocean-core\specialized_chat_engine.py
+  C:\Users\Admin\Desktop\Kloud-cloud\ocean-core\specialized_chat.html
 
 ═══════════════════════════════════════════════════════════════════════════
 
@@ -296,3 +296,4 @@ Then wait 10 seconds and open:
   http://localhost:8030/
 
 ENJOY! 🎉
+

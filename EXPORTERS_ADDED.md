@@ -3,9 +3,9 @@
 ## What We Just Fixed
 
 ### 1️⃣ PostgreSQL Exporter (prometheus/postgres-exporter)
-- **Container**: `clisonix-postgres-exporter`
+- **Container**: `kloud-postgres-exporter`
 - **Port**: `9187`
-- **Connects to**: `postgresql://clisonix:clisonix@postgres:5432/clisonixdb`
+- **Connects to**: `postgresql://kloud:kloud@postgres:5432/klouddb`
 - **Metrics Scraped by Prometheus**: ✅
 - **Metrics Collected**:
   - `pg_up` - PostgreSQL is running
@@ -16,7 +16,7 @@
   - `pg_replication_lag_seconds` - Replication delay
 
 ### 2️⃣ Redis Exporter (oliver006/redis_exporter)
-- **Container**: `clisonix-redis-exporter`
+- **Container**: `kloud-redis-exporter`
 - **Port**: `9121`
 - **Connects to**: `redis:6379`
 - **Metrics Scraped by Prometheus**: ✅
@@ -107,7 +107,7 @@ File: `ops/alert-rules.yml`
 
 Execute:
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 .\test-monitoring.ps1
 ```
 
@@ -181,3 +181,4 @@ The monitoring stack is now **COMPLETE** with:
 - ✅ Test suite
 
 **Status**: Ready for TEST A ✅
+

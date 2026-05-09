@@ -13,7 +13,7 @@ PG_CONFIG = {
     "host": os.getenv("PGHOST", "postgres"),
     "user": os.getenv("PGUSER", "postgres"),
     "password": os.getenv("PGPASSWORD", "postgres"),
-    "dbname": os.getenv("PGDATABASE", "clisonix"),
+    "dbname": os.getenv("PGDATABASE", "kloud"),
 }
 
 
@@ -66,4 +66,5 @@ async def list_drug_labels(limit: int = 50, user=Depends(oidc_guard)):
         "SELECT id, brand_name, generic_name, route FROM drug_labels ORDER BY id DESC LIMIT %s",
         [limit],
     )
+
 

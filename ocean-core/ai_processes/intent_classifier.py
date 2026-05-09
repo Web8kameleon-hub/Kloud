@@ -265,7 +265,7 @@ class IntentClassifier:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("🎯 IntentClassifier initialized")
     
@@ -443,3 +443,4 @@ def get_intent_classifier() -> IntentClassifier:
     if _intent_classifier is None:
         _intent_classifier = IntentClassifier()
     return _intent_classifier
+

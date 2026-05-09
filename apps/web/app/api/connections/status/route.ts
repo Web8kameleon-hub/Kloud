@@ -119,7 +119,7 @@ export async function GET() {
 function generateReport(status: ConnectionsStatus): string {
   const lines = [
     "╔══════════════════════════════════════════════════════════════╗",
-    "║         🔗 CLISONIX CONNECTION STATUS REPORT                 ║",
+    "║         🔗 KLOUD CONNECTION STATUS REPORT                 ║",
     "╠══════════════════════════════════════════════════════════════╣",
     "",
     "📗 EXCEL SERVICE",
@@ -147,3 +147,4 @@ function generateReport(status: ConnectionsStatus): string {
   ];
   return lines.join("\n");
 }
+

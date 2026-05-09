@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-🌍 CLISONIX GLOBAL DATA SOURCES - MASTER INDEX
+🌍 KLOUD GLOBAL DATA SOURCES - MASTER INDEX
 ===============================================
 5000+ Free Open Data Sources from 200+ Countries
 
 This is the master file that combines all regional data sources
-into a single unified interface for the Clisonix platform.
+into a single unified interface for the Kloud platform.
 
 MODULES INCLUDED:
 - europe_sources.py                  (1000+ sources - 20 West European countries)
@@ -37,7 +37,7 @@ CATEGORIES COVERED:
 - Telecom & Communication
 - International Organizations
 
-Author: Clisonix Cloud Team
+Author: Kloud Cloud Team
 Version: 2.0.0
 Last Updated: December 2024
 """
@@ -478,7 +478,7 @@ def to_json_serializable(sources: List[DataSource]) -> List[Dict]:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🌍 CLISONIX GLOBAL DATA SOURCES")
+    print("🌍 KLOUD GLOBAL DATA SOURCES")
     print("=" * 60)
     
     stats = get_statistics()
@@ -499,3 +499,4 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("✅ Global Data Sources initialized successfully!")
     print("=" * 60)
+

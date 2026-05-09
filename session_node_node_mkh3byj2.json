@@ -170,8 +170,8 @@
     "theme": {
       "extend": {
         "colors": {
-          "clisonix-primary": "#6366f1",
-          "clisonix-secondary": "#8b5cf6",
+          "kloud-primary": "#6366f1",
+          "kloud-secondary": "#8b5cf6",
           "neural-blue": "#3b82f6",
           "alba-green": "#10b981",
           "albi-purple": "#8b5cf6",

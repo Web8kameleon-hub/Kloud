@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-🧠 Clisonix INDUSTRIAL BACKEND (REAL)
+🧠 Kloud INDUSTRIAL BACKEND (REAL)
 ========================================
-Clisonix Web8 Division - EuroSonix Industrial API Server
+Kloud Web8 Division - EuroSonix Industrial API Server
 
-Ky është backend-i industrial për Clisonix që ofron:
+Ky është backend-i industrial për Kloud që ofron:
 - EEG dhe Audio Processing
 - ALBA Data Collection
 - ASI Trinity Architecture
@@ -55,9 +55,9 @@ except ImportError:
 
 # Create FastAPI app
 app = FastAPI(
-    title="Clisonix Industrial Backend (REAL)",
+    title="Kloud Industrial Backend (REAL)",
     version="1.0.0",
-    description="Clisonix Web8 Division - EuroSonix Industrial API Server"
+    description="Kloud Web8 Division - EuroSonix Industrial API Server"
 )
 
 # Add CORS middleware
@@ -498,7 +498,7 @@ async def db_ping():
     """Database ping"""
     return {
         "status": "connected",
-        "database": "Clisonix_industrial",
+        "database": "Kloud_industrial",
         "response_time_ms": 12.5,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
@@ -924,7 +924,7 @@ async def root():
         })
 
     return {
-        "message": "Clisonix Industrial Backend (REAL) - Web8 Division EuroSonix",
+        "message": "Kloud Industrial Backend (REAL) - Web8 Division EuroSonix",
         "version": "1.0.0",
         "status": "operational",
         "api_key_system": "enabled",
@@ -938,7 +938,7 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
 
-    logger.info("🚀 Starting Clisonix Industrial Backend (REAL)")
+    logger.info("🚀 Starting Kloud Industrial Backend (REAL)")
     logger.info("🌐 Web8 Division - EuroSonix")
     logger.info("📡 Server starting on http://localhost:8003")
 
@@ -949,3 +949,4 @@ if __name__ == "__main__":
         port=8003,
         log_level="info"
     )
+

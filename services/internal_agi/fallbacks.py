@@ -126,7 +126,7 @@ FALLBACK_TEMPLATES = {
         "suggestions": [
             "The system is undergoing maintenance",
             "Please check back in 30 minutes",
-            "Contact support@clisonix.com for urgent matters"
+            "Contact support@kloud.com for urgent matters"
         ]
     }
 }
@@ -138,7 +138,7 @@ FALLBACK_TEMPLATES = {
 
 # Basic fallback data for common queries when all else fails
 CACHED_FALLBACKS = {
-    "countries_count": "Clisonix covers 155+ countries with 4053+ data sources",
+    "countries_count": "Kloud covers 155+ countries with 4053+ data sources",
     "api_count": "988 API endpoints available across all regions",
     "regions": ["Europe", "Asia-China", "India-South Asia", "Americas", "Africa-Middle East", 
                 "Asia-Oceania", "Caribbean-Central America", "Pacific Islands",
@@ -330,7 +330,7 @@ class FallbackManager:
         
         # If nothing matched, return general info
         if not result:
-            result["general"] = "Clisonix Internal AGI - 4053+ sources across 155+ countries"
+            result["general"] = "Kloud Internal AGI - 4053+ sources across 155+ countries"
         
         return result
     
@@ -425,3 +425,4 @@ def get_manager() -> FallbackManager:
     if _manager_instance is None:
         _manager_instance = FallbackManager()
     return _manager_instance
+

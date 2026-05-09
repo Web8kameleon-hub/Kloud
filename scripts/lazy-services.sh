@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clisonix Lazy Services Manager
+# Kloud Lazy Services Manager
 # For 16GB/4vCPU server - keeps essential services, starts others on-demand
 
 set -e
@@ -13,70 +13,70 @@ NC='\033[0m'
 
 # Essential services (always running)
 CORE_SERVICES=(
-    "clisonix-01-postgres"
-    "clisonix-02-redis"
-    "clisonix-06-ollama"
-    "clisonix-07-ollama-multi"
-    "clisonix-08-ocean-core"
-    "clisonix-64-api"
-    "clisonix-65-web"
-    "clisonix-66-traefik"
+    "kloud-01-postgres"
+    "kloud-02-redis"
+    "kloud-06-ollama"
+    "kloud-07-ollama-multi"
+    "kloud-08-ocean-core"
+    "kloud-64-api"
+    "kloud-65-web"
+    "kloud-66-traefik"
 )
 
 # Monitoring services
 MONITORING_SERVICES=(
-    "clisonix-67-prometheus"
-    "clisonix-68-grafana"
-    "clisonix-69-loki"
-    "clisonix-70-jaeger"
-    "clisonix-71-tempo"
-    "clisonix-75-health-monitor"
+    "kloud-67-prometheus"
+    "kloud-68-grafana"
+    "kloud-69-loki"
+    "kloud-70-jaeger"
+    "kloud-71-tempo"
+    "kloud-75-health-monitor"
 )
 
 # AI/Agent services
 AI_SERVICES=(
-    "clisonix-09-alba"
-    "clisonix-10-albi"
-    "clisonix-11-jona"
-    "clisonix-12-asi"
-    "clisonix-13-alphabet-layers"
-    "clisonix-14-liam"
-    "clisonix-15-alda"
-    "clisonix-16-alba-idle"
-    "clisonix-17-blerina"
-    "clisonix-73-cognitive"
+    "kloud-09-alba"
+    "kloud-10-albi"
+    "kloud-11-jona"
+    "kloud-12-asi"
+    "kloud-13-alphabet-layers"
+    "kloud-14-liam"
+    "kloud-15-alda"
+    "kloud-16-alba-idle"
+    "kloud-17-blerina"
+    "kloud-73-cognitive"
 )
 
 # Business services
 BUSINESS_SERVICES=(
-    "clisonix-18-cycle-engine"
-    "clisonix-19-saas-orchestrator"
-    "clisonix-20-personas"
-    "clisonix-21-agiem"
-    "clisonix-53-saas-api"
-    "clisonix-54-marketplace"
-    "clisonix-55-economy"
-    "clisonix-56-reporting"
-    "clisonix-57-excel"
-    "clisonix-58-behavioral"
-    "clisonix-59-analytics"
+    "kloud-18-cycle-engine"
+    "kloud-19-saas-orchestrator"
+    "kloud-20-personas"
+    "kloud-21-agiem"
+    "kloud-53-saas-api"
+    "kloud-54-marketplace"
+    "kloud-55-economy"
+    "kloud-56-reporting"
+    "kloud-57-excel"
+    "kloud-58-behavioral"
+    "kloud-59-analytics"
 )
 
 # Specialty services
 SPECIALTY_SERVICES=(
-    "clisonix-60-neurosonix"
-    "clisonix-61-aviation"
-    "clisonix-62-multi-tenant"
-    "clisonix-63-quantum"
-    "clisonix-72-agent-telemetry"
-    "clisonix-74-adaptive-router"
+    "kloud-60-neurosonix"
+    "kloud-61-aviation"
+    "kloud-62-multi-tenant"
+    "kloud-63-quantum"
+    "kloud-72-agent-telemetry"
+    "kloud-74-adaptive-router"
 )
 
 # Database services
 DATABASE_SERVICES=(
-    "clisonix-03-neo4j"
-    "clisonix-04-victoriametrics"
-    "clisonix-05-minio"
+    "kloud-03-neo4j"
+    "kloud-04-victoriametrics"
+    "kloud-05-minio"
 )
 
 # Lab services (development only)
@@ -108,7 +108,7 @@ stop_group() {
 }
 
 show_status() {
-    echo -e "\n${BLUE}=== Clisonix Service Status ===${NC}\n"
+    echo -e "\n${BLUE}=== Kloud Service Status ===${NC}\n"
     
     running=$(docker ps -q | wc -l)
     total=$(docker ps -aq | wc -l)
@@ -127,7 +127,7 @@ show_status() {
 }
 
 show_help() {
-    echo -e "${BLUE}Clisonix Lazy Services Manager${NC}"
+    echo -e "${BLUE}Kloud Lazy Services Manager${NC}"
     echo ""
     echo "Usage: $0 <command> [group]"
     echo ""
@@ -234,3 +234,4 @@ case "$1" in
         show_help
         ;;
 esac
+

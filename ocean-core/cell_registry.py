@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX CELL REGISTRY
+🌊 KLOUD CELL REGISTRY
 =========================
 Anatomia e organizmës - Çdo modul është një qelizë.
 
@@ -14,7 +14,7 @@ Anatomia e organizmës - Çdo modul është një qelizë.
 Të gjitha qelizat formojnë një graf të gjallë:
 G = (Cells, Edges)
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0
 """
 
@@ -166,8 +166,8 @@ class CellRegistry:
         builtin_cells = [
             # Core Services
             Cell(
-                cell_id="clisonix-api",
-                name="Clisonix Main API",
+                cell_id="kloud-api",
+                name="Kloud Main API",
                 role=CellRole.API,
                 capabilities=["health", "status", "metrics", "routing"],
                 endpoint="http://localhost:8000",
@@ -577,3 +577,4 @@ if __name__ == "__main__":
     print(f"\nAll cells:")
     for cell in registry.list_all():
         print(f"  - {cell.cell_id}: {cell.name} ({cell.role.value})")
+

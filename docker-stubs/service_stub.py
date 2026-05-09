@@ -14,7 +14,7 @@ SERVICE_NAME = sys.argv[1] if len(sys.argv) > 1 else "generic-service"
 PORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8080
 
 app = FastAPI(
-    title=f"Clisonix {SERVICE_NAME}",
+    title=f"Kloud {SERVICE_NAME}",
     description=f"{SERVICE_NAME} microservice",
     version="1.0.0"
 )
@@ -43,7 +43,7 @@ def info():
         "name": SERVICE_NAME,
         "port": PORT,
         "type": "microservice",
-        "platform": "Clisonix Cloud",
+        "platform": "Kloud Cloud",
         "endpoints": ["/", "/health", "/info", "/api"]
     }
 
@@ -69,3 +69,4 @@ def process(data: Dict[str, Any] = None):
 if __name__ == "__main__":
     print(f"🚀 Starting {SERVICE_NAME} on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

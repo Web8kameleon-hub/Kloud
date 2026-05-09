@@ -1,5 +1,5 @@
 """
-CLISONIX EXCEL MICROSERVICE
+KLOUD EXCEL MICROSERVICE
 Shërbim i izoluar për operacione Excel
 Port: 8002
 - Export/Import Excel
@@ -24,10 +24,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(
 logger = logging.getLogger("excel-service")
 
 # Core API URL
-CORE_API_URL = os.environ.get("CORE_API_URL", "http://clisonix-core:8000")
+CORE_API_URL = os.environ.get("CORE_API_URL", "http://kloud-core:8000")
 
 app = FastAPI(
-    title="Clisonix Excel Service",
+    title="Kloud Excel Service",
     description="Isolated microservice for Excel operations, formulas, and Office Scripts",
     version="2.0.0",
     docs_url="/docs"
@@ -85,7 +85,7 @@ async def fetch_from_core(endpoint: str) -> Dict[str, Any]:
 async def root():
     """Root endpoint"""
     return {
-        "service": "Clisonix Excel Service",
+        "service": "Kloud Excel Service",
         "version": "2.0.0",
         "excel_available": EXCEL_AVAILABLE,
         "pandas_available": PANDAS_AVAILABLE,
@@ -118,7 +118,7 @@ async def api_status():
     """API status endpoint"""
     return {
         "status": "operational",
-        "service": "Clisonix Excel Service",
+        "service": "Kloud Excel Service",
         "version": "2.0.0",
         "excel_available": EXCEL_AVAILABLE,
         "pandas_available": PANDAS_AVAILABLE,
@@ -128,7 +128,7 @@ async def api_status():
 
 @app.get("/api/excel/generate")
 async def generate_excel(
-    title: str = "Clisonix Data Export",
+    title: str = "Kloud Data Export",
     include_metrics: bool = True
 ):
     """Generate Excel file with system data"""
@@ -177,7 +177,7 @@ async def generate_excel(
         
         # Save
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"clisonix_export_{timestamp}.xlsx"
+        filename = f"kloud_export_{timestamp}.xlsx"
         filepath = EXCEL_DIR / filename
         wb.save(str(filepath))
         
@@ -304,14 +304,14 @@ async def get_formulas():
     return {
         "supported_formulas": [
             {"name": "=PY()", "description": "Execute Python code in Excel", "example": '=PY("import pandas as pd; result = df.sum()")'},
-            {"name": "=CLISONIX.STATUS()", "description": "Get system status", "example": "=CLISONIX.STATUS()"},
-            {"name": "=CLISONIX.METRICS()", "description": "Get live metrics", "example": "=CLISONIX.METRICS()"},
-            {"name": "=CLISONIX.API(endpoint)", "description": "Call API endpoint", "example": '=CLISONIX.API("/api/status")'}
+            {"name": "=KLOUD.STATUS()", "description": "Get system status", "example": "=KLOUD.STATUS()"},
+            {"name": "=KLOUD.METRICS()", "description": "Get live metrics", "example": "=KLOUD.METRICS()"},
+            {"name": "=KLOUD.API(endpoint)", "description": "Call API endpoint", "example": '=KLOUD.API("/api/status")'}
         ],
         "office_scripts": [
             {"name": "refreshData", "description": "Refresh all data connections"},
             {"name": "exportToPDF", "description": "Export current sheet to PDF"},
-            {"name": "syncWithAPI", "description": "Sync data with Clisonix API"}
+            {"name": "syncWithAPI", "description": "Sync data with Kloud API"}
         ]
     }
 
@@ -321,12 +321,12 @@ async def get_office_scripts():
     """Get Office Scripts templates"""
     scripts = [
         {
-            "name": "refreshClisonixData",
-            "description": "Refresh data from Clisonix API",
+            "name": "refreshKloudData",
+            "description": "Refresh data from Kloud API",
             "script": """
 async function main(workbook: ExcelScript.Workbook) {
     const sheet = workbook.getActiveWorksheet();
-    const response = await fetch('https://clisonix.com/api/metrics');
+    const response = await fetch('https://kloud.com/api/metrics');
     const data = await response.json();
     
     let row = 2;
@@ -383,3 +383,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8002))
     logger.info(f"Starting Excel Service on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
+

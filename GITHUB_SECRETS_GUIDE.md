@@ -1,6 +1,6 @@
 # 🔐 GitHub Secrets Configuration Guide
 
-## Clisonix Cloud CI/CD Security Setup
+## Kloud Cloud CI/CD Security Setup
 
 ### Required Secrets for GitHub Actions
 
@@ -168,3 +168,4 @@ openssl rand -base64 24
 ---
 
 Last updated: January 2026
+

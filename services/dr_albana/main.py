@@ -6,11 +6,11 @@ Specialized in: Cardiology, Hepatology, Endocrinology, Metabolic Disorders, Neur
 
 FEATURES:
 - Automatic 5-8 articles/day generation
-- Integration with all Clisonix services
+- Integration with all Kloud services
 - Automatic blog publishing via GitHub API
 - Deep academic/laboratory level content
 
-Author: Clisonix Cloud Medical Division
+Author: Kloud Cloud Medical Division
 """
 
 import asyncio
@@ -46,14 +46,14 @@ logger = logging.getLogger("DR.ALBANA")
 # CONFIGURATION
 # ============================================
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-GITHUB_REPO = os.getenv("GITHUB_REPO", "LedjanAhmati/clisonix-blog")
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://clisonix-ollama:11434")
+GITHUB_REPO = os.getenv("GITHUB_REPO", "LedjanAhmati/kloud-blog")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://kloud-ollama:11434")
 MEDICAL_MODEL = os.getenv("MEDICAL_MODEL", "llama3.2:1b")
 
 # Service URLs for integration
-OCEAN_URL = os.getenv("OCEAN_URL", "http://clisonix-ocean-core:8030")
-BLERINA_URL = os.getenv("BLERINA_URL", "http://clisonix-blerina:8035")
-BLOG_PUBLISHER_URL = os.getenv("BLOG_PUBLISHER_URL", "http://clisonix-blog-publisher:8041")
+OCEAN_URL = os.getenv("OCEAN_URL", "http://kloud-ocean-core:8030")
+BLERINA_URL = os.getenv("BLERINA_URL", "http://kloud-blerina:8035")
+BLOG_PUBLISHER_URL = os.getenv("BLOG_PUBLISHER_URL", "http://kloud-blog-publisher:8041")
 
 # ============================================
 # QUALITY STANDARDS
@@ -247,7 +247,7 @@ async def root():
             <h1>🏥 DR. ALBANA</h1>
             <h2>Medical Pillar Content Engine</h2>
             <p>Specialized in: <strong>Cardiology • Hepatology • Endocrinology • Metabolic Disorders</strong></p>
-            <p>Powered by Clisonix Cloud Medical Division • Ledjan Ahmati, MD</p>
+            <p>Powered by Kloud Cloud Medical Division • Ledjan Ahmati, MD</p>
             
             <div class="endpoint">
                 <h3>📋 Generate Medical Article</h3>
@@ -416,7 +416,7 @@ def get_biomarkers_for_domain(domain: str) -> str:
 
 async def call_ollama(prompt: str, system_prompt: str) -> str:
     """Thirr Ollama për gjenerim të tekstit mjekësor"""
-    ollama_url = os.getenv("OLLAMA_URL", "http://clisonix-ollama:11434")
+    ollama_url = os.getenv("OLLAMA_URL", "http://kloud-ollama:11434")
     
     try:
         async with httpx.AsyncClient(timeout=300.0) as client:
@@ -541,10 +541,10 @@ async def generate_medical_content(
     # Formato artikullin
     full_content = f"""# {title}
 
-*Author: Dr. Albana, Clisonix Cloud Medical Division*
+*Author: Dr. Albana, Kloud Cloud Medical Division*
 *Published: {datetime.utcnow().strftime('%B %d, %Y')}*
 *Clinical Domain: {clinical_domain.title()}*
-*DOI: 10.1234/clisonix.med.{job_id}*
+*DOI: 10.1234/kloud.med.{job_id}*
 
 ---
 
@@ -675,7 +675,7 @@ title: "{title}"
 date: {date_str}
 author: Dr. Albana
 categories: [{clinical_domain}, medical, research]
-tags: [clinical-medicine, {clinical_domain}, clisonix-medical]
+tags: [clinical-medicine, {clinical_domain}, kloud-medical]
 ---
 
 {content}
@@ -709,7 +709,7 @@ tags: [clinical-medicine, {clinical_domain}, clisonix-medical]
             
             if response.status_code in [200, 201]:
                 html_url = response.json().get("content", {}).get("html_url", "")
-                blog_url = f"https://ledjanahmati.github.io/clisonix-blog/{date_str.replace('-', '/')}/{slug}.html"
+                blog_url = f"https://ledjanahmati.github.io/kloud-blog/{date_str.replace('-', '/')}/{slug}.html"
                 logger.info(f"✅ Published to blog: {blog_url}")
                 return {
                     "success": True,
@@ -989,3 +989,4 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("DR_ALBANA_PORT", "8040"))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

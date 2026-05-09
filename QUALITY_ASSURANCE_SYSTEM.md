@@ -60,7 +60,7 @@ Veç tani dokumenta mund të publikohet:
 # VETËM me --status APPROVED
 python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 
-# OUTPUT: Merr në clisonix-blog repo
+# OUTPUT: Merr në kloud-blog repo
 # → LinkedIn poster e pral automatikisht
 ```
 
@@ -135,7 +135,7 @@ Status: PUBLISHED
 Blog: ✅ ON GITHUB
 LinkedIn: ✅ AUTO-POSTED
 Date: [data]
-URL: https://ledjanahmati.github.io/clisonix-blog/...
+URL: https://ledjanahmati.github.io/kloud-blog/...
 ```
 
 ---
@@ -179,7 +179,7 @@ URL: https://ledjanahmati.github.io/clisonix-blog/...
 └─────────────────┬───────────────────────────────────────────┘
                   ↓
 ┌─────────────────────────────────────────────────────────────┐
-│ CLISONIX-BLOG REPO                                          │
+│ KLOUD-BLOG REPO                                          │
 │ posts/protokollet-dhe-metodologjia-e-lagter.md            │
 └─────────────────┬───────────────────────────────────────────┘
                   ↓
@@ -279,4 +279,5 @@ A: Jo. Sign-off duhet nga Ledjan (ose delegate).
 ---
 
 _Procesi i Garantimit të Cilësisë v1.0_  
-_Clisonix Cloud — 28 Shkurt 2026_
+_Kloud Cloud — 28 Shkurt 2026_
+

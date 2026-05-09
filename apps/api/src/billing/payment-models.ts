@@ -1,5 +1,5 @@
 /**
- * Clisonix INDUSTRIAL PAYMENT MODELS
+ * Kloud INDUSTRIAL PAYMENT MODELS
  * ===================================
  * Payment models for industrial use
  */
@@ -78,7 +78,7 @@ export const PAYMENT_CONFIG: PaymentConfig = {
   SEPA_BIC: process.env['SEPA_BIC'] || "YOUR-BIC-HERE",
   SEPA_HOLDER: process.env['SEPA_HOLDER'] || "Your Company Name",
   PAYPAL_EMAIL: process.env['PAYPAL_EMAIL'] || "payments@your-domain.com",
-  COMPANY: "Clisonix Cloud"
+  COMPANY: "Kloud Cloud"
 };
 
 // =================================================================================
@@ -257,3 +257,4 @@ export class Payment {
     };
   }
 }
+

@@ -25,7 +25,8 @@ env:
 ingress:
   enabled: true
   hosts:
-    - host: staging.clisonix.com
+    - host: staging.kloud.com
       paths:
         - path: /
           pathType: Prefix
+

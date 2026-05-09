@@ -106,7 +106,7 @@ class SourceAggregator:
                     aggregated_data["internal_data"][source_name] = result
         
         # External sources - DISABLED (internal only)
-        # All queries now use ONLY internal Clisonix data sources
+        # All queries now use ONLY internal Kloud data sources
         aggregated_data["external_sources_to_query"] = []
         
         return aggregated_data
@@ -145,7 +145,7 @@ class ResponseFormulator:
         # Source attribution - INTERNAL ONLY
         sources_cited = {
             "internal": list(aggregated_data.get("internal_data", {}).keys()),
-            "external": []  # Disabled - using only internal Clisonix sources
+            "external": []  # Disabled - using only internal Kloud sources
         }
         
         return KnowledgeResponse(
@@ -394,3 +394,4 @@ async def get_knowledge_engine(data_sources_manager, external_apis_manager) -> K
         await _knowledge_engine.initialize()
     
     return _knowledge_engine
+

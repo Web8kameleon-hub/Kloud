@@ -20,7 +20,7 @@ route:
 receivers:
   - name: default
     slack_configs:
-      - channel: '#clisonix-monitoring'
+      - channel: '#kloud-monitoring'
         title: 'Alert: {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
         send_resolved: true
@@ -34,7 +34,7 @@ receivers:
 
   - name: warning-alerts
     slack_configs:
-      - channel: '#clisonix-monitoring'
+      - channel: '#kloud-monitoring'
         title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
@@ -44,3 +44,4 @@ inhibit_rules:
     target_match:
       severity: 'warning'
     equal: ['alertname', 'service']
+

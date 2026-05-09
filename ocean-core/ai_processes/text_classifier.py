@@ -183,7 +183,7 @@ class TextClassifier:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("📊 TextClassifier initialized")
     
@@ -379,3 +379,4 @@ def get_text_classifier() -> TextClassifier:
     if _text_classifier is None:
         _text_classifier = TextClassifier()
     return _text_classifier
+

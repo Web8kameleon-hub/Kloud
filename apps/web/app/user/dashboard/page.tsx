@@ -1,10 +1,10 @@
 /**
- * Clisonix Cloud - User Dashboard
+ * Kloud Cloud - User Dashboard
  * 
  * Protected dashboard with subscription info, usage stats, and quick actions
  * 
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 "use client";
@@ -95,7 +95,7 @@ export default function UserDashboardPage() {
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">C</span>
                 </div>
-                <span className="text-white font-semibold hidden sm:block">Clisonix Cloud</span>
+                <span className="text-white font-semibold hidden sm:block">Kloud Cloud</span>
               </Link>
               <span className="text-slate-500">|</span>
               <span className="text-slate-400 text-sm">Dashboard</span>
@@ -121,7 +121,7 @@ export default function UserDashboardPage() {
             Welcome back, {user?.firstName || "User"}! 👋
           </h1>
           <p className="text-slate-400">
-            Here&apos;s an overview of your Clisonix Cloud activity.
+            Here&apos;s an overview of your Kloud Cloud activity.
           </p>
         </div>
 
@@ -314,3 +314,4 @@ function QuickAction({ href, icon, label }: { href: string; icon: string; label:
     </Link>
   );
 }
+

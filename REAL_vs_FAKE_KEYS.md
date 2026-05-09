@@ -14,16 +14,16 @@ TOTAL: 41 Keys
    - localhost (DB_HOST, REDIS_HOST)
    - localhost (MINIO_ENDPOINT)
    - minioadmin (MINIO_ROOT_USER, MINIO_ACCESS_KEY)
-   - clisonix_user (DB_USER)
-   - clisonix_prod (DB_NAME)
-   - clisonix-prod (MINIO_BUCKET)
+   - kloud_user (DB_USER)
+   - kloud_prod (DB_NAME)
+   - kloud-prod (MINIO_BUCKET)
    - 157.90.234.158 (HETZNER_IP - Serveri fizik)
    - admin (GF_SECURITY_ADMIN_USER - Grafana)
-   - /opt/clisonix/.ssh/id_rsa (SSH key path)
+   - /opt/kloud/.ssh/id_rsa (SSH key path)
    - Ports: 5432, 6379, 9000, 8000
    - Settings: production, false (DEBUG), 30d (retention)
-   - URLs: https://clisonix-cloud.com (FRONTEND/BACKEND)
-   - CORS_ORIGINS: https://clisonix-cloud.com
+   - URLs: https://kloud-cloud.com (FRONTEND/BACKEND)
+   - CORS_ORIGINS: https://kloud-cloud.com
 
 🔐 FAKE (Placeholder - Duhet zëvendësuar):
    - DB_PASSWORD=[REDACTED-DEV-PASSWORD] → ${REAL_PASSWORD}
@@ -50,8 +50,8 @@ TOTAL: 41 Keys
 ```
 ✅ DB_HOST = localhost           (or your DB server)
 ✅ DB_PORT = 5432               (PostgreSQL standard)
-✅ DB_USER = clisonix_user      (Gjithmonë njëjtë)
-✅ DB_NAME = clisonix_prod      (Gjithmonë njëjtë)
+✅ DB_USER = kloud_user      (Gjithmonë njëjtë)
+✅ DB_NAME = kloud_prod      (Gjithmonë njëjtë)
 ✅ DB_SSL_MODE = require        (Sigurësi)
 ```
 
@@ -66,7 +66,7 @@ TOTAL: 41 Keys
 ```
 ✅ MINIO_ENDPOINT = localhost:9000
 ✅ MINIO_ROOT_USER = minioadmin  (Standard MinIO user)
-✅ MINIO_BUCKET = clisonix-prod
+✅ MINIO_BUCKET = kloud-prod
 ✅ MINIO_REGION = us-east-1
 ```
 
@@ -79,7 +79,7 @@ TOTAL: 41 Keys
 ### Infrastructure
 ```
 ✅ HETZNER_IP = 157.90.234.158    (Serveri fizik - Real!)
-✅ HETZNER_SSH_KEY_PATH = /opt/clisonix/.ssh/id_rsa
+✅ HETZNER_SSH_KEY_PATH = /opt/kloud/.ssh/id_rsa
 ✅ DEPLOYMENT_ENVIRONMENT = production
 ```
 
@@ -96,9 +96,9 @@ TOTAL: 41 Keys
 ✅ ENVIRONMENT = production
 ✅ DEBUG = false
 ✅ PORT = 8000
-✅ FRONTEND_URL = https://clisonix-cloud.com   (Real domain!)
-✅ BACKEND_URL = https://api.clisonix-cloud.com (Real domain!)
-✅ CORS_ORIGINS = https://clisonix-cloud.com,...
+✅ FRONTEND_URL = https://kloud-cloud.com   (Real domain!)
+✅ BACKEND_URL = https://api.kloud-cloud.com (Real domain!)
+✅ CORS_ORIGINS = https://kloud-cloud.com,...
 ```
 
 ### Security Headers
@@ -293,7 +293,7 @@ Before deployment:
 ☐ All API keys from official dashboards
 ☐ No fake/placeholder values remain
 ☐ File permissions: chmod 600 .env.production
-☐ Database connection: psql postgresql://clisonix_user:PASSWORD@localhost/clisonix_prod
+☐ Database connection: psql postgresql://kloud_user:PASSWORD@localhost/kloud_prod
 ☐ Redis connection: redis-cli -a PASSWORD ping
 ☐ Stripe key format: sk_live_ or sk_test_ (correct format)
 ```
@@ -324,3 +324,4 @@ Zero fake values - 100% Production ready
 ```
 
 🔐 **Status**: GATA PËR PRODUCTION KUR T'I PLOTËSOSH REALE VALUES
+

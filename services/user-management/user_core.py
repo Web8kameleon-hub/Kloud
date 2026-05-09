@@ -1,5 +1,5 @@
 """
-CLISONIX USER MANAGEMENT - Centralized User Registry
+KLOUD USER MANAGEMENT - Centralized User Registry
 =====================================================
 
 Një sistem i QARTË dhe i centralizuar për menaxhimin e përdoruesve.
@@ -298,7 +298,7 @@ class UserRegistry:
     def _create_default_admin(self) -> None:
         """Krijo admin-in e parazgjedhur"""
         admin_id = "usr_admin_ledjan"
-        admin_email = "ledjan@clisonix.com"
+        admin_email = "ledjan@kloud.com"
         
         if admin_id not in self._accounts:
             # Account
@@ -973,3 +973,4 @@ if __name__ == "__main__":
     
     # Print stats
     print("\nStats:", json.dumps(registry.get_stats(), indent=2))
+

@@ -19,11 +19,11 @@ Components:
 - MegaSignalCollector: Skanimi i TË GJITHA sinjaleve
 - BinaryProtocols: CBOR2, MessagePack, Custom Binary
 - BinaryAlgebra: ALGJEBËR BINARE - AND, OR, XOR, NOT, SHIFT, Matrica GF(2)
-- CBP Protocol: Clisonix Binary Protocol - streaming, compression, schemas
+- CBP Protocol: Kloud Binary Protocol - streaming, compression, schemas
 - I18nEngine: 11 gjuhë
 - RealChatEngine: Chat real
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 2.4.0 - CBP Protocol Edition
 """
 
@@ -52,7 +52,7 @@ from .binary_algebra import (
     get_binary_algebra
 )
 from .cbp_protocol import (
-    ClisonixProtocol, Frame, StreamFrame, FrameFlags, MessageType,
+    KloudProtocol, Frame, StreamFrame, FrameFlags, MessageType,
     SchemaRegistry, Schema, SchemaField, BinaryStream,
     get_protocol, get_schema_registry, dump_frame,
     read_clsn_file, write_clsn_file
@@ -107,7 +107,7 @@ __all__ = [
     'BinaryOp',
     'get_binary_algebra',
     # CBP Protocol
-    'ClisonixProtocol',
+    'KloudProtocol',
     'Frame',
     'StreamFrame',
     'FrameFlags',
@@ -124,3 +124,4 @@ __all__ = [
 ]
 
 __version__ = "2.4.0"
+

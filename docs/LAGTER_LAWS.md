@@ -294,4 +294,5 @@ Ato janë **të pandryshueshme**, sepse janë të bazuara në strukturën e naty
 _Dokumenti i krijuar: 27 Shkurt 2026_  
 _Ligjet e L.A.G.T.E.R — Tri Parimet e Pandryshueshme_  
 _Labor Auditimi të Gjurmëve Trupore dhe Enigmave Rezultuese_  
-_Pjesë e Clisonix Cloud Platform_
+_Pjesë e Kloud Cloud Platform_
+

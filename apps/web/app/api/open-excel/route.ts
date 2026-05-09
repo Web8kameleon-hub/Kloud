@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   }
   
   // Rruga e skedarit
-  const filePath = path.join('C:', 'Users', 'Admin', 'Desktop', 'Clisonix-cloud', filename)
+  const filePath = path.join('C:', 'Users', 'Admin', 'Desktop', 'Kloud-cloud', filename)
   
   try {
     // Përdor PowerShell për të hapur skedarin (më i mirë për Windows)
@@ -40,3 +40,4 @@ export async function GET(request: NextRequest) {
     }, { status: 500 })
   }
 }
+

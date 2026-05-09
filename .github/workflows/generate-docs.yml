@@ -83,5 +83,6 @@ jobs:
           publish_dir: ./docs/observability/exports
           destination_dir: observability-docs
           enable_jekyll: false
-          cname: docs.clisonix.com  # Optional: your custom domain
+          cname: docs.kloud.com  # Optional: your custom domain
+
 

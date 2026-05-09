@@ -120,7 +120,7 @@ explored for gaming, meditation enhancement, and even direct brain-to-brain comm
 
 41
 00:02:24,120 --> 00:02:29,521
-Clisonix has developed advanced EEG analysis systems that make brain-computer
+Kloud has developed advanced EEG analysis systems that make brain-computer
 
 42
 00:02:29,521 --> 00:02:34,923
@@ -184,11 +184,11 @@ with technology. From helping patients regain lost abilities to enhancing
 
 61
 00:03:36,632 --> 00:03:41,388
-human cognition, BCIs are not just science fiction—they're becoming reality.
+human cognition, BCIs are not just science fictionï¿½they're becoming reality.
 
 62
 00:03:41,388 --> 00:03:46,144
-At Clisonix, we're proud to be part of this revolution,
+At Kloud, we're proud to be part of this revolution,
 
 63
 00:03:46,144 --> 00:03:50,900
@@ -196,4 +196,5 @@ building the tools that will shape the future of neural
 
 64
 00:03:50,900 --> 00:03:55,656
-technology. Thank you for watching. To learn more, visit clisonix.com.
+technology. Thank you for watching. To learn more, visit kloud.com.
+

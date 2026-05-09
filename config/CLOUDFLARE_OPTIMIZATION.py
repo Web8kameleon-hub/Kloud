@@ -1,5 +1,5 @@
 # =============================================================================
-# CLOUDFLARE OPTIMIZATION GUIDE FOR CLISONIX
+# CLOUDFLARE OPTIMIZATION GUIDE FOR KLOUD
 # =============================================================================
 # Date: 2026-01-14
 # Purpose: Reduce 40-60% traffic, improve cache hit rate, block bots
@@ -94,14 +94,14 @@
 # ===========================================================================
 
 # Rule 1: Cache Everything on static paths
-# URL: *clisonix.com/_next/static/*
+# URL: *kloud.com/_next/static/*
 # Settings:
 #   - Cache Level: Cache Everything
 #   - Edge Cache TTL: 1 month
 #   - Browser Cache TTL: 1 month
 
 # Rule 2: Cache API Status with short TTL
-# URL: *clisonix.com/api/*-status*
+# URL: *kloud.com/api/*-status*
 # Settings:
 #   - Cache Level: Cache Everything
 #   - Edge Cache TTL: 10 seconds
@@ -173,7 +173,7 @@ print("""
 🔧 IMMEDIATE ACTIONS:
 
 1. Open Cloudflare Dashboard: https://dash.cloudflare.com
-2. Select zone: clisonix.com
+2. Select zone: kloud.com
 3. Apply settings from each section above
 
 📊 PRIORITY ORDER:
@@ -190,3 +190,4 @@ print("""
 
 ================================================================================
 """)
+

@@ -30,7 +30,7 @@ from .binary_protocols import get_binary_service, BinaryFormat, BinaryEncoder
 from .binary_middleware import BinaryResponse, create_binary_response
 from .binary_algebra import get_binary_algebra, BinaryOp, BinaryNumber, BinarySignal, BinaryMatrix
 from .cbp_protocol import (
-    get_protocol, get_schema_registry, ClisonixProtocol, Frame, StreamFrame,
+    get_protocol, get_schema_registry, KloudProtocol, Frame, StreamFrame,
     FrameFlags, MessageType, dump_frame, read_clsn_file, write_clsn_file
 )
 from .real_learning_engine import get_real_learning
@@ -1344,7 +1344,7 @@ async def decode_binary(request: Request):
         "application/cbor": BinaryFormat.CBOR2,
         "application/msgpack": BinaryFormat.MSGPACK,
         "application/octet-stream": BinaryFormat.CUSTOM_BINARY,
-        "application/x-clisonix": BinaryFormat.CUSTOM_BINARY,
+        "application/x-kloud": BinaryFormat.CUSTOM_BINARY,
     }
     
     binary_format = format_map.get(content_type, BinaryFormat.CUSTOM_BINARY)
@@ -1863,7 +1863,7 @@ async def algebra_stats():
     return algebra.get_stats()
 
 
-# ==================== CLISONIX BINARY PROTOCOL (CBP) ====================
+# ==================== KLOUD BINARY PROTOCOL (CBP) ====================
 
 @router.post("/cbp/encode")
 async def cbp_encode(request: Request):
@@ -1887,7 +1887,7 @@ async def cbp_encode(request: Request):
     
     return Response(
         content=binary,
-        media_type="application/x-clisonix",
+        media_type="application/x-kloud",
         headers={
             "X-Magic": "CLSN",
             "X-Version": "1",
@@ -2059,7 +2059,7 @@ async def cbp_binary_request(request: Request):
         
         return Response(
             content=response_binary,
-            media_type="application/x-clisonix",
+            media_type="application/x-kloud",
             headers={
                 "X-Magic": "CLSN",
                 "X-Request-Type": msg_type.name,
@@ -2072,7 +2072,7 @@ async def cbp_binary_request(request: Request):
         error_binary = protocol.create_error_frame(500, str(e))
         return Response(
             content=error_binary,
-            media_type="application/x-clisonix",
+            media_type="application/x-kloud",
             status_code=400,
             headers={"X-Error": str(e)}
         )
@@ -2126,7 +2126,7 @@ async def cbp_stream_write(request: Request, stream_id: int = 1):
     
     return Response(
         content=bytes(output),
-        media_type="application/x-clisonix-stream",
+        media_type="application/x-kloud-stream",
         headers={
             "X-Stream-Id": str(stream_id),
             "X-Frames": str(len(frames)),
@@ -2171,7 +2171,7 @@ async def cbp_stream_sample(count: int = 10, interval_ms: int = 100):
     
     return Response(
         content=bytes(output),
-        media_type="application/x-clisonix-stream",
+        media_type="application/x-kloud-stream",
         headers={
             "X-Sample-Count": str(count),
             "X-Frames": str(len(frames)),
@@ -2184,7 +2184,7 @@ async def cbp_stream_sample(count: int = 10, interval_ms: int = 100):
 async def cbp_version():
     """ℹ️ CBP Protocol version info"""
     return {
-        "name": "Clisonix Binary Protocol",
+        "name": "Kloud Binary Protocol",
         "version": 1,
         "magic": "CLSN",
         "header_size": 8,
@@ -2289,3 +2289,4 @@ async def real_learning_stats():
         "is_mock": False,
         "is_real": True
     }
+

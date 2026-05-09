@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CLISONIX AGENTS - AGENT REGISTRY                          ║
+║                    KLOUD AGENTS - AGENT REGISTRY                          ║
 ║              Service Discovery and Registration for Agents                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -32,7 +32,7 @@ from .base import (
 )
 
 
-logger = logging.getLogger("clisonix.agents.registry")
+logger = logging.getLogger("kloud.agents.registry")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -495,3 +495,4 @@ def find_agents(
         return registry.find_by_name(name)
     else:
         return registry.all_agents()
+

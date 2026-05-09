@@ -1,6 +1,6 @@
 # 🔒 Data Retention & Privacy Policy
 
-## Clisonix Cloud - GDPR Compliance Document
+## Kloud Cloud - GDPR Compliance Document
 
 ---
 
@@ -287,3 +287,4 @@ CREATE TABLE user_consents (
 **Last Updated:** 2026-02-03  
 **Next Review:** 2026-03-03  
 **Approved By:** Compliance Team
+

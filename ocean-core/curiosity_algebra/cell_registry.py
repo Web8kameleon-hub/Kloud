@@ -50,7 +50,7 @@ class CellState(Enum):
 @dataclass
 class Cell:
     """
-    Një qelizë në organizmin Clisonix.
+    Një qelizë në organizmin Kloud.
     Çdo modul, sensor, shërbim ka një identitet qelizor.
     """
     id: str
@@ -275,3 +275,4 @@ def get_cell_registry() -> CellRegistry:
     if _registry is None:
         _registry = CellRegistry()
     return _registry
+

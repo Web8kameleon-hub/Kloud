@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 Excel xlwings Automation - REAL Live Data Updates
-Connects to Clisonix API and updates Excel dashboards with REAL metrics.
+Connects to Kloud API and updates Excel dashboards with REAL metrics.
 NO MOCK DATA - All values from live API endpoints.
 
-Author: Clisonix Automation
+Author: Kloud Automation
 Version: 1.0.0
 """
 
@@ -27,7 +27,7 @@ except ImportError:
 
 class ExcelLiveUpdater:
     """
-    Updates Excel dashboards with REAL data from Clisonix API.
+    Updates Excel dashboards with REAL data from Kloud API.
     NO MOCK DATA - All metrics are live from the running system.
     """
     
@@ -136,14 +136,14 @@ class ExcelLiveUpdater:
         return updated
     
     def update_python_dashboard(self, wb: 'xw.Book', metrics: Dict[str, Any]) -> int:
-        """Update Clisonix_Python_Dashboard.xlsx with live metrics."""
+        """Update Kloud_Python_Dashboard.xlsx with live metrics."""
         updated = 0
         
         try:
             sheet = wb.sheets[0]
             
             # Update header with timestamp
-            sheet.range("A1").value = "Clisonix Python Dashboard - LIVE"
+            sheet.range("A1").value = "Kloud Python Dashboard - LIVE"
             sheet.range("A2").value = f"Updated: {metrics['timestamp']}"
             
             # Trinity metrics table
@@ -195,7 +195,7 @@ class ExcelLiveUpdater:
         if excel_files is None:
             excel_files = [
                 "Dashboard_Registry.xlsx",
-                "Clisonix_Python_Dashboard.xlsx"
+                "Kloud_Python_Dashboard.xlsx"
             ]
         
         # Fetch REAL metrics
@@ -308,3 +308,4 @@ if __name__ == "__main__":
     print("  NO MOCK DATA - All metrics from live API")
     print("=" * 60)
     asyncio.run(main())
+

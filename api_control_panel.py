@@ -15,12 +15,12 @@ import os
 
 # Config
 EXCEL_PATH = 'c:/Users/Admin/Desktop/LIVE_API_DASHBOARD.xlsx'
-BASE_URL = 'https://clisonix.com'
+BASE_URL = 'https://kloud.com'
 
 class LiveDashboardApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("🔴 Clisonix LIVE API Monitor")
+        self.root.title("🔴 Kloud LIVE API Monitor")
         self.root.geometry("900x600")
         self.root.configure(bg='#1a1a2e')
         
@@ -43,7 +43,7 @@ class LiveDashboardApp:
         self.status_indicator = tk.Label(title_frame, text="⚫", font=('Arial', 24), bg='#1a1a2e', fg='gray')
         self.status_indicator.pack(side='left', padx=20)
         
-        tk.Label(title_frame, text="Clisonix API Monitor", font=('Arial', 20, 'bold'), 
+        tk.Label(title_frame, text="Kloud API Monitor", font=('Arial', 20, 'bold'), 
                  bg='#1a1a2e', fg='white').pack(side='left')
         
         self.status_label = tk.Label(title_frame, text="STOPPED", font=('Arial', 14, 'bold'),
@@ -311,3 +311,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

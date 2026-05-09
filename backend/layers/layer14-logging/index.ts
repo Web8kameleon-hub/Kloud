@@ -27,7 +27,7 @@ const logFormat = winston.format.combine(
 
 // Daily rotate file transport
 const fileRotateTransport = new winston.transports.DailyRotateFile({
-  filename: "logs/clisonix-%DATE%.log",
+  filename: "logs/kloud-%DATE%.log",
   datePattern: "YYYY-MM-DD",
   maxSize: "20m",
   maxFiles: "14d",
@@ -43,7 +43,7 @@ const consoleTransport = new winston.transports.Console({
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: logFormat,
-  defaultMeta: { service: "clisonix-backend" },
+  defaultMeta: { service: "kloud-backend" },
   transports: [consoleTransport, fileRotateTransport],
 });
 
@@ -112,3 +112,4 @@ export default {
   recordRequest,
   getMetrics,
 };
+

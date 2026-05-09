@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Clisonix Package Installation Script
+Kloud Package Installation Script
 Resolves conflicts between Python backend and npm frontend packages
 """
 
@@ -27,7 +27,7 @@ def run_command(cmd, cwd=None, description=""):
         return False
 
 def main():
-    print("🚀 CLISONIX PACKAGE INSTALLATION")
+    print("🚀 KLOUD PACKAGE INSTALLATION")
     print("=" * 50)
 
     workspace_root = os.getcwd()
@@ -70,7 +70,7 @@ def main():
 
     print("\n🎉 ALL PACKAGES INSTALLED SUCCESSFULLY!")
     print("\n💡 You can now run:")
-    print("   Backend: python start_Clisonix.py")
+    print("   Backend: python start_Kloud.py")
     print("   Frontend: cd frontend && npm run dev")
     print("   Web App: cd apps/web && npm run dev")
 
@@ -79,3 +79,4 @@ def main():
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
+

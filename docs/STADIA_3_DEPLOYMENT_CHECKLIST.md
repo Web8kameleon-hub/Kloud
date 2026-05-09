@@ -52,7 +52,7 @@ python -c "from ocean-core.ai_safety_validator import AIResponseValidator; print
 ### Step 1: Pull Latest Code
 
 ```bash
-ssh hetzner-new "cd /root/Clisonix-cloud && git pull origin main"
+ssh hetzner-new "cd /root/Kloud-cloud && git pull origin main"
 ```
 
 **Expected output:**
@@ -71,7 +71,7 @@ weaviate-client>=4.0.0
 ```
 
 ```bash
-ssh hetzner-new "cd /root/Clisonix-cloud && grep weaviate ocean-core/requirements-lite.txt"
+ssh hetzner-new "cd /root/Kloud-cloud && grep weaviate ocean-core/requirements-lite.txt"
 ```
 
 **Expected:** Package listed
@@ -79,7 +79,7 @@ ssh hetzner-new "cd /root/Clisonix-cloud && grep weaviate ocean-core/requirement
 ### Step 3: Rebuild Ocean Core Container
 
 ```bash
-ssh hetzner-new "cd /root/Clisonix-cloud && docker-compose build --no-cache ocean-core"
+ssh hetzner-new "cd /root/Kloud-cloud && docker-compose build --no-cache ocean-core"
 ```
 
 **Expected output:**
@@ -87,19 +87,19 @@ ssh hetzner-new "cd /root/Clisonix-cloud && docker-compose build --no-cache ocea
 ```text
 ✅ [7/8] COPY ocean-core/ /app
 ✅ [8/8] RUN pip install -r requirements-lite.txt
-✅ Successfully built clisonix-cloud-ocean-core:latest
+✅ Successfully built kloud-cloud-ocean-core:latest
 ```
 
 ### Step 4: Restart Services
 
 ```bash
-ssh hetzner-new "cd /root/Clisonix-cloud && docker-compose up -d ocean-core"
+ssh hetzner-new "cd /root/Kloud-cloud && docker-compose up -d ocean-core"
 ```
 
 **Expected:**
 
 ```text
-✅ clisonix-ocean-core is up-to-date
+✅ kloud-ocean-core is up-to-date
 ```
 
 ### Step 5: Verify Ocean Core Health
@@ -296,7 +296,7 @@ LOGGING_CONFIG = {
 
 ```bash
 # Run every Monday 02:00 UTC
-0 2 * * 1 /root/Clisonix-cloud/scripts/weekly_audit.sh
+0 2 * * 1 /root/Kloud-cloud/scripts/weekly_audit.sh
 ```
 
 ---
@@ -308,13 +308,13 @@ If anything breaks:
 ## Option 1: Revert Last Commit
 
 ```bash
-ssh hetzner-new "cd /root/Clisonix-cloud && git revert HEAD~1 && docker-compose build ocean-core"
+ssh hetzner-new "cd /root/Kloud-cloud && git revert HEAD~1 && docker-compose build ocean-core"
 ```
 
 ## Option 2: Use Previous Image
 
 ```bash
-ssh hetzner-new "docker-compose down ocean-core && docker rmi clisonix-cloud-ocean-core:latest && docker-compose up -d ocean-core"
+ssh hetzner-new "docker-compose down ocean-core && docker rmi kloud-cloud-ocean-core:latest && docker-compose up -d ocean-core"
 ```
 
 ## Option 3: Disable Validator (Emergency)
@@ -377,3 +377,4 @@ VALIDATOR_ENABLED = False  # Set to True after fix
 ---
 
 ## Next: Run Phase 1 checklist →
+

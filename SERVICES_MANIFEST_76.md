@@ -1,4 +1,4 @@
-# Clisonix Microservices Manifest - 76+ Services
+# Kloud Microservices Manifest - 76+ Services
 
 ## Core Infrastructure
 - **Ollama LLM** (Port 11434) - Local language model engine
@@ -70,7 +70,7 @@
 ## Integration & Coordination
 45. **API Request Generator** - Dynamic API request generation
 46. **API Root Patch** - API routing and patching
-47. **Clisonix Integration Runner** - Integration orchestration
+47. **Kloud Integration Runner** - Integration orchestration
 48. **CLX Publisher** - Publication system
 49. **Convert OpenAPI** - OpenAPI conversion utilities
 50. **API Key Management** - API key lifecycle management
@@ -93,8 +93,8 @@
 
 ## Development & Testing
 63. **Check Grafana Stack** - Monitoring stack validation
-64. **Clisonix SDK (Python)** - Python SDK
-65. **Clisonix SDK (TypeScript)** - TypeScript SDK
+64. **Kloud SDK (Python)** - Python SDK
+65. **Kloud SDK (TypeScript)** - TypeScript SDK
 66. **Test YouTube API** - YouTube integration testing
 67. **Test Neurosonix API** - Neurosonix testing
 
@@ -152,7 +152,7 @@
 - `OCEAN_CORE_URL`: http://127.0.0.1:8030
 - `API_BACKEND_URL`: http://127.0.0.1:8000
 - `REDIS_URL`: redis://127.0.0.1:6379
-- `DATABASE_URL`: postgresql://clisonix:clisonix@127.0.0.1:5432/clisonixdb
+- `DATABASE_URL`: postgresql://kloud:kloud@127.0.0.1:5432/klouddb
 
 ### Health Check URLs
 ```bash
@@ -168,3 +168,4 @@ curl http://localhost:11434/api/health  # Ollama
 ✅ Orchestrator script created (START_ALL_SERVICES.ps1)
 ✅ Service manifest complete
 ✅ Dependencies verified
+

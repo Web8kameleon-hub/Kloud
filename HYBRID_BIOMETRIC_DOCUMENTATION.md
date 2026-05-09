@@ -433,7 +433,7 @@ python apps/api/hybrid_biometric_api.py
 
 ```bash
 # 1. Copy files to server
-scp -r apps/api/hybrid_biometric_api.py root@server:/opt/clisonix/apps/api/
+scp -r apps/api/hybrid_biometric_api.py root@server:/opt/kloud/apps/api/
 
 # 2. Update docker-compose.yml
 hybrid-api:
@@ -443,8 +443,8 @@ hybrid-api:
   ports:
     - "8001:8000"
   environment:
-    - API_ENDPOINT=https://api.clisonix.com
-    - WS_URL=wss://api.clisonix.com/ws
+    - API_ENDPOINT=https://api.kloud.com
+    - WS_URL=wss://api.kloud.com/ws
   volumes:
     - ./data/hybrid:/data
 
@@ -562,10 +562,11 @@ Coach monitors performance
 ## 📞 SUPPORT
 
 For issues or integration help:
-- GitHub: https://github.com/LedjanAhmati/Clisonix-cloud
-- Email: support@clisonix.com
-- Docs: https://clisonix-docs.example.com
+- GitHub: https://github.com/LedjanAhmati/Kloud-cloud
+- Email: support@kloud.com
+- Docs: https://kloud-docs.example.com
 
 ---
 
 **Sistema e Plotë Hybrid Biometric ready! 🚀**
+

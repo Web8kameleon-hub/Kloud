@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'http://clisonix-api:8000' 
+  ? 'http://kloud-api:8000' 
   : 'http://127.0.0.1:8000';
 
 export async function GET(request: NextRequest) {
@@ -50,3 +50,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create data source' }, { status: 500 })
   }
 }
+

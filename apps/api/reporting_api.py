@@ -49,7 +49,7 @@ REPORTS_DIR.mkdir(exist_ok=True)
 
 class ExportRequest(BaseModel):
     """Request body për Excel/PowerPoint export"""
-    title: str = "Clisonix Cloud Metrics Report"
+    title: str = "Kloud Cloud Metrics Report"
     format: str = "xlsx"  # xlsx, pptx, both
     include_sla: bool = True
     include_alerts: bool = True
@@ -183,7 +183,7 @@ async def export_excel(background_tasks: BackgroundTasks) -> Response:
     """
     try:
         # Generate Excel file
-        excel_exporter = UltraExcelExporter("Clisonix Cloud Metrics Report")
+        excel_exporter = UltraExcelExporter("Kloud Cloud Metrics Report")
         
         # Fetch mock metrics (in real implementation, query VictoriaMetrics)
         snapshots = _get_mock_metrics(hours=24)
@@ -227,7 +227,7 @@ async def export_powerpoint(background_tasks: BackgroundTasks) -> Response:
     """
     try:
         # Generate PowerPoint
-        ppt_gen = UltraPowerPointGenerator("Clisonix Cloud Metrics Report")
+        ppt_gen = UltraPowerPointGenerator("Kloud Cloud Metrics Report")
         
         # Add slides
         ppt_gen.add_title_slide("Enterprise Metrics & SLA Tracking Report")
@@ -631,21 +631,21 @@ async def get_docker_containers():
 
 
 def _get_mock_containers():
-    """Return mock container data matching actual Clisonix infrastructure"""
+    """Return mock container data matching actual Kloud infrastructure"""
     return [
-        {"name": "clisonix-api", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8000"},
-        {"name": "clisonix-web", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3000"},
-        {"name": "clisonix-core", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8002"},
-        {"name": "clisonix-excel", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8001"},
-        {"name": "clisonix-marketplace", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8003"},
-        {"name": "clisonix-balancer", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "80"},
-        {"name": "clisonix-postgres", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "5432"},
-        {"name": "clisonix-redis", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "6379"},
-        {"name": "clisonix-minio", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "9000"},
-        {"name": "clisonix-prometheus", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "9090"},
-        {"name": "clisonix-grafana", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3001"},
-        {"name": "clisonix-loki", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3100"},
-        {"name": "clisonix-victoriametrics", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8428"}
+        {"name": "kloud-api", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8000"},
+        {"name": "kloud-web", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3000"},
+        {"name": "kloud-core", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8002"},
+        {"name": "kloud-excel", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8001"},
+        {"name": "kloud-marketplace", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8003"},
+        {"name": "kloud-balancer", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "80"},
+        {"name": "kloud-postgres", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "5432"},
+        {"name": "kloud-redis", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "6379"},
+        {"name": "kloud-minio", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "9000"},
+        {"name": "kloud-prometheus", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "9090"},
+        {"name": "kloud-grafana", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3001"},
+        {"name": "kloud-loki", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "3100"},
+        {"name": "kloud-victoriametrics", "status": "running", "health": "healthy", "uptime": "Up 2 hours", "ports": "8428"}
     ]
 
 
@@ -820,4 +820,5 @@ async def clear_errors() -> Dict[str, Any]:
         "message": f"Cleared {error_count} errors",
         "cleared_count": error_count,
     }
+
 

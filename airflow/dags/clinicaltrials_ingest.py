@@ -9,7 +9,7 @@ PG_CONFIG = {
     "host": os.getenv("PGHOST", "postgres"),
     "user": os.getenv("PGUSER", "postgres"),
     "password": os.getenv("PGPASSWORD", "postgres"),
-    "dbname": os.getenv("PGDATABASE", "Clisonix"),
+    "dbname": os.getenv("PGDATABASE", "Kloud"),
 }
 CLINICALTRIALS_API = "https://clinicaltrials.gov/api/v2/studies"
 
@@ -83,4 +83,5 @@ with DAG(
     catchup=False,
 ) as dag:
     PythonOperator(task_id="load_trials", python_callable=load_trials)
+
 

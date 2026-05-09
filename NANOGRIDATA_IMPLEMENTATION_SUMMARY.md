@@ -138,7 +138,7 @@
 ## 🔧 IMPLEMENTATION FILES
 
 ```
-c:\Users\Admin\Desktop\Clisonix-cloud\
+c:\Users\Admin\Desktop\Kloud-cloud\
 
 CORE PROTOCOL:
 ├── nanogridata_protocol_v1.ts      (TypeScript/Node.js - 600+ lines)
@@ -331,3 +331,4 @@ if result.valid:
 **Last Updated:** 2026-01-17  
 **Version:** 1.0.0  
 **Commits:** 4 (security, integration, documentation)
+

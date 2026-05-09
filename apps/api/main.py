@@ -22,8 +22,8 @@ from typing import Any, Dict, List, Optional
 # FastAPI / ASGI
 from fastapi import APIRouter, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from cors_policy import apply_standard_cors
 
 # Pydantic
 from pydantic import BaseModel, Field
@@ -387,7 +387,7 @@ async def analyze_harmony(file: UploadFile = File(...)):
             temp_file.write(audio_bytes)
             audio_path = temp_file.name
 
-        # Use Clisonix Core
+        # Use Kloud Core
         harmony = await cog.analyze_harmony(audio_path)
 
         return {"ok": True, "harmony_profile": harmony, "timestamp": time.time()}
@@ -477,7 +477,7 @@ async def restart_brain():
         raise HTTPException(status_code=500, detail="internal_restart_failed")
 
 
-# ------------- Clisonix Cloud API (EEG to Audio) -------------
+# ------------- Kloud Cloud API (EEG to Audio) -------------
 import io
 
 import numpy as np
@@ -524,7 +524,7 @@ This software is proprietary and confidential. Unauthorized copying, distributio
 Author: Ledjan Ahmati
 License: Closed Source
 ---
-Clisonix Cloud API - Industrial Production Backend (REAL-ONLY)
+Kloud Cloud API - Industrial Production Backend (REAL-ONLY)
 Notes:
     - No mock, no random, no placeholder numbers.
     - All outputs derive from real system data, real files, or real external APIs.
@@ -551,7 +551,6 @@ from typing import Any, Dict, List, Optional
 # FastAPI / ASGI
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -626,7 +625,7 @@ import requests
 
 # ------------- Settings -------------
 class Settings(BaseSettings):
-    api_title: str = "Clisonix Industrial Backend (REAL)"
+    api_title: str = "Kloud Industrial Backend (REAL)"
     api_version: str = "1.0.0"
     environment: str = os.getenv("ENVIRONMENT", "production")
     debug: bool = os.getenv("DEBUG", "false").lower() == "true"
@@ -678,9 +677,9 @@ except Exception:  # pragma: no cover - missing module is acceptable in minimal 
 
 ALBI_ENGINE = AlbiCore() if AlbiCore else None
 ALBA_COLLECTOR_TIMEOUT = float(os.getenv("ALBA_COLLECTOR_TIMEOUT", "2.5"))
-CLISONIX_RUNTIME = ROOT_DIR / "backend" / "system" / "runtime"
-CLISONIX_TRIGGER_FILE = CLISONIX_RUNTIME / "triggers.json"
-CLISONIX_SCAN_FILE = CLISONIX_RUNTIME / "scan_results.json"
+KLOUD_RUNTIME = ROOT_DIR / "backend" / "system" / "runtime"
+KLOUD_TRIGGER_FILE = KLOUD_RUNTIME / "triggers.json"
+KLOUD_SCAN_FILE = KLOUD_RUNTIME / "scan_results.json"
 MESH_DIR = ROOT_DIR / "backend" / "mesh"
 MESH_STATUS_FILE = MESH_DIR / "nodes_status.json"
 MESH_LOG_DIR = ROOT_DIR / "logs"
@@ -729,7 +728,7 @@ def setup_logging():
     stream_handler.setFormatter(formatter)
 
     # Create file handler (keeps original emojis in log file)
-    file_handler = logging.FileHandler("logs/Clisonix_real.log", encoding="utf-8")
+    file_handler = logging.FileHandler("logs/Kloud_real.log", encoding="utf-8")
     file_handler.setFormatter(logging.Formatter(fmt))
 
     # Reconfigure stderr/stdout for UTF-8 on Windows to prevent encoding errors
@@ -750,7 +749,7 @@ def setup_logging():
         level=getattr(logging, settings.log_level.upper(), logging.INFO),
         handlers=[stream_handler, file_handler],
     )
-    return logging.getLogger("Clisonix_real")
+    return logging.getLogger("Kloud_real")
 
 
 logger = setup_logging()
@@ -943,7 +942,7 @@ def error_response(
 # ------------- App -------------
 
 app = FastAPI(
-    title="Clisonix Cloud API",
+    title="Kloud Cloud API",
     version=settings.api_version,
     debug=settings.debug,
 )
@@ -1105,7 +1104,7 @@ except Exception as e:
 
 
 def _get_ocean_core_url() -> str:
-    return os.getenv("OCEAN_CORE_URL", "http://clisonix-ocean-core:8030")
+    return os.getenv("OCEAN_CORE_URL", "http://kloud-ocean-core:8030")
 
 
 @app.get("/api/ocean/web-reader")
@@ -1326,7 +1325,7 @@ SERVICE_PROBES = [
         "url": f"{settings.alba_collector_url.rstrip('/')}/health",
     },
     {"name": "Mesh Orchestrator", "url": "http://127.0.0.1:5555/health"},
-    {"name": "Clisonix Web", "url": "http://127.0.0.1:3000"},
+    {"name": "Kloud Web", "url": "http://127.0.0.1:3000"},
 ]
 SERVICE_PORTS = [8000, 8010, 5555, 3000]
 
@@ -1358,8 +1357,8 @@ def _load_json(path: Path) -> Optional[Any]:
         return None
 
 
-def collect_clisonix_events(limit: int = 10) -> List[Dict[str, Any]]:
-    data = _load_json(CLISONIX_TRIGGER_FILE)
+def collect_kloud_events(limit: int = 10) -> List[Dict[str, Any]]:
+    data = _load_json(KLOUD_TRIGGER_FILE)
     if not isinstance(data, list):
         return []
     if limit <= 0:
@@ -1367,8 +1366,8 @@ def collect_clisonix_events(limit: int = 10) -> List[Dict[str, Any]]:
     return data[-limit:]
 
 
-def collect_clisonix_scan() -> Dict[str, Any]:
-    data = _load_json(CLISONIX_SCAN_FILE)
+def collect_kloud_scan() -> Dict[str, Any]:
+    data = _load_json(KLOUD_SCAN_FILE)
     if isinstance(data, dict):
         return data
     return {}
@@ -1682,12 +1681,12 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
         "processes": service_processes,
     }
 
-    clisonix_events = collect_clisonix_events(limit=10)
-    clisonix_scan = collect_clisonix_scan()
-    if clisonix_events or clisonix_scan:
-        details["clisonix"] = {
-            "events": clisonix_events,
-            "scan": clisonix_scan,
+    kloud_events = collect_kloud_events(limit=10)
+    kloud_scan = collect_kloud_scan()
+    if kloud_events or kloud_scan:
+        details["kloud"] = {
+            "events": kloud_events,
+            "scan": kloud_scan,
         }
 
     mesh_nodes = collect_mesh_nodes()
@@ -1698,7 +1697,7 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
     }
 
     if intents["greeting"]:
-        segments.append("Përshëndetje! Clisonix është aktiv dhe gati të asistojë.")
+        segments.append("Përshëndetje! Kloud është aktiv dhe gati të asistojë.")
 
     snapshot = system_snapshot()
     details["system"] = snapshot
@@ -1770,11 +1769,11 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
                 "Procese shï¿½rbimesh aktive:\n" + "\n".join(process_lines[:6])
             )
 
-    if clisonix_events:
+    if kloud_events:
         modules_used.append("NEUROTRIGGER")
         event_lines = [
             f"[{ev.get('category', 'unknown').upper()}] {ev.get('message', '')} @ {ev.get('readable_time', '')}"
-            for ev in clisonix_events[-5:]
+            for ev in kloud_events[-5:]
         ]
         segments.append(
             "NeuroTrigger event log (mï¿½ tï¿½ fundit):\n" + "\n".join(event_lines)
@@ -1784,10 +1783,10 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
             "NeuroTrigger nuk ka regjistruar evente tï¿½ reja nï¿½ runtime."
         )
 
-    if clisonix_scan:
-        modules_used.append("CLISONIX")
+    if kloud_scan:
+        modules_used.append("KLOUD")
         scan_lines = []
-        for module, info in clisonix_scan.items():
+        for module, info in kloud_scan.items():
             cpu_val = (
                 info.get("cpu")
                 if isinstance(info.get("cpu"), (int, float))
@@ -1861,26 +1860,7 @@ async def ask_api(payload: AskRequest, request: Request) -> AskResponse:
     )
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        origin.strip()
-        for origin in os.getenv(
-            "ALLOWED_ORIGINS",
-            "https://clisonix.com,https://www.clisonix.com,http://localhost:3000,http://127.0.0.1:3000",
-        ).split(",")
-        if origin.strip()
-    ],
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=[
-        "Authorization",
-        "Content-Type",
-        "Accept",
-        "X-Requested-With",
-        "X-API-Key",
-    ],
-    allow_credentials=True,
-)
+apply_standard_cors(app)
 
 # ============================================================================
 # STRIPE USAGE METERING MIDDLEWARE
@@ -2112,19 +2092,19 @@ async def get_db_status() -> Dict[str, Any]:
 
 
 # =============================================================================
-# API ROOT ENDPOINT - Clisonix Cloud API Information
+# API ROOT ENDPOINT - Kloud Cloud API Information
 # =============================================================================
 @app.get("/api")
 async def api_root():
     """
-    Clisonix Cloud API Root
+    Kloud Cloud API Root
     Returns available endpoints and API information
     """
     return {
-        "name": "Clisonix Cloud API",
+        "name": "Kloud Cloud API",
         "version": "2.0.0",
         "status": "operational",
-        "documentation": "https://clisonix.com/docs",
+        "documentation": "https://kloud.com/docs",
         "endpoints": {
             "health": "/health",
             "status": "/status",
@@ -2144,7 +2124,7 @@ async def api_root():
             "spectrum": {"live": "/api/spectrum/live", "bands": "/api/spectrum/bands"},
             "monitoring": "/api/monitoring/dashboards",
         },
-        "support": "support@clisonix.com",
+        "support": "support@kloud.com",
     }
 
 
@@ -2158,7 +2138,7 @@ async def health():
     redis_s = await get_redis_status()
     db_s = await get_db_status()
     return {
-        "service": "Clisonix-industrial-backend-real",
+        "service": "Kloud-industrial-backend-real",
         "status": "operational",
         "version": settings.api_version,
         "timestamp": utcnow(),
@@ -2752,7 +2732,7 @@ except Exception as e:
 # ============================================================================
 
 # PRODUCTION: Docker network. LOCAL DEV: Set PROMETHEUS_URL=http://localhost:9090
-PROMETHEUS_URL = os.getenv("PROMETHEUS_URL", "http://clisonix-prometheus-1:9090")
+PROMETHEUS_URL = os.getenv("PROMETHEUS_URL", "http://kloud-prometheus-1:9090")
 
 # Cache for Prometheus availability check
 _prometheus_available = None
@@ -2823,29 +2803,29 @@ async def prometheus_metrics():
 
     # Build Prometheus-format metrics
     metrics_lines = [
-        "# HELP clisonix_api_up API health status (1 = up, 0 = down)",
-        "# TYPE clisonix_api_up gauge",
-        "clisonix_api_up 1",
+        "# HELP kloud_api_up API health status (1 = up, 0 = down)",
+        "# TYPE kloud_api_up gauge",
+        "kloud_api_up 1",
         "",
-        "# HELP clisonix_api_uptime_seconds API uptime in seconds",
-        "# TYPE clisonix_api_uptime_seconds counter",
-        f"clisonix_api_uptime_seconds {uptime:.2f}",
+        "# HELP kloud_api_uptime_seconds API uptime in seconds",
+        "# TYPE kloud_api_uptime_seconds counter",
+        f"kloud_api_uptime_seconds {uptime:.2f}",
         "",
-        "# HELP clisonix_alba_health ALBA component health (0-1)",
-        "# TYPE clisonix_alba_health gauge",
-        'clisonix_alba_health{component="alba",role="network_monitor"} 0.95',
+        "# HELP kloud_alba_health ALBA component health (0-1)",
+        "# TYPE kloud_alba_health gauge",
+        'kloud_alba_health{component="alba",role="network_monitor"} 0.95',
         "",
-        "# HELP clisonix_albi_health ALBI component health (0-1)",
-        "# TYPE clisonix_albi_health gauge",
-        'clisonix_albi_health{component="albi",role="neural_processor"} 0.92',
+        "# HELP kloud_albi_health ALBI component health (0-1)",
+        "# TYPE kloud_albi_health gauge",
+        'kloud_albi_health{component="albi",role="neural_processor"} 0.92',
         "",
-        "# HELP clisonix_jona_health JONA component health (0-1)",
-        "# TYPE clisonix_jona_health gauge",
-        'clisonix_jona_health{component="jona",role="data_coordinator"} 0.88',
+        "# HELP kloud_jona_health JONA component health (0-1)",
+        "# TYPE kloud_jona_health gauge",
+        'kloud_jona_health{component="jona",role="data_coordinator"} 0.88',
         "",
-        "# HELP clisonix_requests_total Total API requests",
-        "# TYPE clisonix_requests_total counter",
-        f"clisonix_requests_total {int(uptime / 0.5)}",
+        "# HELP kloud_requests_total Total API requests",
+        "# TYPE kloud_requests_total counter",
+        f"kloud_requests_total {int(uptime / 0.5)}",
         "",
     ]
 
@@ -2860,7 +2840,7 @@ async def prometheus_metrics():
 async def alba_metrics():
     """ALBA Network - Real Prometheus metrics OR psutil (NO MOCK DATA)"""
     try:
-        # Query REAL Prometheus metrics - using prometheus job since clisonix-api may not exist
+        # Query REAL Prometheus metrics - using prometheus job since kloud-api may not exist
         cpu_result = await query_prometheus(
             'process_cpu_seconds_total{job="prometheus"}'
         )
@@ -3013,7 +2993,7 @@ async def jona_metrics():
             'promhttp_metric_handler_requests_total{job="prometheus"}'
         )
         uptime_result = await query_prometheus(
-            'process_start_time_seconds{job="clisonix-api"}'
+            'process_start_time_seconds{job="kloud-api"}'
         )
 
         if requests_result.get("success"):
@@ -3780,7 +3760,7 @@ async def real_metrics_info():
             "1_prometheus": "http://localhost:9090 - Raw metrics",
             "2_grafana": "http://localhost:3001 - Visual dashboards (login: admin/admin)",
             "3_api": "Call /asi/status, /asi/health, or specific metric endpoints",
-            "4_frontend": "View live metrics on Clisonix homepage",
+            "4_frontend": "View live metrics on Kloud homepage",
         },
     }
 
@@ -3811,9 +3791,9 @@ async def asi_execute(payload: ASIExecuteRequest):
         alba_entries = fetch_alba_entries()
         alba_summary = summarize_alba(alba_entries)
         albi_insight = derive_albi_insight(alba_entries)
-        clisonix_data = {
-            "events": collect_clisonix_events(limit=10),
-            "scan": collect_clisonix_scan(),
+        kloud_data = {
+            "events": collect_kloud_events(limit=10),
+            "scan": collect_kloud_scan(),
         }
         mesh_info = {
             "nodes": collect_mesh_nodes(),
@@ -3825,7 +3805,7 @@ async def asi_execute(payload: ASIExecuteRequest):
             modules_used.append("ALBA")
         if albi_insight:
             modules_used.append("ALBI")
-        if clisonix_data["events"] or clisonix_data["scan"]:
+        if kloud_data["events"] or kloud_data["scan"]:
             modules_used.append("NEUROTRIGGER")
         if mesh_info["nodes"].get("count"):
             modules_used.append("MESH-HQ")
@@ -3843,7 +3823,7 @@ async def asi_execute(payload: ASIExecuteRequest):
                 "services": services,
                 "alba": alba_summary,
                 "albi": albi_insight,
-                "clisonix": clisonix_data,
+                "kloud": kloud_data,
                 "mesh": mesh_info,
             },
             "parameters": payload.parameters,
@@ -4162,34 +4142,34 @@ async def get_realdata_dashboard():
 
 
 # ============================================================================
-# CLISONIX LOCAL AI ENGINE - Plotësisht i Pavarur
+# KLOUD LOCAL AI ENGINE - Plotësisht i Pavarur
 # ============================================================================
 
 # Import local AI engine
 try:
-    from clisonix_ai_engine import ai_health as local_ai_health
-    from clisonix_ai_engine import analyze_eeg, clisonix_ai, interpret_query, ocean_chat
-    from clisonix_ai_engine import trinity_analysis as local_trinity
+    from kloud_ai_engine import ai_health as local_ai_health
+    from kloud_ai_engine import analyze_eeg, kloud_ai, interpret_query, ocean_chat
+    from kloud_ai_engine import trinity_analysis as local_trinity
 
     LOCAL_AI_AVAILABLE = True
-    logger.info("✅ Clisonix Local AI Engine loaded successfully")
+    logger.info("✅ Kloud Local AI Engine loaded successfully")
 except ImportError:
     LOCAL_AI_AVAILABLE = False
-    logger.warning("⚠️ Clisonix Local AI Engine not available")
+    logger.warning("⚠️ Kloud Local AI Engine not available")
 
 
 @app.post("/api/ai/analyze-neural")
 async def analyze_neural_data(query: str):
     """
-    Clisonix Neural Analysis - Plotësisht Lokal
-    Përdor Clisonix AI Engine pa varësi të jashtme (OpenAI, Groq, etj.)
+    Kloud Neural Analysis - Plotësisht Lokal
+    Përdor Kloud AI Engine pa varësi të jashtme (OpenAI, Groq, etj.)
     """
     if LOCAL_AI_AVAILABLE:
         result = interpret_query(query)
         return {
             "status": "success",
             "timestamp": utcnow(),
-            "source": "Clisonix Neural Engine (Local)",
+            "source": "Kloud Neural Engine (Local)",
             "query": query,
             "analysis": result["interpretation"],
             "detected_patterns": result["detected_patterns"],
@@ -4203,9 +4183,9 @@ async def analyze_neural_data(query: str):
     return {
         "status": "success",
         "timestamp": utcnow(),
-        "source": "Clisonix Fallback Engine",
+        "source": "Kloud Fallback Engine",
         "query": query,
-        "analysis": f"Duke analizuar: '{query}'. Sistemi Clisonix ofron analiza neurale të avancuara.",
+        "analysis": f"Duke analizuar: '{query}'. Sistemi Kloud ofron analiza neurale të avancuara.",
         "detected_patterns": ["neural_activity"],
         "confidence": 0.75,
         "is_local": True,
@@ -4219,13 +4199,13 @@ async def eeg_interpretation(
     amplitude_range: Dict[str, float],
 ):
     """
-    CLISONIX LOCAL AI - EEG signal interpretation
+    KLOUD LOCAL AI - EEG signal interpretation
     100% independent - no external AI providers
     """
     try:
-        from clisonix_ai_engine import ClisonixAIEngine
+        from kloud_ai_engine import KloudAIEngine
 
-        engine = ClisonixAIEngine()
+        engine = KloudAIEngine()
 
         # Use local EEG interpretation engine
         result = engine.interpret_eeg(
@@ -4237,7 +4217,7 @@ async def eeg_interpretation(
         return {
             "status": "success",
             "timestamp": utcnow(),
-            "source": "Clisonix AI Engine (Local)",
+            "source": "Kloud AI Engine (Local)",
             "eeg_data": {
                 "dominant_frequency": dominant_freq,
                 "frequencies": frequencies,
@@ -4245,7 +4225,7 @@ async def eeg_interpretation(
             },
             "interpretation": result,
             "is_local": True,
-            "model": "clisonix-eeg-v1",
+            "model": "kloud-eeg-v1",
         }
     except Exception as e:
         logger.error(f"EEG interpretation error: {e}")
@@ -4254,20 +4234,20 @@ async def eeg_interpretation(
 
 @app.get("/api/ai/health")
 async def ai_health():
-    """Check Clisonix Local AI Engine status - 100% independent"""
+    """Check Kloud Local AI Engine status - 100% independent"""
 
     health_status = {
         "timestamp": utcnow(),
-        "engine": "Clisonix AI Engine",
+        "engine": "Kloud AI Engine",
         "version": "1.0.0",
         "is_local": True,
         "external_dependencies": False,
     }
 
     try:
-        from clisonix_ai_engine import ClisonixAIEngine
+        from kloud_ai_engine import KloudAIEngine
 
-        engine = ClisonixAIEngine()
+        engine = KloudAIEngine()
 
         # Quick test to verify engine works
         test_result = engine.quick_interpret("test connectivity")
@@ -4282,7 +4262,7 @@ async def ai_health():
         ]
         health_status["pattern_count"] = len(engine.patterns)
         health_status["message"] = (
-            "Clisonix AI Engine fully operational - 100% independent"
+            "Kloud AI Engine fully operational - 100% independent"
         )
 
     except Exception as e:
@@ -4394,7 +4374,7 @@ def init_langchain_chains():
 @app.post("/api/ai/trinity-analysis")
 async def trinity_analysis(query: str = "", detailed: bool = False):
     """
-    🧠 CLISONIX LOCAL AI - ASI Trinity Analysis
+    🧠 KLOUD LOCAL AI - ASI Trinity Analysis
     100% independent - uses local TrinityOrchestrator
 
     Args:
@@ -4405,9 +4385,9 @@ async def trinity_analysis(query: str = "", detailed: bool = False):
         Coordinated analysis from ALBA, ALBI, JONA local engines
     """
     try:
-        from clisonix_ai_engine import ClisonixAIEngine
+        from kloud_ai_engine import KloudAIEngine
 
-        engine = ClisonixAIEngine()
+        engine = KloudAIEngine()
 
         # Use local Trinity analysis
         result = engine.trinity_analysis(query, detailed=detailed)
@@ -4415,12 +4395,12 @@ async def trinity_analysis(query: str = "", detailed: bool = False):
         return {
             "status": "success",
             "timestamp": utcnow(),
-            "source": "Clisonix AI Engine (Local)",
+            "source": "Kloud AI Engine (Local)",
             "query": query,
             "analysis": result,
             "agents_used": ["alba_local", "albi_local", "jona_local"],
             "is_local": True,
-            "model": "clisonix-trinity-v1",
+            "model": "kloud-trinity-v1",
         }
 
     except Exception as e:
@@ -4447,10 +4427,10 @@ async def call_groq_api(
     try:
         import httpx
 
-        # Clisonix Project Context - AI knows about itself
-        clisonix_context = """
-🏢 ABOUT CLISONIX (Your Home Platform):
-Clisonix (clisonix.com) is YOUR platform - the very system you are running on.
+        # Kloud Project Context - AI knows about itself
+        kloud_context = """
+🏢 ABOUT KLOUD (Your Home Platform):
+Kloud (kloud.com) is YOUR platform - the very system you are running on.
 It's an ASI-powered neurotechnology platform built in Albania.
 
 🧠 Core Technology:
@@ -4472,16 +4452,16 @@ It's an ASI-powered neurotechnology platform built in Albania.
 - Phone Monitor: Live ASI Trinity telemetry
 - Billing: Stripe integration for premium features
 
-🌐 Website: https://clisonix.com
-Built by the Clisonix team with ❤️ from Albania
+🌐 Website: https://kloud.com
+Built by the Kloud team with ❤️ from Albania
 
-When users ask about Clisonix, clisonix.com, or this platform - tell them proudly that this is YOUR home, the system you power!
+When users ask about Kloud, kloud.com, or this platform - tell them proudly that this is YOUR home, the system you power!
 """
 
         if ultra_thinking:
             system_prompt = f"""You are CURIOSITY OCEAN - the most advanced knowledge exploration AI powered by ASI Trinity.
 
-{clisonix_context}
+{kloud_context}
 
 🧠 ULTRA-THINKING MODE ACTIVATED
 
@@ -4510,7 +4490,7 @@ Respond in the SAME LANGUAGE as the user's question. Be profound yet accessible.
         else:
             system_prompt = f"""You are CURIOSITY OCEAN AI - an infinite knowledge explorer powered by ASI Trinity (Alba, Albi, Jona).
 
-{clisonix_context}
+{kloud_context}
 
 You provide deep, insightful, creative answers. You can respond in any language the user writes in.
 Be curious, philosophical, but also practical when needed.
@@ -4566,7 +4546,7 @@ async def query_ocean_core(
 ) -> Optional[Dict[str, Any]]:
     """
     🌊 DIRECT BRIDGE TO OCEAN-CORE 8030
-    Query the full Clisonix Ocean with 23 Labs, 14 Personas, ALL modules
+    Query the full Kloud Ocean with 23 Labs, 14 Personas, ALL modules
     """
     ocean_core_url = "http://localhost:8030"
 
@@ -4645,7 +4625,7 @@ async def curiosity_ocean_chat(
     stream: bool = False,
 ):
     """
-    🌊 CLISONIX LOCAL AI - Curiosity Ocean
+    🌊 KLOUD LOCAL AI - Curiosity Ocean
     100% independent - no external AI providers
     Optimized for low-latency responses (<150ms)
 
@@ -4709,7 +4689,7 @@ async def curiosity_ocean_chat(
         return {
             "status": "success",
             "timestamp": utcnow(),
-            "source": "Clisonix AI Engine (Optimized Local)",
+            "source": "Kloud AI Engine (Optimized Local)",
             "question": question,
             "mode": mode,
             "ultra_thinking": ultra_thinking,
@@ -4721,7 +4701,7 @@ async def curiosity_ocean_chat(
             },
             "conversation_id": conversation_id or str(uuid.uuid4()),
             "is_local": True,
-            "model": "clisonix-curiosity-v1-optimized",
+            "model": "kloud-curiosity-v1-optimized",
         }
     except Exception as e:
         logger.error(f"Curiosity Ocean error: {e}", exc_info=True)
@@ -4789,7 +4769,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
     🌊 UNIFIED OCEAN QUERY ENDPOINT - 73 ENDPOINTS TOTAL
     🔗 DIRECT BRIDGE TO OCEAN-CORE 8030 + MAIN.PY
 
-    ACCESS TO ALL CLISONIX SYSTEMS:
+    ACCESS TO ALL KLOUD SYSTEMS:
     ✅ 65 Main API Endpoints (ASI Trinity, ALBI, JONA, Crypto, Weather, etc.)
     ✅ 8 Ocean-Core Endpoints (Query, Labs, Personas, Sessions, etc.)
     ✅ 23 Advanced Laboratories
@@ -4854,7 +4834,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
                     "ocean_core_endpoints": 8,
                     "laboratories_available": 23,
                     "personas_available": 14,
-                    "source": "Ocean-Core 8030 (Full Clisonix Integration)",
+                    "source": "Ocean-Core 8030 (Full Kloud Integration)",
                     "timestamp": utcnow(),
                 },
             }
@@ -4911,7 +4891,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
             "intent": intent,
             "response": response_text,
             "persona_answer": response_text,
-            "persona_used": "Clisonix ASI Trinity Synthesis (65 Endpoints)",
+            "persona_used": "Kloud ASI Trinity Synthesis (65 Endpoints)",
             "key_findings": [
                 "Multi-system analysis completed",
                 "Cross-platform synthesis enabled",
@@ -4919,7 +4899,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
             ],
             "curiosity_threads": curiosity_threads,
             "sources_consulted": [
-                "Clisonix Main API (65 endpoints)",
+                "Kloud Main API (65 endpoints)",
                 "ASI Trinity (Alba, Albi, Jona)",
                 "EEG Analysis, Weather, Crypto Data",
                 "Billing & Monitoring Systems",
@@ -4932,7 +4912,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
                 "total_endpoints_accessible": 73,
                 "main_api_endpoints_used": 65,
                 "ocean_core_status": "temporarily_unavailable",
-                "source": "Clisonix Main API Fallback",
+                "source": "Kloud Main API Fallback",
                 "timestamp": utcnow(),
             },
         }
@@ -4947,7 +4927,7 @@ async def ocean_query_unified(request: OceanQueryRequest):
 @app.post("/api/ai/quick-interpret")
 async def quick_interpret(data: Dict[str, Any]):
     """
-    ⚡ CLISONIX LOCAL AI - Quick interpretation
+    ⚡ KLOUD LOCAL AI - Quick interpretation
     100% independent - no external AI providers
 
     Args:
@@ -4957,9 +4937,9 @@ async def quick_interpret(data: Dict[str, Any]):
         Quick interpretation result
     """
     try:
-        from clisonix_ai_engine import ClisonixAIEngine
+        from kloud_ai_engine import KloudAIEngine
 
-        engine = ClisonixAIEngine()
+        engine = KloudAIEngine()
 
         query = data.get("query", "")
         context = data.get("context", "")
@@ -4970,11 +4950,11 @@ async def quick_interpret(data: Dict[str, Any]):
         return {
             "status": "success",
             "timestamp": utcnow(),
-            "source": "Clisonix AI Engine (Local)",
+            "source": "Kloud AI Engine (Local)",
             "query": query,
             "interpretation": result,
             "is_local": True,
-            "model": "clisonix-quick-v1",
+            "model": "kloud-quick-v1",
         }
 
     except Exception as e:
@@ -4985,17 +4965,17 @@ async def quick_interpret(data: Dict[str, Any]):
 @app.get("/api/ai/agents-status")
 async def agents_status():
     """
-    Check status of Clisonix Local AI Engine - 100% independent
+    Check status of Kloud Local AI Engine - 100% independent
     """
     try:
         engine_ok = False
         engine_info = {}
 
-        # Check Clisonix AI Engine
+        # Check Kloud AI Engine
         try:
-            from clisonix_ai_engine import ClisonixAIEngine
+            from kloud_ai_engine import KloudAIEngine
 
-            engine = ClisonixAIEngine()
+            engine = KloudAIEngine()
             engine_ok = True
             engine_info = {
                 "pattern_count": len(engine.patterns),
@@ -5009,12 +4989,12 @@ async def agents_status():
                 ],
             }
         except Exception as e:
-            logger.debug(f"Clisonix AI Engine check failed: {e}")
+            logger.debug(f"Kloud AI Engine check failed: {e}")
             engine_ok = False
 
         return {
             "timestamp": utcnow(),
-            "engine": "Clisonix AI Engine",
+            "engine": "Kloud AI Engine",
             "version": "1.0.0",
             "is_local": True,
             "external_dependencies": False,
@@ -5034,7 +5014,7 @@ async def agents_status():
         logger.error(f"agents_status error: {e}", exc_info=True)
         return {
             "timestamp": utcnow(),
-            "engine": "Clisonix AI Engine",
+            "engine": "Kloud AI Engine",
             "status": "error",
             "error": str(e),
         }
@@ -5358,7 +5338,7 @@ logger.info("[OK] Protocol Kitchen routes loaded")
 excel_router = APIRouter(prefix="/api/excel", tags=["excel-dashboard"])
 
 # Scan for Excel files
-EXCEL_DIR = Path(__file__).resolve().parent.parent.parent  # Clisonix-cloud root
+EXCEL_DIR = Path(__file__).resolve().parent.parent.parent  # Kloud-cloud root
 
 
 def _scan_excel_files() -> List[Dict[str, Any]]:
@@ -6256,10 +6236,10 @@ postman_router = APIRouter(prefix="/api/postman", tags=["postman-integration"])
 # Postman collections in project
 POSTMAN_COLLECTIONS = [
     "Protocol_Kitchen_Sovereign_System.postman_collection.json",
-    "Clisonix-Cloud-Real-APIs.postman_collection.json",
-    "clisonix-ultra-mega-collection.json",
-    "Clisonix_Cloud_API.postman_collection.json",
-    "clisonix-postman-collection.json",
+    "Kloud-Cloud-Real-APIs.postman_collection.json",
+    "kloud-ultra-mega-collection.json",
+    "Kloud_Cloud_API.postman_collection.json",
+    "kloud-postman-collection.json",
 ]
 
 
@@ -6378,7 +6358,9 @@ except ImportError as e:
 @app.get("/api/docs-index")
 async def docs_index():
     """Serve DOCS_INDEX.md as JSON with raw content"""
-    github_raw = "https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/DOCS_INDEX.md"
+    github_raw = (
+        "https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/DOCS_INDEX.md"
+    )
     try:
         # Try local first
         docs_path = Path(__file__).parent.parent.parent / "DOCS_INDEX.md"
@@ -6396,11 +6378,11 @@ async def docs_index():
                     else "# Documentation not available"
                 )
         return {
-            "title": "Clisonix Documentation Index",
+            "title": "Kloud Documentation Index",
             "total_docs": 173,
             "categories": 18,
             "content": content,
-            "github_url": "https://github.com/LedjanAhmati/Clisonix-cloud/blob/main/DOCS_INDEX.md",
+            "github_url": "https://github.com/LedjanAhmati/Kloud-cloud/blob/main/DOCS_INDEX.md",
             "raw_url": github_raw,
         }
     except Exception as e:
@@ -6411,7 +6393,7 @@ async def docs_index():
 @app.get("/")
 def root():
     return {
-        "service": "Clisonix Industrial Backend (REAL)",
+        "service": "Kloud Industrial Backend (REAL)",
         "version": settings.api_version,
         "environment": settings.environment,
         "instance": INSTANCE_ID,

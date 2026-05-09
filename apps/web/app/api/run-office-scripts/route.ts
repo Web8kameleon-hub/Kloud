@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-// PRODUCTION: Hetzner server IP / clisonix.com
+// PRODUCTION: Hetzner server IP / kloud.com
 // Port 8002 = Excel microservice
-const EXCEL_API = process.env.EXCEL_API_URL || "http://clisonix-reporting:8001";
+const EXCEL_API = process.env.EXCEL_API_URL || "http://kloud-reporting:8001";
 const API_BASE = process.env.EXCEL_API_URL || EXCEL_API;
 
 export async function GET() {
@@ -73,3 +73,4 @@ export async function GET() {
 export async function POST() {
   return GET();
 }
+

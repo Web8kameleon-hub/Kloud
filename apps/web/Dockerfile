@@ -22,14 +22,14 @@ RUN apk add --no-cache curl
 WORKDIR /app
 
 RUN addgroup -g 1001 -S nodejs
-RUN adduser -S clisonix -u 1001
+RUN adduser -S kloud -u 1001
 
-COPY --from=builder --chown=clisonix:nodejs /app/.next ./.next
-COPY --from=builder --chown=clisonix:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=clisonix:nodejs /app/package*.json ./
-COPY --from=builder --chown=clisonix:nodejs /app/public ./public
+COPY --from=builder --chown=kloud:nodejs /app/.next ./.next
+COPY --from=builder --chown=kloud:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=kloud:nodejs /app/package*.json ./
+COPY --from=builder --chown=kloud:nodejs /app/public ./public
 
-USER clisonix
+USER kloud
 
 EXPOSE 3000
 
@@ -40,3 +40,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:3000 || exit 1
 
 CMD ["npm", "start"]
+

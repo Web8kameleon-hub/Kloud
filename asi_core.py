@@ -4,8 +4,8 @@ asi_core_real.py – Real ASI Core (pa simulime, pa random)
 
 Përfshin:
 - ASICore: menaxhim i node-ve dhe logim real
-- ClisonixNodeReal: raporton metrika reale të sistemit dhe ngarkon file audio/EEG
-- ClisonixMeshNode: regjistron node-t te Mesh HQ dhe dërgon telemetry reale
+- KloudNodeReal: raporton metrika reale të sistemit dhe ngarkon file audio/EEG
+- KloudMeshNode: regjistron node-t te Mesh HQ dhe dërgon telemetry reale
 """
 
 from __future__ import annotations
@@ -119,14 +119,14 @@ class ASICore:
         return self.realtime_engine.status()
 
 
-class ClisonixNodeReal:
+class KloudNodeReal:
     """Node real që ngarkon file dhe raporton metrika të sistemit."""
 
     def __init__(self, asi_core: ASICore, node_id: str = "CLX-REAL") -> None:
         self.id = node_id
         self.asi = asi_core
-        self.api_audio = "https://clisonix.com/api/uploads/audio/process"
-        self.api_eeg = "https://clisonix.com/api/uploads/eeg/process"
+        self.api_audio = "https://kloud.com/api/uploads/audio/process"
+        self.api_eeg = "https://kloud.com/api/uploads/eeg/process"
 
     def collect_system_metrics(self) -> Dict[str, Any]:
         if not psutil:
@@ -168,7 +168,7 @@ class ClisonixNodeReal:
         self.asi.log_event("ASI", f"Metrika reale: {metrics}")
 
 
-class ClisonixMeshNode:
+class KloudMeshNode:
     """Node që lidhet me Mesh HQ dhe dërgon telemetry reale."""
 
     def __init__(self, asi_core: ASICore, node_id: str = "CLX-REAL", location: str = "Europe") -> None:
@@ -228,17 +228,17 @@ class ClisonixMeshNode:
 def _cli():
     import argparse
     parser = argparse.ArgumentParser(description="Run ASI Core në modalitet real")
-    parser.add_argument("mode", choices=["node", "mesh"], help="node = Clisonix real, mesh = lidhje HQ")
+    parser.add_argument("mode", choices=["node", "mesh"], help="node = Kloud real, mesh = lidhje HQ")
     args = parser.parse_args()
 
     asi = ASICore()
     if args.mode == "node":
-        node = ClisonixNodeReal(asi)
+        node = KloudNodeReal(asi)
         node.report_system()
         node.transmit_audio_file("data/audio.wav")
         node.transmit_eeg_file("data/eeg.edf")
     elif args.mode == "mesh":
-        mesh = ClisonixMeshNode(asi)
+        mesh = KloudMeshNode(asi)
         mesh.register_node()
         mesh.send_status()
 
@@ -256,4 +256,5 @@ def get_system_status():
             {"node": "Industrial Vibration Sensors", "issue": "Scheduled maintenance"}
         ]
     }
+
 

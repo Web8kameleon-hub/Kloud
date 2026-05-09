@@ -1,5 +1,5 @@
-﻿/* =========================================
-   ControlDeck.css â€” Clisonix Cloud Frontend
+/* =========================================
+   ControlDeck.css â€” Kloud Cloud Frontend
    Dashboard for ALBI / ALBA / JONA modules
    ========================================= */
 
@@ -272,3 +272,4 @@
 .control-deck__log::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.45);
 }
+

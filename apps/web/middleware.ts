@@ -1,9 +1,9 @@
 /**
- * Clisonix Cloud - Authentication Middleware
+ * Kloud Cloud - Authentication Middleware
  * Protects routes using Clerk authentication
  *
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +19,7 @@ const publicRoutes = [
   "/landing",
   "/about-us",
   "/pricing",
-  "/why-clisonix",
+  "/why-kloud",
   "/platform",
   "/security",
   "/company",
@@ -59,3 +59,4 @@ export const config = {
     "/(api|trpc)(.*)",
   ],
 };
+

@@ -1,7 +1,7 @@
 # ✅ Integrimi i Cycle Engine - Raport Përfundimtar
 
 **Data**: 15 Dhjetor 2025  
-**Projekti**: clisonix Research Data Ecosystem  
+**Projekti**: kloud Research Data Ecosystem  
 **Statusi**: ✅ **I PLOTË**
 
 ---
@@ -459,6 +459,7 @@ display_cycles_dashboard()
 **Integrimi**: ✅ I PLOTË  
 **Versioni**: 1.0.0  
 **Data**: 15 Dhjetor 2025  
-**Ekipi**: Clisonix
+**Ekipi**: Kloud
 
 **Sukses dhe faleminderit!** 🙏
+

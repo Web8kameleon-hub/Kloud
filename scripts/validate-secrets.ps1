@@ -38,7 +38,7 @@ if (-not (Test-Path ".\secrets")) {
             if ($secret -like "*password*" -or $secret -like "*secret*" -or $secret -like "*key*") {
                 if ($content.Length -lt 16) {
                     $errors += "❌ $secret is too short (< 16 chars)"
-                } elseif ($content -match "^(admin|password|changeme|clisonix123)") {
+                } elseif ($content -match "^(admin|password|changeme|kloud123)") {
                     $errors += "❌ $secret contains weak/default password"
                 } else {
                     Write-Host "✓ $secret validated" -ForegroundColor Green
@@ -91,7 +91,7 @@ if (-not (Test-Path ".\docker-compose.secrets.yml")) {
     
     # Validate it doesn't have hard-coded passwords
     $composeContent = Get-Content ".\docker-compose.secrets.yml" -Raw
-    if ($composeContent -match "password:\s+(clisonix|admin|changeme)") {
+    if ($composeContent -match "password:\s+(kloud|admin|changeme)") {
         $errors += "❌ docker-compose.secrets.yml contains hard-coded passwords!"
     }
 }
@@ -152,4 +152,5 @@ if ($errors.Count -gt 0) {
     Write-Host "⚠️  Validation passed with warnings. Review before deploying." -ForegroundColor Yellow
     exit 0
 }
+
 

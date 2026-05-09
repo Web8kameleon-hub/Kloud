@@ -1,11 +1,11 @@
-# 🏗️ CLISONIX ARCHITECTURE BASELINE 2025
+# 🏗️ KLOUD ARCHITECTURE BASELINE 2025
 **Commercial SaaS Platform - Production Architecture Document**
 
 ---
 
 ## 📋 Executive Summary
 
-**Document Purpose**: Authoritative architecture specification for the **Clisonix SaaS commercial platform**, separating production-ready services from experimental research code.
+**Document Purpose**: Authoritative architecture specification for the **Kloud SaaS commercial platform**, separating production-ready services from experimental research code.
 
 **Platform Status**: Operational but requires stabilization through architectural cleanup and boundary enforcement.
 
@@ -19,16 +19,16 @@
 
 ---
 
-## 🎯 Clisonix Platform Mission
+## 🎯 Kloud Platform Mission
 
-**Clisonix** is a commercial SaaS platform providing:
+**Kloud** is a commercial SaaS platform providing:
 1. **Neural signal processing** (EEG, biofeedback, audio synthesis)
 2. **AI-powered agent coordination** (Alba, Albi, Jona, ASI, AGIEM)
 3. **Real-time monitoring & telemetry** (Prometheus, Grafana, distributed tracing)
 4. **Multi-tenant SaaS delivery** with billing, authentication, and API access
 5. **Industrial-grade data pipelines** (Airflow orchestration)
 
-**NOT included in Clisonix**: UltraWebThinking research platform, experimental AGI modules, prototype signal generators, demo launchers.
+**NOT included in Kloud**: UltraWebThinking research platform, experimental AGI modules, prototype signal generators, demo launchers.
 
 ---
 
@@ -38,7 +38,7 @@
 
 #### 1. **Main API Service** (`apps/api/main.py`)
 - **Port**: 8000
-- **Role**: Central FastAPI gateway for all Clisonix operations
+- **Role**: Central FastAPI gateway for all Kloud operations
 - **Lines**: 3,219
 - **Features**:
   - Health checks & system status
@@ -258,7 +258,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      CLISONIX PLATFORM                          │
+│                      KLOUD PLATFORM                          │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
@@ -354,7 +354,7 @@ User → Frontend → API (JWT validation) → Service
 
 ### Recommended Clean Structure
 ```
-clisonix-cloud/
+kloud-cloud/
 ├── apps/
 │   ├── api/              # Main FastAPI service (port 8000)
 │   └── web/              # Next.js frontend (port 3000)
@@ -517,14 +517,14 @@ Production (Blue/Green Deploy)
 ### Key Metrics (Prometheus)
 
 #### System Health
-- `clisonix_api_requests_total` - API request count
-- `clisonix_api_latency_seconds` - API response time
-- `clisonix_agent_health` - Agent status (0=down, 1=up)
+- `kloud_api_requests_total` - API request count
+- `kloud_api_latency_seconds` - API response time
+- `kloud_agent_health` - Agent status (0=down, 1=up)
 
 #### Business Metrics
-- `clisonix_active_users` - Current user sessions
-- `clisonix_subscriptions_active` - Paid subscriptions
-- `clisonix_revenue_mrr` - Monthly recurring revenue
+- `kloud_active_users` - Current user sessions
+- `kloud_subscriptions_active` - Paid subscriptions
+- `kloud_revenue_mrr` - Monthly recurring revenue
 
 #### Agent Metrics
 - `alba_frames_processed_total` - Data ingestion rate
@@ -568,7 +568,7 @@ Production (Blue/Green Deploy)
 
 ## 📜 Licensing & Ownership
 
-### Clisonix SaaS Platform
+### Kloud SaaS Platform
 - **Type**: Commercial Proprietary
 - **Owner**: [Company Name]
 - **License**: Closed Source (for SaaS customers)
@@ -615,12 +615,12 @@ Production (Blue/Green Deploy)
 
 | Service | Team | On-Call | Slack Channel |
 |---------|------|---------|---------------|
-| Main API | Platform | @platform-oncall | #clisonix-api |
-| Alba | Data Eng | @dataeng-oncall | #clisonix-alba |
-| Albi | Data Science | @ds-oncall | #clisonix-albi |
-| Jona | Platform | @platform-oncall | #clisonix-jona |
-| Frontend | Frontend | @frontend-oncall | #clisonix-web |
-| Infra | DevOps | @devops-oncall | #clisonix-infra |
+| Main API | Platform | @platform-oncall | #kloud-api |
+| Alba | Data Eng | @dataeng-oncall | #kloud-alba |
+| Albi | Data Science | @ds-oncall | #kloud-albi |
+| Jona | Platform | @platform-oncall | #kloud-jona |
+| Frontend | Frontend | @frontend-oncall | #kloud-web |
+| Infra | DevOps | @devops-oncall | #kloud-infra |
 
 ---
 
@@ -656,13 +656,13 @@ Production (Blue/Green Deploy)
 ```
 - frontend/ (old Next.js)
 - frontend-new/ (another old Next.js)
-- clisonix-supernova/ (Vite app)
-- launch_clisonix_cloud.py
+- kloud-supernova/ (Vite app)
+- launch_kloud_cloud.py
 - start_server.py
 - run_*.py (5 files)
 - simple_server.py
 - react_backend.py
-- clisonix_*.py (6 files in root)
+- kloud_*.py (6 files in root)
 - packages/signal-gen/ (TypeScript prototypes)
 ```
 
@@ -687,11 +687,11 @@ Production (Blue/Green Deploy)
 ### Production `.env` Template
 ```bash
 # Database
-DATABASE_URL=postgresql://user:pass@postgres:5432/clisonix
+DATABASE_URL=postgresql://user:pass@postgres:5432/kloud
 REDIS_URL=redis://redis:6379/0
 
 # Services
-API_BASE_URL=https://api.clisonix.com
+API_BASE_URL=https://api.kloud.com
 ALBA_URL=http://alba:5555
 ALBI_URL=http://albi:6666
 JONA_URL=http://jona:7777
@@ -774,3 +774,4 @@ paths:
 ---
 
 **END OF DOCUMENT**
+

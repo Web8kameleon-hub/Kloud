@@ -1,8 +1,8 @@
-# 🚀 CLISONIX CLOUD - HETZNER DEPLOYMENT GUIDE
+# 🚀 KLOUD CLOUD - HETZNER DEPLOYMENT GUIDE
 
 **Status**: Production Ready
 **Target Server**: 157.90.234.158
-**Domain**: clisonix.com
+**Domain**: kloud.com
 **SSL**: Let's Encrypt
 
 ---
@@ -35,22 +35,22 @@ apt install -y docker.io docker-compose git curl wget nginx certbot python3-cert
 
 ### STEP 3: Clone Repository
 \\\ash
-cd /opt && git clone https://github.com/LedjanAhmati/Clisonix-cloud.git clisonix && cd clisonix
+cd /opt && git clone https://github.com/LedjanAhmati/Kloud-cloud.git kloud && cd kloud
 \\\
 
 ### STEP 4: Create Production Environment
 \\\ash
 cat > .env << 'ENVEOF'
-POSTGRES_USER=clisonix
+POSTGRES_USER=kloud
 POSTGRES_PASSWORD=<GENERATE_SECURE_32_CHAR_PASSWORD>
-POSTGRES_DB=clisonixdb
+POSTGRES_DB=klouddb
 REDIS_PASSWORD=<GENERATE_SECURE_32_CHAR_PASSWORD>
 API_ENVIRONMENT=production
 API_HOST=0.0.0.0
 API_PORT=8000
 STRIPE_SECRET_KEY=<YOUR_STRIPE_SECRET_KEY>
 STRIPE_PUBLISHABLE_KEY=<YOUR_STRIPE_PUBLISHABLE_KEY>
-NEXT_PUBLIC_API_URL=https://api.clisonix.com
+NEXT_PUBLIC_API_URL=https://api.kloud.com
 GRAFANA_ADMIN_PASSWORD=<GENERATE_SECURE_32_CHAR_PASSWORD>
 ENVEOF
 \\\
@@ -63,7 +63,7 @@ docker compose -f docker-compose.prod.yml ps
 
 ### STEP 6: Setup SSL Certificate
 \\\ash
-certbot certonly --standalone -d clisonix.com -d www.clisonix.com -d api.clisonix.com
+certbot certonly --standalone -d kloud.com -d www.kloud.com -d api.kloud.com
 \\\
 
 ### STEP 7: Configure Nginx
@@ -74,8 +74,8 @@ certbot certonly --standalone -d clisonix.com -d www.clisonix.com -d api.clisoni
 
 ### STEP 8: Test Endpoints
 \\\ash
-curl https://clisonix.com
-curl https://api.clisonix.com/health
+curl https://kloud.com
+curl https://api.kloud.com/health
 \\\
 
 ---
@@ -84,10 +84,10 @@ curl https://api.clisonix.com/health
 
 | Service | URL |
 |---------|-----|
-| Frontend | https://clisonix.com |
-| API Docs | https://api.clisonix.com/docs |
-| Grafana | https://clisonix.com/grafana |
-| Prometheus | https://clisonix.com/prometheus |
+| Frontend | https://kloud.com |
+| API Docs | https://api.kloud.com/docs |
+| Grafana | https://kloud.com/grafana |
+| Prometheus | https://kloud.com/prometheus |
 
 ---
 
@@ -95,7 +95,7 @@ curl https://api.clisonix.com/health
 
 - [ ] SSH connection successful
 - [ ] Dependencies installed
-- [ ] Repository cloned to /opt/clisonix
+- [ ] Repository cloned to /opt/kloud
 - [ ] .env file created with secure passwords
 - [ ] Docker containers running (18 services)
 - [ ] PostgreSQL healthy
@@ -103,12 +103,13 @@ curl https://api.clisonix.com/health
 - [ ] SSL certificates generated
 - [ ] Nginx reverse proxy configured
 - [ ] HTTPS endpoints responding 200 OK
-- [ ] Frontend loads at https://clisonix.com
+- [ ] Frontend loads at https://kloud.com
 - [ ] Chat feature working
 - [ ] Grafana accessible
 - [ ] Prometheus metrics collected
 
 ---
 
-**Clisonix Cloud in Production!**
+**Kloud Cloud in Production!**
 **Hetzner Deployment: Ready to Launch**
+

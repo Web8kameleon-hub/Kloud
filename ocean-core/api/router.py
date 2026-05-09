@@ -126,7 +126,7 @@ async def admin_chat(req: ChatRequest, request: Request):
     """Admin chat - privilegje të plota"""
     # Check admin header
     admin_key = request.headers.get("X-Admin-Key", "")
-    if admin_key != os.getenv("ADMIN_KEY", "clisonix-admin"):
+    if admin_key != os.getenv("ADMIN_KEY", "kloud-admin"):
         raise HTTPException(403, "Admin access required")
     
     return await _process_chat(req, request, ReasoningMode.ADMIN)
@@ -247,7 +247,7 @@ async def stats():
 async def admin_command(req: AdminCommandRequest, request: Request):
     """Execute admin command"""
     admin_key = request.headers.get("X-Admin-Key", "")
-    if admin_key != os.getenv("ADMIN_KEY", "clisonix-admin"):
+    if admin_key != os.getenv("ADMIN_KEY", "kloud-admin"):
         raise HTTPException(403, "Admin access required")
     
     user = request.headers.get("X-User", "unknown")
@@ -264,7 +264,7 @@ async def admin_command(req: AdminCommandRequest, request: Request):
 async def admin_log(request: Request, limit: int = 50):
     """Get admin command log"""
     admin_key = request.headers.get("X-Admin-Key", "")
-    if admin_key != os.getenv("ADMIN_KEY", "clisonix-admin"):
+    if admin_key != os.getenv("ADMIN_KEY", "kloud-admin"):
         raise HTTPException(403, "Admin access required")
     
     return system_pipeline.get_admin_log(limit)
@@ -277,3 +277,4 @@ async def admin_log(request: Request, limit: int = 50):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

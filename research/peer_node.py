@@ -279,7 +279,7 @@ class PeerNode:
             web.post("/replicate", self.handle_replicate),
         ])
 
-        print(f"[Clisonix Node {self.id}] {self.host}:{self.port} | TLS={'on' if self.server_ssl else 'off'} | "
+        print(f"[Kloud Node {self.id}] {self.host}:{self.port} | TLS={'on' if self.server_ssl else 'off'} | "
               f"MCast {MCAST_GRP}:{MCAST_PORT}")
 
         runner = web.AppRunner(app)
@@ -302,11 +302,12 @@ class PeerNode:
 # =========================
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Clisonix Peer Node (Mesh Core v1)")
+    parser = argparse.ArgumentParser(description="Kloud Peer Node (Mesh Core v1)")
     parser.add_argument("--host", default=HOST, help="bind host, default 0.0.0.0")
     parser.add_argument("--port", type=int, default=PORT, help="bind port, default 8001")
     args = parser.parse_args()
 
     node = PeerNode(args.host, args.port)
     asyncio.run(node.start())
+
 

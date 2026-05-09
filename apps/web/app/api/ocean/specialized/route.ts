@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 const isDev = process.env.NODE_ENV !== "production";
 const OCEAN_CORE_URL =
   process.env.OCEAN_CORE_URL ||
-  (isDev ? "http://localhost:8030" : "http://clisonix-ocean-core:8030");
+  (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
 
 export async function POST(request: Request) {
   try {
@@ -87,3 +87,4 @@ export async function GET() {
     return NextResponse.json({ status: "offline" }, { status: 503 });
   }
 }
+

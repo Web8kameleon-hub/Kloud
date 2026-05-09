@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# CLISONIX CLOUD - AVIATION WEATHER SERVICE DEPLOYMENT
+# KLOUD CLOUD - AVIATION WEATHER SERVICE DEPLOYMENT
 # =============================================================================
 # Deploys ONLY the aviation-weather container to Hetzner server
 # Usage: ./deploy-aviation-weather.sh
@@ -9,9 +9,9 @@
 set -e
 
 HETZNER_IP="46.225.14.83"
-DEPLOY_PATH="/root/Clisonix-cloud"
+DEPLOY_PATH="/root/Kloud-cloud"
 SERVICE_NAME="aviation"
-CONTAINER_NAME="clisonix-aviation"
+CONTAINER_NAME="kloud-aviation"
 
 echo "🛫 Aviation Weather Deployment Script"
 echo "========================================"
@@ -88,14 +88,15 @@ ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 root@$HETZNER_IP << ENDSSH
     echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
     echo ""
     echo "📚 Available endpoints:"
-    echo "   - Health: http://api.clisonix.com:8080/health"
-    echo "   - Status: http://api.clisonix.com:8080/status"
-    echo "   - METAR: http://api.clisonix.com:8080/metar/{ICAO}"
-    echo "   - TAF: http://api.clisonix.com:8080/taf/{ICAO}"
-    echo "   - Search: http://api.clisonix.com:8080/airports/search?query=tirana"
+    echo "   - Health: http://api.kloud.com:8080/health"
+    echo "   - Status: http://api.kloud.com:8080/status"
+    echo "   - METAR: http://api.kloud.com:8080/metar/{ICAO}"
+    echo "   - TAF: http://api.kloud.com:8080/taf/{ICAO}"
+    echo "   - Search: http://api.kloud.com:8080/airports/search?query=tirana"
     
 ENDSSH
 
 echo ""
 echo -e "${GREEN}🎉 Aviation Weather Service deployed successfully!${NC}"
 echo ""
+

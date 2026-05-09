@@ -1,7 +1,7 @@
 /**
- * Clisonix Cloud TypeScript SDK
+ * Kloud Cloud TypeScript SDK
  * @version 1.0.0
- * @description Official TypeScript SDK for Clisonix Cloud API
+ * @description Official TypeScript SDK for Kloud Cloud API
  * 
  * Features:
  * - Neural harmonic processing APIs
@@ -15,7 +15,7 @@
 // CONFIGURATION
 // =============================================================================
 
-export interface ClisonixConfig {
+export interface KloudConfig {
   apiKey: string;
   baseUrl?: string;
   timeout?: number;
@@ -23,7 +23,7 @@ export interface ClisonixConfig {
 }
 
 const DEFAULT_CONFIG = {
-  baseUrl: process.env.CLISONIX_API_URL || 'https://api.clisonix.com',
+  baseUrl: process.env.KLOUD_API_URL || 'https://api.kloud.com',
   timeout: 30000,
   retries: 3
 };
@@ -217,13 +217,13 @@ export interface APIError {
 // =============================================================================
 
 class HttpClient {
-  private config: Required<ClisonixConfig>;
+  private config: Required<KloudConfig>;
 
-  constructor(config: ClisonixConfig) {
+  constructor(config: KloudConfig) {
     this.config = {
       ...DEFAULT_CONFIG,
       ...config
-    } as Required<ClisonixConfig>;
+    } as Required<KloudConfig>;
   }
 
   private async request<T>(
@@ -258,7 +258,7 @@ class HttpClient {
 
         if (!response.ok) {
           const errorData = await response.json() as APIError;
-          throw new ClisonixError(
+          throw new KloudError(
             errorData.error.message,
             errorData.error.code,
             response.status
@@ -302,13 +302,13 @@ class HttpClient {
 // ERROR HANDLING
 // =============================================================================
 
-export class ClisonixError extends Error {
+export class KloudError extends Error {
   code: string;
   statusCode: number;
 
   constructor(message: string, code: string, statusCode: number) {
     super(message);
-    this.name = 'ClisonixError';
+    this.name = 'KloudError';
     this.code = code;
     this.statusCode = statusCode;
   }
@@ -494,7 +494,7 @@ class ReportingAPI {
   private baseUrl: string;
   private apiKey: string;
 
-  constructor(apiKey: string, baseUrl: string = process.env.CLISONIX_REPORTING_URL || 'https://reporting.clisonix.com') {
+  constructor(apiKey: string, baseUrl: string = process.env.KLOUD_REPORTING_URL || 'https://reporting.kloud.com') {
     this.apiKey = apiKey;
     this.baseUrl = baseUrl;
   }
@@ -555,7 +555,7 @@ class ExcelAPI {
   private baseUrl: string;
   private apiKey: string;
 
-  constructor(apiKey: string, baseUrl: string = process.env.CLISONIX_EXCEL_URL || 'https://excel.clisonix.com') {
+  constructor(apiKey: string, baseUrl: string = process.env.KLOUD_EXCEL_URL || 'https://excel.kloud.com') {
     this.apiKey = apiKey;
     this.baseUrl = baseUrl;
   }
@@ -601,28 +601,28 @@ class ExcelAPI {
 // =============================================================================
 
 /**
- * Clisonix Cloud SDK
+ * Kloud Cloud SDK
  * 
  * @example
  * ```typescript
- * const clisonix = new Clisonix({
+ * const kloud = new Kloud({
  *   apiKey: 'your-api-key'
  * });
  * 
  * // Get system health
- * const health = await clisonix.core.health();
+ * const health = await kloud.core.health();
  * 
  * // Analyze brain harmonics
- * const analysis = await clisonix.brain.analyzeHarmonics({
+ * const analysis = await kloud.brain.analyzeHarmonics({
  *   frequencies: [8, 10, 12, 14],
  *   amplitudes: [0.5, 0.8, 0.6, 0.4]
  * });
  * 
  * // Get ASI Trinity status
- * const asiStatus = await clisonix.asi.getStatus();
+ * const asiStatus = await kloud.asi.getStatus();
  * ```
  */
-export class Clisonix {
+export class Kloud {
   private client: HttpClient;
   
   // API Modules
@@ -634,7 +634,7 @@ export class Clisonix {
   public reporting: ReportingAPI;
   public excel: ExcelAPI;
 
-  constructor(config: ClisonixConfig) {
+  constructor(config: KloudConfig) {
     this.client = new HttpClient(config);
     
     // Initialize API modules
@@ -666,7 +666,8 @@ export class Clisonix {
 // EXPORTS
 // =============================================================================
 
-export default Clisonix;
+export default Kloud;
 
 // Named exports for convenience
-export { Clisonix as ClisonixClient };
+export { Kloud as KloudClient };
+

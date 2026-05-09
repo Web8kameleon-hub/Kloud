@@ -28,7 +28,7 @@ except:
     AdvancedCycleAlignments = None
 
 # ============================================================
-# REAL DATA SOURCES FROM CLISONIX GLOBAL DATABASE
+# REAL DATA SOURCES FROM KLOUD GLOBAL DATABASE
 # ============================================================
 
 REAL_DATA_SOURCES = {
@@ -403,7 +403,7 @@ class TenMinuteSession:
 
 async def run_10min_session():
     """Funksioni kryesor për ekzekutim"""
-    session = TenMinuteSession("Clisonix_Cycles_Alignments_Proposals")
+    session = TenMinuteSession("Kloud_Cycles_Alignments_Proposals")
     report = await session.run_session()
     session.export_report()
     return report
@@ -413,10 +413,11 @@ async def run_10min_session():
 if __name__ == "__main__":
     print("""
     ╔══════════════════════════════════════════════════════════╗
-    ║  🔁 CLISONIX 10-MINUTE SESSION                          ║
+    ║  🔁 KLOUD 10-MINUTE SESSION                          ║
     ║  Cycles • Alignments • Proposals                         ║
     ║  Data: 16 Janar 2026                                     ║
     ╚══════════════════════════════════════════════════════════╝
     """)
     
     asyncio.run(run_10min_session())
+

@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Clisonix Cloud - Server Deployment Script
+# Kloud Cloud - Server Deployment Script
 # Deployment to production server via SSH
 
 set -e
 
 # Configuration
-SERVER_HOST="${SERVER_HOST:-clisonix.com}"
+SERVER_HOST="${SERVER_HOST:-kloud.com}"
 SERVER_USER="${SERVER_USER:-deploy}"
 SERVER_PORT="${SERVER_PORT:-22}"
-DEPLOY_DIR="/opt/clisonix"
+DEPLOY_DIR="/opt/kloud"
 DOCKER_REGISTRY="ledjan"
-DOCKER_IMAGE="clisonix-public"
+DOCKER_IMAGE="kloud-public"
 DOCKER_TAG="latest"
 
 # Colors for output
@@ -20,7 +20,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}🚀 Clisonix Cloud Deployment Script${NC}"
+echo -e "${YELLOW}🚀 Kloud Cloud Deployment Script${NC}"
 echo -e "${YELLOW}================================${NC}"
 
 # Check prerequisites
@@ -62,21 +62,21 @@ ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} << 'EOF'
 set -e
 
 echo "📂 Creating deployment directory..."
-sudo mkdir -p /opt/clisonix
-cd /opt/clisonix
+sudo mkdir -p /opt/kloud
+cd /opt/kloud
 
 echo "📥 Pulling latest code from GitHub..."
 if [ -d .git ]; then
     git pull origin main
 else
-    git clone https://github.com/LedjanAhmati/Clisonix-cloud.git .
+    git clone https://github.com/LedjanAhmati/Kloud-cloud.git .
 fi
 
 echo "🐳 Stopping old containers..."
 sudo docker-compose -f docker-compose.public.yml down || true
 
 echo "🔄 Pulling latest Docker image..."
-sudo docker pull ledjan/clisonix-public:latest
+sudo docker pull ledjan/kloud-public:latest
 
 echo "🚀 Starting new containers..."
 sudo docker-compose -f docker-compose.public.yml up -d
@@ -102,3 +102,4 @@ echo -e "📍 Application URL: https://${SERVER_HOST}"
 echo -e "📊 Dashboard: https://${SERVER_HOST}/dashboard"
 echo -e "📝 API: https://${SERVER_HOST}/api"
 echo -e "${YELLOW}================================${NC}"
+

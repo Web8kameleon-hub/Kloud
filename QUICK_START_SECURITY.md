@@ -60,12 +60,12 @@ docker-compose --env-file .env.production -f docker-compose.prod.secure.yml up -
 docker-compose ps
 
 # Expected output (all "healthy"):
-# clisonix-postgres    Up (healthy)
-# clisonix-redis       Up (healthy)
-# clisonix-api         Up (healthy)
+# kloud-postgres    Up (healthy)
+# kloud-redis       Up (healthy)
+# kloud-api         Up (healthy)
 
 # Verify no secrets in environment
-docker inspect clisonix-api | grep -i "password\|secret" | wc -l
+docker inspect kloud-api | grep -i "password\|secret" | wc -l
 # Should be 0 or only references to _FILE variables
 ```
 
@@ -133,7 +133,7 @@ sudo ufw deny from any
 docker-compose logs > breach-$(date +%Y%m%d-%H%M%S).log
 
 # 4. Contact security team
-echo "BREACH at $(date)" | mail -s "URGENT: Security Incident" security@clisonix.com
+echo "BREACH at $(date)" | mail -s "URGENT: Security Incident" security@kloud.com
 ```
 
 ---
@@ -189,10 +189,10 @@ docker-compose logs | grep -i error
 ### Backup & Restore
 ```bash
 # Backup database
-docker exec clisonix-postgres pg_dump -U clisonix clisonixdb > backup-$(date +%Y%m%d).sql
+docker exec kloud-postgres pg_dump -U kloud klouddb > backup-$(date +%Y%m%d).sql
 
 # Restore database
-docker exec -i clisonix-postgres psql -U clisonix clisonixdb < backup-20251216.sql
+docker exec -i kloud-postgres psql -U kloud klouddb < backup-20251216.sql
 ```
 
 ---
@@ -221,11 +221,12 @@ docker exec -i clisonix-postgres psql -U clisonix clisonixdb < backup-20251216.s
 
 ## 📞 Support
 
-**Security Issues**: security@clisonix.com  
-**General Support**: support@clisonix.com  
+**Security Issues**: security@kloud.com  
+**General Support**: support@kloud.com  
 **Documentation**: See `docs/` folder
 
 ---
 
 **Last Updated**: December 16, 2025  
 **Version**: 1.0.0
+

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 /**
- * DAILY HABITS TRACKER - Clisonix Behavioral Science Module
+ * DAILY HABITS TRACKER - Kloud Behavioral Science Module
  * 
  * Frontend: One-tap habit checking, visual streaks, gamification
  * Backend: Habit formation analysis, adherence patterns, optimal scheduling
@@ -63,8 +63,8 @@ export default function DailyHabitsPage() {
 
   useEffect(() => {
     // Load from localStorage
-    const storedHabits = localStorage.getItem('clisonix_habits');
-    const storedLogs = localStorage.getItem('clisonix_habit_logs');
+    const storedHabits = localStorage.getItem('kloud_habits');
+    const storedLogs = localStorage.getItem('kloud_habit_logs');
     
     if (storedHabits) setHabits(JSON.parse(storedHabits));
     if (storedLogs) {
@@ -94,10 +94,10 @@ export default function DailyHabitsPage() {
   };
 
   const getDeviceId = () => {
-    let id = localStorage.getItem('clisonix_device_id');
+    let id = localStorage.getItem('kloud_device_id');
     if (!id) {
       id = 'dev_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('clisonix_device_id', id);
+      localStorage.setItem('kloud_device_id', id);
     }
     return id;
   };
@@ -187,7 +187,7 @@ export default function DailyHabitsPage() {
     }
 
     setLogs(newLogs);
-    localStorage.setItem('clisonix_habit_logs', JSON.stringify(newLogs));
+    localStorage.setItem('kloud_habit_logs', JSON.stringify(newLogs));
     calculateStats(newLogs);
 
     // Send to backend
@@ -232,7 +232,7 @@ export default function DailyHabitsPage() {
 
     const newHabits = [...habits, newHabit];
     setHabits(newHabits);
-    localStorage.setItem('clisonix_habits', JSON.stringify(newHabits));
+    localStorage.setItem('kloud_habits', JSON.stringify(newHabits));
     setNewHabitName('');
     setShowAddHabit(false);
   };
@@ -600,6 +600,7 @@ export default function DailyHabitsPage() {
     </div>
   );
 }
+
 
 
 

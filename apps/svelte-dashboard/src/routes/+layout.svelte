@@ -5,8 +5,8 @@
 </script>
 
 <svelte:head>
-	<title>ASI Terminal | Clisonix</title>
-	<meta name="description" content="Clisonix ASI Terminal - Industrial Intelligence" />
+	<title>ASI Terminal | Kloud</title>
+	<meta name="description" content="Kloud ASI Terminal - Industrial Intelligence" />
 </svelte:head>
 
 <!-- BETA BANNER - Ruajtur për aktivitet masiv në të ardhmen
@@ -16,3 +16,4 @@
 -->
 
 {@render children()}
+

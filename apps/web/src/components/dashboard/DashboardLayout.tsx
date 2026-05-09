@@ -108,7 +108,7 @@ export function DashboardLayout({
   
   const defaultUser = {
     name: variant === 'admin' ? 'Administrator' : 'User',
-    email: variant === 'admin' ? 'admin@clisonix.com' : 'user@clisonix.com',
+    email: variant === 'admin' ? 'admin@kloud.com' : 'user@kloud.com',
     role: variant === 'admin' ? 'Admin' : 'User',
   };
 
@@ -124,7 +124,7 @@ export function DashboardLayout({
                 <span className="text-xl">🧠</span>
               </div>
               <div>
-                <h1 className="font-bold text-lg text-white">Clisonix</h1>
+                <h1 className="font-bold text-lg text-white">Kloud</h1>
                 <p className="text-xs text-neutral-400">
                   {variant === 'admin' ? 'Admin Panel' : 'Dashboard'}
                 </p>
@@ -249,3 +249,4 @@ export function DashboardLayout({
 }
 
 export default DashboardLayout;
+

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-🎯 CLISONIX INTELLIGENCE DEPLOYMENT SCRIPT
+🎯 KLOUD INTELLIGENCE DEPLOYMENT SCRIPT
 ==========================================
-Script për deploy dhe ekzekutim të plotë të sistemit Clisonix Intelligence
+Script për deploy dhe ekzekutim të plotë të sistemit Kloud Intelligence
 
 Ky script përfshin:
 - Deploy automatik të të gjithë komponenteve
@@ -30,22 +30,22 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('clisonix_deployment.log'),
+        logging.FileHandler('kloud_deployment.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
 
-class ClisonixDeploymentManager:
+class KloudDeploymentManager:
     """
-    Menaxher për deploy e sistemit Clisonix Intelligence
+    Menaxher për deploy e sistemit Kloud Intelligence
 
     Ky klasë menaxhon deploy-in e plotë të sistemit dhe të gjithë komponenteve.
     """
 
     def __init__(self, deployment_config: Dict[str, Any]):
         self.config = deployment_config
-        self.deployment_dir = Path(deployment_config.get('deployment_dir', './clisonix_deployment'))
+        self.deployment_dir = Path(deployment_config.get('deployment_dir', './kloud_deployment'))
         self.backup_dir = Path(deployment_config.get('backup_dir', './backups'))
         self.logs_dir = Path(deployment_config.get('logs_dir', './logs'))
 
@@ -54,15 +54,15 @@ class ClisonixDeploymentManager:
         self.backup_dir.mkdir(parents=True, exist_ok=True)
         self.logs_dir.mkdir(parents=True, exist_ok=True)
 
-        logger.info("🚀 Clisonix Deployment Manager inicializuar")
+        logger.info("🚀 Kloud Deployment Manager inicializuar")
 
     async def deploy_full_system(self) -> Dict[str, Any]:
         """
-        Deploy sistemin e plotë Clisonix Intelligence
+        Deploy sistemin e plotë Kloud Intelligence
 
         Ky metodë ekzekuto të gjithë hapësirat e deploy-it në rendin e duhur.
         """
-        logger.info("🎯 Fillimi i deploy-it të plotë të sistemit Clisonix Intelligence")
+        logger.info("🎯 Fillimi i deploy-it të plotë të sistemit Kloud Intelligence")
 
         deployment_results = {
             'start_time': datetime.now(timezone.utc).isoformat(),
@@ -113,7 +113,7 @@ class ClisonixDeploymentManager:
             deployment_results['steps_completed'].append('start_production_system')
 
             deployment_results['final_status'] = 'success'
-            logger.info("✅ Deploy i suksesshëm i sistemit Clisonix Intelligence!")
+            logger.info("✅ Deploy i suksesshëm i sistemit Kloud Intelligence!")
 
         except Exception as e:
             logger.error(f"❌ Gabim në deploy: {e}")
@@ -148,8 +148,8 @@ class ClisonixDeploymentManager:
             'cycle_engine.py',
             'open_data_scalability.py',
             'ai_agi_pipeline.py',
-            'clisonix_api_scanner.ts',
-            'clisonix_integration_runner.py',
+            'kloud_api_scanner.ts',
+            'kloud_integration_runner.py',
             'docker-compose.yml',
             'requirements.txt',
             'package.json'
@@ -173,18 +173,18 @@ class ClisonixDeploymentManager:
 
         # Krijon file environment
         env_file = self.deployment_dir / '.env'
-        env_content = f"""# Clisonix Intelligence Environment Configuration
+        env_content = f"""# Kloud Intelligence Environment Configuration
 # Generated on {datetime.now(timezone.utc).isoformat()}
 
 # System Configuration
-CLISONIX_ENV=production
-CLISONIX_VERSION=1.0.0
+KLOUD_ENV=production
+KLOUD_VERSION=1.0.0
 DEPLOYMENT_TIMESTAMP={datetime.now(timezone.utc).isoformat()}
 
 # API Configuration
-CLISONIX_API_BASE_URL=https://api.clisonix.cloud
-CLISONIX_API_TIMEOUT=30000
-CLISONIX_API_MAX_CONCURRENCY=10
+KLOUD_API_BASE_URL=https://api.kloud.cloud
+KLOUD_API_TIMEOUT=30000
+KLOUD_API_MAX_CONCURRENCY=10
 
 # Intelligence Configuration
 INTELLIGENCE_BATCH_SIZE=10
@@ -196,12 +196,12 @@ JWT_SECRET={self.generate_secret()}
 API_KEY={self.generate_secret()}
 
 # Database Configuration (if needed)
-# DATABASE_URL=postgresql://user:pass@localhost:5432/clisonix
+# DATABASE_URL=postgresql://user:pass@localhost:5432/kloud
 
 # Monitoring Configuration
 MONITORING_ENABLED=true
 METRICS_INTERVAL=30
-ALERT_EMAIL=admin@clisonix.cloud
+ALERT_EMAIL=admin@kloud.cloud
 """
 
         with open(env_file, 'w', encoding='utf-8') as f:
@@ -251,7 +251,7 @@ ALERT_EMAIL=admin@clisonix.cloud
             'cycle_engine.py': 'Cycle Engine',
             'open_data_scalability.py': 'Scalability Engine',
             'ai_agi_pipeline.py': 'AI/AGI Pipeline Builder',
-            'clisonix_integration_runner.py': 'Integration Runner'
+            'kloud_integration_runner.py': 'Integration Runner'
         }
 
         for module_file, description in core_modules.items():
@@ -264,7 +264,7 @@ ALERT_EMAIL=admin@clisonix.cloud
         # Krijon __init__.py për package
         init_file = modules_dir / '__init__.py'
         with open(init_file, 'w', encoding='utf-8') as f:
-            f.write('"""Clisonix Intelligence Modules Package"""\n')
+            f.write('"""Kloud Intelligence Modules Package"""\n')
 
     async def configure_integrations(self):
         """Konfiguron integrimet ndërmjet moduleve"""
@@ -299,7 +299,7 @@ ALERT_EMAIL=admin@clisonix.cloud
             },
             'api_scanner': {
                 'enabled': True,
-                'base_url': 'https://api.clisonix.cloud',
+                'base_url': 'https://api.kloud.cloud',
                 'scan_depth': 3,
                 'timeout': 30000
             }
@@ -367,8 +367,8 @@ ALERT_EMAIL=admin@clisonix.cloud
         scanner_dir.mkdir(parents=True, exist_ok=True)
 
         # Kopjon TypeScript scanner
-        if Path('clisonix_api_scanner.ts').exists():
-            shutil.copy2('clisonix_api_scanner.ts', scanner_dir / 'clisonix_api_scanner.ts')
+        if Path('kloud_api_scanner.ts').exists():
+            shutil.copy2('kloud_api_scanner.ts', scanner_dir / 'kloud_api_scanner.ts')
 
         # Krijon tsconfig.json
         tsconfig = {
@@ -391,9 +391,9 @@ ALERT_EMAIL=admin@clisonix.cloud
 
         # Krijon package.json për scanner
         package_json = {
-            'name': 'clisonix-api-scanner',
+            'name': 'kloud-api-scanner',
             'version': '1.0.0',
-            'description': 'API Scanner për Clisonix Cloud',
+            'description': 'API Scanner për Kloud Cloud',
             'main': 'dist/index.js',
             'scripts': {
                 'build': 'tsc',
@@ -455,7 +455,7 @@ ALERT_EMAIL=admin@clisonix.cloud
             f.write("""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \"\"\"
-Monitoring Script për Clisonix Intelligence
+Monitoring Script për Kloud Intelligence
 \"\"\"
 
 import json
@@ -505,7 +505,7 @@ if __name__ == '__main__':
             f.write("""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \"\"\"
-Integration Tests për Clisonix Intelligence System
+Integration Tests për Kloud Intelligence System
 \"\"\"
 
 import asyncio
@@ -627,9 +627,9 @@ if __name__ == '__main__':
         startup_script = self.deployment_dir / 'start_production.sh'
         with open(startup_script, 'w', encoding='utf-8') as f:
             f.write("""#!/bin/bash
-# Startup Script për Clisonix Intelligence System
+# Startup Script për Kloud Intelligence System
 
-echo "🚀 Nisja e Clisonix Intelligence System..."
+echo "🚀 Nisja e Kloud Intelligence System..."
 
 # Aktivizo virtual environment (nëse ekziston)
 if [ -d "venv" ]; then
@@ -638,7 +638,7 @@ fi
 
 # Nis integration runner
 echo "🔧 Nisja e Integration Runner..."
-python modules/clisonix_integration_runner.py --mode full_integration --log-level INFO &
+python modules/kloud_integration_runner.py --mode full_integration --log-level INFO &
 
 # Nis monitoring (nëse është konfiguruar)
 if [ -f "monitoring/monitor.py" ]; then
@@ -653,17 +653,17 @@ echo "✅ Sistemi është nisur! Kontrollo logs për detaje."
         startup_script.chmod(0o755)
 
         # Krijon systemd service file (për Linux)
-        service_file = self.deployment_dir / 'clisonix-intelligence.service'
+        service_file = self.deployment_dir / 'kloud-intelligence.service'
         with open(service_file, 'w', encoding='utf-8') as f:
             f.write("""[Unit]
-Description=Clisonix Intelligence System
+Description=Kloud Intelligence System
 After=network.target
 
 [Service]
 Type=simple
-User=clisonix
-WorkingDirectory=/opt/clisonix
-ExecStart=/opt/clisonix/start_production.sh
+User=kloud
+WorkingDirectory=/opt/kloud
+ExecStart=/opt/kloud/start_production.sh
 Restart=always
 RestartSec=10
 
@@ -714,8 +714,8 @@ WantedBy=multi-user.target
 
 async def main():
     """Funksioni kryesor për deploy"""
-    parser = argparse.ArgumentParser(description='Clisonix Intelligence Deployment Manager')
-    parser.add_argument('--deployment-dir', default='./clisonix_deployment',
+    parser = argparse.ArgumentParser(description='Kloud Intelligence Deployment Manager')
+    parser.add_argument('--deployment-dir', default='./kloud_deployment',
                        help='Direktoria për deploy')
     parser.add_argument('--backup-dir', default='./backups',
                        help='Direktoria për backup')
@@ -738,7 +738,7 @@ async def main():
     }
 
     # Krijon deployment manager
-    manager = ClisonixDeploymentManager(deployment_config)
+    manager = KloudDeploymentManager(deployment_config)
 
     if args.dry_run:
         logger.info("🔍 Dry run - Simulimi i deploy-it...")
@@ -780,3 +780,4 @@ async def main():
 if __name__ == "__main__":
     # Ekzekuto deploy-in
     asyncio.run(main())
+

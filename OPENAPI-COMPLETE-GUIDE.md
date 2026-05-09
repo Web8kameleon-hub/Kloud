@@ -1,4 +1,4 @@
-# 🎯 Clisonix Cloud API – OpenAPI Specification Complete
+# 🎯 Kloud Cloud API – OpenAPI Specification Complete
 
 ## ✅ Deliver Status
 
@@ -40,8 +40,8 @@ Të gjithë 3 formatet profesionale kanë përfunduar:
 ### 📚 Server Environments
 
 - ✅ Local development (`localhost:8000`)
-- ✅ Production (`api.clisonix.cloud`)
-- ✅ Sandbox (`sandbox.clisonix.cloud`)
+- ✅ Production (`api.kloud.cloud`)
+- ✅ Sandbox (`sandbox.kloud.cloud`)
 
 ---
 
@@ -51,11 +51,11 @@ Të gjithë 3 formatet profesionale kanë përfunduar:
 
 ```bash
 # Option A: Direct File Import
-# Postman → File → Import → clisonix-cloud.postman_collection.json
+# Postman → File → Import → kloud-cloud.postman_collection.json
 
 # Option B: Command Line
-newman run clisonix-cloud.postman_collection.json \
-  --environment clisonix.environment.json \
+newman run kloud-cloud.postman_collection.json \
+  --environment kloud.environment.json \
   --reporters cli,html
 ```
 
@@ -76,15 +76,15 @@ openapi-generator-cli generate \
   -i openapi.yaml \
   -g python \
   -o ./sdk-python \
-  -c "{packageName: clisonix_cloud}"
+  -c "{packageName: kloud_cloud}"
 
 pip install ./sdk-python
 ```
 
 **Usage:**
 ```python
-from clisonix_cloud.api_client import ApiClient
-from clisonix_cloud.apis import BrainApi
+from kloud_cloud.api_client import ApiClient
+from kloud_cloud.apis import BrainApi
 
 config = ApiClient()
 config.configuration.access_token = "your-jwt-token"
@@ -114,12 +114,12 @@ openapi-generator-cli generate \
 **Kong Configuration:**
 ```bash
 curl -X POST http://localhost:8001/apis \
-  -d "name=clisonix" \
+  -d "name=kloud" \
   -d "upstream_url=http://localhost:8000" \
-  -d "uris=/clisonix"
+  -d "uris=/kloud"
 
 # Add OpenAPI plugin
-curl -X POST http://localhost:8001/apis/clisonix/plugins \
+curl -X POST http://localhost:8001/apis/kloud/plugins \
   -d "name=openapi-spec" \
   -F "spec=@openapi.json"
 ```
@@ -174,7 +174,7 @@ import datetime
 secret = "your-secret-key"
 payload = {
     'user_id': '123',
-    'email': 'dev@clisonix.cloud',
+    'email': 'dev@kloud.cloud',
     'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
 }
 token = jwt.encode(payload, secret, algorithm='HS256')
@@ -189,7 +189,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 # Response:
 {
-  "service": "clisonix-cloud",
+  "service": "kloud-cloud",
   "status": "healthy",
   "version": "1.0.0",
   ...
@@ -200,7 +200,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```json
 {
-  "name": "Clisonix Dev",
+  "name": "Kloud Dev",
   "values": [
     {
       "key": "baseUrl",
@@ -308,7 +308,7 @@ cbor2.dump(data, open('openapi.cbor', 'wb'))
 ```python
 import requests
 
-class ClisonixClient:
+class KloudClient:
     def __init__(self, base_url, token):
         self.base_url = base_url
         self.headers = {
@@ -333,7 +333,7 @@ class ClisonixClient:
             ).json()
 
 # Usage
-client = ClisonixClient("http://localhost:8000", "your-token")
+client = KloudClient("http://localhost:8000", "your-token")
 status = client.health_check()
 answer = client.ask("What is my system status?")
 harmony = client.brain_harmony("audio.wav")
@@ -342,7 +342,7 @@ harmony = client.brain_harmony("audio.wav")
 ### JavaScript Client
 
 ```javascript
-class ClisonixClient {
+class KloudClient {
   constructor(baseUrl, token) {
     this.baseUrl = baseUrl;
     this.headers = {
@@ -381,7 +381,7 @@ class ClisonixClient {
 }
 
 // Usage
-const client = new ClisonixClient('http://localhost:8000', token);
+const client = new KloudClient('http://localhost:8000', token);
 const status = await client.healthCheck();
 const answer = await client.ask('What modules are running?');
 ```
@@ -431,3 +431,4 @@ const answer = await client.ask('What modules are running?');
 Të tre format specifikime janë validuar dhe gata për use immediate!
 
 🚀 **Filloni me Postman collection ose SDK generation**
+

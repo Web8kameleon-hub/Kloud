@@ -1,9 +1,9 @@
-# 📖 CLISONIX - Udhëzues Përdorimi
+# 📖 KLOUD - Udhëzues Përdorimi
 ## Platforma e Neuro-Teknologjisë Cloud
 
 **Version:** 2.1.0  
 **Data:** Janar 2026  
-**Website:** https://clisonix.com  
+**Website:** https://kloud.com  
 **Kompania:** WEB8euroweb GmbH  
 **Themelues:** Ledjan Ahmati  
 
@@ -24,7 +24,7 @@
 
 ## 🎯 Hyrje
 
-**Clisonix** është një platformë cloud e avancuar për përpunimin e të dhënave neurologjike dhe audio. Platforma kombinon inteligjencën artificiale me teknologjitë e neuroshkencës për të ofruar një gamë të gjerë shërbimesh.
+**Kloud** është një platformë cloud e avancuar për përpunimin e të dhënave neurologjike dhe audio. Platforma kombinon inteligjencën artificiale me teknologjitë e neuroshkencës për të ofruar një gamë të gjerë shërbimesh.
 
 ### Karakteristikat Kryesore:
 - 🧠 Analizë EEG në kohë reale
@@ -40,20 +40,20 @@
 
 ### 1. Aksesimi i Platformës
 ```
-URL: https://clisonix.com
+URL: https://kloud.com
 ```
 
 ### 2. Navigimi Kryesor
 Nga **Quick Access Hub** mund të aksesoni:
 - 🧠 **All Modules** - Të gjitha modulet
 - 🎵 **Neural Synthesis** - Sinteza audio
-- 📊 **Grafana** - Dashboards (admin/clisonix2025)
+- 📊 **Grafana** - Dashboards (admin/kloud2025)
 - ⚙️ **Prometheus** - Metrikat
 
 ### 3. Kredencialet e Monitorimit
 | Shërbimi | URL | Username | Password |
 |----------|-----|----------|----------|
-| Grafana | /grafana/ | admin | clisonix2025 |
+| Grafana | /grafana/ | admin | kloud2025 |
 | Prometheus | /prometheus/ | - | - |
 | VictoriaMetrics | /victoria/ | - | - |
 
@@ -334,7 +334,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 
 ## 🔗 ASI Trinity System
 
-ASI Trinity është sistemi qendror i platformës Clisonix, i përbërë nga tre komponentë:
+ASI Trinity është sistemi qendror i platformës Kloud, i përbërë nga tre komponentë:
 
 | Komponenti | Ikona | Funksioni |
 |------------|-------|-----------|
@@ -355,9 +355,9 @@ ASI Trinity është sistemi qendror i platformës Clisonix, i përbërë nga tre
 
 | Shërbimi | URL | Kredencialet |
 |----------|-----|--------------|
-| Grafana | https://clisonix.com/grafana/ | admin / clisonix2025 |
-| Prometheus | https://clisonix.com/prometheus/ | - |
-| VictoriaMetrics | https://clisonix.com/victoria/ | - |
+| Grafana | https://kloud.com/grafana/ | admin / kloud2025 |
+| Prometheus | https://kloud.com/prometheus/ | - |
+| VictoriaMetrics | https://kloud.com/victoria/ | - |
 
 ### Metrics Endpoints:
 
@@ -374,7 +374,7 @@ ASI Trinity është sistemi qendror i platformës Clisonix, i përbërë nga tre
 
 ### Base URL:
 ```
-https://clisonix.com/backend/
+https://kloud.com/backend/
 ```
 
 ### Endpoints Kryesore:
@@ -389,13 +389,13 @@ https://clisonix.com/backend/
 
 ### Shembull Request:
 ```bash
-curl https://clisonix.com/backend/api/health
+curl https://kloud.com/backend/api/health
 ```
 
 ### Shembull Response:
 ```json
 {
-  "service": "Clisonix Backend (REAL)",
+  "service": "Kloud Backend (REAL)",
   "status": "Operational",
   "version": "2.1.0"
 }
@@ -427,12 +427,12 @@ curl https://clisonix.com/backend/api/health
 
 | | |
 |---|---|
-| **Kompania** | Clisonix Cloud |
-| **Website** | https://clisonix.com |
-| **GitHub** | github.com/clisonix/Clisonix-cloud |
+| **Kompania** | Kloud Cloud |
+| **Website** | https://kloud.com |
+| **GitHub** | github.com/kloud/Kloud-cloud |
 
 ### Suport Teknik:
-- 🌐 Website: clisonix.com
+- 🌐 Website: kloud.com
 - 📖 Dokumentacioni: GitHub Wiki
 
 ---
@@ -451,4 +451,5 @@ curl https://clisonix.com/backend/api/health
 
 **© 2026 WEB8euroweb GmbH. Të gjitha të drejtat e rezervuara.**
 
-*Clisonix - Neuro-Technology Cloud Platform*
+*Kloud - Neuro-Technology Cloud Platform*
+

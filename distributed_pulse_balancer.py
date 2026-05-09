@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Clisonix Distributed Pulse Balancer (Industrial)
+Kloud Distributed Pulse Balancer (Industrial)
 - Real UDP heartbeat & peer discovery
 - Simple leader election
 - Token-bucket rate limiting per client
@@ -23,7 +23,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn
 
-from clisonix.colored_logger import setup_logger
+from kloud.colored_logger import setup_logger
 
 # =========================
 # Config
@@ -37,7 +37,7 @@ HB_PORT     = int(os.getenv("NSX_HB_PORT", "42999"))
 HB_INTERVAL = float(os.getenv("NSX_HB_INTERVAL", "3.0"))
 HB_TIMEOUT  = float(os.getenv("NSX_HB_TIMEOUT", "10.0"))
 BROADCAST_IP= os.getenv("NSX_BCAST_IP", "255.255.255.255")
-DATA_DIR    = os.getenv("NSX_DATA_DIR", r"C:\Clisonix-cloud")
+DATA_DIR    = os.getenv("NSX_DATA_DIR", r"C:\Kloud-cloud")
 LOG_DIR     = os.path.join(DATA_DIR, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -278,7 +278,7 @@ def heartbeat_receiver():
 # FastAPI app
 # =========================
 app = FastAPI(
-    title="Clisonix Distributed Pulse Balancer",
+    title="Kloud Distributed Pulse Balancer",
     version="1.0.0-industrial",
     description="Cluster-aware balancer with real metrics, rate limit, and circuit breaker."
 )
@@ -308,53 +308,53 @@ def prometheus_metrics():
     capacity = capacity_score(me)
     
     lines = [
-        "# HELP clisonix_balancer_cpu_percent CPU usage percentage",
-        "# TYPE clisonix_balancer_cpu_percent gauge",
-        f'clisonix_balancer_cpu_percent{{node="{NODE_NAME}"}} {me.get("cpu", 0)}',
+        "# HELP kloud_balancer_cpu_percent CPU usage percentage",
+        "# TYPE kloud_balancer_cpu_percent gauge",
+        f'kloud_balancer_cpu_percent{{node="{NODE_NAME}"}} {me.get("cpu", 0)}',
         "",
-        "# HELP clisonix_balancer_mem_percent Memory usage percentage",
-        "# TYPE clisonix_balancer_mem_percent gauge",
-        f'clisonix_balancer_mem_percent{{node="{NODE_NAME}"}} {me.get("mem", 0)}',
+        "# HELP kloud_balancer_mem_percent Memory usage percentage",
+        "# TYPE kloud_balancer_mem_percent gauge",
+        f'kloud_balancer_mem_percent{{node="{NODE_NAME}"}} {me.get("mem", 0)}',
         "",
-        "# HELP clisonix_balancer_disk_percent Disk usage percentage",
-        "# TYPE clisonix_balancer_disk_percent gauge",
-        f'clisonix_balancer_disk_percent{{node="{NODE_NAME}"}} {me.get("disk", 0)}',
+        "# HELP kloud_balancer_disk_percent Disk usage percentage",
+        "# TYPE kloud_balancer_disk_percent gauge",
+        f'kloud_balancer_disk_percent{{node="{NODE_NAME}"}} {me.get("disk", 0)}',
         "",
-        "# HELP clisonix_balancer_net_sent_mb Network bytes sent (MB)",
-        "# TYPE clisonix_balancer_net_sent_mb counter",
-        f'clisonix_balancer_net_sent_mb{{node="{NODE_NAME}"}} {me.get("net_sent_MB", 0)}',
+        "# HELP kloud_balancer_net_sent_mb Network bytes sent (MB)",
+        "# TYPE kloud_balancer_net_sent_mb counter",
+        f'kloud_balancer_net_sent_mb{{node="{NODE_NAME}"}} {me.get("net_sent_MB", 0)}',
         "",
-        "# HELP clisonix_balancer_net_recv_mb Network bytes received (MB)",
-        "# TYPE clisonix_balancer_net_recv_mb counter",
-        f'clisonix_balancer_net_recv_mb{{node="{NODE_NAME}"}} {me.get("net_recv_MB", 0)}',
+        "# HELP kloud_balancer_net_recv_mb Network bytes received (MB)",
+        "# TYPE kloud_balancer_net_recv_mb counter",
+        f'kloud_balancer_net_recv_mb{{node="{NODE_NAME}"}} {me.get("net_recv_MB", 0)}',
         "",
-        "# HELP clisonix_balancer_procs Number of processes",
-        "# TYPE clisonix_balancer_procs gauge",
-        f'clisonix_balancer_procs{{node="{NODE_NAME}"}} {me.get("procs", 0)}',
+        "# HELP kloud_balancer_procs Number of processes",
+        "# TYPE kloud_balancer_procs gauge",
+        f'kloud_balancer_procs{{node="{NODE_NAME}"}} {me.get("procs", 0)}',
         "",
-        "# HELP clisonix_balancer_uptime_seconds System uptime in seconds",
-        "# TYPE clisonix_balancer_uptime_seconds counter",
-        f'clisonix_balancer_uptime_seconds{{node="{NODE_NAME}"}} {me.get("uptime_sec", 0)}',
+        "# HELP kloud_balancer_uptime_seconds System uptime in seconds",
+        "# TYPE kloud_balancer_uptime_seconds counter",
+        f'kloud_balancer_uptime_seconds{{node="{NODE_NAME}"}} {me.get("uptime_sec", 0)}',
         "",
-        "# HELP clisonix_balancer_capacity_score Capacity score (lower is better)",
-        "# TYPE clisonix_balancer_capacity_score gauge",
-        f'clisonix_balancer_capacity_score{{node="{NODE_NAME}"}} {round(capacity, 2)}',
+        "# HELP kloud_balancer_capacity_score Capacity score (lower is better)",
+        "# TYPE kloud_balancer_capacity_score gauge",
+        f'kloud_balancer_capacity_score{{node="{NODE_NAME}"}} {round(capacity, 2)}',
         "",
-        "# HELP clisonix_balancer_is_leader Whether this node is cluster leader",
-        "# TYPE clisonix_balancer_is_leader gauge",
-        f'clisonix_balancer_is_leader{{node="{NODE_NAME}"}} {1 if is_leader else 0}',
+        "# HELP kloud_balancer_is_leader Whether this node is cluster leader",
+        "# TYPE kloud_balancer_is_leader gauge",
+        f'kloud_balancer_is_leader{{node="{NODE_NAME}"}} {1 if is_leader else 0}',
         "",
-        "# HELP clisonix_balancer_peer_count Total known peers",
-        "# TYPE clisonix_balancer_peer_count gauge",
-        f'clisonix_balancer_peer_count{{node="{NODE_NAME}"}} {peer_count}',
+        "# HELP kloud_balancer_peer_count Total known peers",
+        "# TYPE kloud_balancer_peer_count gauge",
+        f'kloud_balancer_peer_count{{node="{NODE_NAME}"}} {peer_count}',
         "",
-        "# HELP clisonix_balancer_alive_peers Alive peers count",
-        "# TYPE clisonix_balancer_alive_peers gauge",
-        f'clisonix_balancer_alive_peers{{node="{NODE_NAME}"}} {alive_peers}',
+        "# HELP kloud_balancer_alive_peers Alive peers count",
+        "# TYPE kloud_balancer_alive_peers gauge",
+        f'kloud_balancer_alive_peers{{node="{NODE_NAME}"}} {alive_peers}',
         "",
-        "# HELP clisonix_balancer_open_circuits Number of open circuit breakers",
-        "# TYPE clisonix_balancer_open_circuits gauge",
-        f'clisonix_balancer_open_circuits{{node="{NODE_NAME}"}} {open_circuits}',
+        "# HELP kloud_balancer_open_circuits Number of open circuit breakers",
+        "# TYPE kloud_balancer_open_circuits gauge",
+        f'kloud_balancer_open_circuits{{node="{NODE_NAME}"}} {open_circuits}',
         "",
     ]
     
@@ -364,9 +364,9 @@ def prometheus_metrics():
             pm = peer.get("metrics", {})
             pname = peer.get("node_name", pid)
             alive = 1 if is_peer_alive(peer) else 0
-            lines.append(f'clisonix_balancer_peer_alive{{node="{NODE_NAME}",peer="{pname}"}} {alive}')
-            lines.append(f'clisonix_balancer_peer_cpu{{node="{NODE_NAME}",peer="{pname}"}} {pm.get("cpu", 0)}')
-            lines.append(f'clisonix_balancer_peer_mem{{node="{NODE_NAME}",peer="{pname}"}} {pm.get("mem", 0)}')
+            lines.append(f'kloud_balancer_peer_alive{{node="{NODE_NAME}",peer="{pname}"}} {alive}')
+            lines.append(f'kloud_balancer_peer_cpu{{node="{NODE_NAME}",peer="{pname}"}} {pm.get("cpu", 0)}')
+            lines.append(f'kloud_balancer_peer_mem{{node="{NODE_NAME}",peer="{pname}"}} {pm.get("mem", 0)}')
     
     return PlainTextResponse("\n".join(lines), media_type="text/plain; charset=utf-8")
 
@@ -527,5 +527,6 @@ if __name__ == "__main__":
         for t in threads:
             t.join(timeout=2.0)
         logger.info("Balancer stopped.")
+
 
 

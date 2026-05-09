@@ -196,7 +196,7 @@ fatigued
 ### Environment Variables
 ```env
 # Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/clisonix
+DATABASE_URL=postgresql://user:pass@localhost:5432/kloud
 SQLALCHEMY_ECHO=false
 
 # Fitness Module
@@ -401,3 +401,4 @@ const workout = await api.startWorkout('Push Day', 'strength', 'moderate');
 ---
 
 **Last Updated**: January 2024
+

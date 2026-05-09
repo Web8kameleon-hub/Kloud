@@ -1,5 +1,5 @@
 """
-Copyright (c) Clisonix Cloud. All rights reserved.
+Copyright (c) Kloud Cloud. All rights reserved.
 Closed Source License.
 """
 
@@ -11,7 +11,7 @@ import time
 from industrial_data import router as industrial_router
 
 app = FastAPI(
-    title="Clisonix Master Orchestrator",
+    title="Kloud Master Orchestrator",
     version="1.2.3",
     description="Central coordination of all agents and workflow management",
     docs_url="/docs",
@@ -30,7 +30,7 @@ def get_status():
         "memory": psutil.virtual_memory()._asdict(),
         "disk": psutil.disk_usage("/")._asdict(),
         "active_users": 1,  # Replace with real user count logic
-        "system": "Clisonix Industrial"
+        "system": "Kloud Industrial"
     }
 
 
@@ -79,7 +79,7 @@ def get_industrial_data():
 @app.get("/dashboard")
 def dashboard():
     return {
-        "system": "Clisonix Industrial",
+        "system": "Kloud Industrial",
         "status": "active",
         "metrics": {
             "cpu": psutil.cpu_percent(),
@@ -87,4 +87,5 @@ def dashboard():
             "disk": psutil.disk_usage("/").percent
         }
     }
+
 

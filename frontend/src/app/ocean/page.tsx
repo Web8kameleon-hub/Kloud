@@ -483,8 +483,9 @@ export default function OceanPage() {
 
       {/* Footer */}
       <footer className="mt-12 py-6 border-t border-gray-800 text-center text-gray-500 text-sm">
-        <p>© 2025 Clisonix Cloud • Ocean Core v4.0.0 • By Ledjan Ahmati</p>
+        <p>© 2025 Kloud Cloud • Ocean Core v4.0.0 • By Ledjan Ahmati</p>
       </footer>
     </div>
   )
 }
+

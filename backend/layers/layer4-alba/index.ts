@@ -255,7 +255,7 @@ export function mountAlba(app: Express, cfg: AppConfig): AlbaCore {
     res.json({
       system: "ALBA Industrial Monitoring Core",
       version: "7.3",
-      developer: "Clisonix / Trinity Systems",
+      developer: "Kloud / Trinity Systems",
       maxStreams: 24,
       uptime: `${Math.round((Date.now() - alba['started']) / 1000)}s`,
       lastDiagnostics: alba.getStatus().timestamp,
@@ -271,3 +271,4 @@ export function mountAlba(app: Express, cfg: AppConfig): AlbaCore {
   console.log(`âœ… [L4] ALBA Industrial Core mounted â€” monitoring ${cfg.ALBA_MAX_STREAMS ?? 24} streams`);
   return alba;
 }
+

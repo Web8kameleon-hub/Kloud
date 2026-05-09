@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const isDev = process.env.NODE_ENV !== 'production';
-const API_INTERNAL = process.env.API_INTERNAL_URL || (isDev ? 'http://localhost:8000' : 'http://clisonix-api:8000');
+const API_INTERNAL = process.env.API_INTERNAL_URL || (isDev ? 'http://localhost:8000' : 'http://kloud-api:8000');
 
 export async function GET() {
   try {
@@ -27,3 +27,4 @@ export async function GET() {
     );
   }
 }
+

@@ -23,7 +23,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   ollama:
     name: "Ollama LLM"
-    host: "clisonix-ollama"
+    host: "kloud-ollama"
     port: 11434
     endpoints:
       chat: "/api/chat"
@@ -40,7 +40,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   alba:
     name: "ALBA - Analytical Intelligence"
-    host: "clisonix-alba"
+    host: "kloud-alba"
     port: 5555
     endpoints:
       analyze: "/api/v1/analyze"
@@ -53,7 +53,7 @@ services:
 
   albi:
     name: "ALBI - Creative Intelligence"
-    host: "clisonix-albi"
+    host: "kloud-albi"
     port: 6680
     endpoints:
       create: "/api/v1/create"
@@ -65,7 +65,7 @@ services:
 
   jona:
     name: "JONA - Emotional Intelligence"
-    host: "clisonix-jona"
+    host: "kloud-jona"
     port: 6681
     endpoints:
       emotion: "/api/v1/emotion"
@@ -77,7 +77,7 @@ services:
 
   asi:
     name: "ASI - Superintelligence Core"
-    host: "clisonix-asi"
+    host: "kloud-asi"
     port: 8020
     endpoints:
       think: "/api/v1/think"
@@ -92,7 +92,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   liam:
     name: "LIAM - Binary Algebra"
-    host: "clisonix-liam"
+    host: "kloud-liam"
     port: 8025
     endpoints:
       encode: "/api/v1/encode"
@@ -104,7 +104,7 @@ services:
 
   alda:
     name: "ALDA - Data Algebra"
-    host: "clisonix-alda"
+    host: "kloud-alda"
     port: 8026
     endpoints:
       process: "/api/v1/process"
@@ -118,7 +118,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   translation:
     name: "Translation Node"
-    host: "clisonix-translation"
+    host: "kloud-translation"
     port: 8036
     endpoints:
       translate: "/api/v1/translate"
@@ -133,7 +133,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   aviation:
     name: "Aviation Weather"
-    host: "clisonix-aviation"
+    host: "kloud-aviation"
     port: 8040
     endpoints:
       metar: "/api/v1/metar"
@@ -146,7 +146,7 @@ services:
 
   fitness:
     name: "Fitness Dashboard"
-    host: "clisonix-api"
+    host: "kloud-api"
     port: 8000
     endpoints:
       workout: "/fitness/workouts"
@@ -158,7 +158,7 @@ services:
 
   weather:
     name: "Weather Service"
-    host: "clisonix-api"
+    host: "kloud-api"
     port: 8000
     endpoints:
       current: "/weather/current"
@@ -169,7 +169,7 @@ services:
 
   crypto:
     name: "Crypto Dashboard"
-    host: "clisonix-api"
+    host: "kloud-api"
     port: 8000
     endpoints:
       prices: "/crypto/prices"
@@ -183,7 +183,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   reporting:
     name: "Reporting Service"
-    host: "clisonix-reporting"
+    host: "kloud-reporting"
     port: 8010
     endpoints:
       generate: "/api/v1/report"
@@ -195,7 +195,7 @@ services:
 
   excel:
     name: "Excel Service"
-    host: "clisonix-excel"
+    host: "kloud-excel"
     port: 8011
     endpoints:
       process: "/api/v1/process"
@@ -207,7 +207,7 @@ services:
 
   behavioral:
     name: "Behavioral Science"
-    host: "clisonix-behavioral"
+    host: "kloud-behavioral"
     port: 8012
     endpoints:
       analyze: "/api/v1/analyze"
@@ -219,7 +219,7 @@ services:
 
   economy:
     name: "Economy Service"
-    host: "clisonix-economy"
+    host: "kloud-economy"
     port: 8013
     endpoints:
       market: "/api/v1/market"
@@ -234,7 +234,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   lab_tirana:
     name: "Tirana Lab"
-    host: "clisonix-lab-tirana"
+    host: "kloud-lab-tirana"
     port: 9001
     endpoints:
       experiment: "/api/v1/experiment"
@@ -245,7 +245,7 @@ services:
 
   lab_berlin:
     name: "Berlin Lab"
-    host: "clisonix-lab-berlin"
+    host: "kloud-lab-berlin"
     port: 9002
     endpoints:
       experiment: "/api/v1/experiment"
@@ -256,7 +256,7 @@ services:
 
   lab_rome:
     name: "Rome Lab"
-    host: "clisonix-lab-rome"
+    host: "kloud-lab-rome"
     port: 9003
     endpoints:
       experiment: "/api/v1/experiment"
@@ -270,7 +270,7 @@ services:
   # ═══════════════════════════════════════════════════════════════
   agiem:
     name: "AGIEM Core"
-    host: "clisonix-agiem"
+    host: "kloud-agiem"
     port: 8050
     endpoints:
       query: "/api/v1/query"
@@ -282,7 +282,7 @@ services:
 
   agiem_europe:
     name: "AGIEM Europe Datasource"
-    host: "clisonix-agiem-europe"
+    host: "kloud-agiem-europe"
     port: 8051
     endpoints:
       query: "/api/v1/query"
@@ -293,7 +293,7 @@ services:
 
   agiem_americas:
     name: "AGIEM Americas Datasource"
-    host: "clisonix-agiem-americas"
+    host: "kloud-agiem-americas"
     port: 8052
     endpoints:
       query: "/api/v1/query"
@@ -304,7 +304,7 @@ services:
 
   agiem_asia:
     name: "AGIEM Asia Datasource"
-    host: "clisonix-agiem-asia"
+    host: "kloud-agiem-asia"
     port: 8053
     endpoints:
       query: "/api/v1/query"
@@ -350,3 +350,4 @@ settings:
   
   # Cache TTL for service discovery (seconds)
   discovery_cache_ttl: 60
+

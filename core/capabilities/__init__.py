@@ -10,7 +10,7 @@ CAPABILITIES MODULE - AI Capabilities Registry
 
 Shembuj: summarization, translation, code-gen, routing, classification, retrieval, planning, tool-use
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 from dataclasses import dataclass, field
@@ -46,7 +46,7 @@ class Capability:
     description: str = ""
     
     # Resources
-    default_engine: str = "ollama:clisonix-ocean:v2"
+    default_engine: str = "ollama:kloud-ocean:v2"
     default_persona: Optional[str] = None
     default_pipeline: Optional[str] = None
     
@@ -183,3 +183,4 @@ __all__ = [
     "get_capability",
     "list_capabilities",
 ]
+

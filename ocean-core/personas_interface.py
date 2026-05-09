@@ -1,5 +1,5 @@
 """
-CLISONIX PERSONAS INTERFACE v1.0
+KLOUD PERSONAS INTERFACE v1.0
 ================================
 Personas për UX / simulation - NUK prekin core learning!
 
@@ -187,7 +187,7 @@ def persona_stats() -> dict:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🎭 CLISONIX PERSONAS INTERFACE v1.0")
+    print("🎭 KLOUD PERSONAS INTERFACE v1.0")
     print("=" * 60)
     
     print("\n📊 Active Personas:")
@@ -208,3 +208,4 @@ if __name__ == "__main__":
     print(f"  {persona_stats()}")
     
     print("\n✅ Personas interface OK - nuk prek auto_learning_core!")
+

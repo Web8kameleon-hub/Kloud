@@ -1,10 +1,10 @@
 /**
- * Clisonix Cloud - Stripe Webhook Handler
+ * Kloud Cloud - Stripe Webhook Handler
  *
  * Handles all Stripe webhook events for subscriptions
  *
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -190,3 +190,4 @@ async function updateUserSubscription(data: SubscriptionUpdate) {
     // Don't throw - webhook should still return 200
   }
 }
+

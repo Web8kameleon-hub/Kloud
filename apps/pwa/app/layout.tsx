@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Clisonix PWA',
+  title: 'Kloud PWA',
   manifest: '/manifest.json',
 }
 
@@ -20,3 +20,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
+

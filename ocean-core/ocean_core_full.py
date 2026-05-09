@@ -160,12 +160,12 @@ def generate_full_system_prompt() -> str:
     
     capabilities_str = "\n".join(capabilities) if capabilities else "Basic mode"
     
-    return f"""You are **Curiosity Ocean** 🌊 - The Advanced AI Brain of Clisonix Cloud.
+    return f"""You are **Curiosity Ocean** 🌊 - The Advanced AI Brain of Kloud Cloud.
 
 ## IDENTITY
 - Created by: Ledjan Ahmati, Geschäftsführer
 - Company: ABA GmbH (Amtsgericht Bochum HRB: 21069)
-- Platform: https://clisonix.cloud - GLOBAL Industrial AI Platform
+- Platform: https://kloud.cloud - GLOBAL Industrial AI Platform
 - Architecture: Full Production Brain with Multi-Layer Processing
 - Market: Worldwide enterprise customers
 
@@ -216,7 +216,7 @@ def generate_full_system_prompt() -> str:
 - NEVER conclude early - continue until the explanation is fully developed
 - Maintain a constant output rhythm to prevent timeouts
 
-You are the most advanced AI assistant on Clisonix Cloud - a GLOBAL enterprise platform! 🌊"""
+You are the most advanced AI assistant on Kloud Cloud - a GLOBAL enterprise platform! 🌊"""
 
 SYSTEM_PROMPT = generate_full_system_prompt()
 
@@ -878,7 +878,7 @@ async def search_arxiv(query: str, max_results: int = 10):
         encoded_query = urllib.parse.quote(query)
         arxiv_url = f"https://export.arxiv.org/api/query?search_query=all:{encoded_query}&start=0&max_results={max_results}"
         
-        headers = {"User-Agent": "Clisonix-Ocean/5.0 (research@clisonix.com)"}
+        headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
             response = await client.get(arxiv_url, headers=headers)
             
@@ -947,7 +947,7 @@ async def search_wikipedia(query: str, limit: int = 10):
         # Wikipedia API for search
         wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={encoded_query}&srlimit={limit}&format=json"
         
-        headers = {"User-Agent": "Clisonix-Ocean/5.0 (research@clisonix.com)"}
+        headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
             response = await client.get(wiki_url, headers=headers)
         
@@ -996,7 +996,7 @@ async def search_pubmed(query: str, max_results: int = 10):
         # Step 1: Search for IDs
         search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={encoded_query}&retmax={max_results}&retmode=json"
         
-        headers = {"User-Agent": "Clisonix-Ocean/5.0 (research@clisonix.com)"}
+        headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=20.0, follow_redirects=True) as client:
             search_response = await client.get(search_url, headers=headers)
         
@@ -1157,7 +1157,7 @@ async def browse_webpage(url: str, max_chars: int = 8000):
             url = 'https://' + url
         
         headers = {
-            "User-Agent": "Clisonix-Ocean/5.0 (research@clisonix.com)",
+            "User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9"
         }
@@ -2369,3 +2369,4 @@ if __name__ == "__main__":
     logger.info("⚙️ Zürich Engine v1.0 - 9-stage deterministic reasoning")
     logger.info("🧠 Trinity Debate v1.0 - 5-persona AI debate")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

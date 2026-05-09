@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "993f4e92-e72c-4b0e-bb00-47af0d0f4af6",
-    "name": "Clisonix Cloud API - Part of Webultrathinking Euroweb - Postman Collection",
-    "description": "Clisonix Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,\nbilling integration, and real-time system observability.\n\n**Key Features:**\n- Neural harmonic synchronization engine\n- EEG signal processing and analysis\n- Brain-adaptive music generation\n- Real-time data streaming (ALBA)\n- Multi-channel payment integration\n- Industrial-grade system monitoring\n\n**Security:** All endpoints require Bearer JWT authentication.\n",
+    "name": "Kloud Cloud API - Part of Webultrathinking Euroweb - Postman Collection",
+    "description": "Kloud Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,\nbilling integration, and real-time system observability.\n\n**Key Features:**\n- Neural harmonic synchronization engine\n- EEG signal processing and analysis\n- Brain-adaptive music generation\n- Real-time data streaming (ALBA)\n- Multi-channel payment integration\n- Industrial-grade system monitoring\n\n**Security:** All endpoints require Bearer JWT authentication.\n",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -1536,4 +1536,5 @@
     ]
   }
 }
+
 

@@ -1,8 +1,8 @@
 /**
- * 🔷 CLISONIX BINARY PROTOCOL (CBP) - C SDK
+ * 🔷 KLOUD BINARY PROTOCOL (CBP) - C SDK
  * ==========================================
  * 
- * Header-only C library for Clisonix Binary Protocol.
+ * Header-only C library for Kloud Binary Protocol.
  * 
  * Frame Layout:
  *   Offset | Size | Field
@@ -13,12 +13,12 @@
  *   6      | 2    | Payload length (uint16)
  *   8      | N    | Payload (binary struct)
  * 
- * Author: Clisonix Team
+ * Author: Kloud Team
  * License: MIT
  */
 
-#ifndef CLISONIX_CBP_H
-#define CLISONIX_CBP_H
+#ifndef KLOUD_CBP_H
+#define KLOUD_CBP_H
 
 /* Standard types - with fallback for environments without stdint.h */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
@@ -404,4 +404,5 @@ static inline cbp_message_type_t cbp_payload_get_type(const uint8_t* payload) {
 }
 #endif
 
-#endif /* CLISONIX_CBP_H */
+#endif /* KLOUD_CBP_H */
+

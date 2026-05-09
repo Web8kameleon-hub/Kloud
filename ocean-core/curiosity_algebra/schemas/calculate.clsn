@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Calculate Response
+# Kloud Binary Schema - Calculate Response
 # Version: 1.0
 # Magic: CLSN
 
@@ -32,3 +32,4 @@ fields:
     type: uint32
     offset: dynamic
     description: "Calculation duration in microseconds"
+

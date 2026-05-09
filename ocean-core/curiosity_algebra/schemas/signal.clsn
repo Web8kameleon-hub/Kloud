@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Signal Frame
+# Kloud Binary Schema - Signal Frame
 # Version: 1.0
 # Magic: CLSN
 
@@ -53,3 +53,4 @@ fields:
     offset: dynamic
     length_field: metadata_len
     description: "Additional metadata (CBOR encoded)"
+

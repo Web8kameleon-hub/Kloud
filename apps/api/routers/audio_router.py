@@ -1,11 +1,11 @@
 """
-CLISONIX AUDIO API ROUTER
+KLOUD AUDIO API ROUTER
 =========================
 
 Dedicated Audio processing endpoints for the API Marketplace.
 Exposes all audio/brain-sync functionality under /api/audio prefix.
 
-Author: Clisonix Cloud
+Author: Kloud Cloud
 """
 
 import io
@@ -161,7 +161,7 @@ async def audio_info():
     Get Audio API information and capabilities
     """
     return {
-        "service": "Clisonix Audio Processing",
+        "service": "Kloud Audio Processing",
         "version": "1.0.0",
         "capabilities": [
             "binaural_beat_generation",
@@ -376,3 +376,4 @@ async def analyze_audio(file: UploadFile = File(...)):
             "effectiveness_score": round(random.uniform(0.6, 0.95), 2)
         }
     }
+

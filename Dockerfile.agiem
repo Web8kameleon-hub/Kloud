@@ -10,7 +10,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="AGIEM - AGI Ecosystem Manager"
 LABEL version="1.0.0"
 
@@ -395,3 +395,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:9300/health || exit 1
 
 CMD ["python", "agiem_service.py"]
+

@@ -1,5 +1,5 @@
 # ============================================================================
-# CLISONIX BLOG AUTO-PUBLISHER
+# KLOUD BLOG AUTO-PUBLISHER
 # Dockerfile for automatic GitHub Pages publishing
 # Port: 8041
 # ============================================================================
@@ -43,3 +43,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run the application
 CMD ["python", "main.py"]
+

@@ -197,7 +197,7 @@
       "contentType": "text/html; charset=utf-8",
       "length": 960,
       "jsonPreview": null,
-      "textPreview": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>Clisonix Industrial Backend (REAL) - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    ",
+      "textPreview": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>Kloud Industrial Backend (REAL) - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    ",
       "error": null,
       "timestamp": "2025-10-17T15:06:51.906Z"
     },
@@ -210,7 +210,7 @@
       "jsonPreview": {
         "openapi": "3.1.0",
         "info": {
-          "title": "Clisonix Industrial Backend (REAL)",
+          "title": "Kloud Industrial Backend (REAL)",
           "version": "1.0.0"
         },
         "paths": {
@@ -1083,7 +1083,7 @@
           }
         }
       },
-      "textPreview": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"Clisonix Industrial Backend (REAL)\",\"version\":\"1.0.0\"},\"paths\":{\"/api/ask\":{\"post\":{\"summary\":\"Ask Api\",\"operationId\":\"ask_api_api_ask_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/health\":{\"get\":{\"summary\":\"Health\",\"operationId\":\"health_health_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/status\":{\"get\":{\"summary\":\"Status Full\",\"operationId\":\"status_full_status_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/api/uploads/eeg/process\":{\"post\":{\"summary\":\"Process Eeg\",\"operationId\":\"process_eeg_api_uploads_eeg_process_post\",\"requestBody\":{\"content\":{\"multipart/form-data\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_process_eeg_api_uploads_eeg_process_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/api/uploads/audio/process\":{\"post\":{\"summary\":\"Process Audio\",\"operationId\":\"process_audio_api_uploads_audio_process_post\",\"requestBody\":{\"content\":{\"multipart/form-data\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_process_audio_api_uploads_audio_process_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/billing/paypal/order\":{\"post\":{\"summary\":\"Paypal Create Order\",\"description\":\"Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).\\nPayload example:\\n{\\n  \\\"intent\\\": \\\"CAPTURE\\\",\\n  \\\"purchase_units\\\": [{\\\"amount\\\": {\\\"currency_code\\\":\\\"EUR\\\",\\\"value\\\":\\\"10.00\\\"}}]\\n}\",\"operationId\":\"paypal_create_ord",
+      "textPreview": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"Kloud Industrial Backend (REAL)\",\"version\":\"1.0.0\"},\"paths\":{\"/api/ask\":{\"post\":{\"summary\":\"Ask Api\",\"operationId\":\"ask_api_api_ask_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/health\":{\"get\":{\"summary\":\"Health\",\"operationId\":\"health_health_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/status\":{\"get\":{\"summary\":\"Status Full\",\"operationId\":\"status_full_status_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/api/uploads/eeg/process\":{\"post\":{\"summary\":\"Process Eeg\",\"operationId\":\"process_eeg_api_uploads_eeg_process_post\",\"requestBody\":{\"content\":{\"multipart/form-data\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_process_eeg_api_uploads_eeg_process_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/api/uploads/audio/process\":{\"post\":{\"summary\":\"Process Audio\",\"operationId\":\"process_audio_api_uploads_audio_process_post\",\"requestBody\":{\"content\":{\"multipart/form-data\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_process_audio_api_uploads_audio_process_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/billing/paypal/order\":{\"post\":{\"summary\":\"Paypal Create Order\",\"description\":\"Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).\\nPayload example:\\n{\\n  \\\"intent\\\": \\\"CAPTURE\\\",\\n  \\\"purchase_units\\\": [{\\\"amount\\\": {\\\"currency_code\\\":\\\"EUR\\\",\\\"value\\\":\\\"10.00\\\"}}]\\n}\",\"operationId\":\"paypal_create_ord",
       "error": null,
       "timestamp": "2025-10-17T15:06:51.906Z"
     },
@@ -1128,7 +1128,7 @@
       "contentType": "application/json",
       "length": 580,
       "jsonPreview": {
-        "service": "Clisonix-industrial-backend-real",
+        "service": "Kloud-industrial-backend-real",
         "status": "operational",
         "version": "1.0.0",
         "timestamp": "2025-10-17T15:06:52.022792+00:00",
@@ -1155,7 +1155,7 @@
         },
         "environment": "production"
       },
-      "textPreview": "{\"service\":\"Clisonix-industrial-backend-real\",\"status\":\"operational\",\"version\":\"1.0.0\",\"timestamp\":\"2025-10-17T15:06:52.022792+00:00\",\"instance_id\":\"91a1869b\",\"uptime_app_seconds\":760.715,\"system\":{\"cpu_percent\":1.7,\"memory_percent\":20.7,\"memory_total\":68490240000,\"disk_percent\":7.9,\"disk_total\":1999492870144,\"net_bytes_sent\":58263659,\"net_bytes_recv\":433829132,\"processes\":250,\"hostname\":\"DESKTOP-I68P1RI\",\"boot_time\":1760711210.3144574,\"uptime_seconds\":2401.708318710327},\"redis\":{\"status\":\"not_configured\"},\"database\":{\"status\":\"not_configured\"},\"environment\":\"production\"}",
+      "textPreview": "{\"service\":\"Kloud-industrial-backend-real\",\"status\":\"operational\",\"version\":\"1.0.0\",\"timestamp\":\"2025-10-17T15:06:52.022792+00:00\",\"instance_id\":\"91a1869b\",\"uptime_app_seconds\":760.715,\"system\":{\"cpu_percent\":1.7,\"memory_percent\":20.7,\"memory_total\":68490240000,\"disk_percent\":7.9,\"disk_total\":1999492870144,\"net_bytes_sent\":58263659,\"net_bytes_recv\":433829132,\"processes\":250,\"hostname\":\"DESKTOP-I68P1RI\",\"boot_time\":1760711210.3144574,\"uptime_seconds\":2401.708318710327},\"redis\":{\"status\":\"not_configured\"},\"database\":{\"status\":\"not_configured\"},\"environment\":\"production\"}",
       "error": null,
       "timestamp": "2025-10-17T15:06:51.908Z"
     },
@@ -1244,7 +1244,7 @@
         "database": {
           "status": "not_configured"
         },
-        "storage_dir": "C:\\Clisonix-cloud\\apps\\api\\storage",
+        "storage_dir": "C:\\Kloud-cloud\\apps\\api\\storage",
         "dependencies": {
           "psutil": true,
           "redis": false,
@@ -1253,7 +1253,7 @@
           "audio_librosa": true
         }
       },
-      "textPreview": "{\"timestamp\":\"2025-10-17T15:06:52.132479+00:00\",\"instance_id\":\"91a1869b\",\"status\":\"active\",\"uptime\":\"0h 40m\",\"memory\":{\"used\":13520,\"total\":65317},\"system\":{\"cpu_percent\":6.8,\"memory_percent\":20.7,\"memory_total\":68490240000,\"disk_percent\":7.9,\"disk_total\":1999492870144,\"net_bytes_sent\":58263659,\"net_bytes_recv\":433829132,\"processes\":250,\"hostname\":\"DESKTOP-I68P1RI\",\"boot_time\":1760711210.3144574,\"uptime_seconds\":2401.818002462387},\"redis\":{\"status\":\"not_configured\"},\"database\":{\"status\":\"not_configured\"},\"storage_dir\":\"C:\\\\Clisonix-cloud\\\\apps\\\\api\\\\storage\",\"dependencies\":{\"psutil\":true,\"redis\":false,\"postgres\":false,\"eeg_mne\":true,\"audio_librosa\":true}}",
+      "textPreview": "{\"timestamp\":\"2025-10-17T15:06:52.132479+00:00\",\"instance_id\":\"91a1869b\",\"status\":\"active\",\"uptime\":\"0h 40m\",\"memory\":{\"used\":13520,\"total\":65317},\"system\":{\"cpu_percent\":6.8,\"memory_percent\":20.7,\"memory_total\":68490240000,\"disk_percent\":7.9,\"disk_total\":1999492870144,\"net_bytes_sent\":58263659,\"net_bytes_recv\":433829132,\"processes\":250,\"hostname\":\"DESKTOP-I68P1RI\",\"boot_time\":1760711210.3144574,\"uptime_seconds\":2401.818002462387},\"redis\":{\"status\":\"not_configured\"},\"database\":{\"status\":\"not_configured\"},\"storage_dir\":\"C:\\\\Kloud-cloud\\\\apps\\\\api\\\\storage\",\"dependencies\":{\"psutil\":true,\"redis\":false,\"postgres\":false,\"eeg_mne\":true,\"audio_librosa\":true}}",
       "error": null,
       "timestamp": "2025-10-17T15:06:51.908Z"
     },
@@ -2039,4 +2039,5 @@
     }
   ]
 }
+
 

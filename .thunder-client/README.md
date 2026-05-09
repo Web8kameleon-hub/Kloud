@@ -1,4 +1,4 @@
-# Thunder Client Collection - Clisonix Cloud
+# Thunder Client Collection - Kloud Cloud
 
 ## ⚡ Si ta përdorësh
 
@@ -11,8 +11,8 @@
 
 ### 2. Zgjidh Environment
 
-- **Clisonix Production**: Server live (46.225.14.83:8000)
-- **Clisonix Local**: localhost:8000
+- **Kloud Production**: Server live (46.225.14.83:8000)
+- **Kloud Local**: localhost:8000
 
 ### 3. APIs të disponueshme
 
@@ -37,9 +37,10 @@
 Nëse dëshiron të importosh koleksionin e plotë Postman:
 
 1. Click "..." → Import
-2. Zgjidh `clisonix-ultra-mega-collection.json`
+2. Zgjidh `kloud-ultra-mega-collection.json`
 3. Thunder Client do ta konvertojë automatikisht
 
 ---
 
 **Falas. Pa limit. Direkt në VS Code.** 🚀
+

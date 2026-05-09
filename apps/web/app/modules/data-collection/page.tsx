@@ -277,7 +277,7 @@ export default function DataCollectionPage() {
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
             <Database className="h-7 w-7 text-orange-500" />
-            Clisonix API Collection
+            Kloud API Collection
           </h1>
           <p className="text-gray-400 mt-1">Real-time API monitoring • No mock data</p>
         </div>
@@ -591,6 +591,7 @@ export default function DataCollectionPage() {
     </div>
   )
 }
+
 
 
 

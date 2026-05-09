@@ -135,7 +135,7 @@ export default function UltraReportingDashboard() {
     setExporting(true);
     try {
       let endpoint = '';
-      let filename = `clisonix-report-${new Date().toISOString().split('T')[0]}`;
+      let filename = `kloud-report-${new Date().toISOString().split('T')[0]}`;
 
       if (format === 'xlsx') {
         endpoint = '/api/proxy/reporting-export-excel';
@@ -746,7 +746,7 @@ export default function UltraReportingDashboard() {
       {/* Footer */}
       <footer className="border-t border-gray-700/50 py-4 mt-8">
         <p className="text-center text-xs text-gray-500">
-          ULTRA Reporting Command Center - Clisonix Cloud Platform - Real-time Analytics
+          ULTRA Reporting Command Center - Kloud Cloud Platform - Real-time Analytics
         </p>
       </footer>
 
@@ -842,6 +842,7 @@ export default function UltraReportingDashboard() {
     </div>
   );
 }
+
 
 
 

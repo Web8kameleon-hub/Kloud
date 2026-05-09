@@ -23,7 +23,7 @@ export interface ConversionOptions {
 const ALLOWED_INPUT_DIRS = [
   path.resolve(process.cwd(), 'data'),
   path.resolve(process.cwd(), 'uploads'),
-  '/tmp/clisonix'
+  '/tmp/kloud'
 ];
 
 function isPathSafe(filePath: string, allowedDirs: string[]): boolean {
@@ -195,3 +195,4 @@ export class NeuroAcousticProcessor {
     });
   }
 }
+

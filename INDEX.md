@@ -1,4 +1,4 @@
-# 📚 Clisonix Cloud – Complete Artifact Index
+# 📚 Kloud Cloud – Complete Artifact Index
 
 ## Quick Links
 
@@ -8,10 +8,10 @@
 | API Specification (Human) | openapi.yaml | 📋 YAML | 48.75 KB |
 | API Specification (Tools) | openapi.json | 📋 JSON | 72.48 KB |
 | API Specification (Binary) | openapi.cbor | 📋 CBOR | 28.26 KB |
-| Postman Tests | clisonix-postman-collection.json | 🧪 Postman | 20.2 KB |
-| Postman Config | clisonix-environment-production.json | ⚙️ Config | ~2 KB |
-| Python SDK | clisonix_sdk.py | 🐍 Python | ~500 lines |
-| TypeScript SDK | clisonix_sdk.ts | 📘 TypeScript | ~430 lines |
+| Postman Tests | kloud-postman-collection.json | 🧪 Postman | 20.2 KB |
+| Postman Config | kloud-environment-production.json | ⚙️ Config | ~2 KB |
+| Python SDK | kloud_sdk.py | 🐍 Python | ~500 lines |
+| TypeScript SDK | kloud_sdk.ts | 📘 TypeScript | ~430 lines |
 | SDK Guide | SDK-README.md | 📖 Guide | 500+ lines |
 | Format Guide | OPENAPI-FORMATS-GUIDE.md | 📖 Guide | 200+ lines |
 | Impl Guide | OPENAPI-COMPLETE-GUIDE.md | 📖 Guide | 400+ lines |
@@ -46,7 +46,7 @@
 
 ### API Testing (Postman)
 
-#### `clisonix-postman-collection.json` (20.2 KB)
+#### `kloud-postman-collection.json` (20.2 KB)
 - **Format**: Postman Collection v2.1.0
 - **Endpoints**: 42 (grouped from 51 total)
 - **Organization**: 8 folders
@@ -64,10 +64,10 @@
 - **Import**: File → Import in Postman
 - **Status**: ✅ Ready for Testing
 
-#### `clisonix-environment-production.json` (~2 KB)
+#### `kloud-environment-production.json` (~2 KB)
 - **Format**: Postman Environment
 - **Variables**:
-  - `base_url`: https://api.clisonix.com
+  - `base_url`: https://api.kloud.com
   - `auth_token`: (empty, populate with JWT)
   - `stream_id`: demo-stream-001
   - `video_id`: dQw4w9WgXcQ
@@ -77,7 +77,7 @@
 
 ### Client SDKs
 
-#### `clisonix_sdk.py` (~500 lines)
+#### `kloud_sdk.py` (~500 lines)
 - **Language**: Python 3.7+
 - **Type**: Synchronous client (requests library)
 - **Type Hints**: Full type annotation support
@@ -91,7 +91,7 @@
   - Example usage included
 - **Status**: ✅ Production Ready
 
-#### `clisonix_sdk.ts` (~430 lines)
+#### `kloud_sdk.ts` (~430 lines)
 - **Language**: TypeScript 4.0+ (compiles to ES2020)
 - **Type**: Asynchronous client (Fetch API)
 - **Type Definitions**: Full TypeScript types
@@ -118,7 +118,7 @@
 #### `generate_postman.py`
 - **Purpose**: Generate Postman collection from openapi.json
 - **Usage**: `python generate_postman.py`
-- **Output**: Updates clisonix-postman-collection.json
+- **Output**: Updates kloud-postman-collection.json
 - **Features**: Auto-generates test scripts, auth headers
 - **When to Use**: After major API changes
 
@@ -191,8 +191,8 @@
    - Understand the API structure
 
 3. **Import to Postman** (5 min)
-   - File → Import → clisonix-postman-collection.json
-   - Add environment → clisonix-environment-production.json
+   - File → Import → kloud-postman-collection.json
+   - Add environment → kloud-environment-production.json
    - Select environment from dropdown
 
 4. **Test First Endpoint** (5 min)
@@ -202,7 +202,7 @@
 
 5. **Set Up Authentication** (5 min)
    - Get JWT token (from login endpoint or admin)
-   - Edit Clisonix Production environment
+   - Edit Kloud Production environment
    - Set auth_token variable
 
 6. **Read**: SDK-README.md (15 min)
@@ -210,7 +210,7 @@
    - Review example code
 
 7. **Integrate SDK** (varies)
-   - Copy clisonix_sdk.py or clisonix_sdk.ts to your project
+   - Copy kloud_sdk.py or kloud_sdk.ts to your project
    - Install dependencies (Python: requests only)
    - Initialize client and start coding
 
@@ -239,7 +239,7 @@
 1. **Review**: DELIVERY-SUMMARY.md → Deployment Checklist
 
 2. **Prepare Infrastructure**
-   - Deploy API to https://api.clisonix.com
+   - Deploy API to https://api.kloud.com
    - Configure SSL/TLS certificates
    - Set up load balancer if needed
 
@@ -270,10 +270,10 @@
 openapi.yaml (or .json / .cbor)
 ├── info: API metadata
 ├── servers: Deployment URLs
-│   ├── Production: https://api.clisonix.com
-│   ├── Staging: https://staging.clisonix.cloud
+│   ├── Production: https://api.kloud.com
+│   ├── Staging: https://staging.kloud.cloud
 │   ├── Development: http://localhost:8000
-│   └── Sandbox: https://sandbox.clisonix.cloud
+│   └── Sandbox: https://sandbox.kloud.cloud
 ├── components: Reusable schemas
 │   ├── securitySchemes: 3 auth methods
 │   └── schemas: 16+ data models
@@ -350,8 +350,8 @@ All errors include:
 | openapi.yaml | YAML | ✅ Valid syntax | Production Ready |
 | openapi.json | JSON | ✅ Valid syntax | Production Ready |
 | openapi.cbor | Binary | ✅ Valid RFC 7049 | Production Ready |
-| clisonix_sdk.py | Python | ✅ 0 errors, full types | Production Ready |
-| clisonix_sdk.ts | TypeScript | ✅ 0 errors, full types | Production Ready |
+| kloud_sdk.py | Python | ✅ 0 errors, full types | Production Ready |
+| kloud_sdk.ts | TypeScript | ✅ 0 errors, full types | Production Ready |
 | Postman Collection | v2.1.0 | ✅ Valid schema | Ready to Import |
 | Postman Env | JSON | ✅ Valid syntax | Ready to Import |
 
@@ -369,5 +369,6 @@ All errors include:
 ---
 
 **Last Updated**: 2024-01-15  
-**Organization**: UltraWebThinking / Euroweb / Clisonix  
+**Organization**: UltraWebThinking / Euroweb / Kloud  
 **Status**: ✅ Complete & Production Ready
+

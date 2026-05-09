@@ -1,7 +1,7 @@
 {
-  "name": "@clisonix/signal-gen-backend",
+  "name": "@kloud/signal-gen-backend",
   "version": "1.0.0",
-  "description": "Clisonix Industrial Backend - TypeScript Fastify Server",
+  "description": "Kloud Industrial Backend - TypeScript Fastify Server",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
@@ -23,3 +23,4 @@
     "tsx": "^4.1.0"
   }
 }
+

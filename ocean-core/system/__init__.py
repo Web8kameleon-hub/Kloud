@@ -1,7 +1,7 @@
 """
 SYSTEM PIPELINE
 ===============
-Health, Admin, Logs për Clisonix Cloud.
+Health, Admin, Logs për Kloud Cloud.
 """
 
 from .health import (
@@ -17,3 +17,4 @@ __all__ = [
     "AdminCommand",
     "get_system_pipeline",
 ]
+

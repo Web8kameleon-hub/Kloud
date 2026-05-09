@@ -1,7 +1,7 @@
 [
   {
-    "_id": "env_clisonix_prod",
-    "name": "Clisonix Production",
+    "_id": "env_kloud_prod",
+    "name": "Kloud Production",
     "default": true,
     "data": [
       {
@@ -39,8 +39,8 @@
     ]
   },
   {
-    "_id": "env_clisonix_local",
-    "name": "Clisonix Local",
+    "_id": "env_kloud_local",
+    "name": "Kloud Local",
     "default": false,
     "data": [
       {
@@ -78,3 +78,4 @@
     ]
   }
 ]
+

@@ -2,7 +2,7 @@
  * ASI Demo Page
  * =============
  * 
- * Interactive demonstration of the Clisonix ASI system
+ * Interactive demonstration of the Kloud ASI system
  * with Trinity architecture (Core-A, Core-B, Core-C)
  */
 
@@ -121,7 +121,7 @@ export default function ASIDemoPage() {
               ease: 'linear'
             }}
           >
-            🧠 Clisonix ASI
+            🧠 Kloud ASI
           </motion.h1>
           
           <motion.p 
@@ -318,13 +318,14 @@ export default function ASIDemoPage() {
             🔒 Sandbox enabled • ♻️ Strict ethics • 💝 Full protection
           </p>
           <p className="text-xs text-gray-600 pt-4">
-            Clisonix ASI Demo v2.1.0 • Built with 💜 using Zustand + Vanilla Extract + Framer Motion + CVA
+            Kloud ASI Demo v2.1.0 • Built with 💜 using Zustand + Vanilla Extract + Framer Motion + CVA
           </p>
         </motion.div>
       </div>
     </div>
   );
 }
+
 
 
 

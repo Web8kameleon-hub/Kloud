@@ -192,7 +192,7 @@ export default function MusicStudio() {
 
     const a = document.createElement('a');
     a.href = generatedFile;
-    a.download = `clisonix-music.${settings.format}`;
+    a.download = `kloud-music.${settings.format}`;
     a.click();
   };
 
@@ -673,3 +673,4 @@ export default function MusicStudio() {
     </div>
   );
 }
+

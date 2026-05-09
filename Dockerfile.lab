@@ -16,7 +16,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="Generic Laboratory Container for 23 City Labs"
 LABEL version="1.0.0"
 
@@ -46,7 +46,7 @@ COPY data_sources/ ./data_sources/
 COPY <<EOF /app/lab_service.py
 """
 Generic Laboratory Service - Configurable via Environment Variables
-Supports all 23 city-named laboratories in the Clisonix network.
+Supports all 23 city-named laboratories in the Kloud network.
 """
 
 import os
@@ -286,3 +286,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 # Run the service
 CMD ["python", "lab_service.py"]
+

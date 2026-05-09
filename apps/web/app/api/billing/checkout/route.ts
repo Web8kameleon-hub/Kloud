@@ -10,32 +10,32 @@ import Stripe from "stripe";
 const PLAN_PRICING = {
   starter_monthly: {
     amount: 2900,
-    name: "Clisonix Starter",
+    name: "Kloud Starter",
     interval: "month" as const,
   },
   starter_yearly: {
     amount: 29000,
-    name: "Clisonix Starter (Yearly)",
+    name: "Kloud Starter (Yearly)",
     interval: "year" as const,
   },
   professional_monthly: {
     amount: 9900,
-    name: "Clisonix Professional",
+    name: "Kloud Professional",
     interval: "month" as const,
   },
   professional_yearly: {
     amount: 99000,
-    name: "Clisonix Professional (Yearly)",
+    name: "Kloud Professional (Yearly)",
     interval: "year" as const,
   },
   enterprise_monthly: {
     amount: 29900,
-    name: "Clisonix Enterprise",
+    name: "Kloud Enterprise",
     interval: "month" as const,
   },
   enterprise_yearly: {
     amount: 299000,
-    name: "Clisonix Enterprise (Yearly)",
+    name: "Kloud Enterprise (Yearly)",
     interval: "year" as const,
   },
 };
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
 
     // Create or get a customer (required for Stripe Accounts V2 in test mode)
     // In production, you'd fetch the customer from your database
-    const customerEmail = process.env.USER_EMAIL || "customer@clisonix.com";
+    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
 
     // Search for existing customer
     const existingCustomers = await stripe.customers.list({
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       // Create new customer
       const customer = await stripe.customers.create({
         email: customerEmail,
-        name: process.env.USER_NAME || "Clisonix User",
+        name: process.env.USER_NAME || "Kloud User",
         metadata: {
           company: process.env.USER_COMPANY || "",
         },
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
             currency: "eur",
             product_data: {
               name: pricing.name,
-              description: `${planName || pricing.name} - Clisonix Cloud Platform`,
+              description: `${planName || pricing.name} - Kloud Cloud Platform`,
             },
             unit_amount: pricing.amount,
             recurring: {
@@ -151,4 +151,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
 

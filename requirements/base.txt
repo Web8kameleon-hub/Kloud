@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Base Requirements - Core Python
+# Kloud Base Requirements - Core Python
 # ═══════════════════════════════════════════════════════════════
 # NO heavy dependencies here - minimal footprint
 
@@ -21,3 +21,4 @@ structlog>=24.4.0
 orjson>=3.10.0
 msgpack>=1.1.0
 cbor2>=5.6.5
+

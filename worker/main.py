@@ -1,5 +1,5 @@
-# Closed Source License - clisonix Cloud
-# Copyright (c) clisonix. All rights reserved.
+# Closed Source License - kloud Cloud
+# Copyright (c) kloud. All rights reserved.
 
 import time
 import logging
@@ -14,4 +14,5 @@ def run_worker():
 
 if __name__ == "__main__":
     run_worker()
+
 

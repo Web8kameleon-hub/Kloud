@@ -1,5 +1,5 @@
 /**
- * CLISONIX NANOGRIDATA PROTOCOL v1.0
+ * KLOUD NANOGRIDATA PROTOCOL v1.0
  * 
  * Unike + Hibride + Stabilne
  * 
@@ -45,7 +45,7 @@ enum SecurityLevel {
  * Nanogridata Frame Header (8-18 bytes)
  * 
  * Struktura:
- * - Magic (2 bytes): 0xC1 0x53 (Clisonix Signature)
+ * - Magic (2 bytes): 0xC1 0x53 (Kloud Signature)
  * - Version (1 byte): 0x01
  * - Model ID (1 byte): Identifikon chip-in/laboratorin
  * - Payload Type (1 byte): Telemetry, Config, Event, etc.
@@ -561,7 +561,7 @@ class ProfileRegistry {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function demonstrateNanogridata(): void {
-  console.log('\n🧬 CLISONIX NANOGRIDATA PROTOCOL v1.0 - DEMONSTRATION\n');
+  console.log('\n🧬 KLOUD NANOGRIDATA PROTOCOL v1.0 - DEMONSTRATION\n');
 
   const sharedSecret = randomBytes(32);
   const encoder = new NanogridataEncoder(sharedSecret);
@@ -711,3 +711,4 @@ export type {
 if (require.main === module) {
   demonstrateNanogridata();
 }
+

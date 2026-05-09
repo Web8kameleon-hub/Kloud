@@ -1,7 +1,7 @@
 # ============================================================================
 # CONTEXT BUILDER - Builds Context from Internal Sources
 # ============================================================================
-# Assembles context for reasoning from all Clisonix data sources
+# Assembles context for reasoning from all Kloud data sources
 # NO external APIs - pure internal data aggregation
 # ============================================================================
 
@@ -99,7 +99,7 @@ class SourceInfo:
 
 class ContextBuilder:
     """
-    Builds context frames from internal Clisonix data sources
+    Builds context frames from internal Kloud data sources
     
     Responsibilities:
     - Load and cache data source information
@@ -430,3 +430,4 @@ def get_builder() -> ContextBuilder:
     if _builder_instance is None:
         _builder_instance = ContextBuilder()
     return _builder_instance
+

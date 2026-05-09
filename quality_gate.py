@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLISONIX QUALITY GATE
+KLOUD QUALITY GATE
 ======================
 
 Quality control for content before publishing.
@@ -41,13 +41,13 @@ class QualityReport:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 FAKE_IMPORT_PATTERNS = [
-    # Fake Clisonix imports that don't exist
-    r"from clisonix\.alda import",
-    r"from clisonix\.liam import",
-    r"from clisonix\.blerina import",
-    r"from clisonix_sdk import",
-    r"import clisonix\.neural",
-    r"import clisonix\.mesh",
+    # Fake Kloud imports that don't exist
+    r"from kloud\.alda import",
+    r"from kloud\.liam import",
+    r"from kloud\.blerina import",
+    r"from kloud_sdk import",
+    r"import kloud\.neural",
+    r"import kloud\.mesh",
     
     # Fake libraries
     r"from neural_mesh import",
@@ -104,7 +104,7 @@ REAL_CODE_INDICATORS = [
 
 class QualityGate:
     """
-    Quality gate for Clisonix content.
+    Quality gate for Kloud content.
     
     Validates:
     1. No fake imports
@@ -361,7 +361,7 @@ if __name__ == "__main__":
     # AI Example
     
     ```python
-    from clisonix.alda import LaborArray
+    from kloud.alda import LaborArray
     
     result = 42  # example
     ```
@@ -378,3 +378,4 @@ if __name__ == "__main__":
     print("  Issues:")
     for issue in report.issues:
         print(f"    - {issue}")
+

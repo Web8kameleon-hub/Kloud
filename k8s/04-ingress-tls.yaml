@@ -7,10 +7,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clisonix-ingress
-  namespace: clisonix
+  name: kloud-ingress
+  namespace: kloud
   labels:
-    app: clisonix
+    app: kloud
   annotations:
     # Nginx annotations
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -41,57 +41,57 @@ spec:
   
   tls:
     - hosts:
-        - clisonix.com
-        - api.clisonix.com
-        - app.clisonix.com
-      secretName: clisonix-tls-cert
+        - kloud.com
+        - api.kloud.com
+        - app.kloud.com
+      secretName: kloud-tls-cert
   
   rules:
     # API routes
-    - host: api.clisonix.com
+    - host: api.kloud.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: clisonix-api-service
+                name: kloud-api-service
                 port:
                   number: 8000
     
     # Frontend routes
-    - host: app.clisonix.com
+    - host: app.kloud.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: clisonix-frontend-service
+                name: kloud-frontend-service
                 port:
                   number: 3000
     
     # Main domain - serve frontend
-    - host: clisonix.com
+    - host: kloud.com
       http:
         paths:
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: clisonix-api-service
+                name: kloud-api-service
                 port:
                   number: 8000
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: clisonix-frontend-service
+                name: kloud-frontend-service
                 port:
                   number: 3000
     
     # Metrics endpoint
-    - host: metrics.clisonix.com
+    - host: metrics.kloud.com
       http:
         paths:
           - path: /
@@ -111,7 +111,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@clisonix.com
+    email: admin@kloud.com
     privateKeySecretRef:
       name: letsencrypt-prod-key
     solvers:
@@ -128,7 +128,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: admin@clisonix.com
+    email: admin@kloud.com
     privateKeySecretRef:
       name: letsencrypt-staging-key
     solvers:
@@ -141,19 +141,19 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: clisonix-cert
-  namespace: clisonix
+  name: kloud-cert
+  namespace: kloud
 spec:
-  secretName: clisonix-tls-cert
+  secretName: kloud-tls-cert
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - clisonix.com
-    - "*.clisonix.com"
-    - api.clisonix.com
-    - app.clisonix.com
-    - metrics.clisonix.com
+    - kloud.com
+    - "*.kloud.com"
+    - api.kloud.com
+    - app.kloud.com
+    - metrics.kloud.com
 
 ---
 # Backend Configuration for API with timeouts
@@ -161,17 +161,17 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-config
-  namespace: clisonix
+  namespace: kloud
 data:
   api-config.conf: |
     upstream api_backend {
       least_conn;
-      server clisonix-api-service:8000;
+      server kloud-api-service:8000;
       keepalive 32;
     }
     
     upstream frontend_backend {
-      server clisonix-frontend-service:3000;
+      server kloud-frontend-service:3000;
       keepalive 32;
     }
     
@@ -182,8 +182,8 @@ data:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: clisonix-gateway
-  namespace: clisonix
+  name: kloud-gateway
+  namespace: kloud
 spec:
   gatewayClassName: nginx
   listeners:
@@ -199,7 +199,7 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: clisonix-tls-cert
+          - name: kloud-tls-cert
       allowedRoutes:
         namespaces:
           from: Same
@@ -210,19 +210,19 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: api-route
-  namespace: clisonix
+  namespace: kloud
 spec:
   parentRefs:
-    - name: clisonix-gateway
+    - name: kloud-gateway
   hostnames:
-    - "api.clisonix.com"
+    - "api.kloud.com"
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /api
       backendRefs:
-        - name: clisonix-api-service
+        - name: kloud-api-service
           port: 8000
       timeouts:
         request: 30s
@@ -234,18 +234,19 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: frontend-route
-  namespace: clisonix
+  namespace: kloud
 spec:
   parentRefs:
-    - name: clisonix-gateway
+    - name: kloud-gateway
   hostnames:
-    - "app.clisonix.com"
+    - "app.kloud.com"
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: clisonix-frontend-service
+        - name: kloud-frontend-service
           port: 3000
+
 

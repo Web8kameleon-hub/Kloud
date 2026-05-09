@@ -99,7 +99,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white text-xl mb-4">🧠 Initializing Clisonix Cloud...</div>
+          <div className="text-white text-xl mb-4">🧠 Initializing Kloud Cloud...</div>
           <div className="text-gray-400">Loading industrial-grade neuroacoustic processing...</div>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-12 bg-white/10 rounded-2xl p-8 border border-white/20">
           <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-cyan-400 via-violet-400 to-emerald-400 bg-clip-text text-transparent">
-            🧠 Clisonix Cloud Platform
+            🧠 Kloud Cloud Platform
           </h1>
           <p className="text-xl text-gray-300 mb-4">
             Industrial-grade Neuroacoustic Processing & EEG Analysis
@@ -287,7 +287,7 @@ export default function Home() {
             
             <a href="/grafana/" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 hover:from-emerald-500/30 hover:to-green-500/30 rounded-lg p-4 text-white font-medium transition-all duration-300 border border-emerald-500/30">
               <div className="text-lg">📊 Grafana Dashboards</div>
-              <div className="text-sm text-gray-300">Real-time monitoring (admin/clisonix2025)</div>
+              <div className="text-sm text-gray-300">Real-time monitoring (admin/kloud2025)</div>
             </a>
 
             <a href="/prometheus/" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 rounded-lg p-4 text-white font-medium transition-all duration-300 border border-orange-500/30">
@@ -398,5 +398,6 @@ export default function Home() {
     </div>
   )
 }
+
 
 

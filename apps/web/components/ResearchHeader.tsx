@@ -6,7 +6,7 @@ interface ResearchHeaderProps {
 }
 
 export default function ResearchHeader({ 
-  title = 'Clisonix Cloud Research Series',
+  title = 'Kloud Cloud Research Series',
   author = 'Ledjan Ahmati'
 }: ResearchHeaderProps) {
   return (
@@ -31,3 +31,4 @@ export default function ResearchHeader({
     </div>
   );
 }
+

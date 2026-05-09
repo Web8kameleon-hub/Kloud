@@ -151,7 +151,7 @@ Frame Format:              │ - Health         │
 ## 📁 File Structure
 
 ```
-c:\Users\Admin\Desktop\Clisonix-cloud\
+c:\Users\Admin\Desktop\Kloud-cloud\
 
 CORE IMPLEMENTATIONS:
 ├── nanogridata_protocol_v1.ts          (600+ lines, TypeScript)
@@ -183,7 +183,7 @@ DOCUMENTATION:
 
 ```bash
 # 1. Navigate to project
-cd c:\Users\Admin\Desktop\Clisonix-cloud
+cd c:\Users\Admin\Desktop\Kloud-cloud
 
 # 2. Make deployment script executable
 chmod +x deploy_nanogridata.sh
@@ -237,7 +237,7 @@ curl http://localhost:5679/stats
 | fa48612 | System architecture | 403 lines added |
 | **TOTAL** | **6 commits, 4379 lines added** | **Ready for production** |
 
-All commits pushed to: `https://github.com/LedjanAhmati/Clisonix-cloud`
+All commits pushed to: `https://github.com/LedjanAhmati/Kloud-cloud`
 
 ---
 
@@ -323,3 +323,4 @@ All commits pushed to: `https://github.com/LedjanAhmati/Clisonix-cloud`
 **Ready**: YES ✅
 
 Let's deploy! 🚀
+

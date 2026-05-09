@@ -1,8 +1,8 @@
-﻿# Clisonix Cloud Industrial Backend - .gitignore
+# Kloud Cloud Industrial Backend - .gitignore
 # SECURITY: Never commit sensitive data!
 
 # Embedded Git Repositories (causes CI submodule issues)
-clisonix-repo/
+kloud-repo/
 research/generated_cycles_v12/grafana-ml-ecosystem/
 
 # Environment Variables (SENSITIVE DATA)
@@ -100,7 +100,7 @@ Thumbs.db
 # Test data (may contain sensitive info)
 
 # Auto-generated content (flows to separate blog repo)
-# Koncepti "batica-zbatica" - content flows OUT to clisonix-blog repo
+# Koncepti "batica-zbatica" - content flows OUT to kloud-blog repo
 published/
 **/published/
 services/content-factory/published/
@@ -176,8 +176,8 @@ temp/
 # Session reports (local testing)
 session_report_*.json
 
-# Clisonix nested repo
-Clisonix-cloud/
+# Kloud nested repo
+Kloud-cloud/
 
 # Build artifacts to ignore
 frontend/.next/
@@ -193,4 +193,5 @@ tmpclaude-*
 
 # Claude temporary directories
 tmpclaude-*
+
 

@@ -1,5 +1,5 @@
 """
-Clisonix Authentication Dependencies
+Kloud Authentication Dependencies
 
 JWT authentication, API keys, subscription plans, and Redis session management.
 Author: Ledjan Ahmati
@@ -50,7 +50,7 @@ security = HTTPBearer()
 # ---------------------------------------------------------------------------
 
 def _get_jwt_secret() -> str:
-    # expecting settings.secret_key (clisonix/Clisonix style)
+    # expecting settings.secret_key (kloud/Kloud style)
     return settings.secret_key
 
 
@@ -499,5 +499,6 @@ __all__ = [
     "check_feature_access",
     "require_feature",
 ]
+
 
 

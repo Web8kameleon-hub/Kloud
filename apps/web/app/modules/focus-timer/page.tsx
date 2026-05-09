@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
 /**
- * FOCUS TIMER (Pomodoro) - Clisonix Productivity Science Module
+ * FOCUS TIMER (Pomodoro) - Kloud Productivity Science Module
  * 
  * Frontend: Beautiful timer, one-tap start, ambient sounds
  * Backend: Focus pattern analysis, optimal work/break ratios, productivity curves
@@ -71,7 +71,7 @@ export default function FocusTimerPage() {
 
   useEffect(() => {
     // Load saved data
-    const stored = localStorage.getItem('clisonix_focus_sessions');
+    const stored = localStorage.getItem('kloud_focus_sessions');
     if (stored) {
       const parsed = JSON.parse(stored);
       setSessions(parsed);
@@ -147,7 +147,7 @@ export default function FocusTimerPage() {
 
     const newSessions = [...sessions, newSession];
     setSessions(newSessions);
-    localStorage.setItem('clisonix_focus_sessions', JSON.stringify(newSessions));
+    localStorage.setItem('kloud_focus_sessions', JSON.stringify(newSessions));
 
     setIsRunning(true);
     setIsPaused(false);
@@ -173,10 +173,10 @@ export default function FocusTimerPage() {
   };
 
   const getDeviceId = () => {
-    let id = localStorage.getItem('clisonix_device_id');
+    let id = localStorage.getItem('kloud_device_id');
     if (!id) {
       id = 'dev_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('clisonix_device_id', id);
+      localStorage.setItem('kloud_device_id', id);
     }
     return id;
   };
@@ -202,7 +202,7 @@ export default function FocusTimerPage() {
           : s
       );
       setSessions(updatedSessions);
-      localStorage.setItem('clisonix_focus_sessions', JSON.stringify(updatedSessions));
+      localStorage.setItem('kloud_focus_sessions', JSON.stringify(updatedSessions));
       calculateStats(updatedSessions);
 
       const session = updatedSessions.find(s => s.id === currentSessionId);
@@ -620,6 +620,7 @@ export default function FocusTimerPage() {
     </div>
   );
 }
+
 
 
 

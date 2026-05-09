@@ -1,5 +1,5 @@
 """
-CLISONIX CLOUD - COMPREHENSIVE TEST SUITE
+KLOUD CLOUD - COMPREHENSIVE TEST SUITE
 Tests all components integration and functionality
 """
 
@@ -55,7 +55,7 @@ class TestAPIHealth:
         response = requests.get(f"{api_base_url}/health")
         assert response.status_code == 200
         data = response.json()
-        assert data["service"] == "Clisonix-industrial-backend-real"
+        assert data["service"] == "Kloud-industrial-backend-real"
         assert data["status"] == "operational"
     
     def test_api_status(self, api_base_url):
@@ -304,4 +304,5 @@ class TestErrorHandling:
 if __name__ == "__main__":
     # Run with: pytest tests_comprehensive.py -v --tb=short
     pytest.main([__file__, "-v", "--tb=short", "-s"])
+
 

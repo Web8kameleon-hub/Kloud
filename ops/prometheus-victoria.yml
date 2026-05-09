@@ -2,7 +2,7 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: 'clisonix-prod'
+    cluster: 'kloud-prod'
     environment: 'production'
 
 # Alert manager for notifications
@@ -25,7 +25,7 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   # ============================================================================
-  # CLISONIX BACKEND API
+  # KLOUD BACKEND API
   # ============================================================================
   - job_name: 'api'
     static_configs:
@@ -124,4 +124,5 @@ remote_write:
       max_samples_per_send: 500
       min_backoff: 30ms
       max_backoff: 100ms
+
 

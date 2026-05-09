@@ -1,4 +1,4 @@
-/* CLISONIX HOME - Vanilla CSS + Motion */
+/* KLOUD HOME - Vanilla CSS + Motion */
 
 .container {
   min-height: 100vh;
@@ -419,3 +419,4 @@
   .heroButtons { flex-direction: column; align-items: center; }
   .primaryBtn, .secondaryBtn { width: 100%; max-width: 300px; justify-content: center; }
 }
+

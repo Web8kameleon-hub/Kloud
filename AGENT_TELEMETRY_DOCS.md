@@ -427,7 +427,7 @@ asi_status = router.get_asi_status()
 from agent_telemetry import init_telemetry
 
 router = init_telemetry(
-    base_url="https://production.clisonix.com",
+    base_url="https://production.kloud.com",
     alba_port=5050,
     albi_port=6060,
     jona_port=7070,
@@ -612,3 +612,4 @@ def analyze_system():
 ---
 
 **Happy Telemetry! 📡✨**
+

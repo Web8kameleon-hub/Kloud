@@ -1,5 +1,5 @@
 /**
- * Clisonix Optimized Image Component
+ * Kloud Optimized Image Component
  * ===================================
  * 
  * Features:
@@ -333,3 +333,4 @@ export function ImageGallery({
 
 
 export default OptimizedImage;
+

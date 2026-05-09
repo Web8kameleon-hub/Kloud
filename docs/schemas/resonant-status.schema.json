@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://clisonix.com/schemas/resonant-status.schema.json",
+  "$id": "https://kloud.com/schemas/resonant-status.schema.json",
   "title": "ResonantStatusResponse",
   "type": "object",
   "required": [
@@ -62,3 +62,4 @@
     }
   }
 }
+

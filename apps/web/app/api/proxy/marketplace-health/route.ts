@@ -6,7 +6,7 @@ const MARKETPLACE_API = process.env.MARKETPLACE_API_URL || null;
 const isDev = process.env.NODE_ENV === "development";
 const API_INTERNAL =
   process.env.API_INTERNAL_URL ||
-  (isDev ? "http://localhost:8000" : "http://clisonix-api:8000");
+  (isDev ? "http://localhost:8000" : "http://kloud-api:8000");
 
 export async function GET() {
   // If Marketplace microservice is configured, check it directly
@@ -69,3 +69,4 @@ export async function GET() {
     );
   }
 }
+

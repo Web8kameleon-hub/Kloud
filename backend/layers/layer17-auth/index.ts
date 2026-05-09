@@ -12,7 +12,7 @@ import { Request, Response, NextFunction } from "express";
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const JWT_SECRET =
-  process.env.JWT_SECRET || "clisonix-super-secret-key-change-in-production";
+  process.env.JWT_SECRET || "kloud-super-secret-key-change-in-production";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "24h";
 const SALT_ROUNDS = 12;
 
@@ -141,7 +141,7 @@ export const optionalAuth = (
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const API_KEYS = new Map<string, { name: string; role: UserRole }>([
-  ["clisonix-api-key-1", { name: "Default API", role: "api" }],
+  ["kloud-api-key-1", { name: "Default API", role: "api" }],
 ]);
 
 export const apiKeyAuth = (
@@ -162,7 +162,7 @@ export const apiKeyAuth = (
 
   req.user = {
     userId: "api",
-    email: `${keyData.name}@api.clisonix.com`,
+    email: `${keyData.name}@api.kloud.com`,
     role: keyData.role,
   };
 
@@ -177,3 +177,4 @@ export default {
   optionalAuth,
   apiKeyAuth,
 };
+

@@ -23,13 +23,13 @@ def generate_pdf_report():
         raise ImportError("reportlab not installed. Install with: pip install reportlab")
     
     REPORTS.mkdir(exist_ok=True)
-    report_name = f"clisonix_report_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
+    report_name = f"kloud_report_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
     report_path = REPORTS / report_name
     c = canvas.Canvas(str(report_path), pagesize=A4)
     width, height = A4
 
     c.setFont("Helvetica-Bold", 14)
-    c.drawString(50, height - 50, "Clisonix System Report")
+    c.drawString(50, height - 50, "Kloud System Report")
     c.setFont("Helvetica", 10)
     c.drawString(50, height - 70, f"Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
@@ -70,4 +70,5 @@ def generate_pdf_report():
 
     c.save()
     return report_path
+
 

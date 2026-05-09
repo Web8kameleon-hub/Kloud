@@ -37,12 +37,12 @@ node --version  # Must be 18+
 docker --version
 
 # Check existing services running
-docker ps --filter "label=project=clisonix"
+docker ps --filter "label=project=kloud"
 ```
 
 ### 2. Deploy Gateway
 ```bash
-cd /opt/clisonix-cloud
+cd /opt/kloud-cloud
 
 # Make deployment script executable
 chmod +x deploy_nanogridata.sh
@@ -114,7 +114,7 @@ docker-compose -f docker-compose.nanogridata.yml down
 
 ```bash
 # Build Docker image
-docker build -f Dockerfile.nanogridata -t clisonix/nanogridata-gateway:latest .
+docker build -f Dockerfile.nanogridata -t kloud/nanogridata-gateway:latest .
 
 # Run container
 docker run -d \
@@ -124,8 +124,8 @@ docker run -d \
   -e NANOGRIDATA_ESP32_SECRET=<hex-secret> \
   -e NANOGRIDATA_STM32_SECRET=<hex-secret> \
   -e ALBA_ENDPOINT=http://alba:5555 \
-  --network clisonix \
-  clisonix/nanogridata-gateway:latest
+  --network kloud \
+  kloud/nanogridata-gateway:latest
 
 # View logs
 docker logs -f nanogridata-gateway
@@ -403,7 +403,7 @@ docker-compose -f docker-compose.nanogridata.yml up -d
 docker-compose logs -f alba | grep nanogridata
 
 # 4. Verify data in InfluxDB
-curl "http://localhost:8086/api/v1/query?org=clisonix&query=..."
+curl "http://localhost:8086/api/v1/query?org=kloud&query=..."
 ```
 
 ---
@@ -458,7 +458,7 @@ curl http://localhost:5679/stats > stats_$(date +%Y%m).json
 1. Check logs: `docker-compose logs nanogridata-gateway`
 2. Verify endpoints: `curl http://localhost:5679/health`
 3. Review configuration: `docker exec nanogridata-gateway env | grep NANO`
-4. Check GitHub issues: https://github.com/LedjanAhmati/Clisonix-cloud/issues
+4. Check GitHub issues: https://github.com/LedjanAhmati/Kloud-cloud/issues
 
 **Documentation**:
 - Protocol spec: `NANOGRIDATA_PRODUCTION_GUIDE.md`
@@ -487,3 +487,4 @@ curl http://localhost:5679/stats > stats_$(date +%Y%m).json
 
 Commit: `b4fa87f`  
 Last Update: 2026-01-17
+

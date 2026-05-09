@@ -1,5 +1,5 @@
 """
-Cognitive architecture integration for the Clisonix backend.
+Cognitive architecture integration for the Kloud backend.
 
 This module connects the ALBI layer with the lower-level BrainAnalyzer to
 provide consistent health and metric snapshots that can be exposed through
@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from app.Clisonix.brain_analyzer import BrainAnalyzer
+from app.Kloud.brain_analyzer import BrainAnalyzer
 
 
 class CognitiveArchitecture:
@@ -33,4 +33,5 @@ class CognitiveArchitecture:
     async def get_uptime_seconds(self) -> float:
         """Return the analyzer uptime in seconds."""
         return (datetime.utcnow() - self.analyzer.start_time).total_seconds()
+
 

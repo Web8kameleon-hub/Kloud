@@ -1,6 +1,6 @@
 """
-Clisonix Cloud API - Minimal Production Version
-Production-ready FastAPI backend for Clisonix Cloud
+Kloud Cloud API - Minimal Production Version
+Production-ready FastAPI backend for Kloud Cloud
 """
 
 from fastapi import FastAPI, HTTPException
@@ -15,12 +15,12 @@ import socket
 # ============ HEALTH CHECK ============
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 Clisonix API Starting...")
+    print("🚀 Kloud API Starting...")
     yield
-    print("⛔ Clisonix API Shutting down...")
+    print("⛔ Kloud API Shutting down...")
 
 app = FastAPI(
-    title="Clisonix Cloud API",
+    title="Kloud Cloud API",
     description="Industrial AI Cloud Platform",
     version="1.0.0",
     lifespan=lifespan
@@ -39,13 +39,13 @@ app.add_middleware(
 @app.get("/health")
 async def health():
     """Basic health check - used by Kubernetes"""
-    return {"status": "healthy", "service": "clisonix-api"}
+    return {"status": "healthy", "service": "kloud-api"}
 
 @app.get("/status")
 async def status():
     """Comprehensive system status"""
     return {
-        "service": "clisonix-api",
+        "service": "kloud-api",
         "status": "operational",
         "timestamp": datetime.utcnow().isoformat(),
         "version": "1.0.0",
@@ -75,8 +75,8 @@ async def asi_status():
 async def root():
     """API root endpoint"""
     return {
-        "message": "Clisonix Cloud API",
-        "service": "clisonix-api",
+        "message": "Kloud Cloud API",
+        "service": "kloud-api",
         "version": "1.0.0",
         "status": "operational",
         "timestamp": datetime.utcnow().isoformat()
@@ -99,3 +99,4 @@ if __name__ == "__main__":
         reload=False,
         workers=1
     )
+

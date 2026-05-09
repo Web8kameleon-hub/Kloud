@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Stream Frame
+# Kloud Binary Schema - Stream Frame
 # Version: 1.0
 # Magic: CLSN
 
@@ -44,3 +44,4 @@ fields:
     type: bytes
     length_field: payload_len
     description: "Stream payload data"
+

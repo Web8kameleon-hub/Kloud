@@ -7,7 +7,7 @@ from datetime import datetime
 class CycleASIIntegration:
     """Lidhe Cycle Engine me ASI API dhe agents"""
     
-    def __init__(self, api_url: str = "http://clisonix-api:8000"):
+    def __init__(self, api_url: str = "http://kloud-api:8000"):
         self.api_url = api_url
     
     async def link_agents_to_cycle(self, cycle_id: str, agents: List[str]) -> bool:
@@ -92,3 +92,4 @@ async def setup_production_cycle():
 if __name__ == "__main__":
     result = asyncio.run(setup_production_cycle())
     print(f"Integration status: {'✓ OK' if result else '❌ Failed'}")
+

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Music Studio - Clisonix',
+	title: 'Music Studio - Kloud',
 	description: 'Create music with do-re-mi notes, sine waveform and WAV export.',
 	appleWebApp: {
 		capable: true,
@@ -13,3 +13,4 @@ export const metadata: Metadata = {
 export default function MusicStudioLayout({ children }: { children: React.ReactNode }) {
 	return <>{children}</>;
 }
+

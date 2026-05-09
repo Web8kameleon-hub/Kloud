@@ -1,7 +1,7 @@
 {
-  "name": "@clisonix/ui",
+  "name": "@kloud/ui",
   "version": "1.0.0",
-  "description": "Shared UI components for clisonix platform",
+  "description": "Shared UI components for kloud platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@clisonix/shared": "1.0.0",
+    "@kloud/shared": "1.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
@@ -25,3 +25,4 @@
     "react-dom": "^18.0.0"
   }
 }
+

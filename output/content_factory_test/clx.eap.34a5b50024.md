@@ -1,6 +1,6 @@
 # EU AI Act: Identity Sovereignty at Risk
 
-*Published by Clisonix Cloud | 2026-02-06*
+*Published by Kloud Cloud | 2026-02-06*
 
 **Tags:** `critical`, `eu`, `identity`, `structural`, `ai-act`, `sovereignty`
 
@@ -93,3 +93,4 @@ A new governance paradigm that addresses Structural void in AI identity governan
 ---
 
 *Document ID: `clx.eap.34a5b50024` | Version: 1.0*
+

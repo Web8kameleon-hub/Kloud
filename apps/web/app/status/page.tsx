@@ -77,7 +77,7 @@ export default function StatusPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/platform" className="text-gray-400 hover:text-white transition-colors">Platform</Link>
@@ -207,13 +207,13 @@ export default function StatusPage() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link
-              href="https://twitter.com/clisonix"
+              href="https://twitter.com/kloud"
               className="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors"
             >
               🐦 Twitter Updates
             </Link>
             <Link
-              href="mailto:support@clisonix.com?subject=Status%20Updates%20Subscription"
+              href="mailto:support@kloud.com?subject=Status%20Updates%20Subscription"
               className="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors"
             >
               📧 Email Alerts
@@ -225,7 +225,7 @@ export default function StatusPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/security" className="hover:text-violet-400 ml-2">Security</Link> | 
           <Link href="/platform" className="hover:text-violet-400 ml-2">Platform</Link> | 
           <Link href="/company" className="hover:text-violet-400 ml-2">Company</Link>
@@ -234,6 +234,7 @@ export default function StatusPage() {
     </div>
   );
 }
+
 
 
 

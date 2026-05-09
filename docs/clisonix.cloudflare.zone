@@ -1,6 +1,6 @@
 ; Cloudflare-optimized zone file for easy import
 ; Remove SOA/NS - Cloudflare manages those itself on import
-$ORIGIN clisonix.com.
+$ORIGIN kloud.com.
 $TTL 3600
 
 ; --- IPv4 Records ---
@@ -19,18 +19,19 @@ system      IN  A   76.76.21.21
 neuro       IN  A   76.76.21.21
 
 ; --- Mail Exchange ---
-@           IN  MX 10 mail.clisonix.com.
+@           IN  MX 10 mail.kloud.com.
 
 ; --- TXT & Security ---
 @           IN  TXT "v=spf1 include:_spf.google.com ~all"
-_dmarc      IN  TXT "v=DMARC1; p=none; rua=mailto:postmaster@clisonix.com"
+_dmarc      IN  TXT "v=DMARC1; p=none; rua=mailto:postmaster@kloud.com"
 selector1._domainkey IN TXT "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCt7"
 
 ; --- CAA (SSL Certificate Authority Authorization) ---
 @           IN  CAA 0 issue "letsencrypt.org"
 @           IN  CAA 0 issuewild "letsencrypt.org"
-@           IN  CAA 0 iodef "mailto:admin@clisonix.com"
+@           IN  CAA 0 iodef "mailto:admin@kloud.com"
 
 ; Notes:
 ; - Import this file into Cloudflare (DNS → Import) and then toggle which A records you want proxied (orange cloud).
 ; - Cloudflare will set its own SOA/NS values after import. Do not try to import SOA/NS here.
+

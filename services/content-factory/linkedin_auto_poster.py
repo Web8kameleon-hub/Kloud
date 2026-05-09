@@ -30,8 +30,8 @@ logger = logging.getLogger('linkedin_auto_poster')
 LINKEDIN_ACCESS_TOKEN = os.getenv('LINKEDIN_ACCESS_TOKEN')
 LINKEDIN_PERSON_URN = os.getenv('LINKEDIN_PERSON_URN', 'urn:li:person:5KOBp94BOT')
 POSTED_ARTICLES_FILE = Path('/app/data/posted_articles.json')
-BLOG_URL = os.getenv('BLOG_URL', 'https://ledjanahmati.github.io/clisonix-blog/')
-SITE_URL = os.getenv('SITE_URL', 'https://clisonix.com')
+BLOG_URL = os.getenv('BLOG_URL', 'https://ledjanahmati.github.io/kloud-blog/')
+SITE_URL = os.getenv('SITE_URL', 'https://kloud.com')
 
 # Ensure data directory exists
 POSTED_ARTICLES_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -72,7 +72,7 @@ def generate_post_text(article: dict) -> str:
     # Build hashtags from tags
     hashtags = ' '.join([f'#{tag.replace(" ", "")}' for tag in tags[:5]])
     if not hashtags:
-        hashtags = '#AI #CloudComputing #EEG #IndustrialAI #Clisonix'
+        hashtags = '#AI #CloudComputing #EEG #IndustrialAI #Kloud'
     
     # Generate post text
     post_text = f"""🚀 New Article: {title}
@@ -83,7 +83,7 @@ def generate_post_text(article: dict) -> str:
 
 {hashtags}
 
-#Clisonix #TechInnovation"""
+#Kloud #TechInnovation"""
     
     return post_text
 
@@ -153,7 +153,7 @@ def fetch_blog_articles() -> list:
             for url_path, date, slug, title in matches:
                 # Clean up title
                 title = title.strip()
-                if not title or title == 'Clisonix Blog':
+                if not title or title == 'Kloud Blog':
                     continue
                 
                 full_url = f"{BLOG_URL.rstrip('/')}/{url_path}"
@@ -190,7 +190,7 @@ def extract_tags_from_title(title: str) -> list:
         'Industrial': 'IndustrialAI', 'Sustainable': 'Sustainability'
     }
     
-    tags = ['Clisonix']
+    tags = ['Kloud']
     for keyword, tag in keywords.items():
         if keyword.lower() in title.lower():
             tags.append(tag)
@@ -310,7 +310,7 @@ def create_app():
     
     app = FastAPI(
         title="LinkedIn Auto Poster",
-        description="Automated LinkedIn posting service for Clisonix blog articles",
+        description="Automated LinkedIn posting service for Kloud blog articles",
         version="1.0.0"
     )
     
@@ -383,7 +383,7 @@ if __name__ == "__main__":
             print(json.dumps(result, indent=2))
         elif sys.argv[1] == "test":
             # Test posting
-            result = post_custom_content("🧪 Test post from Clisonix LinkedIn Auto Poster!")
+            result = post_custom_content("🧪 Test post from Kloud LinkedIn Auto Poster!")
             print(json.dumps(result, indent=2))
         elif sys.argv[1] == "serve":
             # Run as API server
@@ -392,3 +392,4 @@ if __name__ == "__main__":
             uvicorn.run(app, host="0.0.0.0", port=8007)
     else:
         print("Usage: python linkedin_auto_poster.py [daily|test|serve]")
+

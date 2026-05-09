@@ -1,4 +1,4 @@
-# Clisonix Cloud - Docker Build Guide
+# Kloud Cloud - Docker Build Guide
 
 ## Public Dashboard Container
 
@@ -6,10 +6,10 @@
 
 ```bash
 # Build public container
-docker build -f Dockerfile.public -t clisonix-public:latest .
+docker build -f Dockerfile.public -t kloud-public:latest .
 
 # Tag for registry
-docker tag clisonix-public:latest ledjan/clisonix-public:latest
+docker tag kloud-public:latest ledjan/kloud-public:latest
 ```
 
 ### Run with Docker Compose
@@ -28,16 +28,16 @@ docker-compose up -d
 # Simple run
 docker run -p 3000:3000 \
   -e NODE_ENV=production \
-  -e NEXT_PUBLIC_API_URL=https://api.clisonix.com \
-  --name clisonix-public \
-  clisonix-public:latest
+  -e NEXT_PUBLIC_API_URL=https://api.kloud.com \
+  --name kloud-public \
+  kloud-public:latest
 
 # With Nginx reverse proxy
 docker run -p 80:80 -p 443:443 \
   -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro \
   -v $(pwd)/certs:/etc/nginx/certs:ro \
-  --name clisonix-nginx \
-  --link clisonix-public:backend \
+  --name kloud-nginx \
+  --link kloud-public:backend \
   nginx:alpine
 ```
 
@@ -54,7 +54,7 @@ docker run -p 80:80 -p 443:443 \
 
 ```bash
 NODE_ENV=production                    # Must be 'production'
-NEXT_PUBLIC_API_URL=https://api.clisonix.com
+NEXT_PUBLIC_API_URL=https://api.kloud.com
 NEXT_PUBLIC_ANALYTICS=true
 ```
 
@@ -62,7 +62,7 @@ NEXT_PUBLIC_ANALYTICS=true
 
 ```bash
 # For logs
--v clisonix-logs:/app/.next
+-v kloud-logs:/app/.next
 
 # For SSL certificates (with Nginx)
 -v ./certs:/etc/nginx/certs:ro
@@ -74,26 +74,26 @@ NEXT_PUBLIC_ANALYTICS=true
 
 ```bash
 docker login
-docker push ledjan/clisonix-public:latest
-docker push ledjan/clisonix-public:$(date +%Y.%m.%d)
+docker push ledjan/kloud-public:latest
+docker push ledjan/kloud-public:$(date +%Y.%m.%d)
 ```
 
 ### Deploy to Production
 
 ```bash
 # Pull latest image
-docker pull ledjan/clisonix-public:latest
+docker pull ledjan/kloud-public:latest
 
 # Stop and remove old container
-docker stop clisonix-public
-docker rm clisonix-public
+docker stop kloud-public
+docker rm kloud-public
 
 # Run new container
 docker run -d \
   -p 3000:3000 \
-  --name clisonix-public \
+  --name kloud-public \
   --restart always \
-  ledjan/clisonix-public:latest
+  ledjan/kloud-public:latest
 ```
 
 ## Kubernetes Deployment (Optional)
@@ -102,27 +102,27 @@ docker run -d \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clisonix-public
+  name: kloud-public
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: clisonix-public
+      app: kloud-public
   template:
     metadata:
       labels:
-        app: clisonix-public
+        app: kloud-public
     spec:
       containers:
-      - name: clisonix-public
-        image: ledjan/clisonix-public:latest
+      - name: kloud-public
+        image: ledjan/kloud-public:latest
         ports:
         - containerPort: 3000
         env:
         - name: NODE_ENV
           value: "production"
         - name: NEXT_PUBLIC_API_URL
-          value: "https://api.clisonix.com"
+          value: "https://api.kloud.com"
         livenessProbe:
           httpGet:
             path: /health
@@ -139,10 +139,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clisonix-public-service
+  name: kloud-public-service
 spec:
   selector:
-    app: clisonix-public
+    app: kloud-public
   ports:
   - protocol: TCP
     port: 80
@@ -156,10 +156,10 @@ spec:
 
 ```bash
 # Check logs
-docker logs clisonix-public
+docker logs kloud-public
 
 # Check health
-docker ps | grep clisonix-public
+docker ps | grep kloud-public
 ```
 
 ### High memory usage
@@ -219,3 +219,4 @@ docker-compose -f docker-compose.public.yml down
 **Last Updated**: January 19, 2026  
 **Version**: 1.0.0  
 **Status**: Production Ready 🚀
+

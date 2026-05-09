@@ -9,20 +9,20 @@ from pydantic import BaseModel, Field
 
 PORT = int(os.getenv("PORT", "9999"))
 MODEL = os.getenv("MODEL", "llama3.1:8b")
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 REQUEST_TIMEOUT = float(os.getenv("REQUEST_TIMEOUT", "90"))
 
 SERVICE_ARRAY: Dict[str, str] = {
-    "api": os.getenv("API_URL", "http://clisonix-api:8000"),
-    "ocean_core": os.getenv("OCEAN_CORE_URL", "http://clisonix-ocean-core:8030"),
-    "alba": os.getenv("ALBA_URL", "http://clisonix-alba:5555"),
-    "albi": os.getenv("ALBI_URL", "http://clisonix-albi:6680"),
-    "jona": os.getenv("JONA_URL", "http://clisonix-jona:7777"),
-    "redis": os.getenv("REDIS_URL", "redis://clisonix-redis:6379/0"),
+    "api": os.getenv("API_URL", "http://kloud-api:8000"),
+    "ocean_core": os.getenv("OCEAN_CORE_URL", "http://kloud-ocean-core:8030"),
+    "alba": os.getenv("ALBA_URL", "http://kloud-alba:5555"),
+    "albi": os.getenv("ALBI_URL", "http://kloud-albi:6680"),
+    "jona": os.getenv("JONA_URL", "http://kloud-jona:7777"),
+    "redis": os.getenv("REDIS_URL", "redis://kloud-redis:6379/0"),
     "ollama": OLLAMA_HOST,
 }
 
-GLOBAL_SYSTEM_PROMPT = """You are Clisonix Global AI Orchestrator on port 9999.
+GLOBAL_SYSTEM_PROMPT = """You are Kloud Global AI Orchestrator on port 9999.
 Rules:
 1. Support all world languages fairly and respectfully.
 2. Never produce hateful, racist, discriminatory, or demeaning content.
@@ -31,7 +31,7 @@ Rules:
 5. If context is incomplete, state assumptions clearly.
 """
 
-app = FastAPI(title="Clisonix AI Global 9999", version="1.0.0")
+app = FastAPI(title="Kloud AI Global 9999", version="1.0.0")
 
 
 class ChatRequest(BaseModel):
@@ -60,7 +60,7 @@ class AutomationPlanRequest(BaseModel):
 @app.get("/")
 async def root():
     return {
-        "name": "Clisonix AI Global 9999",
+        "name": "Kloud AI Global 9999",
         "mode": "cpu-first",
         "status": "running",
         "multilingual": True,
@@ -232,3 +232,4 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

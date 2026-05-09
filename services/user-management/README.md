@@ -1,8 +1,8 @@
-# 👤 Clisonix User Management
+# 👤 Kloud User Management
 
 ## Sistemi Qendror i Menaxhimit të Përdoruesve
 
-Ky shërbim është **BURIMI I VETËM I SË VËRTETËS** për të gjitha të dhënat e përdoruesve në sistemin Clisonix.
+Ky shërbim është **BURIMI I VETËM I SË VËRTETËS** për të gjitha të dhënat e përdoruesve në sistemin Kloud.
 
 ## 🎯 Qëllimi
 
@@ -148,10 +148,10 @@ curl -X GET http://localhost:8070/api/users/me \
 
 ```bash
 # Build
-docker build -t clisonix-user-management .
+docker build -t kloud-user-management .
 
 # Run
-docker run -p 8070:8070 clisonix-user-management
+docker run -p 8070:8070 kloud-user-management
 
 # With docker-compose
 docker-compose up user-management
@@ -193,3 +193,4 @@ async def validate_user(token: str):
 **Autor:** Ledjan Ahmati (CEO, ABA GmbH)  
 **Port:** 8070  
 **Versioni:** 1.0.0
+

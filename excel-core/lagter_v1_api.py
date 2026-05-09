@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 from lagter_v1_excel import LagterV1ExcelBuilder
 
 app = FastAPI(
-    title="Clisonix LAGTER v1 API",
+    title="Kloud LAGTER v1 API",
     description="Dedicated LAGTER v1 service for industrial Excel export",
     version="1.0.0",
 )
@@ -173,3 +173,4 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", "4010"))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

@@ -513,4 +513,5 @@ fig.show()
 **Version**: 1.0.0  
 **Status**: ✅ Production Ready  
 
-Built with ❤️ for Clisonix clisonix Cloud
+Built with ❤️ for Kloud kloud Cloud
+

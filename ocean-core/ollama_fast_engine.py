@@ -19,7 +19,7 @@ KA VETËM:
 
 Koha e pritshme: 3-8 sekonda (jo 40-90!)
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 3.0.0 FAST
 """
 
@@ -38,8 +38,8 @@ logger = logging.getLogger("ollama_fast")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 IS_DOCKER = os.path.exists("/.dockerenv") or os.environ.get("DOCKER_ENV") == "1"
-# Container name in docker-compose.yml is "clisonix-ollama"
-OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "clisonix-ollama" if IS_DOCKER else "localhost")
+# Container name in docker-compose.yml is "kloud-ollama"
+OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "kloud-ollama" if IS_DOCKER else "localhost")
 if OLLAMA_HOST.startswith("http://"):
     OLLAMA_HOST = OLLAMA_HOST.replace("http://", "").split(":")[0]
 
@@ -52,11 +52,11 @@ STREAM_TIMEOUT = None  # Pa limit për streaming
 # ═══════════════════════════════════════════════════════════════════════════════
 # MODEL SELECTION - VETËM MODELE QË FLASIN MIRË
 # ═══════════════════════════════════════════════════════════════════════════════
-# HEQUR: phi3:mini, clisonix-ocean:latest - flasin përçart në shqip
+# HEQUR: phi3:mini, kloud-ocean:latest - flasin përçart në shqip
 # MBAJTUR: llama3.1:8b - flet mirë të gjitha gjuhët
 
 DEFAULT_MODEL = "llama3.1:8b"  # Model i vetëm i besueshëm
-FALLBACK_MODELS = ["llama3.1:8b", "clisonix-ocean:v2"]  # Vetëm modele të mëdha
+FALLBACK_MODELS = ["llama3.1:8b", "kloud-ocean:v2"]  # Vetëm modele të mëdha
 
 # ALBANIAN DETECTION
 ALBANIAN_MARKERS = [
@@ -83,7 +83,7 @@ try:
 except Exception as e:
     logger.warning(f"⚠️ Could not import master_prompt: {e}")
     # Fallback - minimal prompt
-    SYSTEM_PROMPT = """You are Curiosity Ocean, the AI of Clisonix Platform (clisonix.cloud).
+    SYSTEM_PROMPT = """You are Curiosity Ocean, the AI of Kloud Platform (kloud.cloud).
 Created by Ledjan Ahmati. Respond in the user's language. Be concise, accurate, helpful.
 Never invent facts. Admit if unsure: "Nuk e di" / "I don't know"."""
 
@@ -335,7 +335,7 @@ if __name__ == "__main__":
         tests = [
             "Përshëndetje!",
             "What is 2+2?",
-            "Çfarë është Clisonix?",
+            "Çfarë është Kloud?",
         ]
         
         for q in tests:
@@ -348,3 +348,4 @@ if __name__ == "__main__":
         print("\n✅ Test complete!")
     
     asyncio.run(test())
+

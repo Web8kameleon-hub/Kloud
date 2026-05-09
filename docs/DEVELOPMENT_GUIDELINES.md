@@ -1,11 +1,11 @@
-# 📚 Clisonix Cloud - Development Guidelines
+# 📚 Kloud Cloud - Development Guidelines
 
 ## Quick Start
 
 ```bash
 # Clone repository
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 
 # Setup Python environment
 python -m venv .venv
@@ -22,7 +22,7 @@ docker compose up -d
 ## Project Structure
 
 ```
-Clisonix-cloud/
+Kloud-cloud/
 ├── apps/
 │   ├── api/              # FastAPI Backend
 │   └── web/              # Next.js Frontend
@@ -191,8 +191,8 @@ PORT=8000
 # Database
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-POSTGRES_DB=clisonixdb
-POSTGRES_USER=clisonix
+POSTGRES_DB=klouddb
+POSTGRES_USER=kloud
 POSTGRES_PASSWORD=your-password
 
 # Redis
@@ -234,6 +234,7 @@ GitHub Actions workflow runs:
 - 📖 [Architecture Docs](./ARCHITECTURE.md)
 - 🔧 [API Reference](./API_GUIDELINES.md)
 - 🚀 [Deployment Guide](./DEPLOYMENT.md)
-- 💬 Contact: support@clisonix.cloud
+- 💬 Contact: support@kloud.cloud
 
-*Clisonix Cloud Platform © 2026 ABA GmbH*
+*Kloud Cloud Platform © 2026 ABA GmbH*
+

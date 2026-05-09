@@ -2,7 +2,7 @@
 """
 🚀 ENHANCED ASI MODULE - ADVANCED SYNTHETIC INTELLIGENCE
 ========================================================
-Moduli i avancuar i Inteligjencës Sintetike për Clisonix Cloud
+Moduli i avancuar i Inteligjencës Sintetike për Kloud Cloud
 
 Ky modul zgjeron ASI me:
 - New Intelligence Generation (NIG)
@@ -663,3 +663,4 @@ async def get_enhanced_asi() -> EnhancedASI:
         await _enhanced_asi.initialize()
 
     return _enhanced_asi
+

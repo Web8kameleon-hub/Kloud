@@ -1,5 +1,5 @@
 # ============================================================================
-# MODULE REGISTRY - Registers all 23 Clisonix Modules
+# MODULE REGISTRY - Registers all 23 Kloud Modules
 # ============================================================================
 # All internal modules that feed the AGI Engine
 # ============================================================================
@@ -29,7 +29,7 @@ class ModuleStatus(Enum):
 
 
 class ModuleType(Enum):
-    """Types of Clisonix modules"""
+    """Types of Kloud modules"""
     CORE = "core"                   # Core system (HQ, ALBA, ALBI, JONA)
     DATA_SOURCE = "data_source"     # Data ingestion modules
     ANALYTICS = "analytics"         # Analytics and processing
@@ -64,9 +64,9 @@ class ModuleCapability(Enum):
 
 
 @dataclass
-class ClisonixModule:
+class KloudModule:
     """
-    Represents a single Clisonix module
+    Represents a single Kloud module
     
     Each module in the system has:
     - Unique identifier and name
@@ -113,7 +113,7 @@ class ClisonixModule:
 
 class ModuleRegistry:
     """
-    Central registry for all 23+ Clisonix modules
+    Central registry for all 23+ Kloud modules
     
     The registry:
     - Maintains state of all modules
@@ -123,7 +123,7 @@ class ModuleRegistry:
     """
     
     def __init__(self):
-        self.modules: Dict[str, ClisonixModule] = {}
+        self.modules: Dict[str, KloudModule] = {}
         self.capability_index: Dict[ModuleCapability, List[str]] = {}
         self.type_index: Dict[ModuleType, List[str]] = {}
         self._health_check_interval = 30  # seconds
@@ -133,13 +133,13 @@ class ModuleRegistry:
         self._register_core_modules()
     
     def _register_core_modules(self):
-        """Register all 23 core Clisonix modules"""
+        """Register all 23 core Kloud modules"""
         
         # ====================================================================
         # CORE SERVICES (The Trinity + HQ)
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="hq",
             name="HQ Main API",
             module_type=ModuleType.CORE,
@@ -154,7 +154,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="alba",
             name="ALBA Streaming Service",
             module_type=ModuleType.CORE,
@@ -170,7 +170,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="albi",
             name="ALBI Analytics Engine",
             module_type=ModuleType.CORE,
@@ -186,7 +186,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="jona",
             name="JONA Supervision Layer",
             module_type=ModuleType.CORE,
@@ -206,7 +206,7 @@ class ModuleRegistry:
         # DATA SOURCES MODULE
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="data_sources",
             name="Global Data Sources",
             module_type=ModuleType.DATA_SOURCE,
@@ -235,7 +235,7 @@ class ModuleRegistry:
         # AI & AGENTS
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="agiem",
             name="AGIEM Core",
             module_type=ModuleType.AGENT,
@@ -250,7 +250,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="agents",
             name="Agent Orchestration",
             module_type=ModuleType.AGENT,
@@ -265,7 +265,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="asi",
             name="ASI Realtime Engine",
             module_type=ModuleType.AGENT,
@@ -285,7 +285,7 @@ class ModuleRegistry:
         # ORCHESTRATION & BALANCING
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="orchestrator",
             name="SAAS Orchestrator",
             module_type=ModuleType.ORCHESTRATOR,
@@ -301,7 +301,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="balancer",
             name="Distributed Pulse Balancer",
             module_type=ModuleType.ORCHESTRATOR,
@@ -320,7 +320,7 @@ class ModuleRegistry:
         # PROTOCOL & DATA HANDLING
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="hybrid_protocol",
             name="Hybrid Protocol Pipeline",
             module_type=ModuleType.PROTOCOL,
@@ -335,7 +335,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="iot",
             name="IoT Gateway",
             module_type=ModuleType.PROTOCOL,
@@ -351,7 +351,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="cbor2",
             name="CBOR2 Encoder",
             module_type=ModuleType.PROTOCOL,
@@ -370,7 +370,7 @@ class ModuleRegistry:
         # CYCLE ENGINE & LABS
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="cycle_engine",
             name="Cycle Engine",
             module_type=ModuleType.ANALYTICS,
@@ -385,7 +385,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="labs",
             name="Research Labs",
             module_type=ModuleType.ANALYTICS,
@@ -404,7 +404,7 @@ class ModuleRegistry:
         # SECURITY & MONITORING
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="security",
             name="Security & DDoS Protection",
             module_type=ModuleType.SECURITY,
@@ -419,7 +419,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="telemetry",
             name="Agent Telemetry",
             module_type=ModuleType.ANALYTICS,
@@ -438,7 +438,7 @@ class ModuleRegistry:
         # BILLING & REPORTING
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="billing",
             name="Billing Plans",
             module_type=ModuleType.INTEGRATION,
@@ -452,7 +452,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="blerina",
             name="Blerina Reformatter",
             module_type=ModuleType.DATA_SOURCE,
@@ -470,7 +470,7 @@ class ModuleRegistry:
         # NODE & INFRASTRUCTURE
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="nodes_py",
             name="Python Nodes",
             module_type=ModuleType.INTEGRATION,
@@ -484,7 +484,7 @@ class ModuleRegistry:
             status=ModuleStatus.ACTIVE
         ))
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="nodes_npm",
             name="NPM Nodes",
             module_type=ModuleType.INTEGRATION,
@@ -501,7 +501,7 @@ class ModuleRegistry:
         # UI & TOKENS
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="css_panda_tokens",
             name="CSS Panda Tokens",
             module_type=ModuleType.UI,
@@ -518,7 +518,7 @@ class ModuleRegistry:
         # PROSPALIS & GENERATION
         # ====================================================================
         
-        self.register(ClisonixModule(
+        self.register(KloudModule(
             id="prospalis",
             name="Generated Prospalis",
             module_type=ModuleType.DATA_SOURCE,
@@ -536,7 +536,7 @@ class ModuleRegistry:
         logger.info(f"Registered {len(self.modules)} core modules")
         self._initialized = True
     
-    def register(self, module: ClisonixModule) -> bool:
+    def register(self, module: KloudModule) -> bool:
         """Register a new module"""
         if module.id in self.modules:
             logger.warning(f"Module {module.id} already registered, updating")
@@ -558,25 +558,25 @@ class ModuleRegistry:
         
         return True
     
-    def get_module(self, module_id: str) -> Optional[ClisonixModule]:
+    def get_module(self, module_id: str) -> Optional[KloudModule]:
         """Get a module by ID"""
         return self.modules.get(module_id)
     
-    def get_modules_by_capability(self, capability: ModuleCapability) -> List[ClisonixModule]:
+    def get_modules_by_capability(self, capability: ModuleCapability) -> List[KloudModule]:
         """Get all modules with a specific capability"""
         module_ids = self.capability_index.get(capability, [])
         return [self.modules[mid] for mid in module_ids if mid in self.modules]
     
-    def get_modules_by_type(self, module_type: ModuleType) -> List[ClisonixModule]:
+    def get_modules_by_type(self, module_type: ModuleType) -> List[KloudModule]:
         """Get all modules of a specific type"""
         module_ids = self.type_index.get(module_type, [])
         return [self.modules[mid] for mid in module_ids if mid in self.modules]
     
-    def get_active_modules(self) -> List[ClisonixModule]:
+    def get_active_modules(self) -> List[KloudModule]:
         """Get all active modules"""
         return [m for m in self.modules.values() if m.status == ModuleStatus.ACTIVE]
     
-    def get_core_services(self) -> List[ClisonixModule]:
+    def get_core_services(self) -> List[KloudModule]:
         """Get HQ, ALBA, ALBI, JONA"""
         return [self.modules[m] for m in ["hq", "alba", "albi", "jona"] if m in self.modules]
     
@@ -601,7 +601,7 @@ class ModuleRegistry:
             "modules": {mid: m.to_dict() for mid, m in self.modules.items()}
         }
     
-    def find_modules_for_query(self, query: str, capabilities: List[ModuleCapability] = None) -> List[ClisonixModule]:
+    def find_modules_for_query(self, query: str, capabilities: List[ModuleCapability] = None) -> List[KloudModule]:
         """Find best modules to handle a query"""
         candidates = []
         
@@ -636,3 +636,4 @@ def get_registry() -> ModuleRegistry:
     if _registry_instance is None:
         _registry_instance = ModuleRegistry()
     return _registry_instance
+

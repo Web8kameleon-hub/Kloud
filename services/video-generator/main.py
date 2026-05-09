@@ -2,7 +2,7 @@
 """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  VIDEO GENERATOR API — FastAPI Wrapper for BLERINA Video Pipeline            ║
-║  Part of Clisonix Cloud Industrial Backend                                    ║
+║  Part of Kloud Cloud Industrial Backend                                    ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Port: 8008                                                                   ║
 ║  Endpoints:                                                                   ║
@@ -48,7 +48,7 @@ JOBS: Dict[str, Dict[str, Any]] = {}
 
 app = FastAPI(
     title="Video Generator BLERINA",
-    description="AI-powered video generation for Clisonix",
+    description="AI-powered video generation for Kloud",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -295,3 +295,4 @@ if __name__ == "__main__":
     
     print(f"\n🚀 Starting server on port {PORT}...")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

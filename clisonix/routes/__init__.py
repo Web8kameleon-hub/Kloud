@@ -1,4 +1,4 @@
-"""Route registration utilities for the clisonix standalone services."""
+"""Route registration utilities for the kloud standalone services."""
 
 import logging
 from typing import Any
@@ -22,4 +22,5 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(status_router)
     if ingest_router is not None:
         app.include_router(ingest_router)
+
 

@@ -52,7 +52,7 @@ async def main():
     """Main launcher"""
     print("""
     ╔══════════════════════════════════════════════════════════════════╗
-    ║  🚀 CLISONIX DUAL PROCESS LAUNCHER                              ║
+    ║  🚀 KLOUD DUAL PROCESS LAUNCHER                              ║
     ║  ═══════════════════════════════════════════════════════════════ ║
     ║                                                                  ║
     ║  🐍 PYTHON PROCESS:                                             ║
@@ -118,3 +118,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

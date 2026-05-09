@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Lightweight localization utilities for Clisonix runtimes."""
+"""Lightweight localization utilities for Kloud runtimes."""
 
 from __future__ import annotations
 
@@ -120,4 +120,5 @@ class LocalizationManager:
 
 
 DEFAULT_LOCALIZATION = LocalizationManager()
+
 

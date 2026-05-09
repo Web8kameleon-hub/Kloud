@@ -126,7 +126,7 @@ default_args = {
     'depends_on_past': False,
     'start_date': datetime(2025, 1, 1),
     'email_on_failure': True,
-    'email': ['ops@clisonix.com'],
+    'email': ['ops@kloud.com'],
     'retries': 2,
     'retry_delay': timedelta(minutes=5),
 }
@@ -142,7 +142,7 @@ dag = DAG(
 
 def fetch_active_sources(**context):
     """Retrieve all active knowledge sources from catalog"""
-    pg_hook = PostgresHook(postgres_conn_id='clisonix_db')
+    pg_hook = PostgresHook(postgres_conn_id='kloud_db')
     query = """
         SELECT id, name, access_model, base_url, api_key_ref, schema_version
         FROM knowledge_sources
@@ -154,7 +154,7 @@ def fetch_active_sources(**context):
 
 def validate_api_connectivity(source_id, name, access_model, base_url, api_key_ref, **context):
     """Test API endpoint connectivity and authentication"""
-    pg_hook = PostgresHook(postgres_conn_id='clisonix_db')
+    pg_hook = PostgresHook(postgres_conn_id='kloud_db')
     
     validation_result = {
         'source_id': source_id,
@@ -217,7 +217,7 @@ def check_schema_drift(source_id, name, schema_version, **context):
 
 def generate_validation_report(**context):
     """Generate weekly validation report"""
-    pg_hook = PostgresHook(postgres_conn_id='clisonix_db')
+    pg_hook = PostgresHook(postgres_conn_id='kloud_db')
     
     # Summary query
     summary = pg_hook.get_first("""
@@ -354,3 +354,4 @@ catalog_ingestion_lag_seconds
 ---
 
 **Next Step**: [Ingestion Pipeline Architecture](./INGESTION_PIPELINE_ARCHITECTURE.md)
+

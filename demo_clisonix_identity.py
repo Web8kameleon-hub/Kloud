@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Clisonix System Identity Demonstration
-Shows Curiosity Ocean now knows itself as Clisonix with multilingual support
+Kloud System Identity Demonstration
+Shows Curiosity Ocean now knows itself as Kloud with multilingual support
 
 Author: Ledjan Ahmati
 Date: January 17, 2026
@@ -11,7 +11,7 @@ import sys
 import json
 sys.path.insert(0, "apps/api/services")
 
-from clisonix_identity import get_clisonix_identity, IdentityLanguage
+from kloud_identity import get_kloud_identity, IdentityLanguage
 from curiosity_core_engine import get_engine, ResponseLanguage
 
 
@@ -23,15 +23,15 @@ def print_section(title: str):
 
 
 def main():
-    """Demonstrate Clisonix system identity awareness"""
+    """Demonstrate Kloud system identity awareness"""
     
-    identity = get_clisonix_identity()
+    identity = get_kloud_identity()
     engine = get_engine()
     
     # ====================================================================
     # 1. SYSTEM IDENTITY
     # ====================================================================
-    print_section("1️⃣  CLISONIX SYSTEM IDENTITY")
+    print_section("1️⃣  KLOUD SYSTEM IDENTITY")
     
     status = identity.get_system_status(IdentityLanguage.ENGLISH)
     for key, value in status.items():
@@ -152,8 +152,8 @@ def main():
     print_section("✅ SYSTEM IDENTITY VERIFICATION COMPLETE")
     
     print("""
-  ✓ Clisonix now has system identity and self-awareness
-  ✓ Curiosity Ocean understands it is Layer 7 of Clisonix
+  ✓ Kloud now has system identity and self-awareness
+  ✓ Curiosity Ocean understands it is Layer 7 of Kloud
   ✓ Trinity system (ALBA/ALBI/JONA) integrated
   ✓ Multilingual support (8+ languages)
   ✓ Identity-aware question detection enabled
@@ -173,7 +173,7 @@ def main():
   POST /api/ocean/chat (with language parameter)
     → Chat with identity-aware responses
   
-  STATUS: Clisonix knows itself! 🧠🌊
+  STATUS: Kloud knows itself! 🧠🌊
     """)
 
 
@@ -184,3 +184,4 @@ if __name__ == "__main__":
         print(f"\n❌ Error: {e}")
         import traceback
         traceback.print_exc()
+

@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CLISONIX AGENTS - SPECIALIZED AGENTS                      ║
+║                    KLOUD AGENTS - SPECIALIZED AGENTS                      ║
 ║           Data Processing, Analytics, Integration, ML, Collectors           ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -667,7 +667,7 @@ class WebScraperAgent(BaseAgent):
             retry_count=3,
             rate_limit_per_second=5,
             metadata={
-                "user_agent": "Clisonix-Bot/1.0",
+                "user_agent": "Kloud-Bot/1.0",
                 "respect_robots_txt": True
             }
         )
@@ -1160,3 +1160,4 @@ def create_specialized_agent(name: str, **kwargs) -> BaseAgent:
         raise ValueError(f"Unknown specialized agent: {name}. Available: {list(agents.keys())}")
     
     return agent_class(**kwargs)
+

@@ -1,4 +1,4 @@
-# Clisonix Cloud - Hetzner Quick Deploy Guide
+# Kloud Cloud - Hetzner Quick Deploy Guide
 # Server: 157.90.234.158 (cpx22, Ubuntu 4GB)
 
 ## Step 1: SSH into Hetzner
@@ -6,25 +6,26 @@ ssh root@157.90.234.158
 
 ## Step 2: Run deployment script (automatic everything)
 export SERVER_IP=157.90.234.158
-export DOMAIN=clisonix.com
-export API_DOMAIN=api.clisonix.com
+export DOMAIN=kloud.com
+export API_DOMAIN=api.kloud.com
 
-curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/deploy-hetzner.sh | bash
+curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/deploy-hetzner.sh | bash
 
 ## Step 3: Verify deployment
 docker-compose ps
-docker logs clisonix-web
+docker logs kloud-web
 docker logs neurosonix-cloud-api-1
 
 ## Step 4: Configure DNS (after script completes)
 Point your domain to: 157.90.234.158
 
 ## Step 5: Access services
-Frontend:   https://clisonix.com (or http://157.90.234.158:3000)
-Backend API: https://api.clisonix.com (or http://157.90.234.158:8000)
-Grafana:    https://clisonix.com:3001 (or http://157.90.234.158:3001)
+Frontend:   https://kloud.com (or http://157.90.234.158:3000)
+Backend API: https://api.kloud.com (or http://157.90.234.158:8000)
+Grafana:    https://kloud.com:3001 (or http://157.90.234.158:3001)
 
 ## Credentials will be saved in .credentials.txt on server
 
 ## Optional: Setup SSL with Let's Encrypt
-docker exec -it \ certbot certonly --standalone -d clisonix.com -d api.clisonix.com
+docker exec -it \ certbot certonly --standalone -d kloud.com -d api.kloud.com
+

@@ -1,5 +1,5 @@
 # =============================================================================
-# CLISONIX CLOUD - UNIFIED DEPLOYMENT PIPELINE
+# KLOUD CLOUD - UNIFIED DEPLOYMENT PIPELINE
 # =============================================================================
 # Deploys to Hetzner Kubernetes with optional Helm or raw K8s manifests
 # 
@@ -146,19 +146,19 @@ jobs:
 
       - name: Create namespace
         run: |
-          NAMESPACE="clisonix-${{ inputs.environment || 'production' }}"
+          NAMESPACE="kloud-${{ inputs.environment || 'production' }}"
           kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f deploy/kubernetes/clisonix-deployment.yaml
+          kubectl apply -f deploy/kubernetes/kloud-deployment.yaml
 
       - name: Verify deployment
         run: |
-          NAMESPACE="clisonix-${{ inputs.environment || 'production' }}"
-          kubectl rollout status deployment/clisonix-backend -n $NAMESPACE --timeout=5m
-          kubectl rollout status deployment/clisonix-ocean-core -n $NAMESPACE --timeout=5m
-          kubectl rollout status deployment/clisonix-frontend -n $NAMESPACE --timeout=5m
+          NAMESPACE="kloud-${{ inputs.environment || 'production' }}"
+          kubectl rollout status deployment/kloud-backend -n $NAMESPACE --timeout=5m
+          kubectl rollout status deployment/kloud-ocean-core -n $NAMESPACE --timeout=5m
+          kubectl rollout status deployment/kloud-frontend -n $NAMESPACE --timeout=5m
 
   # =========================================================================
   # DEPLOY WITH HELM (Optional)
@@ -209,43 +209,43 @@ jobs:
 
       - name: Create namespace
         run: |
-          kubectl create namespace clisonix-${{ inputs.environment }} --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create namespace kloud-${{ inputs.environment }} --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy PostgreSQL
         run: |
           helm upgrade --install postgres bitnami/postgresql \
-            --namespace clisonix-${{ inputs.environment }} \
+            --namespace kloud-${{ inputs.environment }} \
             --values ./helm/values-postgres.yaml
 
       - name: Deploy Redis
         run: |
           helm upgrade --install redis bitnami/redis \
-            --namespace clisonix-${{ inputs.environment }} \
+            --namespace kloud-${{ inputs.environment }} \
             --values ./helm/values-redis.yaml
 
       - name: Deploy Prometheus Stack
         run: |
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
-            --namespace clisonix-${{ inputs.environment }} \
+            --namespace kloud-${{ inputs.environment }} \
             --values ./helm/values-prometheus.yaml
 
       - name: Deploy Grafana
         run: |
           helm upgrade --install grafana grafana/grafana \
-            --namespace clisonix-${{ inputs.environment }} \
+            --namespace kloud-${{ inputs.environment }} \
             --values ./helm/values-grafana.yaml
 
-      - name: Deploy Clisonix Application
+      - name: Deploy Kloud Application
         run: |
-          helm upgrade --install clisonix ./helm/clisonix \
-            --namespace clisonix-${{ inputs.environment }} \
+          helm upgrade --install kloud ./helm/kloud \
+            --namespace kloud-${{ inputs.environment }} \
             --values ./helm/values-${{ inputs.environment }}.yaml \
             --set image.tag=${{ needs.build-and-push.outputs.image_tag }}
 
       - name: Verify deployment
         run: |
-          kubectl get pods -n clisonix-${{ inputs.environment }}
-          kubectl get services -n clisonix-${{ inputs.environment }}
+          kubectl get pods -n kloud-${{ inputs.environment }}
+          kubectl get services -n kloud-${{ inputs.environment }}
 
   # =========================================================================
   # DEPLOYMENT SUMMARY
@@ -259,7 +259,7 @@ jobs:
     steps:
       - name: Generate summary
         run: |
-          echo "## 🚀 Clisonix Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Kloud Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
@@ -270,3 +270,4 @@ jobs:
           echo "**Environment:** ${{ inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Method:** ${{ inputs.deploy_method || 'kubectl' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+

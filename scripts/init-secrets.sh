@@ -42,7 +42,7 @@ echo ""
 echo "📝 Generating secure passwords..."
 
 create_secret "postgres_password" "$(generate_password 32)"
-create_secret "postgres_user" "clisonix"
+create_secret "postgres_user" "kloud"
 create_secret "redis_password" "$(generate_password 32)"
 create_secret "minio_root_password" "$(generate_password 32)"
 create_secret "elastic_password" "$(generate_password 32)"
@@ -82,5 +82,6 @@ echo "✅ Secrets initialization complete!"
 echo "📝 Next steps:"
 echo "   1. Review generated passwords above"
 echo "   2. Update API keys in secrets/ directory"
-echo "   3. Run: docker stack deploy -c docker-compose.secrets.yml clisonix"
+echo "   3. Run: docker stack deploy -c docker-compose.secrets.yml kloud"
+
 

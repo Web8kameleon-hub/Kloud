@@ -3,7 +3,7 @@ info:
   title: Jona API
   version: 1.0.0
   description: |
-    Jona is Clisonix's coordination and neural audio generation agent.
+    Jona is Kloud's coordination and neural audio generation agent.
     
     **Features:**
     - Data synthesis and transformation
@@ -14,8 +14,8 @@ info:
     **Port:** 7777  
     **Health Check:** `GET /health`
   contact:
-    name: Clisonix Engineering
-    url: https://github.com/LedjanAhmati/Clisonix-cloud
+    name: Kloud Engineering
+    url: https://github.com/LedjanAhmati/Kloud-cloud
   license:
     name: MIT
     
@@ -24,7 +24,7 @@ servers:
     description: Development server
   - url: http://192.168.2.122:7777
     description: Local network
-  - url: https://api.clisonix.com/jona
+  - url: https://api.kloud.com/jona
     description: Production server
 
 tags:
@@ -241,7 +241,7 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-      description: Clisonix API key
+      description: Kloud API key
       
   schemas:
     HealthResponse:
@@ -502,4 +502,5 @@ components:
         X-RateLimit-Reset:
           schema:
             type: integer
+
 

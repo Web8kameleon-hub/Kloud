@@ -8,7 +8,7 @@ Integron modele lokale LLM përmes Ollama.
 
 Modelet e mbështetura:
 - llama3.1:8b (Meta, DEFAULT - flet mirë shqip)
-- clisonix-ocean:v2 (Clisonix, backup)
+- kloud-ocean:v2 (Kloud, backup)
 """
 
 import asyncio
@@ -39,12 +39,12 @@ DEFAULT_TIMEOUT = 60.0  # seconds
 # System prompt - imported from centralized module
 try:
     import sys
-    sys.path.insert(0, 'c:/Users/Admin/Desktop/Clisonix-cloud/modules')
+    sys.path.insert(0, 'c:/Users/Admin/Desktop/Kloud-cloud/modules')
     from curiosity_ocean.curiosity_ocean_prompt import CURIOSITY_OCEAN_SYSTEM_PROMPT
     OCEAN_SYSTEM_PROMPT = CURIOSITY_OCEAN_SYSTEM_PROMPT
 except ImportError:
     # Fallback if import fails
-    OCEAN_SYSTEM_PROMPT = """You are Curiosity Ocean, the core conversational intelligence of Clisonix Platform.
+    OCEAN_SYSTEM_PROMPT = """You are Curiosity Ocean, the core conversational intelligence of Kloud Platform.
 Respond in the same language as the user. Be clear, concise, and intelligent.
 Do not fabricate citations or generate random topics. Answer only what is asked."""
 
@@ -369,3 +369,4 @@ if __name__ == "__main__":
         print("\n✅ Test complete!")
     
     asyncio.run(test())
+

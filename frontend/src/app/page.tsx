@@ -46,7 +46,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="text-center py-12">
         <h1 className="text-5xl font-black mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Clisonix Cloud
+          Kloud Cloud
         </h1>
         <p className="text-xl text-gray-400 mb-8">
           Advanced Neural & Audio Intelligence Platform
@@ -135,8 +135,8 @@ export default function HomePage() {
           <Link href="/modules" className="text-blue-400 hover:text-blue-300">
             All Modules
           </Link>
-          <a href="https://clisonix.com" target="_blank" className="text-purple-400 hover:text-purple-300">
-            Clisonix.com
+          <a href="https://kloud.com" target="_blank" className="text-purple-400 hover:text-purple-300">
+            Kloud.com
           </a>
           <a href="https://vilsonit.com" target="_blank" className="text-green-400 hover:text-green-300">
             Vilsonit.com
@@ -146,3 +146,4 @@ export default function HomePage() {
     </div>
   )
 }
+

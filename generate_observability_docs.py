@@ -1,5 +1,5 @@
 """
-Clisonix Cloud Observability Documentation Generator
+Kloud Cloud Observability Documentation Generator
 Converts Markdown documentation to PDF and HTML for distribution
 
 Requirements:
@@ -335,7 +335,7 @@ class ObservabilityDocsGenerator:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Clisonix Cloud — Observability Documentation</title>
+            <title>Kloud Cloud — Observability Documentation</title>
         """)
         
         html_parts.append(self.get_css_styles())
@@ -344,7 +344,7 @@ class ObservabilityDocsGenerator:
         # Cover page
         html_parts.append(f"""
         <div class="header">
-            <h1>Clisonix Cloud</h1>
+            <h1>Kloud Cloud</h1>
             <p style="font-size: 1.5em; margin-top: 10px;">Observability Suite</p>
             <p>Enterprise Monitoring • TSDB Analysis • Performance Telemetry</p>
             <p style="margin-top: 20px; font-size: 0.9em;">Generated: {datetime.now().strftime('%B %d, %Y')}</p>
@@ -379,9 +379,9 @@ class ObservabilityDocsGenerator:
         # Footer
         html_parts.append(f"""
         <div class="footer">
-            <p><strong>Clisonix Cloud Observability Documentation</strong></p>
+            <p><strong>Kloud Cloud Observability Documentation</strong></p>
             <p>Generated: {datetime.now().strftime('%B %d, %Y at %H:%M UTC')}</p>
-            <p>Version 1.0.0 | Maintained by Clisonix SRE Team</p>
+            <p>Version 1.0.0 | Maintained by Kloud SRE Team</p>
         </div>
         """)
         
@@ -452,7 +452,7 @@ class ObservabilityDocsGenerator:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate Clisonix Observability Documentation')
+    parser = argparse.ArgumentParser(description='Generate Kloud Observability Documentation')
     parser.add_argument(
         '--format',
         choices=['html', 'pdf', 'all'],
@@ -479,4 +479,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

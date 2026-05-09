@@ -1,5 +1,5 @@
 """
-Clisonix Redis Caching Middleware
+Kloud Redis Caching Middleware
 =================================
 High-performance caching layer that reduces database/API load by 80%
 
@@ -308,3 +308,4 @@ async def update_data():
     await cache.delete_pattern("api:metrics:*")
     return result
 """
+

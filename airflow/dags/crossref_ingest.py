@@ -9,7 +9,7 @@ WEAVIATE_URL = os.getenv("WEAVIATE_URL", "http://weaviate:8080")
 CROSSREF_URL = "https://api.crossref.org/works"
 
 DEFAULT_ARGS = {
-    "owner": "Clisonix",
+    "owner": "Kloud",
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
 }
@@ -82,4 +82,5 @@ with DAG(
     load = PythonOperator(task_id="fetch_and_load", python_callable=fetch_and_load)
 
     ensure >> load
+
 

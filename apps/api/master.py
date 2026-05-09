@@ -1,5 +1,5 @@
 """
-Copyright (c) Clisonix Cloud. All rights reserved.
+Copyright (c) Kloud Cloud. All rights reserved.
 Closed Source License.
 """
 
@@ -10,7 +10,7 @@ import logging
 import time
 from industrial_data import router as industrial_router
 
-app = FastAPI(title="Clisonix Industrial API", description="Industrial backend for monitoring, logging, and control.")
+app = FastAPI(title="Kloud Industrial API", description="Industrial backend for monitoring, logging, and control.")
 app.include_router(industrial_router)
 
 @app.get("/status")
@@ -21,7 +21,7 @@ def get_status():
         "memory": psutil.virtual_memory()._asdict(),
         "disk": psutil.disk_usage("/")._asdict(),
         "active_users": 1,
-        "system": "Clisonix Industrial"
+        "system": "Kloud Industrial"
     }
 
 @app.post("/log")
@@ -47,7 +47,7 @@ def health():
 @app.get("/dashboard")
 def dashboard():
     return {
-        "system": "Clisonix Industrial",
+        "system": "Kloud Industrial",
         "status": "active",
         "metrics": {
             "cpu": psutil.cpu_percent(),
@@ -55,5 +55,6 @@ def dashboard():
             "disk": psutil.disk_usage("/").percent
         }
     }
+
 
 

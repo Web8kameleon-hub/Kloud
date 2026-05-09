@@ -1,5 +1,5 @@
 {
-  "name": "clisonix-pwa",
+  "name": "kloud-pwa",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -26,3 +26,4 @@
     "glob": "^11.0.0"
   }
 }
+

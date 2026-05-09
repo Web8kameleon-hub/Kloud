@@ -2,7 +2,7 @@
 ===========================================================
 API_MANAGER_ULTRA v6.0 â€” CENTRALIZED TELEMETRY LINKED
 ===========================================================
-Industrial control and monitoring node for Clisonix Cloud.
+Industrial control and monitoring node for Kloud Cloud.
 Each local log, event, and service status is auto-synced with
 AGIEMCore (/api/telemetry). Zero fake, zero delay, total sync.
 ===========================================================
@@ -18,14 +18,14 @@ from datetime import datetime
 # CONFIG
 # =========================================================
 AGIEM_URL = "http://127.0.0.1:8020/api/telemetry"
-LOG_PATH = "C:/Clisonix-cloud/backend/logs/api_manager_ultra.log"
+LOG_PATH = "C:/Kloud-cloud/backend/logs/api_manager_ultra.log"
 SYNC_INTERVAL = 5  # seconds
 
 SERVICES = {
-    "backend_main": {"port": 8001, "path": "C:/Clisonix-cloud/app/main.py"},
-    "agiem_core": {"port": 8020, "path": "C:/Clisonix-cloud/backend/app/agiem_core.py"},
-    "alba_collector": {"port": 8010, "path": "C:/Clisonix-cloud/packages/alba-collector/src/server.ts"},
-    "dashboard": {"port": 5173, "path": "C:/Clisonix-cloud/dashboard"},
+    "backend_main": {"port": 8001, "path": "C:/Kloud-cloud/app/main.py"},
+    "agiem_core": {"port": 8020, "path": "C:/Kloud-cloud/backend/app/agiem_core.py"},
+    "alba_collector": {"port": 8010, "path": "C:/Kloud-cloud/packages/alba-collector/src/server.ts"},
+    "dashboard": {"port": 5173, "path": "C:/Kloud-cloud/dashboard"},
 }
 
 # =========================================================
@@ -195,4 +195,5 @@ if __name__ == "__main__":
     os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
     log("API_MANAGER_ULTRA 6.0 started", "SYS")
     uvicorn.run(app, host="0.0.0.0", port=8101, log_level="error")
+
 

@@ -16,7 +16,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 # Config
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 PORT = int(os.getenv("PORT", "8030"))
 
@@ -113,3 +113,4 @@ if __name__ == "__main__":
     import uvicorn
     print(f"🌊 Ocean Simple - {MODEL} @ {OLLAMA_HOST}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

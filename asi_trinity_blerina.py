@@ -14,7 +14,7 @@ Components:
 - ALBI: Audio Lab Biometric Intelligence (Neural Processing)  
 - JONA: Industrial IoT Gateway (Coordination)
 
-Author: Clisonix Team
+Author: Kloud Team
 Date: 2026-02-08
 """
 
@@ -989,3 +989,4 @@ if __name__ == "__main__":
     time.sleep(5)
     stop_autopilot()
     print("Autopilot stopped.")
+

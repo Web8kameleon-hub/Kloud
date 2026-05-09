@@ -22,7 +22,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Data directory
-DATA_DIR = Path("/data/clisonix")
+DATA_DIR = Path("/data/kloud")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DATA_DIR / "user_data_sources.db"
 
@@ -410,7 +410,7 @@ class UserDataSourcesService:
     def _test_webhook(self, source_id: str) -> Dict:
         """Generate webhook URL for incoming data"""
         # Webhook URL that users can POST data to
-        webhook_url = f"https://api.clisonix.com/api/webhooks/data/{source_id}"
+        webhook_url = f"https://api.kloud.com/api/webhooks/data/{source_id}"
         
         return {
             "success": True,
@@ -693,3 +693,4 @@ def get_service() -> UserDataSourcesService:
     if _service is None:
         _service = UserDataSourcesService()
     return _service
+

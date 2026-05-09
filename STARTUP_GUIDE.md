@@ -1,4 +1,4 @@
-# 🚀 Clisonix Cloud - Complete Startup & Postman Guide
+# 🚀 Kloud Cloud - Complete Startup & Postman Guide
 
 **Industrial-Grade Neuroacoustic Processing Platform**
 
@@ -90,7 +90,7 @@
 
 ```
 Staging Infrastructure:
-├── API Server (staging.api.clisonix.com)
+├── API Server (staging.api.kloud.com)
 ├── Database (staging DB)
 ├── Cache (staging Redis)
 └── Monitoring (staging logs)
@@ -114,7 +114,7 @@ Success Criteria: Zero critical bugs
 
 ```
 Beta Infrastructure:
-├── Production API (beta.api.clisonix.com)
+├── Production API (beta.api.kloud.com)
 ├── Production Database (beta DB)
 ├── Monitoring & Alerting ON
 ├── Backup & Disaster Recovery
@@ -140,7 +140,7 @@ Success Criteria: Positive feedback, <1% error rate
 
 ```
 Production Infrastructure:
-├── API Servers (api.clisonix.com + CDN)
+├── API Servers (api.kloud.com + CDN)
 ├── Production Database (multi-region backup)
 ├── Redis cluster (high availability)
 ├── Load balancer (auto-scaling)
@@ -345,9 +345,9 @@ CREATE TABLE audit_logs (
 1. **Download**: `postman_collection_auth.json`
 2. **Import into Postman**: File → Import → Select JSON
 3. **Create Environment**: 
-   - Name: `Clisonix Development`
+   - Name: `Kloud Development`
    - Variables:
-     - `base_url` = `http://localhost:8000` (dev) or `https://api.clisonix.com` (prod)
+     - `base_url` = `http://localhost:8000` (dev) or `https://api.kloud.com` (prod)
      - `auth_token` = (empty, will populate)
      - `refresh_token` = (empty, will populate)
      - `api_key` = (empty, will populate)
@@ -850,12 +850,13 @@ Info (logged):
 | Role | Contact | Status |
 |------|---------|--------|
 | **On-Call Engineer** | +1-xxx-xxx-xxxx | 24/7 |
-| **Support Manager** | support@clisonix.com | 24/5 |
-| **CEO/CTO** | cto@clisonix.com | Critical only |
-| **Status Page** | status.clisonix.com | Public |
+| **Support Manager** | support@kloud.com | 24/5 |
+| **CEO/CTO** | cto@kloud.com | Critical only |
+| **Status Page** | status.kloud.com | Public |
 
 ---
 
-**Clisonix Cloud – Complete Startup Guide**  
+**Kloud Cloud – Complete Startup Guide**  
 **Ready for Production Launch**  
 **November 30, 2025**
+

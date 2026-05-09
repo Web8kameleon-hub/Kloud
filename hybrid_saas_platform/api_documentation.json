@@ -1,9 +1,9 @@
 {
   "/health": {
     "method": "GET",
-    "description": "Kontrollon gjendjen e shëndetit të sistemit. Kthen statusin e përgjithshëm të platformës Clisonix Cloud duke përfshirë versionin, uptime dhe statusin e shërbimeve të brendshme.",
+    "description": "Kontrollon gjendjen e shëndetit të sistemit. Kthen statusin e përgjithshëm të platformës Kloud Cloud duke përfshirë versionin, uptime dhe statusin e shërbimeve të brendshme.",
     "sample_response": {
-      "service": "clisonix-cloud",
+      "service": "kloud-cloud",
       "status": "healthy",
       "version": "2.1.0",
       "uptime_seconds": 86400,
@@ -14,8 +14,8 @@
         "prometheus": "healthy"
       }
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/health\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/health\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/status": {
     "method": "GET",
@@ -30,14 +30,14 @@
       "average_response_time_ms": 125,
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/status\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/status\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/api/system-status": {
     "method": "GET",
     "description": "Kthen statusin e plotë të sistemit industrial duke përfshirë të gjitha shërbimet, metrikat dhe alarmet aktive.",
     "sample_response": {
-      "system": "clisonix-industrial",
+      "system": "kloud-industrial",
       "status": "running",
       "services": {
         "alba_network": {
@@ -56,8 +56,8 @@
       "alerts": [],
       "last_check": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/api/system-status\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/api/system-status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/api/system-status\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/api/system-status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/db/ping": {
     "method": "GET",
@@ -73,8 +73,8 @@
       },
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/db/ping\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/db/ping\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/db/ping\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/db/ping\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/redis/ping": {
     "method": "GET",
@@ -88,14 +88,14 @@
       "version": "7.2.0",
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/redis/ping\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/redis/ping\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/redis/ping\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/redis/ping\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/api/ask": {
     "method": "POST",
     "description": "Endpoint i inteligjencës artificiale për pyetje-përgjigje. Pranon pyetje në gjuhë natyrore dhe kthen përgjigje të gjeneruara nga AI me kontekst të plotë.",
     "sample_response": {
-      "answer": "Clisonix është një platformë e avancuar neuro-audio që kombinon përpunimin EEG me gjenerimin e muzikës brain-sync.",
+      "answer": "Kloud është një platformë e avancuar neuro-audio që kombinon përpunimin EEG me gjenerimin e muzikës brain-sync.",
       "confidence": 0.95,
       "sources": [
         "internal_docs",
@@ -105,8 +105,8 @@
       "tokens_used": 125,
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/api/ask\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"question\": \"Çfarë është Clisonix?\", \"context\": \"Platformë neuro-audio\", \"include_details\": true}' ",
-    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.clisonix.com/api/ask\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"question\": \"Çfarë është Clisonix?\",\n        \"context\": \"Platformë neuro-audio dhe EEG\",\n        \"include_details\": True\n    }\n)\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/api/ask\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"question\": \"Çfarë është Kloud?\", \"context\": \"Platformë neuro-audio\", \"include_details\": true}' ",
+    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.kloud.com/api/ask\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"question\": \"Çfarë është Kloud?\",\n        \"context\": \"Platformë neuro-audio dhe EEG\",\n        \"include_details\": True\n    }\n)\nprint(response.json())"
   },
   "/neural-symphony": {
     "method": "GET",
@@ -119,8 +119,8 @@
       "status": "streaming",
       "stream_url": "/neural-symphony/stream/abc123"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/neural-symphony\" -H \"Authorization: Bearer $TOKEN\" -H \"Accept: audio/wav\" --output symphony.wav",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/neural-symphony\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Accept\": \"audio/wav\"\n    },\n    stream=True\n)\n\nwith open(\"symphony.wav\", \"wb\") as f:\n    for chunk in response.iter_content(chunk_size=8192):\n        f.write(chunk)"
+    "curl": "curl -X GET \"https://api.kloud.com/neural-symphony\" -H \"Authorization: Bearer $TOKEN\" -H \"Accept: audio/wav\" --output symphony.wav",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/neural-symphony\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Accept\": \"audio/wav\"\n    },\n    stream=True\n)\n\nwith open(\"symphony.wav\", \"wb\") as f:\n    for chunk in response.iter_content(chunk_size=8192):\n        f.write(chunk)"
   },
   "/api/uploads/eeg/process": {
     "method": "POST",
@@ -157,8 +157,8 @@
       "report_url": "/reports/eeg-upload-001.pdf",
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/api/uploads/eeg/process\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@brain_scan.edf\"",
-    "python": "import requests\n\nwith open(\"brain_scan.edf\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.clisonix.com/api/uploads/eeg/process\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/api/uploads/eeg/process\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@brain_scan.edf\"",
+    "python": "import requests\n\nwith open(\"brain_scan.edf\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.kloud.com/api/uploads/eeg/process\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
   },
   "/api/uploads/audio/process": {
     "method": "POST",
@@ -179,8 +179,8 @@
       },
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/api/uploads/audio/process\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@recording.wav\"",
-    "python": "import requests\n\nwith open(\"recording.wav\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.clisonix.com/api/uploads/audio/process\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/api/uploads/audio/process\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@recording.wav\"",
+    "python": "import requests\n\nwith open(\"recording.wav\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.kloud.com/api/uploads/audio/process\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
   },
   "/billing/paypal/order": {
     "method": "POST",
@@ -196,8 +196,8 @@
       "approval_url": "https://www.paypal.com/checkoutnow?token=5AB12345XY",
       "created_at": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/billing/paypal/order\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"intent\": \"CAPTURE\", \"purchase_units\": [{\"amount\": {\"currency_code\": \"EUR\", \"value\": \"10.00\"}}]}'  ",
-    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.clisonix.com/billing/paypal/order\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"intent\": \"CAPTURE\",\n        \"purchase_units\": [{\n            \"amount\": {\"currency_code\": \"EUR\", \"value\": \"10.00\"}\n        }]\n    }\n)\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/billing/paypal/order\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"intent\": \"CAPTURE\", \"purchase_units\": [{\"amount\": {\"currency_code\": \"EUR\", \"value\": \"10.00\"}}]}'  ",
+    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.kloud.com/billing/paypal/order\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"intent\": \"CAPTURE\",\n        \"purchase_units\": [{\n            \"amount\": {\"currency_code\": \"EUR\", \"value\": \"10.00\"}\n        }]\n    }\n)\nprint(response.json())"
   },
   "/billing/stripe/payment-intent": {
     "method": "POST",
@@ -214,8 +214,8 @@
       ],
       "created": 1704963600
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/billing/stripe/payment-intent\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1000, \"currency\": \"eur\", \"payment_method_types\": [\"sepa_debit\"]}'  ",
-    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.clisonix.com/billing/stripe/payment-intent\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"amount\": 1000,\n        \"currency\": \"eur\",\n        \"payment_method_types\": [\"sepa_debit\"],\n        \"description\": \"Clisonix subscription\"\n    }\n)\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/billing/stripe/payment-intent\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1000, \"currency\": \"eur\", \"payment_method_types\": [\"sepa_debit\"]}'  ",
+    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.kloud.com/billing/stripe/payment-intent\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"amount\": 1000,\n        \"currency\": \"eur\",\n        \"payment_method_types\": [\"sepa_debit\"],\n        \"description\": \"Kloud subscription\"\n    }\n)\nprint(response.json())"
   },
   "/asi/status": {
     "method": "GET",
@@ -245,8 +245,8 @@
       "coordination_level": "synchronized",
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/asi/status\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/asi/status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/asi/status\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/asi/status\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/asi/health": {
     "method": "GET",
@@ -276,8 +276,8 @@
       "alerts": [],
       "last_check": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/asi/health\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/asi/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/asi/health\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/asi/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/asi/execute": {
     "method": "POST",
@@ -292,8 +292,8 @@
       },
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/asi/execute\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"command\": \"status\", \"agent\": \"trinity\", \"parameters\": {}}'  ",
-    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.clisonix.com/asi/execute\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"command\": \"status\",\n        \"agent\": \"trinity\",\n        \"parameters\": {}\n    }\n)\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/asi/execute\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"command\": \"status\", \"agent\": \"trinity\", \"parameters\": {}}'  ",
+    "python": "import requests\n\nresponse = requests.post(\n    \"https://api.kloud.com/asi/execute\",\n    headers={\n        \"Authorization\": f\"Bearer {TOKEN}\",\n        \"Content-Type\": \"application/json\"\n    },\n    json={\n        \"command\": \"status\",\n        \"agent\": \"trinity\",\n        \"parameters\": {}\n    }\n)\nprint(response.json())"
   },
   "/api/alba/health": {
     "method": "GET",
@@ -316,8 +316,8 @@
       "last_restart": "2026-01-01T00:00:00Z",
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/api/alba/health\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/api/alba/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/api/alba/health\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/api/alba/health\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/asi/alba/metrics": {
     "method": "GET",
@@ -337,8 +337,8 @@
       },
       "scraped_at": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/asi/alba/metrics\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/asi/alba/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/asi/alba/metrics\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/asi/alba/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/asi/albi/metrics": {
     "method": "GET",
@@ -356,8 +356,8 @@
       },
       "scraped_at": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/asi/albi/metrics\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/asi/albi/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/asi/albi/metrics\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/asi/albi/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/asi/jona/metrics": {
     "method": "GET",
@@ -375,8 +375,8 @@
       },
       "scraped_at": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/asi/jona/metrics\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/asi/jona/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/asi/jona/metrics\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/asi/jona/metrics\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"}\n)\nprint(response.json())"
   },
   "/brain/youtube/insight": {
     "method": "GET",
@@ -397,8 +397,8 @@
       "transcript_available": true,
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X GET \"https://api.clisonix.com/brain/youtube/insight?video_id=dQw4w9WgXcQ\" -H \"Authorization: Bearer $TOKEN\"",
-    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.clisonix.com/brain/youtube/insight\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n    params={\"video_id\": \"dQw4w9WgXcQ\"}\n)\nprint(response.json())"
+    "curl": "curl -X GET \"https://api.kloud.com/brain/youtube/insight?video_id=dQw4w9WgXcQ\" -H \"Authorization: Bearer $TOKEN\"",
+    "python": "import requests\n\nresponse = requests.get(\n    \"https://api.kloud.com/brain/youtube/insight\",\n    headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n    params={\"video_id\": \"dQw4w9WgXcQ\"}\n)\nprint(response.json())"
   },
   "/brain/music/brainsync": {
     "method": "POST",
@@ -416,7 +416,8 @@
       "download_url": "/brain/music/download/brainsync-job-001",
       "timestamp": "2026-01-11T10:00:00Z"
     },
-    "curl": "curl -X POST \"https://api.clisonix.com/brain/music/brainsync?mode=relax\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@eeg_data.edf\"",
-    "python": "import requests\n\nwith open(\"eeg_data.edf\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.clisonix.com/brain/music/brainsync\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        params={\"mode\": \"relax\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
+    "curl": "curl -X POST \"https://api.kloud.com/brain/music/brainsync?mode=relax\" \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -F \"file=@eeg_data.edf\"",
+    "python": "import requests\n\nwith open(\"eeg_data.edf\", \"rb\") as f:\n    response = requests.post(\n        \"https://api.kloud.com/brain/music/brainsync\",\n        headers={\"Authorization\": f\"Bearer {TOKEN}\"},\n        params={\"mode\": \"relax\"},\n        files={\"file\": f}\n    )\nprint(response.json())"
   }
 }
+

@@ -12,7 +12,7 @@ router = APIRouter()
 
 def get_service_name() -> str:
 	# example dependency that could be replaced by a real service later
-	return "Clisonix-integrated"
+	return "Kloud-integrated"
 
 
 @router.get("/health")
@@ -23,4 +23,5 @@ def health():
 @router.get("/info")
 def info(service: str = Depends(get_service_name)):
 	return {"service": service, "description": "Minimal integrated routes"}
+
 

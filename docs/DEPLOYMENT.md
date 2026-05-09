@@ -1,12 +1,12 @@
-# 🚀 Clisonix Cloud - Deployment Guide
+# 🚀 Kloud Cloud - Deployment Guide
 
 ## Environments
 
 | Environment | Server | URL |
 |-------------|--------|-----|
 | Development | Local | `http://localhost:*` |
-| Staging | Docker Compose | `https://staging.clisonix.cloud` |
-| Production | Hetzner Cloud | `https://clisonix.cloud` |
+| Staging | Docker Compose | `https://staging.kloud.cloud` |
+| Production | Hetzner Cloud | `https://kloud.cloud` |
 
 ---
 
@@ -26,8 +26,8 @@
 
 ```bash
 # Clone and setup
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 
 # Copy environment file
 cp .env.example .env
@@ -46,7 +46,7 @@ docker compose ps
 ssh hetzner-new
 
 # Navigate to project
-cd /root/Clisonix-cloud
+cd /root/Kloud-cloud
 
 # Pull latest changes
 git pull origin main
@@ -91,7 +91,7 @@ docker compose logs -f --tail=100
 services:
   # Frontend
   web:
-    image: clisonix/web:latest
+    image: kloud/web:latest
     ports:
       - "80:80"
       - "443:443"
@@ -100,7 +100,7 @@ services:
 
   # Backend API
   api:
-    image: clisonix/api:latest
+    image: kloud/api:latest
     ports:
       - "8000:8000"
     environment:
@@ -112,7 +112,7 @@ services:
 
   # Curiosity Ocean AI
   ocean:
-    image: clisonix/ocean-core:latest
+    image: kloud/ocean-core:latest
     ports:
       - "8030:8030"
     environment:
@@ -129,8 +129,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=clisonixdb
-      - POSTGRES_USER=clisonix
+      - POSTGRES_DB=klouddb
+      - POSTGRES_USER=kloud
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   redis:
@@ -175,7 +175,7 @@ services:
 docker compose exec api alembic upgrade head
 
 # Verify
-docker compose exec postgres psql -U clisonix -d clisonixdb -c "\dt"
+docker compose exec postgres psql -U kloud -d klouddb -c "\dt"
 ```
 
 ### 3. Deploy Application
@@ -188,7 +188,7 @@ docker compose build --no-cache
 docker compose up -d --remove-orphans
 
 # Verify deployment
-curl -s https://api.clisonix.cloud/health | jq
+curl -s https://api.kloud.cloud/health | jq
 ```
 
 ### 4. Post-Deployment Verification
@@ -240,8 +240,8 @@ docker compose exec api alembic downgrade abc123
 ```bash
 # Initial setup
 certbot certonly --webroot -w /var/www/certbot \
-  -d clisonix.cloud \
-  -d api.clisonix.cloud
+  -d kloud.cloud \
+  -d api.kloud.cloud
 
 # Auto-renewal (cron)
 0 3 * * * certbot renew --quiet
@@ -252,10 +252,10 @@ certbot certonly --webroot -w /var/www/certbot \
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name api.clisonix.cloud;
+    server_name api.kloud.cloud;
     
-    ssl_certificate /etc/letsencrypt/live/clisonix.cloud/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/clisonix.cloud/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/kloud.cloud/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kloud.cloud/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     
     location / {
@@ -274,7 +274,7 @@ server {
 
 ```bash
 # API Health
-curl https://api.clisonix.cloud/health
+curl https://api.kloud.cloud/health
 
 # Ocean Health
 curl http://localhost:8030/health
@@ -285,7 +285,7 @@ docker compose exec postgres pg_isready
 
 ### Grafana Dashboards
 
-Access: `https://grafana.clisonix.cloud`
+Access: `https://grafana.kloud.cloud`
 
 Available dashboards:
 - API Performance
@@ -310,7 +310,7 @@ Configured in Prometheus/Alertmanager:
 
 ```bash
 # Database backup (runs daily via cron)
-0 2 * * * docker compose exec postgres pg_dump -U clisonix clisonixdb | gzip > /backups/db-$(date +%Y%m%d).sql.gz
+0 2 * * * docker compose exec postgres pg_dump -U kloud klouddb | gzip > /backups/db-$(date +%Y%m%d).sql.gz
 
 # Retain 30 days
 find /backups -name "db-*.sql.gz" -mtime +30 -delete
@@ -320,10 +320,10 @@ find /backups -name "db-*.sql.gz" -mtime +30 -delete
 
 ```bash
 # Full database backup
-docker compose exec postgres pg_dump -U clisonix -Fc clisonixdb > backup.dump
+docker compose exec postgres pg_dump -U kloud -Fc klouddb > backup.dump
 
 # Restore
-docker compose exec -T postgres pg_restore -U clisonix -d clisonixdb < backup.dump
+docker compose exec -T postgres pg_restore -U kloud -d klouddb < backup.dump
 ```
 
 ---
@@ -347,11 +347,11 @@ docker compose restart service-name
 #### Database Connection Failed
 ```bash
 # Test connection
-docker compose exec postgres psql -U clisonix -d clisonixdb
+docker compose exec postgres psql -U kloud -d klouddb
 
 # Check network
 docker network ls
-docker network inspect clisonix-cloud_default
+docker network inspect kloud-cloud_default
 ```
 
 #### High Memory Usage
@@ -379,3 +379,4 @@ docker compose up -d --scale api=2
 ---
 
 *Last Updated: February 2026 | Version 2.0.0*
+

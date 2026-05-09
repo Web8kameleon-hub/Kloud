@@ -1,8 +1,8 @@
 """
-CLISONIX API ROUTERS
+KLOUD API ROUTERS
 ====================
 
-Dedicated API routers for the Clisonix Marketplace.
+Dedicated API routers for the Kloud Marketplace.
 Each router handles a specific domain of functionality.
 
 Available Routers:
@@ -20,3 +20,4 @@ __all__ = [
     "audio_router", 
     "brain_api_router"
 ]
+

@@ -1,5 +1,5 @@
 """
-Clisonix Cloud SDK – Python Client
+Kloud Cloud SDK – Python Client
 Part of UltraWebThinking / Euroweb
 """
 
@@ -9,12 +9,12 @@ import requests
 from pathlib import Path
 
 
-class ClisonixClient:
-    """Synchronous Clisonix API client"""
+class KloudClient:
+    """Synchronous Kloud API client"""
 
     def __init__(
         self,
-        base_url: str = "https://api.clisonix.com",
+        base_url: str = "https://api.kloud.com",
         token: Optional[str] = None,
         timeout: int = 30
     ):
@@ -27,7 +27,7 @@ class ClisonixClient:
 
     def _headers(self, json_content: bool = True) -> Dict[str, str]:
         headers = {
-            "User-Agent": "Clisonix-Python-SDK/1.0"
+            "User-Agent": "Kloud-Python-SDK/1.0"
         }
         if json_content:
             headers["Accept"] = "application/json"
@@ -398,7 +398,7 @@ class ClisonixClient:
 # ==================== Example Usage ====================
 
 if __name__ == "__main__":
-    client = ClisonixClient(base_url="https://api.clisonix.com")
+    client = KloudClient(base_url="https://api.kloud.com")
 
     try:
         # 1. Login
@@ -411,7 +411,7 @@ if __name__ == "__main__":
         print(f"✓ Health: {health['status']}")
 
         # 3. Ask a question
-        answer = client.ask("Çfarë është Clisonix?", "neuro-audio platform")
+        answer = client.ask("Çfarë është Kloud?", "neuro-audio platform")
         print(f"✓ Answer: {answer['answer'][:100]}...")
 
         # 4. Refresh token (optional)
@@ -426,4 +426,5 @@ if __name__ == "__main__":
         print(f"✗ Error: {e}")
     finally:
         client.close()
+
 

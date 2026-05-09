@@ -1,4 +1,4 @@
-# Clisonix User Management Service
+# Kloud User Management Service
 # Centralized user registration, authentication, and profiling
 
 fastapi>=0.109.0
@@ -7,3 +7,4 @@ pydantic>=2.5.0
 pydantic[email]
 python-multipart>=0.0.6
 httpx>=0.26.0
+

@@ -365,4 +365,5 @@ Ky është mekanizmi që ruan:
 
 _Dokumenti i krijuar: 27 Shkurt 2026_  
 _L.A.G.T.E.R Protocols v1_  
-_Pjesë e Clisonix Cloud Platform_
+_Pjesë e Kloud Cloud Platform_
+

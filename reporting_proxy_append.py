@@ -8,8 +8,8 @@ from io import BytesIO
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, StreamingResponse
 
-# Microservices: Docker DNS, both containers in clisonix-unified network
-REPORTING_SERVICE_URL = "http://clisonix-reporting:8001"
+# Microservices: Docker DNS, both containers in kloud-unified network
+REPORTING_SERVICE_URL = "http://kloud-reporting:8001"
 
 # Production-grade timeout: 90s for most endpoints (reporting is slow), 180s for Excel
 PROXY_TIMEOUT = httpx.Timeout(90.0, connect=15.0)
@@ -105,3 +105,4 @@ except NameError:
     app.include_router(reporting_proxy_router)
 print(">>> REPORTING PROXY ENABLED ON PORT 8000 <<<")
 # === END REPORTING PROXY ===
+

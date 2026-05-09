@@ -559,10 +559,10 @@ AI_RESPONSES = {
     "ditë të mbarë": "have a good day",
 }
 
-# Clisonix-specific terms
-CLISONIX_TERMS = {
-    "Clisonix": "Platformë e Inteligjencës Industriale",
-    "Ocean AI": "Asistent AI i Clisonix",
+# Kloud-specific terms
+KLOUD_TERMS = {
+    "Kloud": "Platformë e Inteligjencës Industriale",
+    "Ocean AI": "Asistent AI i Kloud",
     "ASI Trinity": "Tre superinteligjenca artificiale",
     "ALBA": "Inteligjenca Analitike",
     "ALBI": "Inteligjenca Kreative", 
@@ -572,7 +572,7 @@ CLISONIX_TERMS = {
     "Curiosity Ocean": "Modul i eksplorimeve dhe pyetjeve",
     "CEO": "Drejtor Ekzekutiv",
     "themelues": "founder",
-    "Ledjan Ahmati": "Geschäftsführer dhe Themelues i Clisonix",
+    "Ledjan Ahmati": "Geschäftsführer dhe Themelues i Kloud",
     "ABA GmbH": "Organizata mëmë (Amtsgericht Bochum HRB: 21069)",
     "REST API": "Ndërfaqe programimi",
     "IoT": "Internet i Gjërave",
@@ -588,7 +588,7 @@ SENTENCE_PATTERNS = {
     "greeting_response": [
         "Mirëdita! Si mund të të ndihmoj sot?",
         "Tungjatjeta! Jam këtu për ty. Çfarë të intereson?",
-        "Përshëndetje! Mirë se erdhe në Clisonix. Si mund të ndihmoj?",
+        "Përshëndetje! Mirë se erdhe në Kloud. Si mund të ndihmoj?",
         "Ç'kemi! Jam Ocean AI. Pyet çfarë të duash!",
     ],
     "confusion_response": [
@@ -617,12 +617,12 @@ SENTENCE_PATTERNS = {
         "Fatkeqësisht jo.",
         "Nuk kam mundësi për këtë.",
     ],
-    "about_clisonix": [
-        "Clisonix është një platformë e inteligjencës industriale e krijuar nga Ledjan Ahmati.",
-        "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Clisonix.",
+    "about_kloud": [
+        "Kloud është një platformë e inteligjencës industriale e krijuar nga Ledjan Ahmati.",
+        "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Kloud.",
         "Ne ofrojmë REST API, zgjidhje IoT me LoRa, dhe analitikë në kohë reale.",
-        "Clisonix operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069).",
-        "Kontakti: support@clisonix.com ose +49 2327 9954413",
+        "Kloud operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069).",
+        "Kontakti: support@kloud.com ose +49 2327 9954413",
     ],
 }
 
@@ -679,10 +679,10 @@ DEFINITIONS = {
     "tirana": "Tirana është kryeqyteti dhe qyteti më i madh i Shqipërisë.",
     "prishtina": "Prishtina është kryeqyteti i Kosovës dhe qendra më e madhe urbane.",
     
-    # Clisonix
-    "clisonix": "Clisonix është platformë e inteligjencës industriale e krijuar nga Ledjan Ahmati. Ofron zgjidhje AI, IoT dhe analitikë në kohë reale.",
-    "curiosity ocean": "Curiosity Ocean është moduli AI chat i Clisonix - një asistent inteligjent që përgjigjet në shumë gjuhë.",
-    "ledjan ahmati": "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Clisonix, që operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069).",
+    # Kloud
+    "kloud": "Kloud është platformë e inteligjencës industriale e krijuar nga Ledjan Ahmati. Ofron zgjidhje AI, IoT dhe analitikë në kohë reale.",
+    "curiosity ocean": "Curiosity Ocean është moduli AI chat i Kloud - një asistent inteligjent që përgjigjet në shumë gjuhë.",
+    "ledjan ahmati": "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Kloud, që operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069).",
 }
 
 
@@ -791,17 +791,17 @@ def get_albanian_response(query: str) -> str | None:
             return random.choice(SENTENCE_PATTERNS["greeting_response"])
     
     # ═══════════════════════════════════════════════════════════════════════════
-    # 4) CHECK FOR CLISONIX QUESTIONS
+    # 4) CHECK FOR KLOUD QUESTIONS
     # ═══════════════════════════════════════════════════════════════════════════
-    clisonix_keywords = ["clisonix", "themelues", "ceo", "krijoi", "ndërtoi", 
+    kloud_keywords = ["kloud", "themelues", "ceo", "krijoi", "ndërtoi", 
                          "kompani", "platforma", "ledjan"]
-    if any(k in query_lower for k in clisonix_keywords):
+    if any(k in query_lower for k in kloud_keywords):
         if "kush" in query_lower or "ceo" in query_lower or "themelues" in query_lower:
-            return "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Clisonix. Ai ka krijuar këtë platformë të inteligjencës industriale që operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069)."
+            return "Ledjan Ahmati është Geschäftsführer dhe themeluesi i Kloud. Ai ka krijuar këtë platformë të inteligjencës industriale që operon nën ABA GmbH (Amtsgericht Bochum HRB: 21069)."
         if "çfarë" in query_lower or "cfare" in query_lower:
-            definition = get_definition("clisonix")
+            definition = get_definition("kloud")
             if definition:
-                return f"**Clisonix**\n\n{definition}"
+                return f"**Kloud**\n\n{definition}"
     
     # ═══════════════════════════════════════════════════════════════════════════
     # 5) CHECK FOR "what can you do" QUESTIONS
@@ -860,7 +860,7 @@ def get_word_translation(word: str) -> str | None:
     # Search all dictionaries
     all_dicts = [GREETINGS, QUESTION_WORDS, VERBS, TECH_NOUNS, 
                  COMMON_NOUNS, ADJECTIVES, NUMBERS, TIME_EXPRESSIONS,
-                 AI_RESPONSES, CLISONIX_TERMS]
+                 AI_RESPONSES, KLOUD_TERMS]
     
     for d in all_dicts:
         if word_lower in d:
@@ -880,7 +880,7 @@ ALL_ALBANIAN_WORDS.update(ADJECTIVES)
 ALL_ALBANIAN_WORDS.update(NUMBERS)
 ALL_ALBANIAN_WORDS.update(TIME_EXPRESSIONS)
 ALL_ALBANIAN_WORDS.update(AI_RESPONSES)
-ALL_ALBANIAN_WORDS.update(CLISONIX_TERMS)
+ALL_ALBANIAN_WORDS.update(KLOUD_TERMS)
 
 # Word count
 WORD_COUNT = len(ALL_ALBANIAN_WORDS)
@@ -892,3 +892,4 @@ if __name__ == "__main__":
         trans = get_word_translation(word)
         if trans:
             print(f"  {word} → {trans}")
+

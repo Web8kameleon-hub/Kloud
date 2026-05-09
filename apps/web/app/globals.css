@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ========================================
-   CLISONIX PRO THEME
+   KLOUD PRO THEME
    Inspired by: Figma, Postman, Datadog, Opera
    Professional dark UI - No emoji, clean icons
    ======================================== */
@@ -315,3 +315,4 @@ body {
     .animate-pulse-slow {
       animation: pulse-slow 2s ease-in-out infinite;
     }
+

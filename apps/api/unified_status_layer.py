@@ -1,6 +1,6 @@
 """
 =============================================================================
-CLISONIX UNIFIED STATUS LAYER
+KLOUD UNIFIED STATUS LAYER
 =============================================================================
 Version: 1.0
 Date: 2026-01-14
@@ -377,7 +377,7 @@ async def unified_health_endpoint(request: Request):
             
             "_cache": "MISS",
             "_version": "1.0.0",
-            "_documentation": "https://clisonix.com/developers"
+            "_documentation": "https://kloud.com/developers"
         }
         
         # Cache the response
@@ -388,7 +388,7 @@ async def unified_health_endpoint(request: Request):
             headers={
                 "X-Cache": "MISS", 
                 "Cache-Control": "public, max-age=10",
-                "X-Clisonix-Version": "1.0.0"
+                "X-Kloud-Version": "1.0.0"
             }
         )
         
@@ -416,12 +416,12 @@ async def _check_all_services() -> List[Dict[str, Any]]:
         # Use Docker container names with INTERNAL ports
         # Note: Internal ports differ from external mapped ports
         services = [
-            {"name": "api", "url": "http://clisonix-api:8000/health", "critical": True},
-            {"name": "web", "url": "http://clisonix-web:3000", "critical": True},
-            {"name": "core", "url": "http://clisonix-core:8000/", "critical": False},  # Internal 8000
-            {"name": "excel", "url": "http://clisonix-excel:8002/", "critical": False},  # Internal 8002
-            {"name": "marketplace", "url": "http://clisonix-marketplace:8004/", "critical": False},  # Internal 8004
-            {"name": "balancer", "url": "http://clisonix-balancer:8091/", "critical": False},
+            {"name": "api", "url": "http://kloud-api:8000/health", "critical": True},
+            {"name": "web", "url": "http://kloud-web:3000", "critical": True},
+            {"name": "core", "url": "http://kloud-core:8000/", "critical": False},  # Internal 8000
+            {"name": "excel", "url": "http://kloud-excel:8002/", "critical": False},  # Internal 8002
+            {"name": "marketplace", "url": "http://kloud-marketplace:8004/", "critical": False},  # Internal 8004
+            {"name": "balancer", "url": "http://kloud-balancer:8091/", "critical": False},
         ]
     else:
         # Use localhost with EXTERNAL ports (for local development)
@@ -628,7 +628,7 @@ class NotFoundMiddleware(BaseHTTPMiddleware):
                             "/api/asi/status",
                             "/api/system-status"
                         ],
-                        "documentation": "https://clisonix.com/developers"
+                        "documentation": "https://kloud.com/developers"
                     }
                 )
         
@@ -683,3 +683,4 @@ This will:
 3. Rate limit to 60 req/min per IP
 4. Log and handle all 404s and 5xx errors
 """
+

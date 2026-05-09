@@ -3,7 +3,7 @@
 import os
 import re
 
-ocean_core = r"c:\Users\Admin\Desktop\Clisonix-cloud\ocean-core"
+ocean_core = r"c:\Users\Admin\Desktop\Kloud-cloud\ocean-core"
 
 emoji_map = {
     '✅': '[OK]',
@@ -112,3 +112,4 @@ for filename in os.listdir(ocean_core):
             print(f"[ERROR] {filename}: {e}")
 
 print(f"\n{count} files cleaned from emoji")
+

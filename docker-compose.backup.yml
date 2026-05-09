@@ -4,17 +4,17 @@ services:
   # ==========================
   postgres:
     image: postgres:16-alpine
-    container_name: clisonix-postgres
+    container_name: kloud-postgres
     environment:
-      POSTGRES_USER: clisonix
-      POSTGRES_PASSWORD: clisonix
-      POSTGRES_DB: clisonixdb
+      POSTGRES_USER: kloud
+      POSTGRES_PASSWORD: kloud
+      POSTGRES_DB: klouddb
     ports:
       - "5432:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U clisonix"]
+      test: ["CMD-SHELL", "pg_isready -U kloud"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,7 +22,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: clisonix-redis
+    container_name: kloud-redis
     ports:
       - "6379:6379"
     healthcheck:
@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.alba
-    container_name: clisonix-alba
+    container_name: kloud-alba
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -62,7 +62,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.albi
-    container_name: clisonix-albi
+    container_name: kloud-albi
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -85,11 +85,11 @@ services:
     build:
       context: ./ocean-core
       dockerfile: Dockerfile
-    container_name: clisonix-ocean-core
+    container_name: kloud-ocean-core
     environment:
       PYTHONUNBUFFERED: "1"
       OCEAN_PORT: "8030"
-      OLLAMA_HOST: "http://clisonix-ollama:11434"
+      OLLAMA_HOST: "http://kloud-ollama:11434"
       MODEL: "llama3.1:8b"
       REDIS_URL: "redis://redis:6379/0"
     ports:
@@ -108,7 +108,7 @@ services:
     build:
       context: ./services/aviation-weather
       dockerfile: Dockerfile
-    container_name: clisonix-aviation
+    container_name: kloud-aviation
     environment:
       PYTHONUNBUFFERED: "1"
       AVIATION_PORT: "8080"
@@ -130,10 +130,10 @@ services:
     build:
       context: ./apps/api
       dockerfile: Dockerfile
-    container_name: clisonix-api
+    container_name: kloud-api
     environment:
       PYTHONUNBUFFERED: "1"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
       REDIS_URL: "redis://redis:6379/0"
     ports:
       - "8000:8000"
@@ -156,11 +156,11 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile
-    container_name: clisonix-web
+    container_name: kloud-web
     environment:
       NODE_ENV: "production"
       # Use Docker internal network for server-side API calls
-      API_INTERNAL_URL: "http://clisonix-api:8000"
+      API_INTERNAL_URL: "http://kloud-api:8000"
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
     ports:
@@ -175,7 +175,7 @@ services:
   # ==========================
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.96.0
-    container_name: clisonix-victoriametrics
+    container_name: kloud-victoriametrics
     ports:
       - "8428:8428"
     volumes:
@@ -198,7 +198,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.asi
-    container_name: clisonix-asi
+    container_name: kloud-asi
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -221,7 +221,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.marketplace
-    container_name: clisonix-marketplace
+    container_name: kloud-marketplace
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -247,10 +247,10 @@ services:
     build:
       context: ./services/excel
       dockerfile: Dockerfile
-    container_name: clisonix-excel
+    container_name: kloud-excel
     environment:
       PYTHONUNBUFFERED: "1"
-      CORE_API_URL: "http://clisonix-api:8000"
+      CORE_API_URL: "http://kloud-api:8000"
     ports:
       - "8002:8002"
     volumes:
@@ -270,7 +270,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.reporting
-    container_name: clisonix-reporting
+    container_name: kloud-reporting
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -291,7 +291,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.economy
-    container_name: clisonix-economy
+    container_name: kloud-economy
     environment:
       PYTHONUNBUFFERED: "1"
       ECONOMY_API_PORT: "9093"
@@ -311,7 +311,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.behavioral
-    container_name: clisonix-behavioral
+    container_name: kloud-behavioral
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -330,7 +330,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.cycle
-    container_name: clisonix-cycle
+    container_name: kloud-cycle
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -353,7 +353,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.neurosonix
-    container_name: clisonix-neurosonix
+    container_name: kloud-neurosonix
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -372,10 +372,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.analytics
-    container_name: clisonix-analytics
+    container_name: kloud-analytics
     environment:
       PYTHONUNBUFFERED: "1"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
     ports:
       - "8007:8007"
     depends_on:
@@ -395,7 +395,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.saas
-    container_name: clisonix-saas
+    container_name: kloud-saas
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -418,7 +418,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.biometric
-    container_name: clisonix-biometric
+    container_name: kloud-biometric
     environment:
       PYTHONUNBUFFERED: "1"
     ports:
@@ -437,10 +437,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.userdata
-    container_name: clisonix-userdata
+    container_name: kloud-userdata
     environment:
       PYTHONUNBUFFERED: "1"
-      DATABASE_URL: "postgresql://clisonix:clisonix@postgres:5432/clisonixdb"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
       REDIS_URL: "redis://redis:6379/0"
     ports:
       - "8010:8010"
@@ -463,10 +463,10 @@ services:
     build:
       context: ./services/curiosity_ocean
       dockerfile: Dockerfile
-    container_name: clisonix-curiosity
+    container_name: kloud-curiosity
     environment:
       PYTHONUNBUFFERED: "1"
-      OCEAN_CORE_URL: "http://clisonix-ocean-core:8030"
+      OCEAN_CORE_URL: "http://kloud-ocean-core:8030"
     ports:
       - "8011:8011"
     depends_on:
@@ -485,7 +485,7 @@ services:
     build:
       context: ./services/knowledge_index
       dockerfile: Dockerfile
-    container_name: clisonix-knowledge
+    container_name: kloud-knowledge
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -508,13 +508,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.intelligence
-    container_name: clisonix-intelligence
+    container_name: kloud-intelligence
     environment:
       PYTHONUNBUFFERED: "1"
-      ALBA_URL: "http://clisonix-alba:5555"
-      ALBI_URL: "http://clisonix-albi:6666"
-      ASI_URL: "http://clisonix-asi:9094"
-      OCEAN_URL: "http://clisonix-ocean-core:8030"
+      ALBA_URL: "http://kloud-alba:5555"
+      ALBI_URL: "http://kloud-albi:6666"
+      ASI_URL: "http://kloud-asi:9094"
+      OCEAN_URL: "http://kloud-ocean-core:8030"
     ports:
       - "8013:8013"
     depends_on:
@@ -536,7 +536,7 @@ services:
     build:
       context: ./services/internal_agi
       dockerfile: Dockerfile
-    container_name: clisonix-agi
+    container_name: kloud-agi
     environment:
       PYTHONUNBUFFERED: "1"
       REDIS_URL: "redis://redis:6379/0"
@@ -555,3 +555,4 @@ services:
 networks:
   default:
     driver: bridge
+

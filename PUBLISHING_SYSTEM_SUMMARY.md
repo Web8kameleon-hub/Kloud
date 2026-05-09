@@ -93,7 +93,7 @@ Faza 5: Ledjan Sign-Off → ✅
 python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 
 # Rezultat:
-# → clisonix-blog repo
+# → kloud-blog repo
 # → LinkedIn auto-poster
 # → LinkedIn profile (publikuar)
 ```
@@ -120,7 +120,7 @@ python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 └────────────────────────┬────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────────┐
-│               PUBLISH TO CLISONIX-BLOG REPO                 │
+│               PUBLISH TO KLOUD-BLOG REPO                 │
 │          posts/lagter-protocols-...-methodology.md          │
 └────────────────────────┬────────────────────────────────────┘
                          ↓
@@ -150,11 +150,11 @@ python publish_to_blog.py --doc docs/LAGTER_PROTOCOLS.md --status APPROVED
 
 - Më mirë të publikosh 2 dokumenta të mirë në janar
 - Se sa 10 dokumenta të prish reputacionin
-- Çdo dokument = Përfaqësim i Clisonix
+- Çdo dokument = Përfaqësim i Kloud
 
 ### 🏆 Standardi i Artë
 
-**"Dokumenta të Clisonix duhet të jenë standardi në fushë."**
+**"Dokumenta të Kloud duhet të jenë standardi në fushë."**
 
 - Të tjerë të mësohen nga ato
 - Të imitojnë strukturën
@@ -212,7 +212,7 @@ Edhe nëse jeni në nxitje:
 ## 🎯 OBJEKTIVI PËRFUNDIMTAR
 
 ```
-Clisonix = Standardi i Sektori në Dokumentacioni
+Kloud = Standardi i Sektori në Dokumentacioni
 Dokumenta e Lartë-Cilësisë = Besim i Klientëve
 Besim = Biznes
 ```
@@ -248,5 +248,6 @@ Besim = Biznes
 
 ---
 
-_Sistemi i Publikimit Profesional | Clisonix Cloud_  
+_Sistemi i Publikimit Profesional | Kloud Cloud_  
 _28 Shkurt 2026 | v1.0_
+

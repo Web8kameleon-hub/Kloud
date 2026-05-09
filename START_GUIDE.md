@@ -1,8 +1,8 @@
-# 🚀 Clisonix Cloud - Quick Start Guide
+# 🚀 Kloud Cloud - Quick Start Guide
 
 ## 📋 Overview
 
-The Clisonix Cloud project is now fully integrated with an optimized startup script that launches all services in one command. The system includes:
+The Kloud Cloud project is now fully integrated with an optimized startup script that launches all services in one command. The system includes:
 
 - **FastAPI Backend** (Port 8000) - Core API with all endpoints
 - **Next.js Frontend** (Port 3001) - Modern React dashboard  
@@ -221,4 +221,5 @@ Get-Process node | Stop-Process -Force
 
 **System Status**: ✅ **100% Operational**  
 **Last Updated**: November 30, 2025  
-**Maintainer**: Clisonix Development Team
+**Maintainer**: Kloud Development Team
+

@@ -1,7 +1,8 @@
 {
-  "admin": "clisonix-admin-key-2025",
-  "operator": "clisonix-operator-key-2025",
-  "auditor": "clisonix-auditor-key-2025",
-  "user": "clisonix-user-key-2025"
+  "admin": "kloud-admin-key-2025",
+  "operator": "kloud-operator-key-2025",
+  "auditor": "kloud-auditor-key-2025",
+  "user": "kloud-user-key-2025"
 }</content>
-<parameter name="filePath">c:\Users\pc\Clisonix-cloud\config\api_keys.json
+<parameter name="filePath">c:\Users\pc\Kloud-cloud\config\api_keys.json
+

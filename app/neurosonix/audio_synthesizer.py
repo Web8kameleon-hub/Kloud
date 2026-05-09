@@ -1,13 +1,13 @@
 """
-Clisonix Audio Synthesizer
+Kloud Audio Synthesizer
 ----------------------------
-Modern implementation of the Clisonix audio synthesizer engine.
+Modern implementation of the Kloud audio synthesizer engine.
 
 This module provides utilities for generating, mixing, and exporting
 synthetic audio waveforms for use in cognitive simulation or
 neural pattern sonification.
 
-Author: Clisonix Systems
+Author: Kloud Systems
 """
 
 import numpy as np
@@ -21,7 +21,7 @@ WaveType = Literal["sine", "square", "triangle", "sawtooth", "noise"]
 
 class AudioSynthesizer:
     """
-    Core class for Clisonix audio synthesis.
+    Core class for Kloud audio synthesis.
     Supports basic waveform generation and export to WAV.
     """
 
@@ -116,9 +116,10 @@ if __name__ == "__main__":
         (880, 0.5, "sawtooth"),
     ]
 
-    wave = synth.synthesize_pattern(pattern, output_path="output/Clisonix_demo.wav")
+    wave = synth.synthesize_pattern(pattern, output_path="output/Kloud_demo.wav")
 
     print("ðŸŽ§ Generated:", len(wave), "samples")
-    print("âœ… File saved to: output/Clisonix_demo.wav")
+    print("âœ… File saved to: output/Kloud_demo.wav")
+
 
 

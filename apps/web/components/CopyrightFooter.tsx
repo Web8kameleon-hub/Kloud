@@ -16,7 +16,7 @@ export default function CopyrightFooter({ showBrand = true, className = '' }: Co
         {showBrand && (
           <div className="text-center mb-4">
             <p className="text-sm font-medium text-blue-400">
-              Clisonix Cloud Research Series
+              Kloud Cloud Research Series
             </p>
           </div>
         )}
@@ -57,3 +57,4 @@ export default function CopyrightFooter({ showBrand = true, className = '' }: Co
     </footer>
   );
 }
+

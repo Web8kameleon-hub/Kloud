@@ -1,6 +1,6 @@
 # Grafana Dashboard Charts
 
-This folder contains exported Grafana charts from Clisonix Cloud's Prometheus monitoring.
+This folder contains exported Grafana charts from Kloud Cloud's Prometheus monitoring.
 
 ## Chart Inventory
 
@@ -60,3 +60,4 @@ Since I cannot save image attachments directly, please:
 ---
 
 **Last Updated:** December 11, 2025
+

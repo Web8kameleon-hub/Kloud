@@ -110,7 +110,7 @@ class EntityExtractor:
     KNOWN_ORGS = {
         "Google", "Microsoft", "Apple", "Amazon", "Meta", "Facebook", "Twitter",
         "Tesla", "SpaceX", "NASA", "UN", "EU", "NATO", "WHO", "UNICEF",
-        "IBM", "Intel", "NVIDIA", "OpenAI", "Anthropic", "Clisonix",
+        "IBM", "Intel", "NVIDIA", "OpenAI", "Anthropic", "Kloud",
         # Albanian
         "Universiteti i Tiranës", "RTSH", "BKT", "Raiffeisen", "Alpha Bank"
     }
@@ -129,7 +129,7 @@ class EntityExtractor:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("🏷️ EntityExtractor initialized")
     
@@ -435,3 +435,4 @@ def get_entity_extractor() -> EntityExtractor:
     if _entity_extractor is None:
         _entity_extractor = EntityExtractor()
     return _entity_extractor
+

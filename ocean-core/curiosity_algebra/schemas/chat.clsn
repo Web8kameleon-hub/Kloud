@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Chat Response
+# Kloud Binary Schema - Chat Response
 # Version: 1.0
 # Magic: CLSN
 
@@ -43,3 +43,4 @@ fields:
     offset: dynamic
     length_field: data_len
     description: "Additional binary data"
+

@@ -1,5 +1,5 @@
 /**
- * Clisonix INDUSTRIAL BACKEND SERVER
+ * Kloud INDUSTRIAL BACKEND SERVER
  * ===================================
  * Production-ready server with ASI Trinity + Payment System
  * ZERO FAKE DATA - Only real system metrics
@@ -115,7 +115,7 @@ industrialServer.get("/health", async (request, reply) => {
   const metrics = await getRealSystemMetrics();
   
   return {
-    service: "Clisonix-industrial-backend",
+    service: "Kloud-industrial-backend",
     status: "operational",
     version: "1.0.0",
     timestamp: new Date().toISOString(),
@@ -147,7 +147,7 @@ industrialServer.get("/status", async (request, reply) => {
                                  (100 - metrics.system.memory_usage_percent)) / 2).toFixed(1);
   
   return {
-    Clisonix_ecosystem: {
+    Kloud_ecosystem: {
       albi: "active_processing",
       alba: "data_collecting", 
       jona: "system_monitoring",
@@ -162,7 +162,7 @@ industrialServer.get("/status", async (request, reply) => {
       stability_rating: metrics.process.uptime_seconds > 300 ? "excellent" : "good"
     },
     business_info: {
-      company: "Clisonix Cloud"
+      company: "Kloud Cloud"
     },
     data_integrity: "verified_real_data_only",
     timestamp: new Date().toISOString()
@@ -337,7 +337,7 @@ industrialServer.get("/", async (request, reply) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Clisonix Industrial Backend + Payment System</title>
+      <title>Kloud Industrial Backend + Payment System</title>
       <style>
         body { font-family: 'Courier New', monospace; background: #0a0a0a; color: #00ff41; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; }
@@ -351,7 +351,7 @@ industrialServer.get("/", async (request, reply) => {
     </head>
     <body>
       <div class="container">
-        <h1 class="title">Clisonix Industrial Backend + Payment System</h1>
+        <h1 class="title">Kloud Industrial Backend + Payment System</h1>
         <div class="status">Status: <span class="success">OPERATIONAL</span></div>
         <div class="status">Time: ${new Date().toISOString()}</div>
         
@@ -406,7 +406,7 @@ try {
   await industrialServer.listen({ port, host: "0.0.0.0" });
   
   console.log("==========================================");
-  console.log("Clisonix INDUSTRIAL BACKEND STARTED");
+  console.log("Kloud INDUSTRIAL BACKEND STARTED");
   console.log("==========================================");
   console.log(`Server: http://127.0.0.1:${port}`);
   console.log(`Health: http://127.0.0.1:${port}/health`);
@@ -434,3 +434,4 @@ process.on("SIGTERM", async () => {
   await industrialServer.close();
   process.exit(0);
 });
+

@@ -173,7 +173,7 @@ jobs:
     steps:
       - name: Generate Report
         run: |
-          echo "# 🛡️ Clisonix Cloud - Enterprise Security Report" >> $GITHUB_STEP_SUMMARY
+          echo "# 🛡️ Kloud Cloud - Enterprise Security Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Pipeline Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -197,3 +197,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "🏢 *Enterprise-grade security without GitHub Advanced Security billing*" >> $GITHUB_STEP_SUMMARY
+

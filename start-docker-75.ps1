@@ -1,5 +1,5 @@
 # ============================================================
-# CLISONIX 75 MICROSERVICES - DOCKER STARTUP SCRIPT
+# KLOUD 75 MICROSERVICES - DOCKER STARTUP SCRIPT
 # Data: 30 Janar 2026
 # ============================================================
 
@@ -16,7 +16,7 @@ $ComposeFile = "docker-compose.75-microservices.yml"
 
 Write-Host @"
 ╔══════════════════════════════════════════════════════════════╗
-║           CLISONIX CLOUD - 75 MICROSERVICES                 ║
+║           KLOUD CLOUD - 75 MICROSERVICES                 ║
 ║                   Docker Manager v1.0                        ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Categories:                                                 ║
@@ -136,3 +136,4 @@ Write-Host "   • Status: .\start-docker-75.ps1 -Status" -ForegroundColor White
 Write-Host "   • Stop:   .\start-docker-75.ps1 -Stop" -ForegroundColor White
 Write-Host "   • Logs:   .\start-docker-75.ps1 -Logs" -ForegroundColor White
 Write-Host "   • Logs [service]: .\start-docker-75.ps1 -Logs -Service alba" -ForegroundColor White
+

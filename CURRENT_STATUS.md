@@ -1,4 +1,4 @@
-# 🎉 CLISONIX CLOUD - SYSTEM RUNNING SUCCESSFULLY
+# 🎉 KLOUD CLOUD - SYSTEM RUNNING SUCCESSFULLY
 
 **Date**: December 5, 2025  
 **Status**: ✅ **FULLY OPERATIONAL**
@@ -34,7 +34,7 @@ Next.js build cache corruption causing manifest file errors:
 ### How to Start the System
 
 ```powershell
-cd C:\clisonix-cloud
+cd C:\kloud-cloud
 .\start-dev.ps1
 ```
 
@@ -115,3 +115,4 @@ Frontend Started:
 - Services responding ✓
 
 **System Ready for Use!** 🎯
+

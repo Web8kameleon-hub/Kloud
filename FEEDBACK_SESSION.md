@@ -10,7 +10,7 @@
 
 - [x] K3s Kubernetes cluster (2 nodes) instaluar
 - [x] Traefik conflict resolved - nginx funksionon
-- [x] Site LIVE: <https://clisonix.com> → HTTP 200 ✅
+- [x] Site LIVE: <https://kloud.com> → HTTP 200 ✅
 - [x] GitHub Secrets: HETZNER_SSH_KEY, HETZNER_KUBECONFIG
 
 ### 2. Authentication
@@ -48,8 +48,8 @@
    - Vendos në server
 
 2. **Stripe Products** - shko: <https://dashboard.stripe.com/products>
-   - Krijo "Clisonix Pro" @ €9.99/mo
-   - Krijo "Clisonix Team" @ €29.99/mo
+   - Krijo "Kloud Pro" @ €9.99/mo
+   - Krijo "Kloud Team" @ €29.99/mo
    - Kopjo Price IDs në server
 
 ### Prioritet Mesatar
@@ -112,3 +112,4 @@ ose në Windows:
 ```powershell
 Remove-Item FEEDBACK_SESSION.md
 ```
+

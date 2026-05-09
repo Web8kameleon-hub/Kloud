@@ -67,7 +67,7 @@ export async function GET() {
         process.cwd(),
         "..",
         "..",
-        "Clisonix-Cloud-Real-APIs.postman_collection.json",
+        "Kloud-Cloud-Real-APIs.postman_collection.json",
       ),
     ];
 
@@ -88,8 +88,8 @@ export async function GET() {
           message: "Postman collection file found in project root",
           collections: [
             "Protocol_Kitchen_Sovereign_System.postman_collection.json",
-            "Clisonix-Cloud-Real-APIs.postman_collection.json",
-            "clisonix-ultra-mega-collection.json",
+            "Kloud-Cloud-Real-APIs.postman_collection.json",
+            "kloud-ultra-mega-collection.json",
           ],
         },
         kitchen: {
@@ -147,3 +147,4 @@ export async function GET() {
     );
   }
 }
+

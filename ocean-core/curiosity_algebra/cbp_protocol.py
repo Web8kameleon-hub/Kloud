@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-🔷 CLISONIX BINARY PROTOCOL (CBP)
+🔷 KLOUD BINARY PROTOCOL (CBP)
 =================================
-Protokoll i plotë binar për Clisonix.
+Protokoll i plotë binar për Kloud.
 
 Frame Layout:
 ┌──────────┬─────────┬───────┬────────────────┬─────────────┐
@@ -26,7 +26,7 @@ Features:
 - Encryption (optional)
 - Schema validation
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import struct
@@ -573,7 +573,7 @@ class BinaryStream:
 
 # ============ PROTOCOL ============
 
-class ClisonixProtocol:
+class KloudProtocol:
     """Main protocol handler"""
     
     def __init__(self, schema_dir: Optional[str] = None):
@@ -653,7 +653,7 @@ def read_clsn_file(path: str) -> Dict[str, Any]:
     with open(path, 'rb') as f:
         data = f.read()
     
-    protocol = ClisonixProtocol()
+    protocol = KloudProtocol()
     msg_type, payload = protocol.decode_message(data)
     
     return {
@@ -666,7 +666,7 @@ def read_clsn_file(path: str) -> Dict[str, Any]:
 
 def write_clsn_file(path: str, data: Dict[str, Any], msg_type: MessageType = MessageType.UNKNOWN):
     """Write data to .clsn binary file"""
-    protocol = ClisonixProtocol()
+    protocol = KloudProtocol()
     binary = protocol.encode_message(data, msg_type)
     
     with open(path, 'wb') as f:
@@ -711,18 +711,19 @@ def dump_frame(data: bytes) -> Dict[str, Any]:
 
 # ============ GLOBAL ============
 
-_protocol: Optional[ClisonixProtocol] = None
+_protocol: Optional[KloudProtocol] = None
 _schema_dir = os.path.join(os.path.dirname(__file__), 'schemas')
 
 
-def get_protocol() -> ClisonixProtocol:
+def get_protocol() -> KloudProtocol:
     """Get global protocol instance"""
     global _protocol
     if _protocol is None:
-        _protocol = ClisonixProtocol(_schema_dir)
+        _protocol = KloudProtocol(_schema_dir)
     return _protocol
 
 
 def get_schema_registry() -> SchemaRegistry:
     """Get schema registry"""
     return get_protocol().registry
+

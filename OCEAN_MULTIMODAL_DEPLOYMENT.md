@@ -12,12 +12,12 @@ ocean-multimodal:
   build:
     context: ./ocean-core
     dockerfile: Dockerfile.multimodal
-  container_name: clisonix-ocean-multimodal
+  container_name: kloud-ocean-multimodal
   ports:
     - "8031:8031"
   environment:
     PORT: 8031
-    OLLAMA_HOST: http://clisonix-06-ollama:11434
+    OLLAMA_HOST: http://kloud-06-ollama:11434
     VISION_MODEL: llava:latest
     AUDIO_MODEL: whisper:latest
     REASONING_MODEL: llama3.1:8b
@@ -38,9 +38,9 @@ ocean-multimodal:
 ```bash
 # On the server with Ollama running
 
-docker exec clisonix-06-ollama ollama pull llava:latest
-docker exec clisonix-06-ollama ollama pull whisper:latest
-docker exec clisonix-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-ollama ollama pull llava:latest
+docker exec kloud-06-ollama ollama pull whisper:latest
+docker exec kloud-06-ollama ollama pull llama3.1:8b
 
 ```
 
@@ -205,7 +205,7 @@ Root directory:
 ocean-multimodal (port 8031)
 
     ↓
-clisonix-06-ollama (port 11434)
+kloud-06-ollama (port 11434)
     ├── llava:latest          (Vision)
     ├── whisper:latest        (Audio)
     └── llama3.1:8b           (Reasoning)
@@ -317,10 +317,10 @@ curl http://localhost:8031/health | jq '.requests_processed'
 ```bash
 # Memory and CPU usage
 
-docker stats clisonix-ocean-multimodal
+docker stats kloud-ocean-multimodal
 
 # Detailed inspection
-docker inspect clisonix-ocean-multimodal
+docker inspect kloud-ocean-multimodal
 
 ```
 
@@ -349,10 +349,10 @@ curl http://localhost:11434/api/tags
 # Increase container memory
 
 docker compose up -d --no-recreate ocean-multimodal
-docker update --memory 8g clisonix-ocean-multimodal
+docker update --memory 8g kloud-ocean-multimodal
 
 # Restart container
-docker restart clisonix-ocean-multimodal
+docker restart kloud-ocean-multimodal
 
 ```
 
@@ -361,10 +361,10 @@ docker restart clisonix-ocean-multimodal
 ```bash
 # List available models
 
-docker exec clisonix-06-ollama ollama list
+docker exec kloud-06-ollama ollama list
 
 # Pull missing model
-docker exec clisonix-06-ollama ollama pull llava:latest
+docker exec kloud-06-ollama ollama pull llava:latest
 
 ```
 
@@ -376,8 +376,8 @@ docker exec clisonix-06-ollama ollama pull llava:latest
 curl http://localhost:11434/api/ps
 
 # Monitor system resources
-docker stats clisonix-ocean-multimodal
-docker stats clisonix-06-ollama
+docker stats kloud-ocean-multimodal
+docker stats kloud-06-ollama
 
 # Increase parallelism if needed
 
@@ -399,7 +399,7 @@ router = APIRouter(prefix="/ocean")
 async def call_ocean(mode: str, data: dict):
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "http://clisonix-ocean-multimodal:8031/api/v1/analyze",
+            "http://kloud-ocean-multimodal:8031/api/v1/analyze",
             json={"mode": mode, **data}
         )
         return response.json()
@@ -425,14 +425,14 @@ metadata:
   name: ocean-multimodal
 spec:
   hosts:
-  - clisonix-ocean-multimodal
+  - kloud-ocean-multimodal
   http:
   - match:
     - uri:
         prefix: /api/v1
     route:
     - destination:
-        host: clisonix-ocean-multimodal
+        host: kloud-ocean-multimodal
         port:
           number: 8031
     timeout: 60s
@@ -465,7 +465,7 @@ ocean-multimodal:
 
   # Enable reverse proxy with HTTPS
   labels:
-    - "traefik.http.routers.ocean.rule=Host(`ocean.clisonix.com`)"
+    - "traefik.http.routers.ocean.rule=Host(`ocean.kloud.com`)"
     - "traefik.http.routers.ocean.entrypoints=websecure"
     - "traefik.http.routers.ocean.tls=true"
 
@@ -483,13 +483,13 @@ For multiple instances:
 ocean-multimodal-1:
 
   # ... same config
-  container_name: clisonix-ocean-multimodal-1
+  container_name: kloud-ocean-multimodal-1
   ports:
     - "8031:8031"
 
 ocean-multimodal-2:
   # ... same config
-  container_name: clisonix-ocean-multimodal-2
+  container_name: kloud-ocean-multimodal-2
   ports:
     - "8032:8031"
 
@@ -531,10 +531,11 @@ ocean-multimodal:
 - 📖 **API Docs**: See `OCEAN_MULTIMODAL_API.md`
 - 🧪 **Tests**: Run `python ocean-core/test_multimodal.py`
 - 📊 **Monitoring**: Check `/health` endpoint
-- 💬 **Support**: Contact the Clisonix development team
+- 💬 **Support**: Contact the Kloud development team
 
 ---
 
 **Deployment Status**: ✅ Ready for production
 
 Last Updated: Feb 4, 2026
+

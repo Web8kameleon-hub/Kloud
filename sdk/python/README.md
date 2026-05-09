@@ -1,19 +1,19 @@
-# Clisonix Python SDK
+# Kloud Python SDK
 
-Official Python SDK for Clisonix Cloud API - Neural harmonic processing, EEG analysis, and ASI Trinity integration.
+Official Python SDK for Kloud Cloud API - Neural harmonic processing, EEG analysis, and ASI Trinity integration.
 
 ## Installation
 
 ```bash
-pip install clisonix
+pip install kloud
 ```
 
 ## Quick Start
 
 ```python
-from clisonix import Clisonix
+from kloud import Kloud
 
-client = Clisonix(api_key="your-api-key")
+client = Kloud(api_key="your-api-key")
 
 # Check system health
 health = client.core.health()
@@ -154,11 +154,11 @@ templates = client.excel.get_templates()
 ## Configuration
 
 ```python
-client = Clisonix(
+client = Kloud(
     api_key="your-api-key",
-    base_url="https://api.clisonix.com",  # Optional
-    reporting_url="https://reporting.clisonix.com",  # Optional
-    excel_url="https://excel.clisonix.com",  # Optional
+    base_url="https://api.kloud.com",  # Optional
+    reporting_url="https://reporting.kloud.com",  # Optional
+    excel_url="https://excel.kloud.com",  # Optional
     timeout=30,  # Request timeout in seconds
     retries=3  # Number of retry attempts
 )
@@ -167,24 +167,24 @@ client = Clisonix(
 ### Environment Variables
 
 ```bash
-export CLISONIX_API_KEY="your-api-key"
+export KLOUD_API_KEY="your-api-key"
 ```
 
 Then:
 
 ```python
-from clisonix import Clisonix
+from kloud import Kloud
 
 # API key will be read from environment
-client = Clisonix()
+client = Kloud()
 ```
 
 ## Error Handling
 
 ```python
-from clisonix import (
-    Clisonix,
-    ClisonixError,
+from kloud import (
+    Kloud,
+    KloudError,
     AuthenticationError,
     RateLimitError,
     ValidationError,
@@ -201,7 +201,7 @@ except ValidationError as e:
     print(f"Invalid request: {e.message}")
 except NotFoundError:
     print("Resource not found")
-except ClisonixError as e:
+except KloudError as e:
     print(f"API Error: {e.message} (code: {e.code})")
 ```
 
@@ -209,27 +209,28 @@ except ClisonixError as e:
 
 ```bash
 # Check health
-clisonix --api-key YOUR_KEY --health
+kloud --api-key YOUR_KEY --health
 
 # Get status
-clisonix --api-key YOUR_KEY --status
+kloud --api-key YOUR_KEY --status
 
 # Get ASI status
-clisonix --api-key YOUR_KEY --asi
+kloud --api-key YOUR_KEY --asi
 
 # Get Docker containers
-clisonix --api-key YOUR_KEY --containers
+kloud --api-key YOUR_KEY --containers
 ```
 
 ## Production Endpoints
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Main API | https://api.clisonix.com | Core, Brain, EEG, ASI, Billing |
-| Reporting | https://reporting.clisonix.com | Docker, System Metrics |
-| Excel | https://excel.clisonix.com | Excel Reports |
-| Frontend | https://clisonix.com | Web Dashboard |
+| Main API | https://api.kloud.com | Core, Brain, EEG, ASI, Billing |
+| Reporting | https://reporting.kloud.com | Docker, System Metrics |
+| Excel | https://excel.kloud.com | Excel Reports |
+| Frontend | https://kloud.com | Web Dashboard |
 
 ## License
 
-MIT © Clisonix Cloud
+MIT © Kloud Cloud
+

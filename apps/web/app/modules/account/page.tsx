@@ -1,5 +1,5 @@
 /**
- * Clisonix User Account & Billing Dashboard
+ * Kloud User Account & Billing Dashboard
  * Manage subscriptions, billing, profile settings
  */
 
@@ -307,9 +307,9 @@ export default function AccountPage() {
       setDetectedTimezone(browserTimezone)
       
       // Load saved preferences from localStorage
-      const savedLanguage = localStorage.getItem('clisonix_language')
-      const savedTimezone = localStorage.getItem('clisonix_timezone')
-      const savedTheme = localStorage.getItem('clisonix_theme')
+      const savedLanguage = localStorage.getItem('kloud_language')
+      const savedTimezone = localStorage.getItem('kloud_timezone')
+      const savedTheme = localStorage.getItem('kloud_theme')
       
       if (savedLanguage || savedTimezone) {
         // Will apply after user loads
@@ -324,7 +324,7 @@ export default function AccountPage() {
   const handleLanguageChange = (langCode: string) => {
     if (!user) return
     setUser({...user, language: langCode})
-    localStorage.setItem('clisonix_language', langCode)
+    localStorage.setItem('kloud_language', langCode)
     setPreferencesMessage({ type: 'success', text: `${t('preferences.languageChanged')} ${langCode.toUpperCase()}` })
     setTimeout(() => setPreferencesMessage(null), 2000)
   }
@@ -333,7 +333,7 @@ export default function AccountPage() {
   const handleTimezoneChange = (timezone: string) => {
     if (!user) return
     setUser({...user, timezone})
-    localStorage.setItem('clisonix_timezone', timezone)
+    localStorage.setItem('kloud_timezone', timezone)
     setPreferencesMessage({ type: 'success', text: `${t('preferences.timezoneChanged')} ${timezone}` })
     setTimeout(() => setPreferencesMessage(null), 2000)
   }
@@ -342,7 +342,7 @@ export default function AccountPage() {
   const handleAutoDetectTimezone = () => {
     if (!user || !detectedTimezone) return
     setUser({...user, timezone: detectedTimezone})
-    localStorage.setItem('clisonix_timezone', detectedTimezone)
+    localStorage.setItem('kloud_timezone', detectedTimezone)
     setPreferencesMessage({ type: 'success', text: `${t('preferences.timezoneChanged')} ${detectedTimezone}` })
     setTimeout(() => setPreferencesMessage(null), 3000)
   }
@@ -595,11 +595,11 @@ export default function AccountPage() {
                     <div className="text-sm text-gray-400">{t('overview.passwordAnd2FA')}</div>
                   </div>
                 </button>
-                <a href="mailto:contact@clisonix.com" className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
+                <a href="mailto:contact@kloud.com" className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
                   <span className="text-2xl">📧</span>
                   <div>
                     <div className="font-medium">{t('overview.contactSupport')}</div>
-                    <div className="text-sm text-gray-400">contact@clisonix.com</div>
+                    <div className="text-sm text-gray-400">contact@kloud.com</div>
                   </div>
                 </a>
               </div>
@@ -1324,7 +1324,7 @@ export default function AccountPage() {
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Dedicated Manager</li>
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Custom Integrations</li>
                   </ul>
-                  <a href="mailto:enterprise@clisonix.com" className="block w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-center">
+                  <a href="mailto:enterprise@kloud.com" className="block w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-center">
                     {t('upgrade.contactSales')}
                   </a>
                 </div>
@@ -1333,7 +1333,7 @@ export default function AccountPage() {
               {/* Footer */}
               <div className="mt-8 text-center">
                 <p className="text-gray-400 text-sm">
-                  💳 Secure payment via Stripe • 🔄 Cancel anytime • 📧 Questions? <a href="mailto:contact@clisonix.com" className="text-violet-400 hover:underline">contact@clisonix.com</a>
+                  💳 Secure payment via Stripe • 🔄 Cancel anytime • 📧 Questions? <a href="mailto:contact@kloud.com" className="text-violet-400 hover:underline">contact@kloud.com</a>
                 </p>
               </div>
             </div>
@@ -1528,6 +1528,7 @@ export default function AccountPage() {
     </div>
   )
 }
+
 
 
 

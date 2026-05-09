@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 
-// PRODUCTION: Hetzner server IP / clisonix.com
+// PRODUCTION: Hetzner server IP / kloud.com
 // DEVELOPMENT: Use localhost for local backend
 const isDev = process.env.NODE_ENV === 'development'
-const HETZNER_API = process.env.API_URL || (isDev ? 'http://localhost:8000' : 'http://clisonix-api:8000')
+const HETZNER_API = process.env.API_URL || (isDev ? 'http://localhost:8000' : 'http://kloud-api:8000')
 const API_BASE = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_BASE || HETZNER_API
 
 // Suppress repetitive error logging
@@ -42,3 +42,4 @@ export async function GET() {
     }, { status: 503 })
   }
 }
+

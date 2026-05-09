@@ -213,7 +213,7 @@ User sees clean answer ✓
 
 ### Production Deployment
 - **Server:** Hetzner (46.224.203.89)
-- **Container:** clisonix-ocean-core
+- **Container:** kloud-ocean-core
 - **Port:** 8030
 - **Status:** ✅ Live and tested
 
@@ -326,3 +326,4 @@ Planned improvements:
 **Status:** ✅ Fully deployed and operational  
 **Last Updated:** January 19, 2026  
 **Production URL:** http://46.224.203.89:8030/
+

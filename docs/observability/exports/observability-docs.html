@@ -4,7 +4,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Clisonix Cloud — Observability Documentation</title>
+            <title>Kloud Cloud — Observability Documentation</title>
         
 
         <style>
@@ -223,25 +223,25 @@
 </head><body>
 
         <div class="header">
-            <h1>Clisonix Cloud</h1>
+            <h1>Kloud Cloud</h1>
             <p style="font-size: 1.5em; margin-top: 10px;">Observability Suite</p>
             <p>Enterprise Monitoring • TSDB Analysis • Performance Telemetry</p>
             <p style="margin-top: 20px; font-size: 0.9em;">Generated: December 11, 2025</p>
         </div>
         
-<div class="toc"><h2>📚 Table of Contents</h2><ul><li>1. <a href="#clisonix-cloud">Clisonix Cloud</a></li><li>2. <a href="#clisonix-cloud">Clisonix Cloud</a></li><li>3. <a href="#metrics-overview">Metrics Overview</a></li><li>4. <a href="#prometheus-metrics-reference">Prometheus Metrics Reference</a></li><li>5. <a href="#tsdb-analysis">TSDB Analysis</a></li><li>6. <a href="#cardinality-engineering">Cardinality Engineering</a></li><li>7. <a href="#alert-rules">Alert Rules</a></li><li>8. <a href="#anomalies-report">Anomalies Report</a></li></ul></div>
-<div id="clisonix-cloud">
-<h1 id="clisonix-cloud-observability-suite">Clisonix Cloud — Observability Suite</h1>
+<div class="toc"><h2>📚 Table of Contents</h2><ul><li>1. <a href="#kloud-cloud">Kloud Cloud</a></li><li>2. <a href="#kloud-cloud">Kloud Cloud</a></li><li>3. <a href="#metrics-overview">Metrics Overview</a></li><li>4. <a href="#prometheus-metrics-reference">Prometheus Metrics Reference</a></li><li>5. <a href="#tsdb-analysis">TSDB Analysis</a></li><li>6. <a href="#cardinality-engineering">Cardinality Engineering</a></li><li>7. <a href="#alert-rules">Alert Rules</a></li><li>8. <a href="#anomalies-report">Anomalies Report</a></li></ul></div>
+<div id="kloud-cloud">
+<h1 id="kloud-cloud-observability-suite">Kloud Cloud — Observability Suite</h1>
 
 <p><strong>Enterprise Monitoring · TSDB Analysis · Performance Telemetry</strong></p>
 
-<p>Clisonix Cloud përdor një arkitekturë moderne observability me:</p>
+<p>Kloud Cloud përdor një arkitekturë moderne observability me:</p>
 
 <ul>
 <li><strong>Prometheus TSDB</strong></li>
 <li><strong>Grafana Dashboards</strong></li>
 <li><strong>Exporter-layer custom</strong></li>
-<li><strong>Clisonix Internal Neuro-Monitor Engine</strong></li>
+<li><strong>Kloud Internal Neuro-Monitor Engine</strong></li>
 </ul>
 
 <p>Ky dokument shërben si hyrje për:</p>
@@ -258,7 +258,7 @@
 
 <h2 id="overview">🔭 Overview</h2>
 
-<p>Observability në Clisonix është ndërtuar mbi 3 shtylla:</p>
+<p>Observability në Kloud është ndërtuar mbi 3 shtylla:</p>
 
 <h3 id="1-metrics">1. Metrics</h3>
 
@@ -297,7 +297,7 @@
 
 <h2 id="metrics-included">📊 Metrics Included</h2>
 
-<p>Clisonix mbledh 5 kategori metrikash:</p>
+<p>Kloud mbledh 5 kategori metrikash:</p>
 
 <table>
 <thead>
@@ -324,7 +324,7 @@
   <td>Conntrack, dialer failures</td>
 </tr>
 <tr>
-  <td><strong>Clisonix Neural Metrics</strong></td>
+  <td><strong>Kloud Neural Metrics</strong></td>
   <td>EEG ingestion, brain-sync workloads, harmonic engines</td>
 </tr>
 </tbody>
@@ -369,7 +369,7 @@
 
 <p>Cardinality është metrika më kritike e Prometheus.</p>
 
-<p>Në Clisonix:</p>
+<p>Në Kloud:</p>
 
 <ul>
 <li><code>instance = localhost:9090</code> → <strong>1013 series</strong></li>
@@ -486,14 +486,14 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <hr />
 
-<p><strong>Maintained by:</strong> Clisonix Cloud SRE Team<br />
+<p><strong>Maintained by:</strong> Kloud Cloud SRE Team<br />
 <strong>Last Updated:</strong> December 11, 2025<br />
 <strong>Version:</strong> 1.0.0</p>
 
 </div>
 <div class="page-break"></div>
-<div id="clisonix-cloud">
-<h1 id="clisonix-cloud-observability-architecture">Clisonix Cloud — Observability Architecture</h1>
+<div id="kloud-cloud">
+<h1 id="kloud-cloud-observability-architecture">Kloud Cloud — Observability Architecture</h1>
 
 <p><strong>Document Status:</strong> Draft<br />
 <strong>Version:</strong> 1.0.0<br />
@@ -503,14 +503,14 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <h2 id="overview">Overview</h2>
 
-<p>This document describes the end-to-end observability architecture for Clisonix Cloud, covering metrics collection, storage, visualization, and alerting.</p>
+<p>This document describes the end-to-end observability architecture for Kloud Cloud, covering metrics collection, storage, visualization, and alerting.</p>
 
 <hr />
 
 <h2 id="architecture-diagram">Architecture Diagram</h2>
 
 <pre><code>┌─────────────────────────────────────────────────────────────┐
-│                    Clisonix Services                        │
+│                    Kloud Services                        │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
 │  │   API    │  │  ALBA    │  │  ALBI    │  │  JONA    │   │
 │  │  :8000   │  │  :5555   │  │  :6666   │  │  :7777   │   │
@@ -548,7 +548,7 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <h3 id="1-metrics-exporters">1. Metrics Exporters</h3>
 
-<p>Each Clisonix service exposes metrics via <code>/metrics</code> endpoint:</p>
+<p>Each Kloud service exposes metrics via <code>/metrics</code> endpoint:</p>
 
 <ul>
 <li><strong>FastAPI apps:</strong> Built-in Prometheus middleware</li>
@@ -656,7 +656,7 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <h2 id="metric-categories">Metric Categories</h2>
 
-<p>Clisonix Cloud collects metrics across 5 primary categories:</p>
+<p>Kloud Cloud collects metrics across 5 primary categories:</p>
 
 <hr />
 
@@ -767,7 +767,7 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <hr />
 
-<h2 id="5-clisonix-neural-metrics">5. Clisonix Neural Metrics</h2>
+<h2 id="5-kloud-neural-metrics">5. Kloud Neural Metrics</h2>
 
 <h3 id="brain-engine-metrics">Brain Engine Metrics</h3>
 
@@ -797,16 +797,16 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <h2 id="metric-naming-convention">Metric Naming Convention</h2>
 
-<p>Clisonix follows Prometheus naming best practices:</p>
+<p>Kloud follows Prometheus naming best practices:</p>
 
 <ol>
 <li><strong>Format:</strong> <code>&lt;namespace&gt;_&lt;subsystem&gt;_&lt;name&gt;_&lt;unit&gt;</code></li>
 <li><p><strong>Examples:</strong></p>
 
 <ul>
-<li><code>clisonix_api_requests_total</code></li>
-<li><code>clisonix_neuro_processing_duration_seconds</code></li>
-<li><code>clisonix_alba_frames_bytes_total</code></li>
+<li><code>kloud_api_requests_total</code></li>
+<li><code>kloud_neuro_processing_duration_seconds</code></li>
+<li><code>kloud_alba_frames_bytes_total</code></li>
 </ul></li>
 <li><p><strong>Label Guidelines:</strong></p>
 
@@ -1084,7 +1084,7 @@ curl<span class="w"> </span>http://localhost:9090/api/v1/status/tsdb
 
 <h2 id="executive-summary">Executive Summary</h2>
 
-<p>This document provides detailed analysis of the 6 Grafana charts exported from Clisonix Cloud's Prometheus TSDB monitoring dashboard.</p>
+<p>This document provides detailed analysis of the 6 Grafana charts exported from Kloud Cloud's Prometheus TSDB monitoring dashboard.</p>
 
 <p><strong>Key Findings:</strong>
 - ✅ TSDB is healthy with 1053 active series
@@ -1402,7 +1402,7 @@ http_requests_total{method="POST", endpoint="/api", status="201"}
 
 <hr />
 
-<h2 id="clisonixs-current-state">Clisonix's Current State</h2>
+<h2 id="klouds-current-state">Kloud's Current State</h2>
 
 <table>
 <thead>
@@ -1436,7 +1436,7 @@ http_requests_total{method="POST", endpoint="/api", status="201"}
 </tbody>
 </table>
 
-<p><strong>Interpretation:</strong> Clisonix is operating at ~1% of recommended limits.</p>
+<p><strong>Interpretation:</strong> Kloud is operating at ~1% of recommended limits.</p>
 
 <hr />
 
@@ -1759,7 +1759,7 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 </tbody>
 </table>
 
-<h3 id="clisonix-trajectory">Clisonix Trajectory</h3>
+<h3 id="kloud-trajectory">Kloud Trajectory</h3>
 
 <p><strong>Current:</strong> 1K series (Small)<br />
 <strong>6 months:</strong> 5K series (Small → Medium transition)<br />
@@ -1811,7 +1811,7 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 
 <h2 id="overview">Overview</h2>
 
-<p>This document defines alert rules for Clisonix Cloud's production monitoring.</p>
+<p>This document defines alert rules for Kloud Cloud's production monitoring.</p>
 
 <hr />
 
@@ -1985,11 +1985,11 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 
 <h2 id="business-logic-alerts">Business Logic Alerts</h2>
 
-<h3 id="clisonix-specific-metrics">Clisonix-Specific Metrics</h3>
+<h3 id="kloud-specific-metrics">Kloud-Specific Metrics</h3>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clisonix_business</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kloud_business</span>
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALBAFrameGenerationStalled</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -2097,7 +2097,7 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 <span class="nt">receivers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;default&#39;</span>
 <span class="w">    </span><span class="nt">email_configs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ops@clisonix.com&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ops@kloud.com&#39;</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;pagerduty&#39;</span>
 <span class="w">    </span><span class="nt">pagerduty_configs</span><span class="p">:</span>
@@ -2111,7 +2111,7 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;email&#39;</span>
 <span class="w">    </span><span class="nt">email_configs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;monitoring@clisonix.com&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;monitoring@kloud.com&#39;</span>
 </code></pre>
 </div>
 
@@ -2125,12 +2125,12 @@ prometheus_http_request_duration_seconds_bucket{le="+Inf"}
 <strong>Severity:</strong> Critical</p>
 
 <p><strong>Diagnosis:</strong>
-1. Check service status: <code>systemctl status clisonix-api</code>
-2. Review logs: <code>journalctl -u clisonix-api -n 100</code>
+1. Check service status: <code>systemctl status kloud-api</code>
+2. Review logs: <code>journalctl -u kloud-api -n 100</code>
 3. Test connectivity: <code>curl http://localhost:8000/health</code></p>
 
 <p><strong>Resolution:</strong>
-1. Restart service: <code>systemctl restart clisonix-api</code>
+1. Restart service: <code>systemctl restart kloud-api</code>
 2. If still down, check dependencies (PostgreSQL, Redis)
 3. Escalate to on-call engineer if not resolved in 5 minutes</p>
 
@@ -2552,9 +2552,9 @@ curl<span class="w"> </span>http://localhost:8000/api/slow-endpoint?delay<span c
 </div>
 
         <div class="footer">
-            <p><strong>Clisonix Cloud Observability Documentation</strong></p>
+            <p><strong>Kloud Cloud Observability Documentation</strong></p>
             <p>Generated: December 11, 2025 at 15:36 UTC</p>
-            <p>Version 1.0.0 | Maintained by Clisonix SRE Team</p>
+            <p>Version 1.0.0 | Maintained by Kloud SRE Team</p>
         </div>
         
 </body></html>

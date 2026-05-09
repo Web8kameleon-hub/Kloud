@@ -13,11 +13,11 @@ RUNTIME = BASE / "runtime"
 RUNTIME.mkdir(exist_ok=True)
 RESULTS = RUNTIME / "scan_results.json"
 
-app = FastAPI(title="Smart Orchestrator (Clisonix)")
+app = FastAPI(title="Smart Orchestrator (Kloud)")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 HTML = """
-<!doctype html><html><head><meta charset="utf-8"><title>Clisonix — Smart Orchestrator</title>
+<!doctype html><html><head><meta charset="utf-8"><title>Kloud — Smart Orchestrator</title>
 <style>
 body{font-family:Arial;background:#0a0a0a;color:#e0e0e0;margin:0;padding:16px}
 h1{color:#33ccff}
@@ -28,7 +28,7 @@ th,td{border-bottom:1px solid #222;padding:8px;text-align:left}
 .ok{background:#0d381a;color:#12e46b}.warn{background:#382d0d;color:#ffb400}.bad{background:#3a0d0d;color:#ff5f5f}
 small{color:#9aa}
 </style></head><body>
-<h1>🧠 Clisonix — Smart Orchestrator</h1>
+<h1>🧠 Kloud — Smart Orchestrator</h1>
 <p>Skano automatikisht backend/frontend/docs/demo, monitoro për 10 sekonda dhe eksportoje raportin.</p>
 <div>
   <button onclick="scan()">🔎 SCAN & MONITOR (10s)</button>
@@ -101,7 +101,7 @@ def scan():
 def export_json():
     if not RESULTS.exists(): raise HTTPException(404, "No results")
     return Response(RESULTS.read_bytes(), media_type="application/json", headers={
-        "Content-Disposition": "attachment; filename=clisonix_report.json"
+        "Content-Disposition": "attachment; filename=kloud_report.json"
     })
 
 @app.get("/export/cbor")
@@ -111,7 +111,7 @@ def export_cbor():
     data = json.loads(RESULTS.read_text(encoding="utf-8"))
     blob = exp.to_cbor(data)   # hedh gabim të qartë nëse s’ke cbor2
     return Response(blob, media_type="application/cbor", headers={
-        "Content-Disposition": "attachment; filename=clisonix_report.cbor"
+        "Content-Disposition": "attachment; filename=kloud_report.cbor"
     })
 
 @app.get("/export/pdf")
@@ -126,4 +126,5 @@ def export_pdf():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5555)
+
 

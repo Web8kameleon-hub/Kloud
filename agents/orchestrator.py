@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                   CLISONIX AGENTS - ORCHESTRATOR                             ║
+║                   KLOUD AGENTS - ORCHESTRATOR                             ║
 ║              Central Coordination for All Agent Operations                   ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -48,7 +48,7 @@ from .specialized import (
 )
 
 
-logger = logging.getLogger("clisonix.agents.orchestrator")
+logger = logging.getLogger("kloud.agents.orchestrator")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -58,7 +58,7 @@ logger = logging.getLogger("clisonix.agents.orchestrator")
 @dataclass
 class OrchestratorConfig:
     """Configuration for the orchestrator"""
-    name: str = "clisonix-orchestrator"
+    name: str = "kloud-orchestrator"
     
     # Pool settings
     enable_autoscaling: bool = True
@@ -561,3 +561,4 @@ async def shutdown_orchestrator() -> None:
     if _global_orchestrator:
         await _global_orchestrator.stop()
         _global_orchestrator = None
+

@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Clisonix Cloud API - Part of Webultrathinking Euroweb
+  title: Kloud Cloud API - Part of Webultrathinking Euroweb
   version: '1.0.0'
   description: |
-    Clisonix Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,
+    Kloud Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,
     billing integration, and real-time system observability.
     
     **Key Features:**
@@ -16,23 +16,23 @@ info:
     
     **Security:** All endpoints require Bearer JWT authentication.
   contact:
-    name: Clisonix Support
-    url: https://clisonix.cloud/support
-    email: support@clisonix.cloud
+    name: Kloud Support
+    url: https://kloud.cloud/support
+    email: support@kloud.cloud
   license:
     name: Proprietary
-    url: https://clisonix.cloud/license
+    url: https://kloud.cloud/license
   x-logo:
-    url: https://clisonix.cloud/logo.png
+    url: https://kloud.cloud/logo.png
 
 servers:
   - url: http://localhost:8000
     description: Local Development
     variables: {}
-  - url: https://api.clisonix.cloud
+  - url: https://api.kloud.cloud
     description: Production
     variables: {}
-  - url: https://sandbox.clisonix.cloud
+  - url: https://sandbox.kloud.cloud
     description: Sandbox Testing
     variables: {}
 
@@ -112,7 +112,7 @@ components:
       properties:
         service:
           type: string
-          example: 'clisonix-cloud'
+          example: 'kloud-cloud'
         status:
           type: string
           enum: [healthy, degraded, unhealthy]
@@ -1960,4 +1960,5 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AlbaHealthResponse'
+
 

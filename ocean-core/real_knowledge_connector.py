@@ -18,7 +18,7 @@ Burimet:
 - Reasoning Engine (Logic)
 - Knowledge Router (Routing)
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 from __future__ import annotations
@@ -259,7 +259,7 @@ class ResearchConnector:
 
 class InternalKnowledgeBase:
     """
-    Baza e njohurisë interne - informacione rreth Clisonix dhe sistemeve
+    Baza e njohurisë interne - informacione rreth Kloud dhe sistemeve
     """
     
     def __init__(self):
@@ -268,7 +268,7 @@ class InternalKnowledgeBase:
     def _build_knowledge(self) -> Dict[str, Any]:
         """Build internal knowledge base"""
         return {
-            "clisonix": {
+            "kloud": {
                 "description": "Platformë inteligjente cloud e ndërtuar në Shqipëri",
                 "modules": ["Alba", "Albi", "Jona", "ASI", "AGEIM"],
                 "laboratories": 23,
@@ -302,7 +302,7 @@ class InternalKnowledgeBase:
                 "patterns": ["pershendetje", "tungjatjeta", "hello", "hi", "mirëdita", "si jeni"],
                 "responses": [
                     "Mirëdita! 👋 Si mund t'ju ndihmoj sot?",
-                    "Përshëndetje! Jam Clisonix Ocean, gati t'ju asistoj me çdo pyetje.",
+                    "Përshëndetje! Jam Kloud Ocean, gati t'ju asistoj me çdo pyetje.",
                     "Tungjatjeta! Çfarë dëshironi të mësoni sot?"
                 ]
             },
@@ -433,7 +433,7 @@ class ConversationalAI:
         
         # Topic detection
         topics = {
-            "ai": "Inteligjenca artificiale është një fushë që zhvillohet me shpejtësi. Clisonix përdor AI për të ofruar zgjidhje inteligjente.",
+            "ai": "Inteligjenca artificiale është një fushë që zhvillohet me shpejtësi. Kloud përdor AI për të ofruar zgjidhje inteligjente.",
             "machine learning": "Machine Learning na mundëson të mësojmë nga të dhënat dhe të bëjmë parashikime. Sistemi ynë ka ML Manager me disa modele.",
             "blockchain": "Blockchain është teknologji e decentralizuar. Mund të integroni CoinGecko API për çmime kripto.",
             "programming": "Programimi është arti i krijimit të softuerit. Çfarë gjuhe programimi ju intereson?",
@@ -590,7 +590,7 @@ if __name__ == "__main__":
             "Çfarë është çmimi i Bitcoin sot?",
             "Si është moti në Tiranë?",
             "Kërko artikuj për machine learning",
-            "Çfarë është Clisonix?"
+            "Çfarë është Kloud?"
         ]
         
         for query in queries:
@@ -603,3 +603,4 @@ if __name__ == "__main__":
             print(f"\n📝 Response:\n{result.get('final_response', 'No response')}")
     
     asyncio.run(test())
+

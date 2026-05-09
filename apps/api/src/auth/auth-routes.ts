@@ -1,5 +1,5 @@
 /**
- * Clisonix SIMPLE USER AUTHENTICATION
+ * Kloud SIMPLE USER AUTHENTICATION
  * ====================================
  * Basic user auth pÃ«r payment system
  */
@@ -50,7 +50,7 @@ const tokens = new Map<string, { user_id: string; expires_at: string }>();
 // Pre-populate with admin user
 const adminUser: User = {
   id: "admin-001",
-  email: "admin@clisonix.com",
+  email: "admin@kloud.com",
   username: "admin",
   hashed_password: hashPassword(process.env['ADMIN_PASSWORD'] || "ChangeMe123!"),
   is_active: true,
@@ -350,3 +350,4 @@ export async function registerAuthRoutes(app: FastifyInstance) {
     };
   });
 }
+

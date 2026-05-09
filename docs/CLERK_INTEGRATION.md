@@ -2,7 +2,7 @@
 
 ## Overview
 
-Clisonix uses **Clerk** for user authentication and identity management.
+Kloud uses **Clerk** for user authentication and identity management.
 This integration allows Ocean to identify users and provide personalized experiences.
 
 ## Architecture
@@ -29,7 +29,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxx
 
 1. Go to Clerk Dashboard
 2. Navigate to Webhooks and Add Endpoint
-3. Set URL: `https://api.clisonix.cloud/webhooks/clerk`
+3. Set URL: `https://api.kloud.cloud/webhooks/clerk`
 4. Select events: user.created, user.updated, user.deleted
 5. Copy the Signing Secret to CLERK_WEBHOOK_SECRET
 
@@ -131,3 +131,4 @@ curl -X POST http://localhost:8030/api/v1/chat \
 
 - Update CLERK_WEBHOOK_SECRET from Clerk Dashboard
 - Ensure headers are forwarded correctly
+

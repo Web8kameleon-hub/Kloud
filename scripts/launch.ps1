@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
 #
 # ╔═══════════════════════════════════════════════════════════════════╗
-# ║                    CLISONIX CLOUD - MEGA LAUNCHER                 ║
+# ║                    KLOUD CLOUD - MEGA LAUNCHER                 ║
 # ║                   "Next Generation Startup Script"                ║
 # ║                                                                   ║
-# ║  Launches the entire Clisonix Cloud stack like a modern aircraft  ║
+# ║  Launches the entire Kloud Cloud stack like a modern aircraft  ║
 # ║  with pre-flight checks, parallel initialization, and real-time   ║
 # ║  monitoring dashboard.                                            ║
 # ╚═══════════════════════════════════════════════════════════════════╝
@@ -17,7 +17,7 @@ param(
     [switch]$Monitor
 )
 
-$Root = 'c:\clisonix-cloud'
+$Root = 'c:\kloud-cloud'
 Set-Location $Root
 
 # ═══════════════════════════════════════════════════════════════════
@@ -36,7 +36,7 @@ $Colors = @{
 function Show-Banner {
     Write-Host "`n╔═══════════════════════════════════════════════════════════════════╗" -ForegroundColor $Colors.Title
     Write-Host "║                                                                   ║" -ForegroundColor $Colors.Title
-    Write-Host "║     🚀  CLISONIX CLOUD - NEXT GENERATION LAUNCHER  🚀             ║" -ForegroundColor $Colors.Title
+    Write-Host "║     🚀  KLOUD CLOUD - NEXT GENERATION LAUNCHER  🚀             ║" -ForegroundColor $Colors.Title
     Write-Host "║                                                                   ║" -ForegroundColor $Colors.Title
     Write-Host "╚═══════════════════════════════════════════════════════════════════╝`n" -ForegroundColor $Colors.Title
 }
@@ -121,7 +121,7 @@ function Start-Mode1 {
     
     Show-Status "Starting API Server (port 8000)..." 'WAIT'
     $apiJob = Start-Job -Name 'API' -ScriptBlock {
-        Set-Location 'c:\clisonix-cloud'
+        Set-Location 'c:\kloud-cloud'
         python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
     }
     Show-Status "API started (Job #$($apiJob.Id)) ✓" 'OK'
@@ -130,7 +130,7 @@ function Start-Mode1 {
     
     Show-Status "Starting Frontend (port 3000)..." 'WAIT'
     $webJob = Start-Job -Name 'Frontend' -ScriptBlock {
-        Set-Location 'c:\clisonix-cloud\apps\web'
+        Set-Location 'c:\kloud-cloud\apps\web'
         $env:NEXT_PUBLIC_API_BASE = 'http://localhost:8000'
         npm run dev
     }
@@ -147,7 +147,7 @@ function Start-Mode2 {
     Start-Process pwsh -ArgumentList @(
         '-NoExit',
         '-Command',
-        'Set-Location c:\clisonix-cloud; $host.UI.RawUI.WindowTitle = "Clisonix - API (8000)"; Write-Host "Starting API..." -ForegroundColor Green; python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000'
+        'Set-Location c:\kloud-cloud; $host.UI.RawUI.WindowTitle = "Kloud - API (8000)"; Write-Host "Starting API..." -ForegroundColor Green; python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000'
     )
     Show-Status "API window opened ✓" 'OK'
     
@@ -157,7 +157,7 @@ function Start-Mode2 {
     Start-Process pwsh -ArgumentList @(
         '-NoExit',
         '-Command',
-        'Set-Location c:\clisonix-cloud\apps\web; $host.UI.RawUI.WindowTitle = "Clisonix - Frontend (3000)"; $env:NEXT_PUBLIC_API_BASE="http://localhost:8000"; Write-Host "Starting Frontend..." -ForegroundColor Green; npm run dev'
+        'Set-Location c:\kloud-cloud\apps\web; $host.UI.RawUI.WindowTitle = "Kloud - Frontend (3000)"; $env:NEXT_PUBLIC_API_BASE="http://localhost:8000"; Write-Host "Starting Frontend..." -ForegroundColor Green; npm run dev'
     )
     Show-Status "Frontend window opened ✓" 'OK'
     
@@ -172,14 +172,14 @@ function Start-Mode3 {
     Start-Sleep 1
     
     Show-Status "Launching API Server..." 'WAIT'
-    $apiCmd = 'Set-Location c:\clisonix-cloud; $host.UI.RawUI.WindowTitle = "🔷 CLISONIX - API SERVER (8000)"; Write-Host "╔═════════════════════════════════════════╗" -ForegroundColor Cyan; Write-Host "║   API SERVER ONLINE - Port 8000        ║" -ForegroundColor Cyan; Write-Host "╚═════════════════════════════════════════╝" -ForegroundColor Cyan; python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000'
+    $apiCmd = 'Set-Location c:\kloud-cloud; $host.UI.RawUI.WindowTitle = "🔷 KLOUD - API SERVER (8000)"; Write-Host "╔═════════════════════════════════════════╗" -ForegroundColor Cyan; Write-Host "║   API SERVER ONLINE - Port 8000        ║" -ForegroundColor Cyan; Write-Host "╚═════════════════════════════════════════╝" -ForegroundColor Cyan; python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000'
     Start-Process pwsh -ArgumentList @('-NoExit', '-Command', $apiCmd)
     Show-Status "API launched ✓" 'OK'
     
     Start-Sleep 2
     
     Show-Status "Launching Frontend..." 'WAIT'
-    $webCmd = 'Set-Location c:\clisonix-cloud\apps\web; $host.UI.RawUI.WindowTitle = "🔶 CLISONIX - FRONTEND (3000)"; $env:NEXT_PUBLIC_API_BASE="http://localhost:8000"; Write-Host "╔═════════════════════════════════════════╗" -ForegroundColor Yellow; Write-Host "║   FRONTEND ONLINE - Port 3000          ║" -ForegroundColor Yellow; Write-Host "╚═════════════════════════════════════════╝" -ForegroundColor Yellow; npm run dev'
+    $webCmd = 'Set-Location c:\kloud-cloud\apps\web; $host.UI.RawUI.WindowTitle = "🔶 KLOUD - FRONTEND (3000)"; $env:NEXT_PUBLIC_API_BASE="http://localhost:8000"; Write-Host "╔═════════════════════════════════════════╗" -ForegroundColor Yellow; Write-Host "║   FRONTEND ONLINE - Port 3000          ║" -ForegroundColor Yellow; Write-Host "╚═════════════════════════════════════════╝" -ForegroundColor Yellow; npm run dev'
     Start-Process pwsh -ArgumentList @('-NoExit', '-Command', $webCmd)
     Show-Status "Frontend launched ✓" 'OK'
     
@@ -249,5 +249,6 @@ switch ($Mode) {
 
 Show-Dashboard
 
-Write-Host "🚀 Clisonix Cloud is ready for takeoff!`n" -ForegroundColor $Colors.Success
+Write-Host "🚀 Kloud Cloud is ready for takeoff!`n" -ForegroundColor $Colors.Success
+
 

@@ -1,8 +1,8 @@
 /**
- * Clisonix Cloud - Sign In Page
+ * Kloud Cloud - Sign In Page
  * 
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { SignIn } from "@clerk/nextjs";
@@ -14,7 +14,7 @@ export default function SignInPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Clisonix Cloud</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Kloud Cloud</h1>
           <p className="text-gray-400 text-lg">Sign in is currently unavailable. Please contact support.</p>
         </div>
       </div>
@@ -37,7 +37,7 @@ export default function SignInPage() {
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-xl">C</span>
             </div>
-            <span className="text-2xl font-bold text-white">Clisonix Cloud</span>
+            <span className="text-2xl font-bold text-white">Kloud Cloud</span>
           </div>
           <p className="text-gray-400">Welcome back! Sign in to continue.</p>
         </div>
@@ -81,3 +81,4 @@ export default function SignInPage() {
     </div>
   );
 }
+

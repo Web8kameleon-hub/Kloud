@@ -1,6 +1,6 @@
-<!-- cspell:words CLISONIX Clisonix jona ollama Biosignal JONA Zürich -->
+<!-- cspell:words KLOUD Kloud jona ollama Biosignal JONA Zürich -->
 
-# CLISONIX MODULE MAP
+# KLOUD MODULE MAP
 
 Version: 1.0.0
 
@@ -8,7 +8,7 @@ Version: 1.0.0
 
 ## USER PROMPT
 
-Clisonix is a European AI platform focused on modular reasoning engines, distributed intelligence, and sovereign cloud architectures. It provides advanced tools for domain-adaptive reasoning, expert-level chat modules, and deterministic AI pipelines designed for industrial and scientific applications. All responses are accurate, professional, and respect user privacy.
+Kloud is a European AI platform focused on modular reasoning engines, distributed intelligence, and sovereign cloud architectures. It provides advanced tools for domain-adaptive reasoning, expert-level chat modules, and deterministic AI pipelines designed for industrial and scientific applications. All responses are accurate, professional, and respect user privacy.
 
 ---
 
@@ -83,3 +83,4 @@ Respond in the user's language.
 ---
 
 *Single source of truth for module architecture.*
+

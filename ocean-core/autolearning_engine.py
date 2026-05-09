@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🧠 CLISONIX AUTOLEARNING ENGINE
+🧠 KLOUD AUTOLEARNING ENGINE
 ================================
 Sistem i mësimit të vazhdueshëm që:
 - Ruan çdo pyetje dhe përgjigje
@@ -9,7 +9,7 @@ Sistem i mësimit të vazhdueshëm që:
 - Krijon knowledge base të brendshme
 - NUK VARET NGA API TË JASHTME
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0
 """
 
@@ -317,7 +317,7 @@ class PatternDetector:
         "identity_query": {
             "keywords": ["who are you", "kush je", "what are you", "çfarë je"],
             "regex": r"(who are you|kush je|what are you|çfarë je)",
-            "response": "Jam Curiosity Ocean - sistemi i inteligjencës artificiale i Clisonix. Kam 14 persona ekspertësh, 23 laboratorë dhe 61 shtresa alfabetike për të analizuar pyetjet tuaja."
+            "response": "Jam Curiosity Ocean - sistemi i inteligjencës artificiale i Kloud. Kam 14 persona ekspertësh, 23 laboratorë dhe 61 shtresa alfabetike për të analizuar pyetjet tuaja."
         }
     }
     
@@ -785,3 +785,4 @@ if __name__ == "__main__":
     print("="*60)
     stats = engine.get_learning_stats()
     print(json.dumps(stats, indent=2, ensure_ascii=False))
+

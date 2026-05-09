@@ -1,6 +1,6 @@
 # 🌐 Hetzner Floating IP Setup Guide
 
-**High Availability Configuration for Clisonix Cloud**
+**High Availability Configuration for Kloud Cloud**
 
 ---
 
@@ -42,7 +42,7 @@ Floating IPs enable flexible, high-availability setups by allowing you to:
    Settings:
    - Type: IPv4
    - Location: Same as your server (e.g., Nuremberg)
-   - Assign to: Your Clisonix server
+   - Assign to: Your Kloud server
    ```
 
 2. **Via Hetzner CLI (hcloud):**
@@ -52,17 +52,17 @@ Floating IPs enable flexible, high-availability setups by allowing you to:
    # or download from: https://github.com/hetznercloud/cli
    
    # Login
-   hcloud context create clisonix-prod
+   hcloud context create kloud-prod
    
    # Create Floating IP
    hcloud floating-ip create \
      --type ipv4 \
      --home-location nbg1 \
-     --description "Clisonix Production" \
-     --name clisonix-floating-ip
+     --description "Kloud Production" \
+     --name kloud-floating-ip
    
    # Assign to server
-   hcloud floating-ip assign clisonix-floating-ip your-server-name
+   hcloud floating-ip assign kloud-floating-ip your-server-name
    ```
 
 **You'll receive an IP like:** `95.217.123.45`
@@ -79,7 +79,7 @@ Use our automated script:
 
 ```bash
 # Download and run configuration script
-curl -sSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/scripts/setup-floating-ip.sh -o setup-floating-ip.sh
+curl -sSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/scripts/setup-floating-ip.sh -o setup-floating-ip.sh
 
 chmod +x setup-floating-ip.sh
 
@@ -134,9 +134,9 @@ Point your domain to the Floating IP:
 
 ```
 A Record:
-clisonix.com        → 95.217.123.45
-*.clisonix.com      → 95.217.123.45
-api.clisonix.com    → 95.217.123.45
+kloud.com        → 95.217.123.45
+*.kloud.com      → 95.217.123.45
+api.kloud.com    → 95.217.123.45
 ```
 
 **Propagation time:** 5 minutes to 24 hours (usually < 1 hour)
@@ -149,19 +149,19 @@ Let's Encrypt certificates are tied to the IP address.
 
 ```bash
 # Stop nginx temporarily
-docker compose -f /opt/clisonix/docker-compose.prod.yml stop nginx
+docker compose -f /opt/kloud/docker-compose.prod.yml stop nginx
 
 # Request new certificates with Floating IP
 certbot certonly --standalone \
-  -d clisonix.com \
-  -d api.clisonix.com \
-  -d www.clisonix.com \
-  --email admin@clisonix.com \
+  -d kloud.com \
+  -d api.kloud.com \
+  -d www.kloud.com \
+  --email admin@kloud.com \
   --agree-tos \
   --non-interactive
 
 # Restart nginx
-docker compose -f /opt/clisonix/docker-compose.prod.yml start nginx
+docker compose -f /opt/kloud/docker-compose.prod.yml start nginx
 ```
 
 ---
@@ -228,8 +228,8 @@ vrrp_instance VI_1 {
         check_nginx
     }
     
-    notify_master "/opt/clisonix/scripts/floating-ip-master.sh"
-    notify_backup "/opt/clisonix/scripts/floating-ip-backup.sh"
+    notify_master "/opt/kloud/scripts/floating-ip-master.sh"
+    notify_backup "/opt/kloud/scripts/floating-ip-backup.sh"
 }
 ```
 
@@ -241,7 +241,7 @@ priority 100  # Lower than master
 
 #### **Create Notification Scripts:**
 
-**Master script** (`/opt/clisonix/scripts/floating-ip-master.sh`):
+**Master script** (`/opt/kloud/scripts/floating-ip-master.sh`):
 ```bash
 #!/bin/bash
 # Assign Floating IP via Hetzner API
@@ -258,19 +258,19 @@ curl -X POST \
 
 # Send alert
 echo "Floating IP failover: PRIMARY is now MASTER" | \
-  mail -s "Clisonix Failover Alert" admin@clisonix.com
+  mail -s "Kloud Failover Alert" admin@kloud.com
 ```
 
-**Backup script** (`/opt/clisonix/scripts/floating-ip-backup.sh`):
+**Backup script** (`/opt/kloud/scripts/floating-ip-backup.sh`):
 ```bash
 #!/bin/bash
 echo "Floating IP failover: PRIMARY is now BACKUP" | \
-  mail -s "Clisonix Failover Alert" admin@clisonix.com
+  mail -s "Kloud Failover Alert" admin@kloud.com
 ```
 
 **Make executable:**
 ```bash
-chmod +x /opt/clisonix/scripts/floating-ip-*.sh
+chmod +x /opt/kloud/scripts/floating-ip-*.sh
 ```
 
 **Start Keepalived:**
@@ -291,14 +291,14 @@ systemctl status keepalived
 # Floating IPs → Select IP → Assign to different server
 
 # Via CLI:
-hcloud floating-ip assign clisonix-floating-ip backup-server-name
+hcloud floating-ip assign kloud-floating-ip backup-server-name
 ```
 
 ### **Test 2: Simulate Server Failure**
 
 ```bash
 # On primary server - stop nginx
-docker compose -f /opt/clisonix/docker-compose.prod.yml stop nginx
+docker compose -f /opt/kloud/docker-compose.prod.yml stop nginx
 
 # Keepalived should detect failure and switch IP
 # Check logs:
@@ -309,11 +309,11 @@ journalctl -u keepalived -f
 
 ```bash
 # From external machine
-dig clisonix.com +short
+dig kloud.com +short
 # Should return Floating IP: 95.217.123.45
 
 # Test website accessibility
-curl -I https://clisonix.com
+curl -I https://kloud.com
 ```
 
 ---
@@ -324,7 +324,7 @@ curl -I https://clisonix.com
 
 ```bash
 # Check which server has the Floating IP
-hcloud floating-ip describe clisonix-floating-ip
+hcloud floating-ip describe kloud-floating-ip
 
 # Check Keepalived status
 systemctl status keepalived
@@ -365,7 +365,7 @@ Store Hetzner API token securely:
 
 ```bash
 # Create secrets file
-sudo nano /opt/clisonix/.hetzner-secrets
+sudo nano /opt/kloud/.hetzner-secrets
 ```
 
 ```bash
@@ -375,10 +375,10 @@ FLOATING_IP_ID=123456
 
 ```bash
 # Secure permissions
-sudo chmod 600 /opt/clisonix/.hetzner-secrets
+sudo chmod 600 /opt/kloud/.hetzner-secrets
 
 # Source in scripts
-source /opt/clisonix/.hetzner-secrets
+source /opt/kloud/.hetzner-secrets
 ```
 
 ---
@@ -402,7 +402,7 @@ source /opt/clisonix/.hetzner-secrets
 
 ```bash
 # Manual switch
-hcloud floating-ip assign clisonix-floating-ip backup-server
+hcloud floating-ip assign kloud-floating-ip backup-server
 
 # Or via API
 curl -X POST \
@@ -416,28 +416,28 @@ curl -X POST \
 
 ```bash
 # 1. Switch IP to backup
-hcloud floating-ip assign clisonix-floating-ip backup-server
+hcloud floating-ip assign kloud-floating-ip backup-server
 
 # 2. Wait for DNS propagation (2-5 minutes)
-watch -n 5 'curl -I https://clisonix.com'
+watch -n 5 'curl -I https://kloud.com'
 
 # 3. Perform maintenance on primary server
 apt update && apt upgrade -y
-docker compose -f /opt/clisonix/docker-compose.prod.yml pull
-docker compose -f /opt/clisonix/docker-compose.prod.yml up -d
+docker compose -f /opt/kloud/docker-compose.prod.yml pull
+docker compose -f /opt/kloud/docker-compose.prod.yml up -d
 
 # 4. Switch IP back to primary
-hcloud floating-ip assign clisonix-floating-ip primary-server
+hcloud floating-ip assign kloud-floating-ip primary-server
 ```
 
 ### **Remove Floating IP**
 
 ```bash
 # Unassign from server
-hcloud floating-ip unassign clisonix-floating-ip
+hcloud floating-ip unassign kloud-floating-ip
 
 # Delete Floating IP
-hcloud floating-ip delete clisonix-floating-ip
+hcloud floating-ip delete kloud-floating-ip
 ```
 
 ---
@@ -470,7 +470,7 @@ journalctl -u keepalived -n 100
 tcpdump -i eth0 vrrp
 
 # Check script execution
-bash -x /opt/clisonix/scripts/floating-ip-master.sh
+bash -x /opt/kloud/scripts/floating-ip-master.sh
 ```
 
 ### **SSL certificate errors after IP change**
@@ -480,8 +480,8 @@ bash -x /opt/clisonix/scripts/floating-ip-master.sh
 certbot renew --force-renewal
 
 # Or delete and recreate
-certbot delete --cert-name clisonix.com
-certbot certonly --standalone -d clisonix.com -d api.clisonix.com
+certbot delete --cert-name kloud.com
+certbot certonly --standalone -d kloud.com -d api.kloud.com
 ```
 
 ---
@@ -512,4 +512,5 @@ certbot certonly --standalone -d clisonix.com -d api.clisonix.com
 ---
 
 **Last Updated:** December 12, 2025  
-**Maintainer:** Clisonix DevOps Team
+**Maintainer:** Kloud DevOps Team
+

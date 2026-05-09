@@ -69,7 +69,7 @@ class StripePaymentManager:
                 currency=currency,
                 payment_method_types=["card"],
                 receipt_email=customer_email,
-                statement_descriptor="Clisonix Cloud"
+                statement_descriptor="Kloud Cloud"
             )
             logger.info(f"✅ PaymentIntent created: {intent.id}")
             return {
@@ -93,7 +93,7 @@ class StripePaymentManager:
             intent = stripe.PaymentIntent.confirm(
                 intent_id,
                 payment_method=payment_method_id,
-                return_url="https://clisonix.cloud/payment/success"
+                return_url="https://kloud.cloud/payment/success"
             )
             return {
                 "status": "success" if intent.status == "succeeded" else "requires_action",
@@ -151,7 +151,7 @@ class PayPalPaymentManager:
     
     @staticmethod
     def create_order(amount: float, currency: str = "USD", 
-                    description: str = "Clisonix Subscription") -> Dict[str, Any]:
+                    description: str = "Kloud Subscription") -> Dict[str, Any]:
         """Create PayPal order"""
         # Implementation would use PayPal SDK
         return {
@@ -205,3 +205,4 @@ if __name__ == "__main__":
     print("💳 Payment Gateway Configuration")
     print(f"   Configuration Status: {config.validate_configuration()}")
     print("   Compliance: PSD2, SCA/2FA, GDPR, PCI-DSS")
+

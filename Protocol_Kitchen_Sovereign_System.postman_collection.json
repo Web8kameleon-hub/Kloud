@@ -15,7 +15,7 @@
   },
   "variable": [
     { "key": "BASE_URL", "value": "http://localhost:8000", "type": "string" },
-    { "key": "API_KEY", "value": "clisonix-dev-key-2026", "type": "string" }
+    { "key": "API_KEY", "value": "kloud-dev-key-2026", "type": "string" }
   ],
   "item": [
     {
@@ -497,7 +497,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"language\": \"python\",\n  \"sdk_name\": \"clisonix-sdk\",\n  \"version\": \"1.0.0\"\n}"
+              "raw": "{\n  \"language\": \"python\",\n  \"sdk_name\": \"kloud-sdk\",\n  \"version\": \"1.0.0\"\n}"
             },
             "url": { "raw": "{{BASE_URL}}/api/artifacts/generate-sdk", "host": ["{{BASE_URL}}"], "path": ["api", "artifacts", "generate-sdk"] }
           }
@@ -606,3 +606,4 @@
     }
   ]
 }
+

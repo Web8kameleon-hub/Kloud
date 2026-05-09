@@ -1,5 +1,5 @@
 """
-Clisonix Cloud - Security Middleware
+Kloud Cloud - Security Middleware
 Industrial-grade security controls and monitoring
 """
 import asyncio
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class SecurityMiddleware(BaseHTTPMiddleware):
     """
-    Industrial-grade security middleware for Clisonix
+    Industrial-grade security middleware for Kloud
     Implements IP filtering, request validation, and threat detection
     """
     
@@ -37,7 +37,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
             "X-XSS-Protection": "1; mode=block",
             "Referrer-Policy": "strict-origin-when-cross-origin",
             "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-            "X-Powered-By": "Clisonix-Cloud"
+            "X-Powered-By": "Kloud-Cloud"
         }
         
         # Dangerous patterns to detect
@@ -320,5 +320,6 @@ class SecurityMiddleware(BaseHTTPMiddleware):
             "total_threats": sum(data.get("threats", 0) for data in self.suspicious_ips.values()),
             "timestamp": time.time()
         }
+
 
 

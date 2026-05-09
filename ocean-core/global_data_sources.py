@@ -14,7 +14,7 @@ Structure:
  CENTRAL ASIA & CAUCASUS (Kazakhstan, Uzbekistan, Georgia, Armenia)
  ANTARCTICA (Research Stations, Polar Data)
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 2.0.1 HYBRID
 """
 
@@ -1026,7 +1026,7 @@ class GlobalDataConnector:
         if self.session is None or self.session.closed:
             self.session = aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=30),
-                headers={"User-Agent": "Clisonix-Ocean/2.0"}
+                headers={"User-Agent": "Kloud-Ocean/2.0"}
             )
         return self.session
     
@@ -1100,3 +1100,4 @@ if __name__ == "__main__":
     print(f" Global Data Sources: {summary['total_sources']} total")
     for region, info in summary["regions"].items():
         print(f"  {region}: {info['count']} sources")
+

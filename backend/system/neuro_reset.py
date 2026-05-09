@@ -1,5 +1,5 @@
 """
-Clisonix Neuro Reset — controlled creative revival
+Kloud Neuro Reset — controlled creative revival
 - 5' mute / 7' random sensory / 3' scripting instinct (defaults, configurable)
 - objective measures: CPU, mem, latency (optional: URL for /health)
 - stores each session in runtime/neuro_reset_sessions.json
@@ -74,7 +74,7 @@ class NeuroReset:
         self.sessions_path.write_text(json.dumps(self.sessions, indent=2), encoding="utf-8")
 
     # ---------- metrics ----------
-    ALLOWED_LATENCY_HOSTS = frozenset(["api.clisonix.com", "localhost", "127.0.0.1"])
+    ALLOWED_LATENCY_HOSTS = frozenset(["api.kloud.com", "localhost", "127.0.0.1"])
     
     def _validate_url(self, url: str) -> bool:
         """Validate URL to prevent SSRF attacks"""
@@ -213,4 +213,5 @@ def neuro_stop(payload: Dict[str, Any] = Body(...)):
 @router.get("/reset/last")
 def neuro_last(n: int = 5):
     return nr.last(n)
+
 

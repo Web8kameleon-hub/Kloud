@@ -147,7 +147,7 @@ class SentimentAnalyzer:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("🎭 SentimentAnalyzer initialized")
     
@@ -435,3 +435,4 @@ def get_sentiment_analyzer() -> SentimentAnalyzer:
     if _sentiment_analyzer is None:
         _sentiment_analyzer = SentimentAnalyzer()
     return _sentiment_analyzer
+

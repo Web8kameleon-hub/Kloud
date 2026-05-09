@@ -15,7 +15,7 @@
 
 Write-Host "`n" -ForegroundColor Cyan
 Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  CLISONIX MONITORING STACK - PRE-DEPLOYMENT TEST          ║" -ForegroundColor Cyan
+Write-Host "║  KLOUD MONITORING STACK - PRE-DEPLOYMENT TEST          ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 
 $PrometheusHost = "http://localhost:9090"
@@ -212,4 +212,5 @@ Write-Host "   Grafana: http://localhost:3001" -ForegroundColor Cyan
 Write-Host "   VictoriaMetrics: http://localhost:8428" -ForegroundColor Cyan
 
 Write-Host "`n" -ForegroundColor Cyan
+
 

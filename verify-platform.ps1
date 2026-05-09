@@ -1,7 +1,7 @@
-# Clisonix Production Verification Script
+# Kloud Production Verification Script
 # Run this to verify platform readiness
 
-Write-Host "🔍 Clisonix Platform Verification" -ForegroundColor Cyan
+Write-Host "🔍 Kloud Platform Verification" -ForegroundColor Cyan
 Write-Host "=================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -26,7 +26,7 @@ if ($nodeVersion -match "v20\." -or $nodeVersion -match "v2[1-9]\.") {
 # 3. Verify pyproject.toml
 Write-Host "3️⃣  Validating pyproject.toml..." -ForegroundColor Yellow
 try {
-    $tomlTest = python -c "import tomllib; f = open('c:/clisonix-cloud/pyproject.toml', 'rb'); data = tomllib.load(f); print(len(data['project']['dependencies']))" 2>&1
+    $tomlTest = python -c "import tomllib; f = open('c:/kloud-cloud/pyproject.toml', 'rb'); data = tomllib.load(f); print(len(data['project']['dependencies']))" 2>&1
     Write-Host "   ✅ Valid TOML - $tomlTest dependencies locked" -ForegroundColor Green
 } catch {
     Write-Host "   ❌ TOML validation failed" -ForegroundColor Red
@@ -80,7 +80,7 @@ $docs = @(
     "PRODUCTION_SERVICES.md",
     "DEPENDENCY_LOCK_REPORT.md",
     "STABILIZATION_COMPLETE.md",
-    "CLISONIX_ARCHITECTURE_BASELINE_2025.md",
+    "KLOUD_ARCHITECTURE_BASELINE_2025.md",
     "openapi\README.md"
 )
 foreach ($doc in $docs) {
@@ -131,4 +131,5 @@ if ($pythonVersion -match "Python 3\.13" -and
 }
 
 Write-Host ""
+
 

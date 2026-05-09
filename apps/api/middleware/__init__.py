@@ -1,5 +1,5 @@
 """
-Clisonix Cloud Middleware Package
+Kloud Cloud Middleware Package
 Industrial-grade middleware components for FastAPI
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 """
@@ -13,5 +13,6 @@ __all__ = [
     "SecurityMiddleware", 
     "MonitoringMiddleware"
 ]
+
 
 

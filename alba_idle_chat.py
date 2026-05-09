@@ -1,4 +1,4 @@
-"""ALBA Idle Chat API - Clisonix Cloud."""
+"""ALBA Idle Chat API - Kloud Cloud."""
 import os
 from typing import Optional
 
@@ -26,3 +26,4 @@ def chat(message: Optional[dict] = None):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8031))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

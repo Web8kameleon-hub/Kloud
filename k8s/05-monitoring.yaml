@@ -8,14 +8,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  namespace: clisonix
+  namespace: kloud
 data:
   prometheus.yml: |
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
       external_labels:
-        cluster: clisonix-prod
+        cluster: kloud-prod
         environment: production
     
     alerting:
@@ -46,17 +46,17 @@ data:
             action: keep
             regex: default;kubernetes;https
       
-      # Clisonix API
-      - job_name: clisonix-api
+      # Kloud API
+      - job_name: kloud-api
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
               names:
-                - clisonix
+                - kloud
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_label_app]
             action: keep
-            regex: clisonix-api
+            regex: kloud-api
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: pod
@@ -81,28 +81,28 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-rules
-  namespace: clisonix
+  namespace: kloud
 data:
   alerts.yml: |
     groups:
-      - name: clisonix
+      - name: kloud
         interval: 30s
         rules:
           # API availability
           - alert: APIDown
-            expr: up{job="clisonix-api"} == 0
+            expr: up{job="kloud-api"} == 0
             for: 1m
             labels:
               severity: critical
             annotations:
-              summary: "Clisonix API is down"
+              summary: "Kloud API is down"
               description: "API endpoint {{ $labels.instance }} is not responding"
           
           # High memory usage
           - alert: HighMemoryUsage
             expr: |
-              (container_memory_usage_bytes{pod=~"clisonix-.*"} / 
-               container_spec_memory_limit_bytes{pod=~"clisonix-.*"}) > 0.8
+              (container_memory_usage_bytes{pod=~"kloud-.*"} / 
+               container_spec_memory_limit_bytes{pod=~"kloud-.*"}) > 0.8
             for: 5m
             labels:
               severity: warning
@@ -113,7 +113,7 @@ data:
           # High CPU usage
           - alert: HighCPUUsage
             expr: |
-              rate(container_cpu_usage_seconds_total{pod=~"clisonix-.*"}[5m]) > 0.8
+              rate(container_cpu_usage_seconds_total{pod=~"kloud-.*"}[5m]) > 0.8
             for: 5m
             labels:
               severity: warning
@@ -135,7 +135,7 @@ data:
           - alert: HighResponseTime
             expr: |
               histogram_quantile(0.95, 
-                rate(http_request_duration_seconds_bucket{job="clisonix-api"}[5m])
+                rate(http_request_duration_seconds_bucket{job="kloud-api"}[5m])
               ) > 1
             for: 5m
             labels:
@@ -150,7 +150,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: prometheus
 spec:
@@ -205,7 +205,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus-service
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: prometheus
 spec:
@@ -221,7 +221,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus
-  namespace: clisonix
+  namespace: kloud
 
 ---
 # ClusterRole for Prometheus
@@ -260,7 +260,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: prometheus
-    namespace: clisonix
+    namespace: kloud
 
 ---
 # Grafana Deployment
@@ -268,7 +268,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: clisonix
+  namespace: kloud
 spec:
   replicas: 1
   selector:
@@ -318,7 +318,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-datasources
-  namespace: clisonix
+  namespace: kloud
 data:
   prometheus.yml: |
     apiVersion: 1
@@ -335,7 +335,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: grafana-secret
-  namespace: clisonix
+  namespace: kloud
 type: Opaque
 stringData:
   admin-password: "change-me-in-production"
@@ -346,7 +346,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grafana-service
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: grafana
 spec:
@@ -362,7 +362,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jaeger
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: jaeger
 spec:
@@ -398,7 +398,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jaeger-service
-  namespace: clisonix
+  namespace: kloud
 spec:
   ports:
     - port: 6831
@@ -408,4 +408,5 @@ spec:
       name: jaeger-ui
   selector:
     app: jaeger
+
 

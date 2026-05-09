@@ -1,15 +1,15 @@
-# Clisonix API Root Endpoint - Insert after line 1542 in main.py
+# Kloud API Root Endpoint - Insert after line 1542 in main.py
 @app.get("/api")
 async def api_root():
     """
-    Clisonix Cloud API Root
+    Kloud Cloud API Root
     Returns available endpoints and API information
     """
     return {
-        "name": "Clisonix Cloud API",
+        "name": "Kloud Cloud API",
         "version": "2.0.0",
         "status": "operational",
-        "documentation": "https://clisonix.com/docs",
+        "documentation": "https://kloud.com/docs",
         "endpoints": {
             "health": "/health",
             "status": "/status",
@@ -32,6 +32,7 @@ async def api_root():
             },
             "monitoring": "/api/monitoring/dashboards"
         },
-        "support": "support@clisonix.com"
+        "support": "support@kloud.com"
     }
+
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Clisonix Stripe Billing Routes (Standalone)
+Kloud Stripe Billing Routes (Standalone)
 ============================================
 Routes për Stripe billing që funksionojnë pa varësi të jashtme.
 """
@@ -42,7 +42,7 @@ async def billing_status():
     """Check Stripe billing status."""
     return {
         "stripe_configured": STRIPE_CONFIGURED,
-        "webhook_url": "https://api.clisonix.com/api/v1/billing/webhook",
+        "webhook_url": "https://api.kloud.com/api/v1/billing/webhook",
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
@@ -51,7 +51,7 @@ async def billing_status():
 async def create_payment_intent(
     amount: int = 2900,  # Default 29.00 EUR
     currency: str = "eur",
-    description: str = "Clisonix Subscription"
+    description: str = "Kloud Subscription"
 ):
     """
     Create a Stripe Payment Intent.
@@ -70,7 +70,7 @@ async def create_payment_intent(
             currency=currency,
             description=description,
             metadata={
-                "product": "clisonix",
+                "product": "kloud",
                 "environment": os.getenv("ENVIRONMENT", "production")
             }
         )
@@ -92,7 +92,7 @@ async def stripe_webhook(request: Request):
     """
     Handle Stripe webhook events.
     
-    Configured webhook URL: https://api.clisonix.com/api/v1/billing/webhook
+    Configured webhook URL: https://api.kloud.com/api/v1/billing/webhook
     """
     if not STRIPE_CONFIGURED:
         raise HTTPException(status_code=503, detail="Stripe not configured")
@@ -212,7 +212,7 @@ async def create_customer(
         customer = stripe.Customer.create(
             email=email,
             name=name,
-            metadata={"source": "clisonix_api"}
+            metadata={"source": "kloud_api"}
         )
         
         return {
@@ -227,7 +227,7 @@ async def create_customer(
 
 @router.get("/products")
 async def list_products():
-    """List all Clisonix products."""
+    """List all Kloud products."""
     if not STRIPE_CONFIGURED:
         raise HTTPException(status_code=503, detail="Stripe not configured")
     
@@ -275,8 +275,8 @@ async def create_checkout_session(request: Request):
         body = await request.json()
         price_id = body.get("price_id")
         customer_email = body.get("customer_email")
-        success_url = body.get("success_url", "https://clisonix.com/success")
-        cancel_url = body.get("cancel_url", "https://clisonix.com/cancel")
+        success_url = body.get("success_url", "https://kloud.com/success")
+        cancel_url = body.get("cancel_url", "https://kloud.com/cancel")
         
         if not price_id:
             raise HTTPException(status_code=400, detail="price_id required")
@@ -360,3 +360,4 @@ async def report_usage(
     except Exception as e:
         logger.error(f"Usage report failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+

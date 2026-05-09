@@ -11,7 +11,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="SaaS API Production Service"
 LABEL version="1.0.0"
 
@@ -61,7 +61,7 @@ ALBI_URL = os.getenv("ALBI_URL", "http://albi:6666")
 JONA_URL = os.getenv("JONA_URL", "http://jona:7777")
 
 app = FastAPI(
-    title="Clisonix SaaS API",
+    title="Kloud SaaS API",
     description="Production SaaS API powered by ASI Trinity",
     version="1.0.0",
     docs_url="/api/v1/docs",
@@ -138,7 +138,7 @@ async def health_check():
 @app.get("/")
 async def root():
     return {
-        "service": "Clisonix SaaS API",
+        "service": "Kloud SaaS API",
         "version": "1.0.0",
         "mode": SAAS_MODE,
         "endpoints": {
@@ -290,3 +290,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8008/health || exit 1
 
 CMD ["python", "saas_api_service.py"]
+

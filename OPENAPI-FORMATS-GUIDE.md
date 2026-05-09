@@ -1,4 +1,4 @@
-# OpenAPI Specification – Clisonix Cloud API v1.0.0
+# OpenAPI Specification – Kloud Cloud API v1.0.0
 
 ## 📋 Tre Format Profesional Të Prodhuara
 
@@ -18,7 +18,7 @@ openapi-generator-cli validate -i openapi.yaml
 openapi-generator-cli generate -i openapi.yaml -g python -o ./sdk
 
 # Publikim në Swagger UI
-swaggerhub api:create Clisonix/Cloud-API:1.0.0 openapi.yaml
+swaggerhub api:create Kloud/Cloud-API:1.0.0 openapi.yaml
 ```
 
 ### 2. **openapi.json** (74.2 KB)
@@ -56,7 +56,7 @@ import cbor2
 with open('openapi.cbor', 'rb') as f:
     spec = cbor2.load(f)
 
-print(spec['info']['title'])  # 'Clisonix Cloud API'
+print(spec['info']['title'])  # 'Kloud Cloud API'
 ```
 
 **Përdorimi (Node.js):**
@@ -159,7 +159,7 @@ POST /api/ask
 ```bash
 # Kong
 curl -X POST http://kong:8001/apis \
-  -F "name=clisonix" \
+  -F "name=kloud" \
   -F "upstream_url=http://localhost:8000" \
   -F "uris=/api" \
   -d "plugins=openapi-spec" \
@@ -175,19 +175,19 @@ aws apigateway import-rest-api --body file://openapi.json
 openapi-generator-cli generate \
   -i openapi.yaml \
   -g python \
-  -o ./clisonix-sdk-python
+  -o ./kloud-sdk-python
 
 # TypeScript SDK
 openapi-generator-cli generate \
   -i openapi.yaml \
   -g typescript-fetch \
-  -o ./clisonix-sdk-ts
+  -o ./kloud-sdk-ts
 
 # Go SDK
 openapi-generator-cli generate \
   -i openapi.yaml \
   -g go \
-  -o ./clisonix-sdk-go
+  -o ./kloud-sdk-go
 ```
 
 ---
@@ -227,8 +227,8 @@ spectacle openapi.yaml -d ./docs
 
 ### Postman Collection Test
 ```bash
-newman run clisonix.postman_collection.json \
-  --environment clisonix.postman_environment.json \
+newman run kloud.postman_collection.json \
+  --environment kloud.postman_environment.json \
   --reporters cli,json \
   --reporter-json-export test-results.json
 ```
@@ -276,3 +276,4 @@ Mund të:
 - **openapi.yaml** – për developers & editors
 - **openapi.json** – për integrations & tools
 - **openapi.cbor** – për embedded & IoT systems
+

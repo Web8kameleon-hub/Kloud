@@ -23,21 +23,21 @@ const inter = Inter({
 
 // 🚀 AGGRESSIVE SEO - Maximum visibility
 export const metadata: Metadata = {
-  metadataBase: new URL('https://clisonix.com'),
+  metadataBase: new URL('https://kloud.com'),
   title: {
-    default: "Clisonix Cloud - AI-Powered Industrial Intelligence Platform",
-    template: "%s | Clisonix Cloud"
+    default: "Kloud Cloud - AI-Powered Industrial Intelligence Platform",
+    template: "%s | Kloud Cloud"
   },
-  description: "Clisonix Cloud: The next-generation AI platform for industrial intelligence, behavioral science, and real-time analytics. Transform your data into actionable insights with our advanced machine learning solutions.",
+  description: "Kloud Cloud: The next-generation AI platform for industrial intelligence, behavioral science, and real-time analytics. Transform your data into actionable insights with our advanced machine learning solutions.",
   keywords: [
     "AI platform", "industrial intelligence", "machine learning", "behavioral science",
     "real-time analytics", "cloud computing", "neural networks", "data science",
     "IoT analytics", "predictive analytics", "cognitive computing", "deep learning",
     "automation", "smart manufacturing", "Industry 4.0", "digital transformation",
-    "Clisonix", "AGI", "artificial general intelligence"
+    "Kloud", "AGI", "artificial general intelligence"
   ],
   authors: [
-    { name: "Ledjan Ahmati", url: "https://clisonix.com" },
+    { name: "Ledjan Ahmati", url: "https://kloud.com" },
     { name: "ABA GmbH", url: "https://aba-gmbh.eu" }
   ],
   creator: "Ledjan Ahmati",
@@ -56,28 +56,28 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://clisonix.com',
-    siteName: 'Clisonix Cloud',
-    title: 'Clisonix Cloud - AI-Powered Industrial Intelligence',
+    url: 'https://kloud.com',
+    siteName: 'Kloud Cloud',
+    title: 'Kloud Cloud - AI-Powered Industrial Intelligence',
     description: 'Transform your industrial operations with AI-powered analytics, behavioral science insights, and real-time monitoring.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Clisonix Cloud - Industrial AI Platform',
+        alt: 'Kloud Cloud - Industrial AI Platform',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Clisonix Cloud - AI-Powered Industrial Intelligence',
+    title: 'Kloud Cloud - AI-Powered Industrial Intelligence',
     description: 'Next-generation AI platform for industrial intelligence and behavioral science.',
     images: ['/og-image.png'],
-    creator: '@clisonix',
+    creator: '@kloud',
   },
   alternates: {
-    canonical: 'https://clisonix.com',
+    canonical: 'https://kloud.com',
   },
   category: 'Technology',
 };
@@ -102,15 +102,15 @@ export default function RootLayout({
               },
                 "@type": "Person",
                 "name": "Ledjan Ahmati",
-                "url": "https://clisonix.com"
+                "url": "https://kloud.com"
                 "ratingCount": "150"
               },
               "description": "AI-powered industrial intelligence and behavioral science platform",
-              "url": "https://clisonix.com",
+              "url": "https://kloud.com",
               "author": {
                 "@type": "Organization",
-                "name": "Clisonix",
-                "url": "https://clisonix.com"
+                "name": "Kloud",
+                "url": "https://kloud.com"
               }
             })
           }}
@@ -122,9 +122,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Clisonix Cloud",
-              "url": "https://clisonix.com",
-              "logo": "https://clisonix.com/logo.png",
+              "name": "Kloud Cloud",
+              "url": "https://kloud.com",
+              "logo": "https://kloud.com/logo.png",
               "legalName": "ABA GmbH",
               "founder": {
                 "@type": "Person",
@@ -135,24 +135,24 @@ export default function RootLayout({
                 "name": "Ledjan Ahmati"
               },
               "sameAs": [
-                "https://github.com/LedjanAhmati/Clisonix-cloud",
-                "https://twitter.com/clisonix"
+                "https://github.com/LedjanAhmati/Kloud-cloud",
+                "https://twitter.com/kloud"
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "customer support",
-                "email": "support@clisonix.com",
+                "email": "support@kloud.com",
                 "availableLanguage": ["English", "Albanian"]
               }
             })
           }}
         />
-        <link rel="canonical" href="https://clisonix.com" />
+        <link rel="canonical" href="https://kloud.com" />
         <meta name="theme-color" content="#6366f1" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Clisonix" />
+        <meta name="apple-mobile-web-app-title" content="Kloud" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <script
@@ -192,6 +192,7 @@ export default function RootLayout({
     </html>
   );
 }
+
 
 
 

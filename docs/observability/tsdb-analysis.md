@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document provides detailed analysis of the 6 Grafana charts exported from Clisonix Cloud's Prometheus TSDB monitoring dashboard.
+This document provides detailed analysis of the 6 Grafana charts exported from Kloud Cloud's Prometheus TSDB monitoring dashboard.
 
 **Key Findings:**
 - ✅ TSDB is healthy with 1053 active series
@@ -207,3 +207,4 @@ This document provides detailed analysis of the 6 Grafana charts exported from C
 ---
 
 **Next:** [Cardinality Engineering →](cardinality-engineering.md)
+

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generated_at": "2025-01-15T12:00:00Z",
-  "generator": "Clisonix IndexBuilder v1.0.0",
+  "generator": "Kloud IndexBuilder v1.0.0",
   "description": "Centralized link index for Curiosity Ocean - 200,000+ free-score knowledge links",
   "statistics": {
     "total_links": 4053,
@@ -207,3 +207,4 @@
   },
   "note": "This is a sample index. Run index_builder.py to generate the full 200,000+ links index from data_sources modules."
 }
+

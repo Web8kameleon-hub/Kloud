@@ -1,4 +1,4 @@
-# Clisonix Binary Schema - Time Response
+# Kloud Binary Schema - Time Response
 # Version: 1.0
 # Magic: CLSN
 
@@ -62,3 +62,4 @@ fields:
     offset: 21
     length_field: timezone_len
     description: "Timezone name"
+

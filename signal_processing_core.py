@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLISONIX SIGNAL PROCESSING CORE
+KLOUD SIGNAL PROCESSING CORE
 ================================
 
 Real signal processing for EEG and biomedical signals.
@@ -462,3 +462,4 @@ if __name__ == "__main__":
     benchmarks = get_processing_benchmarks()
     print(f"  Latency: {benchmarks['eeg_processing_latency']['mean_ms']} ± {benchmarks['eeg_processing_latency']['std_ms']} ms")
     print(f"  Artifact accuracy: {benchmarks['artifact_detection']['accuracy_percent']}%")
+

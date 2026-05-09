@@ -1,6 +1,6 @@
 # DNS Configuration Guide - STRATO → Hetzner
 
-**Domain:** clisonix.com  
+**Domain:** kloud.com  
 **Hosting:** Hetzner Cloud  
 **DNS Provider:** STRATO
 
@@ -8,7 +8,7 @@
 
 ## 🎯 Objective
 
-Point `clisonix.com` domain (registered at STRATO) to Hetzner server.
+Point `kloud.com` domain (registered at STRATO) to Hetzner server.
 
 ---
 
@@ -16,7 +16,7 @@ Point `clisonix.com` domain (registered at STRATO) to Hetzner server.
 
 - ✅ Hetzner server created and IP address obtained
 - ✅ Access to STRATO account
-- ✅ Domain `clisonix.com` active
+- ✅ Domain `kloud.com` active
 
 ---
 
@@ -33,7 +33,7 @@ Point `clisonix.com` domain (registered at STRATO) to Hetzner server.
 ## 🔧 Step 2: Navigate to DNS Settings
 
 1. Click on **"Domains"** in the menu
-2. Find **"clisonix.com"**
+2. Find **"kloud.com"**
 3. Click **"Verwalten"** (Manage)
 4. Select **"DNS-Verwaltung"** or **"DNS Settings"**
 
@@ -109,21 +109,21 @@ That point to STRATO's servers (e.g., `570523285.swh.strato-hosting.eu`)
 
 **Windows:**
 ```powershell
-nslookup clisonix.com
-nslookup www.clisonix.com
-nslookup api.clisonix.com
+nslookup kloud.com
+nslookup www.kloud.com
+nslookup api.kloud.com
 ```
 
 **Linux/macOS:**
 ```bash
-dig clisonix.com +short
-dig www.clisonix.com +short
-dig api.clisonix.com +short
+dig kloud.com +short
+dig www.kloud.com +short
+dig api.kloud.com +short
 ```
 
 **Online Tools:**
-- https://www.whatsmydns.net/#A/clisonix.com
-- https://dnschecker.org/#A/clisonix.com
+- https://www.whatsmydns.net/#A/kloud.com
+- https://dnschecker.org/#A/kloud.com
 
 ---
 
@@ -132,9 +132,9 @@ dig api.clisonix.com +short
 All domains should return your Hetzner server IP:
 
 ```
-clisonix.com → [HETZNER_IP]
-www.clisonix.com → [HETZNER_IP]
-api.clisonix.com → [HETZNER_IP]
+kloud.com → [HETZNER_IP]
+www.kloud.com → [HETZNER_IP]
+api.kloud.com → [HETZNER_IP]
 ```
 
 ---
@@ -148,19 +148,19 @@ Once DNS is propagated, run on Hetzner server:
 apt install -y certbot
 
 # Get certificates
-certbot certonly --standalone -d clisonix.com -d www.clisonix.com --email amati.ledian@gmail.com --agree-tos
+certbot certonly --standalone -d kloud.com -d www.kloud.com --email amati.ledian@gmail.com --agree-tos
 
-certbot certonly --standalone -d api.clisonix.com --email amati.ledian@gmail.com --agree-tos
+certbot certonly --standalone -d api.kloud.com --email amati.ledian@gmail.com --agree-tos
 
 # Auto-renewal
 certbot renew --dry-run
 ```
 
 Certificates will be saved to:
-- `/etc/letsencrypt/live/clisonix.com/fullchain.pem`
-- `/etc/letsencrypt/live/clisonix.com/privkey.pem`
-- `/etc/letsencrypt/live/api.clisonix.com/fullchain.pem`
-- `/etc/letsencrypt/live/api.clisonix.com/privkey.pem`
+- `/etc/letsencrypt/live/kloud.com/fullchain.pem`
+- `/etc/letsencrypt/live/kloud.com/privkey.pem`
+- `/etc/letsencrypt/live/api.kloud.com/fullchain.pem`
+- `/etc/letsencrypt/live/api.kloud.com/privkey.pem`
 
 ---
 
@@ -174,8 +174,8 @@ DNS (STRATO)
 Hetzner Server (IP: XXX.XXX.XXX.XXX)
     ↓
 Nginx Reverse Proxy (SSL/TLS)
-    ├── clisonix.com → Next.js Frontend (Port 3000)
-    └── api.clisonix.com → FastAPI Backend (Port 8000)
+    ├── kloud.com → Next.js Frontend (Port 3000)
+    └── api.kloud.com → FastAPI Backend (Port 8000)
 ```
 
 ---
@@ -198,4 +198,5 @@ Nginx Reverse Proxy (SSL/TLS)
 ---
 
 **Last Updated:** December 11, 2025  
-**Author:** Clisonix Cloud DevOps Team
+**Author:** Kloud Cloud DevOps Team
+

@@ -1,5 +1,5 @@
 """
-🎯 CLISONIX API REQUEST GENERATOR
+🎯 KLOUD API REQUEST GENERATOR
 Excel Template me formulas =PY() për gjenerim automatik të:
 - cURL commands
 - Python snippets  
@@ -32,7 +32,7 @@ def create_api_generator_template(output_path: str = None):
     Krijon Excel template me formulas për API request generation.
     """
     base_path = Path(__file__).parent
-    output_path = output_path or str(base_path / "Clisonix_API_Generator.xlsx")
+    output_path = output_path or str(base_path / "Kloud_API_Generator.xlsx")
     
     wb = Workbook()
     
@@ -90,9 +90,9 @@ def create_api_generator_template(output_path: str = None):
     ws['J2'].alignment = Alignment(horizontal='center')
     
     # Ngarko API endpoints
-    collection_path = base_path / "clisonix-ultra-mega-collection.json"
+    collection_path = base_path / "kloud-ultra-mega-collection.json"
     if not collection_path.exists():
-        collection_path = base_path / "clisonix-postman-collection.json"
+        collection_path = base_path / "kloud-postman-collection.json"
     
     endpoints = []
     if collection_path.exists():
@@ -182,7 +182,7 @@ def create_api_generator_template(output_path: str = None):
         ws.cell(row=row, column=5, value=ep['name']).alignment = wrap_align
         
         # cURL - Formulë statike (jo =PY() sepse s'funksionon pa cloud)
-        curl_base = "https://api.clisonix.com"
+        curl_base = "https://api.kloud.com"
         curl_cmd = f'curl -X {method} "{curl_base}{ep["endpoint"]}" -H "Authorization: Bearer $TOKEN"'
         if ep['body'] and method in ['POST', 'PUT', 'PATCH']:
             curl_cmd += f" -H 'Content-Type: application/json' -d '{ep['body'][:100]}...'"
@@ -238,7 +238,7 @@ print(response.json())"""
     ws2.column_dimensions['C'].width = 40
     
     # cURL Formula Example
-    curl_formula = '=PY("endpoint = xl(\'D2\'); method = xl(\'C2\'); f\'curl -X {method} https://api.clisonix.com{endpoint}\'")'
+    curl_formula = '=PY("endpoint = xl(\'D2\'); method = xl(\'C2\'); f\'curl -X {method} https://api.kloud.com{endpoint}\'")'
     ws2['A4'] = "cURL Generator"
     ws2['B4'] = curl_formula
     ws2['B4'].font = code_font
@@ -246,7 +246,7 @@ print(response.json())"""
     ws2['C4'] = "Gjeneron cURL command nga method dhe endpoint"
     
     # Python Formula Example
-    python_formula = '=PY("endpoint = xl(\'D2\'); method = xl(\'C2\').lower(); f\'requests.{method}(https://api.clisonix.com{endpoint})\'")'
+    python_formula = '=PY("endpoint = xl(\'D2\'); method = xl(\'C2\').lower(); f\'requests.{method}(https://api.kloud.com{endpoint})\'")'
     ws2['A5'] = "Python Generator"
     ws2['B5'] = python_formula
     ws2['B5'].font = code_font
@@ -270,7 +270,7 @@ print(response.json())"""
     ws2['C7'] = "Ndërton headers me token"
     
     # Full Request Generator
-    full_formula = '=PY("method = xl(\'C2\'); ep = xl(\'D2\'); token = xl(\'J2\'); f\'curl -X {method} https://api.clisonix.com{ep} -H Authorization: Bearer {token}\'")'
+    full_formula = '=PY("method = xl(\'C2\'); ep = xl(\'D2\'); token = xl(\'J2\'); f\'curl -X {method} https://api.kloud.com{ep} -H Authorization: Bearer {token}\'")'
     ws2['A8'] = "Full Request"
     ws2['B8'] = full_formula
     ws2['B8'].font = code_font
@@ -327,7 +327,7 @@ print(response.json())"""
 
 
 def main():
-    print("🎯 Clisonix API Request Generator")
+    print("🎯 Kloud API Request Generator")
     print("=" * 50)
     
     output_path, count = create_api_generator_template()
@@ -351,3 +351,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

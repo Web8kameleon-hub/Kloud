@@ -20,7 +20,7 @@ async def signal_gen_health():
     """Health check for signal generation service"""
     return {
         "status": "healthy",
-        "service": "Clisonix Signal Generation",
+        "service": "Kloud Signal Generation",
         "version": "1.0.0",
         "timestamp": signal_service.start_time
     }
@@ -89,5 +89,6 @@ async def get_system_info():
         return metrics["system"]
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"System info error: {str(e)}")
+
 
 

@@ -3,7 +3,7 @@ info:
   title: Albi API
   version: 1.0.0
   description: |
-    Albi is Clisonix's data processing and analytics agent.
+    Albi is Kloud's data processing and analytics agent.
     
     **Features:**
     - Real-time pattern detection
@@ -14,8 +14,8 @@ info:
     **Port:** 6680  
     **Health Check:** `GET /health`
   contact:
-    name: Clisonix Engineering
-    url: https://github.com/LedjanAhmati/Clisonix-cloud
+    name: Kloud Engineering
+    url: https://github.com/LedjanAhmati/Kloud-cloud
   license:
     name: MIT
     
@@ -24,7 +24,7 @@ servers:
     description: Development server
   - url: http://192.168.2.122:6680
     description: Local network
-  - url: https://api.clisonix.com/albi
+  - url: https://api.kloud.com/albi
     description: Production server
 
 tags:
@@ -174,7 +174,7 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-      description: Clisonix API key
+      description: Kloud API key
       
   schemas:
     HealthResponse:
@@ -420,4 +420,5 @@ components:
         X-RateLimit-Reset:
           schema:
             type: integer
+
 

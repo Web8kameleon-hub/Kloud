@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://clisonix.cloud',
+  siteUrl: process.env.SITE_URL || 'https://kloud.cloud',
   generateRobotsTxt: false, // We have custom robots.txt
   generateIndexSitemap: true,
   sitemapSize: 7000,
@@ -85,3 +85,4 @@ module.exports = {
     };
   },
 };
+

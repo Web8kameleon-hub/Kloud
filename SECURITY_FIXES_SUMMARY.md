@@ -74,11 +74,11 @@ ultra-security.yml (Weekly Schedule - Monday 2am UTC)
 
 ### STEP 1: Set GitHub Secrets (5 minutes)
 ```
-URL: https://github.com/LedjanAhmati/Clisonix-cloud/settings/secrets/actions
+URL: https://github.com/LedjanAhmati/Kloud-cloud/settings/secrets/actions
 
 Add CRITICAL variables:
   - DB_HOST (e.g., localhost or Hetzner IP)
-  - DB_USER (e.g., clisonix)
+  - DB_USER (e.g., kloud)
   - DB_PASSWORD (your secure password)
   - JWT_SECRET (random string ≥32 chars)
 
@@ -111,16 +111,16 @@ curl -sSL https://get.docker.com | sh
 apt install docker-compose
 
 # Phase 3: Deploy app
-cd /home/clisonix
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+cd /home/kloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 cp .env.example .env.production
 # Edit .env.production with actual values
 source .env.production
 docker-compose -f docker-compose.prod.secure.yml up -d
 
 # Phase 4: Configure DNS
-1. Point clisonix.com A record to SERVER_IP (via STRATO)
+1. Point kloud.com A record to SERVER_IP (via STRATO)
 2. Install SSL: certbot (Let's Encrypt)
 3. Configure reverse proxy (Nginx)
 ```
@@ -187,14 +187,15 @@ After setup, verify:
 
 ## 📞 QUICK LINKS
 
-- **GitHub Repo**: https://github.com/LedjanAhmati/Clisonix-cloud
-- **GitHub Secrets**: https://github.com/LedjanAhmati/Clisonix-cloud/settings/secrets/actions
-- **GitHub Actions**: https://github.com/LedjanAhmati/Clisonix-cloud/actions
+- **GitHub Repo**: https://github.com/LedjanAhmati/Kloud-cloud
+- **GitHub Secrets**: https://github.com/LedjanAhmati/Kloud-cloud/settings/secrets/actions
+- **GitHub Actions**: https://github.com/LedjanAhmati/Kloud-cloud/actions
 - **Hetzner Console**: https://console.hetzner.com
-- **Domain (STRATO)**: clisonix.com
+- **Domain (STRATO)**: kloud.com
 
 ---
 
 **Last Updated**: December 19, 2025, 00:00 UTC
 **Status**: ✅ READY FOR GITHUB SECRETS CONFIGURATION
 **Next Action**: Set DB_HOST, DB_USER, DB_PASSWORD, JWT_SECRET in GitHub Secrets
+

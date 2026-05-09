@@ -27,7 +27,7 @@ TENANTS = {
 
 PLANS = {
     "free": {"price": 0, "api_calls": 1000, "models": ["llama3.1:8b"]},
-    "pro": {"price": 29, "api_calls": 50000, "models": ["llama3.1:8b", "clisonix-ocean:v2"]},
+    "pro": {"price": 29, "api_calls": 50000, "models": ["llama3.1:8b", "kloud-ocean:v2"]},
     "enterprise": {"price": 299, "api_calls": 500000, "models": ["all"]},
     "academic": {"price": 0, "api_calls": 100000, "models": ["all"]},
     "education": {"price": 0, "api_calls": 200000, "models": ["all"]}
@@ -132,3 +132,4 @@ def metrics():
 if __name__ == "__main__":
     print(f"☁️ Starting SaaS Orchestrator on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

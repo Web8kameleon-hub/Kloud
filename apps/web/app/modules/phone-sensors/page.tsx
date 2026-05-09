@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * 🌟 CLISONIX PHONE SENSORS MAX - ULTRA AVANCUAR
+ * 🌟 KLOUD PHONE SENSORS MAX - ULTRA AVANCUAR
  * 
  * TË GJITHA TË DHËNAT JANË REALE - ASGJË FAKE!
  * 
@@ -99,7 +99,7 @@ interface HealthMetrics {
 }
 
 // ==================== KOMPONENTA KRYESORE ====================
-export default function ClisonixPhoneSensorsMax() {
+export default function KloudPhoneSensorsMax() {
     // ========== SENSOR STATES (ALL REAL) ==========
     const [motionData, setMotionData] = useState<MotionData | null>(null);
   const [orientation, setOrientation] = useState<OrientationData | null>(null);
@@ -741,7 +741,7 @@ export default function ClisonixPhoneSensorsMax() {
                           ← Dashboard
                       </Link>
                       <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
-                          🧠 Clisonix Sensors MAX
+                          🧠 Kloud Sensors MAX
                       </h1>
                       <div className="flex items-center gap-2 text-sm">
                           <span className={'w-2 h-2 rounded-full ' + (activeSensors.length > 0 ? 'bg-green-500 animate-pulse' : 'bg-red-500')} />
@@ -1079,12 +1079,13 @@ export default function ClisonixPhoneSensorsMax() {
 
           {/* Footer */}
           <div className="text-center text-gray-600 text-xs py-4 pb-24">
-              <p>🔬 Clisonix Sensors MAX • 100% Real Data • Zero Fake</p>
+              <p>🔬 Kloud Sensors MAX • 100% Real Data • Zero Fake</p>
               <p className="mt-1">Platform: {isAndroid ? 'Android' : 'iOS/Other'}</p>
           </div>
     </div>
   );
 }
+
 
 
 

@@ -1,4 +1,4 @@
-# 📊 CLISONIX QUALITY SCORE - FORMULA E PLOTË
+# 📊 KLOUD QUALITY SCORE - FORMULA E PLOTË
 
 ## Pyetja e Kritikut
 >
@@ -56,7 +56,7 @@ TOTAL = 0.30 + 0.25 + 0.25 + 0.20 - 0 = 1.00
 ```python
 # Artikulli ka:
 word_count = 500            # Nën minimum
-has_fake_imports = True     # "from clisonix.alda import LaborArray"
+has_fake_imports = True     # "from kloud.alda import LaborArray"
 has_real_code = False       # Vetëm pseudo-kod
 has_real_metrics = False    # "Example: 42"
 fake_data_count = 3         # 3 patterns fake data
@@ -80,9 +80,9 @@ Këto imports do të ulin score-in tuaj në 0:
 
 ```python
 # ❌ FAKE - Nuk ekzistojnë!
-from clisonix.alda import LaborArray
-from clisonix.liam import IntelligenceMatrix
-from clisonix_sdk import CRDTMergeLayer
+from kloud.alda import LaborArray
+from kloud.liam import IntelligenceMatrix
+from kloud_sdk import CRDTMergeLayer
 from neural_mesh import WaveSyncProtocol
 from quantum_neural import EntanglementProcessor
 
@@ -195,7 +195,7 @@ Kështu duhet të duken metrikat reale:
 
 ```bash
 # Testoni në local
-cd /path/to/Clisonix-cloud
+cd /path/to/Kloud-cloud
 python quality_gate.py
 
 # Ose përdorni API
@@ -218,3 +218,4 @@ curl http://localhost:8006/api/validate-content \
 **Autori:** Ledjan Ahmati (CEO, ABA GmbH)  
 **Data:** February 8, 2026  
 **Statusi:** ✅ Implementuar dhe dokumentuar
+

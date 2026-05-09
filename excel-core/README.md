@@ -21,7 +21,7 @@ Ky modul ofron eksport industrial `LAGTER v1` në Excel me tabela + skica dhe AP
 ## Quick Start (Windows / pwsh)
 
 ```powershell
-Set-Location "c:\Users\pc\Clisonix-cloud\clisonix.com"
+Set-Location "c:\Users\pc\Kloud-cloud\kloud.com"
 C:/Python313/python.exe -m pip install -r "excel-core/requirements.txt"
 C:/Python313/python.exe "excel-core/run_lagter_v1_export.py"
 ```
@@ -29,13 +29,14 @@ C:/Python313/python.exe "excel-core/run_lagter_v1_export.py"
 ## API Run
 
 ```powershell
-Set-Location "c:\Users\pc\Clisonix-cloud\clisonix.com\excel-core"
+Set-Location "c:\Users\pc\Kloud-cloud\kloud.com\excel-core"
 C:/Python313/python.exe "excel_reporting_api.py"
 ```
 
 ## Smoke Test
 
 ```powershell
-Set-Location "c:\Users\pc\Clisonix-cloud\clisonix.com"
+Set-Location "c:\Users\pc\Kloud-cloud\kloud.com"
 C:/Python313/python.exe "excel-core/test_lagter_v1.py"
 ```
+

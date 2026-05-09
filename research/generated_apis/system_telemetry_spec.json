@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Clisonix System Telemetry API",
+    "title": "Kloud System Telemetry API",
     "version": "1.0.0",
     "description": "This specification was generated automatically. It addresses the\ndetected requirement: Provide consolidated health metrics for downstream consumers. Review the manifest for the\nsource context.",
     "tags": [
@@ -66,4 +66,5 @@
     }
   }
 }
+
 

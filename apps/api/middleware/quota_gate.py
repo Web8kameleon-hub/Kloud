@@ -1,5 +1,5 @@
 """
-Clisonix Quota Gate Middleware
+Kloud Quota Gate Middleware
 Industrial-grade plan-based restrictions and rate limiting
 """
 import time
@@ -309,5 +309,6 @@ def validate_file_size(max_size_mb: Optional[int] = None):
             return await func(*args, **kwargs)
         return wrapper
     return decorator
+
 
 

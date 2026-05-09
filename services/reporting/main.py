@@ -1,5 +1,5 @@
 """
-CLISONIX REPORTING SERVICE - REAL DATA EXCEL
+KLOUD REPORTING SERVICE - REAL DATA EXCEL
 Excel i vërtetë me tabela të plota, jo fake, jo mock
 Port: 8001
 """
@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(
 logger = logging.getLogger("reporting-real")
 
 app = FastAPI(
-    title="Clisonix Reporting - Real Excel",
+    title="Kloud Reporting - Real Excel",
     description="Excel i vërtetë me të dhëna reale nga sistemi",
     version="4.0.0",
     docs_url="/docs"
@@ -497,7 +497,7 @@ async def export_excel():
         
         # Save
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"clisonix_real_report_{timestamp}.xlsx"
+        filename = f"kloud_real_report_{timestamp}.xlsx"
         filepath = REPORTS_DIR / filename
         wb.save(str(filepath))
         
@@ -538,7 +538,7 @@ async def export_pptx():
         slide1 = prs.slides.add_slide(prs.slide_layouts[6])
         title = slide1.shapes.add_textbox(Inches(0.5), Inches(2.5), Inches(9), Inches(1))
         tf = title.text_frame
-        tf.text = "Clisonix Cloud Report"
+        tf.text = "Kloud Cloud Report"
         tf.paragraphs[0].font.size = Pt(44)
         tf.paragraphs[0].font.bold = True
         tf.paragraphs[0].font.color.rgb = RGBColor(31, 78, 121)
@@ -590,7 +590,7 @@ Containers: {len(containers)} running
         
         # Save
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"clisonix_real_{timestamp}.pptx"
+        filename = f"kloud_real_{timestamp}.pptx"
         filepath = REPORTS_DIR / filename
         prs.save(str(filepath))
         
@@ -613,3 +613,4 @@ Containers: {len(containers)} running
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
+

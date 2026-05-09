@@ -14,7 +14,7 @@ import Script from 'next/script';
 export default function PricingPage() {
   const faqs = [
     {
-      q: 'Can I try Clisonix before paying?',
+      q: 'Can I try Kloud before paying?',
       a: 'Absolutely! The Free plan gives you access to 10 research articles and basic Curiosity Ocean features forever - no credit card required.'
     },
     {
@@ -46,10 +46,10 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link href="/why-clisonix" className="text-gray-400 hover:text-white transition-colors">Why Clisonix</Link>
+            <Link href="/why-kloud" className="text-gray-400 hover:text-white transition-colors">Why Kloud</Link>
             <Link href="/platform" className="text-gray-400 hover:text-white transition-colors">Platform</Link>
             <Link href="/modules" className="px-4 py-2 bg-violet-600 hover:bg-violet-500 rounded-lg transition-colors">
               Open Dashboard
@@ -151,7 +151,7 @@ export default function PricingPage() {
         <h2 className="text-3xl font-bold mb-4">Still have questions?</h2>
         <p className="text-gray-400 mb-8">Our team is here to help you find the perfect plan.</p>
         <Link
-          href="mailto:support@clisonix.com"
+          href="mailto:support@kloud.com"
           className="inline-flex px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-xl font-semibold transition-colors"
         >
           Contact Support
@@ -161,7 +161,7 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/security" className="hover:text-violet-400 ml-2">Security</Link> | 
           <Link href="/status" className="hover:text-violet-400 ml-2">Status</Link> | 
           <Link href="/company" className="hover:text-violet-400 ml-2">Company</Link>
@@ -170,6 +170,7 @@ export default function PricingPage() {
     </div>
   );
 }
+
 
 
 

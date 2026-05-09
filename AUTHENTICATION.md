@@ -1,8 +1,8 @@
-# Clisonix Cloud API – Authentication Guide
+# Kloud Cloud API – Authentication Guide
 
 ## Overview
 
-Clisonix Cloud now features a complete enterprise-grade authentication system with JWT tokens, refresh tokens, and API key management. All authentication flows are implemented across the OpenAPI specification, Python SDK, TypeScript SDK, and Postman collection.
+Kloud Cloud now features a complete enterprise-grade authentication system with JWT tokens, refresh tokens, and API key management. All authentication flows are implemented across the OpenAPI specification, Python SDK, TypeScript SDK, and Postman collection.
 
 ---
 
@@ -124,10 +124,10 @@ pip install requests pydantic
 ### Basic Login Flow
 
 ```python
-from clisonix import ClisonixClient
+from kloud import KloudClient
 
 # Initialize client
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 
 # Login with email and password
 login_data = client.login("user@example.com", "password123")
@@ -148,7 +148,7 @@ refreshed = client.refresh()
 print(f"✓ New token: {refreshed['token'][:20]}...")
 
 # Continue using client - new token is automatically used
-ask_response = client.ask("Hello, Clisonix!")
+ask_response = client.ask("Hello, Kloud!")
 ```
 
 ### Creating API Keys
@@ -165,7 +165,7 @@ print(f"✓ API Key created: {api_key_data['api_key']}")
 
 ```python
 # Initialize with API key instead of token
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 client.set_api_key("api_sk_abcdefghijklmnopqrstuvwxyz")
 
 # All requests will use X-API-Key header
@@ -220,11 +220,11 @@ npm install
 -### Basic Login Flow
 
 ```typescript
-import { ClisonixClient } from './clisonix_sdk';
+import { KloudClient } from './kloud_sdk';
 
 // Initialize client
-const client = new ClisonixClient({
-  baseUrl: 'https://api.clisonix.com',
+const client = new KloudClient({
+  baseUrl: 'https://api.kloud.com',
   timeout: 30000
 });
 
@@ -261,8 +261,8 @@ console.log(`✓ API Key created: ${apiKeyData.api_key}`);
 
 ```typescript
 // Initialize with API key
-const client = new ClisonixClient({
-  baseUrl: 'https://api.clisonix.com'
+const client = new KloudClient({
+  baseUrl: 'https://api.kloud.com'
 });
 
 client.setApiKey('api_sk_abcdefghijklmnopqrstuvwxyz');
@@ -281,7 +281,7 @@ Import the Postman collection from `postman_collection_auth.json`. It includes p
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `base_url` | API endpoint | `https://api.clisonix.com` |
+| `base_url` | API endpoint | `https://api.kloud.com` |
 | `auth_token` | JWT Bearer token | (auto-populated) |
 | `refresh_token` | Refresh token | (auto-populated) |
 | `api_key` | API key | (auto-populated) |
@@ -325,7 +325,7 @@ Import the Postman collection from `postman_collection_auth.json`. It includes p
 ### API Key Storage
 
 - **Never** commit API keys to version control
-- Use environment variables: `CLISONIX_API_KEY=api_sk_xxx`
+- Use environment variables: `KLOUD_API_KEY=api_sk_xxx`
 - Rotate keys regularly
 - Use separate keys per service/environment (dev, staging, prod)
 
@@ -415,17 +415,17 @@ try {
 
 ```bash
 # .env file (never commit)
-CLISONIX_API_URL=https://api.clisonix.com
-CLISONIX_EMAIL=dev@example.com
-CLISONIX_PASSWORD=dev_password
+KLOUD_API_URL=https://api.kloud.com
+KLOUD_EMAIL=dev@example.com
+KLOUD_PASSWORD=dev_password
 ```
 
 ### Production
 
 ```bash
 # Use secure secrets management (AWS Secrets Manager, Azure Key Vault, etc.)
-export CLISONIX_API_KEY=api_sk_production_xxxxx
-export CLISONIX_API_URL=https://api.clisonix.com
+export KLOUD_API_KEY=api_sk_production_xxxxx
+export KLOUD_API_URL=https://api.kloud.com
 ```
 
 ---
@@ -444,8 +444,8 @@ All authentication schemas and endpoints are defined in `openapi.yaml`:
 
 - 📖 **Full API Docs**: [API_DOCS.md](API_DOCS.md)
 - 🔗 **OpenAPI Spec**: [openapi.yaml](openapi.yaml)
-- 💻 **Python SDK**: [clisonix_sdk.py](clisonix_sdk.py)
-- 🎯 **TypeScript SDK**: [clisonix_sdk.ts](clisonix_sdk.ts)
+- 💻 **Python SDK**: [kloud_sdk.py](kloud_sdk.py)
+- 🎯 **TypeScript SDK**: [kloud_sdk.ts](kloud_sdk.ts)
 - 📮 **Postman Collection**: [postman_collection_auth.json](postman_collection_auth.json)
 - 🌐 **Landing Page**: [index.html](index.html)
 
@@ -465,4 +465,5 @@ All authentication schemas and endpoints are defined in `openapi.yaml`:
 
 ---
 
-**Clisonix Cloud API** • Part of UltraWebThinking / Euroweb
+**Kloud Cloud API** • Part of UltraWebThinking / Euroweb
+

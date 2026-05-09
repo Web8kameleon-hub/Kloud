@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 /**
- * MOOD JOURNAL - Clisonix Behavioral Science Module
+ * MOOD JOURNAL - Kloud Behavioral Science Module
  * 
  * Frontend: Simple emoji picker, one-tap logging
  * Backend: Sentiment analysis, temporal patterns, correlation engine
@@ -66,7 +66,7 @@ export default function MoodJournalPage() {
 
   // Load entries from localStorage + API
   useEffect(() => {
-    const stored = localStorage.getItem('clisonix_mood_entries');
+    const stored = localStorage.getItem('kloud_mood_entries');
     if (stored) {
       const parsed = JSON.parse(stored);
       setEntries(parsed);
@@ -97,10 +97,10 @@ export default function MoodJournalPage() {
   };
 
   const getDeviceId = () => {
-    let id = localStorage.getItem('clisonix_device_id');
+    let id = localStorage.getItem('kloud_device_id');
     if (!id) {
       id = 'dev_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('clisonix_device_id', id);
+      localStorage.setItem('kloud_device_id', id);
     }
     return id;
   };
@@ -206,7 +206,7 @@ export default function MoodJournalPage() {
 
     const newEntries = [entry, ...entries];
     setEntries(newEntries);
-    localStorage.setItem('clisonix_mood_entries', JSON.stringify(newEntries));
+    localStorage.setItem('kloud_mood_entries', JSON.stringify(newEntries));
     calculateStats(newEntries);
 
     // Send to backend for analysis
@@ -550,6 +550,7 @@ export default function MoodJournalPage() {
     </div>
   );
 }
+
 
 
 

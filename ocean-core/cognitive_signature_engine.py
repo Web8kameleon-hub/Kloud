@@ -24,7 +24,7 @@ FILOZOFIA:
  GENIUS     >= 0.75      Partneritet, matematik e thell, teori            
 
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0 Enterprise
 Date: 2026-01-30
 """
@@ -522,3 +522,4 @@ if __name__ == "__main__":
     
     print("\n" + "=" * 70)
     print("Test complete!")
+

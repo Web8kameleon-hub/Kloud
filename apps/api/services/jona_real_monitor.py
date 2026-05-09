@@ -1,7 +1,7 @@
 """
 ðŸ”® JONA - Joyful Overseer of Neural Alignment (REAL SYSTEM MONITOR) 
 ===================================================================
-Monitor real i sistemit qÃ« mbikÃ«qyr harmoninÃ« e Clisonix ecosystem.
+Monitor real i sistemit qÃ« mbikÃ«qyr harmoninÃ« e Kloud ecosystem.
 Real health monitor, real harmony checker, real system optimizer.
 
 NO FAKE METRICS, NO MOCK HEALTH, REAL MONITORING ONLY
@@ -31,7 +31,7 @@ class JONA_RealMonitor:
     ðŸ§  JONA Real System Monitor qÃ« mbikÃ«qyr sistemin real
     """
     
-    def __init__(self, base_dir="C:/Clisonix-cloud"):
+    def __init__(self, base_dir="C:/Kloud-cloud"):
         self.base_dir = Path(base_dir)
         self.harmony_log = self.base_dir / "data" / "jona_harmony_log.json"
         self.alert_log = self.base_dir / "data" / "jona_alerts.json"
@@ -339,5 +339,6 @@ async def create_jona_real() -> JONA_RealMonitor:
     """Krijon njÃ« instance JONA qÃ« monitorizon sistemin real"""
     jona = JONA_RealMonitor()
     return jona
+
 
 

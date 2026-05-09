@@ -9,7 +9,7 @@ export default function AboutUsPage() {
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-white flex items-center gap-2">
-            <span className="text-3xl">🔬</span> Clisonix
+            <span className="text-3xl">🔬</span> Kloud
           </Link>
           <nav className="flex items-center gap-6">
             <Link href="/modules" className="text-gray-300 hover:text-white transition-colors">Modules</Link>
@@ -23,7 +23,7 @@ export default function AboutUsPage() {
         {/* Hero Section */}
         <section className="text-center mb-20">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Clisonix</span>
+            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Kloud</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             A modular SaaS and API platform built for businesses that require clarity, stability, 
@@ -38,7 +38,7 @@ export default function AboutUsPage() {
               <span className="text-2xl">🎯</span> Why We Exist
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-4">
-              Clisonix is not designed for mass consumer access — but for professional teams, IoT systems, 
+              Kloud is not designed for mass consumer access — but for professional teams, IoT systems, 
               B2B integrations, and organizations that need full control over telemetry, processes, and automation.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed">
@@ -58,15 +58,15 @@ export default function AboutUsPage() {
               To bring <strong>clarity</strong>, <strong>orientation</strong>, and <strong>operational calm</strong> to complex systems.
             </p>
             <p className="text-gray-300 text-lg leading-relaxed mt-4">
-              Clisonix reduces technological noise and increases decision-making capacity — 
+              Kloud reduces technological noise and increases decision-making capacity — 
               turning every system into something readable, measurable, and manageable.
             </p>
           </div>
         </section>
 
-        {/* Why Clisonix - Pillars */}
+        {/* Why Kloud - Pillars */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Why Clisonix?</h2>
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">Why Kloud?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-blue-700/30 transition-all">
               <div className="text-3xl mb-4">🧩</div>
@@ -108,7 +108,7 @@ export default function AboutUsPage() {
               <span className="text-2xl">📡</span> IoT & LoRa Layer
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              Clisonix provides an infrastructure optimized for low-bandwidth and low-power devices:
+              Kloud provides an infrastructure optimized for low-bandwidth and low-power devices:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <ul className="space-y-3 text-gray-300">
@@ -140,7 +140,7 @@ export default function AboutUsPage() {
               <span className="text-2xl">⚡</span> API Layer
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              Clisonix APIs are designed for clarity and long-term stability:
+              Kloud APIs are designed for clarity and long-term stability:
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
@@ -248,7 +248,7 @@ export default function AboutUsPage() {
               <span className="text-2xl">🌍</span> Social Impact
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
-              Although not a consumer platform, Clisonix has broad social impact because it:
+              Although not a consumer platform, Kloud has broad social impact because it:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
@@ -278,7 +278,7 @@ export default function AboutUsPage() {
               🤝 Invitation for Investors & Strategic Partners
             </h2>
             <p className="text-xl text-blue-400 leading-relaxed mb-8 max-w-3xl mx-auto">
-              Clisonix is opening its doors to a select group of investors and strategic partners 
+              Kloud is opening its doors to a select group of investors and strategic partners 
               who share our vision for clarity, ethical technology, and modular intelligence.
             </p>
             
@@ -334,18 +334,18 @@ export default function AboutUsPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
-                  href="mailto:investors@clisonix.com" 
+                  href="mailto:investors@kloud.com" 
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-blue-700/25"
                 >
                   <span className="text-xl">📧</span>
-                  investors@clisonix.com
+                  investors@kloud.com
                 </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Clisonix in One Sentence */}
+        {/* Kloud in One Sentence */}
         <section className="text-center py-12 border-t border-white/10">
           <blockquote className="text-2xl md:text-3xl text-white font-light italic max-w-4xl mx-auto">
             &quot;A modular platform that gives businesses <span className="text-blue-600">clarity</span>, 
@@ -375,13 +375,14 @@ export default function AboutUsPage() {
       <footer className="border-t border-white/10 py-8 mt-16">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <p className="text-gray-500 text-sm">
-            © 2026 Clisonix. All rights reserved. Built with clarity, ethics, and engineering discipline.
+            © 2026 Kloud. All rights reserved. Built with clarity, ethics, and engineering discipline.
           </p>
         </div>
       </footer>
     </div>
   );
 }
+
 
 
 

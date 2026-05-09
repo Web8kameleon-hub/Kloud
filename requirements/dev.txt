@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Dev Requirements - Development Only
+# Kloud Dev Requirements - Development Only
 # ═══════════════════════════════════════════════════════════════
 
 -r api.txt
@@ -32,3 +32,4 @@ mkdocs-material>=9.5.0
 # Debug
 ipython>=8.29.0
 rich>=13.9.0
+

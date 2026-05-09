@@ -1,4 +1,4 @@
-# 🎉 CLISONIX CLOUD - COMPLETE SETUP & POSTMAN GUIDE
+# 🎉 KLOUD CLOUD - COMPLETE SETUP & POSTMAN GUIDE
 
 ## ✅ EVERYTHING IS READY!
 
@@ -18,7 +18,7 @@
 ### Step 1: Import the Collection
 1. Open Postman
 2. Click **Import** (top left)
-3. Select file: `Clisonix-Cloud-API.postman_collection.json`
+3. Select file: `Kloud-Cloud-API.postman_collection.json`
 4. ✅ Collection imported successfully!
 
 ### Step 2: Test Your First Endpoint
@@ -190,7 +190,7 @@ Fixed: mesh_cluster_startup.py now has fallback logger
 
 | File | Purpose |
 |------|---------|
-| `Clisonix-Cloud-API.postman_collection.json` | Postman collection with all endpoints |
+| `Kloud-Cloud-API.postman_collection.json` | Postman collection with all endpoints |
 | `start-full-stack.ps1` | Start frontend + API |
 | `start-docker-stack.ps1` | Start Docker & monitoring services |
 | `.env.local` | Frontend environment config |
@@ -238,17 +238,17 @@ npm cache clean --force
 curl http://localhost:8000/api/system-status
 
 # Test Postman collection (via CLI)
-newman run Clisonix-Cloud-API.postman_collection.json
+newman run Kloud-Cloud-API.postman_collection.json
 ```
 
 ---
 
 ## 📞 SUPPORT & DOCUMENTATION
 
-- **Project**: Clisonix Cloud Industrial Platform
+- **Project**: Kloud Cloud Industrial Platform
 - **Owner**: Ledjan Ahmati
 - **Company**: WEB8euroweb GmbH
-- **Repository**: https://github.com/Kameleonlife/Clisonix-cloud
+- **Repository**: https://github.com/Kameleonlife/Kloud-cloud
 - **API Docs**: See `API_DOCS.md`
 - **Integration Report**: See `INTEGRATION_COMPLETE_REPORT.md`
 
@@ -283,4 +283,5 @@ newman run Clisonix-Cloud-API.postman_collection.json
 **Last Updated**: December 5, 2025  
 **Ready For**: Development & Testing
 
-🎉 **Enjoy building with Clisonix Cloud!**
+🎉 **Enjoy building with Kloud Cloud!**
+

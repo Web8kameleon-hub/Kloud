@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 # ═══════════════════════════════════════════════════════════════════════════
-# CLISONIX CLOUD - UNIVERSAL LAUNCHER
+# KLOUD CLOUD - UNIVERSAL LAUNCHER
 # Multi-dimensional, multi-command startup system with auto port detection
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -26,7 +26,7 @@ param(
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════
 
-$ProjectRoot = "C:\clisonix-cloud"
+$ProjectRoot = "C:\kloud-cloud"
 $Global:ServicePorts = @{}
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -36,7 +36,7 @@ $Global:ServicePorts = @{}
 function Write-Banner {
     Write-Host "`n╔═══════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║                                                                   ║" -ForegroundColor Cyan
-    Write-Host "║              🚀 CLISONIX CLOUD - UNIVERSAL LAUNCHER 🚀            ║" -ForegroundColor Cyan
+    Write-Host "║              🚀 KLOUD CLOUD - UNIVERSAL LAUNCHER 🚀            ║" -ForegroundColor Cyan
     Write-Host "║                                                                   ║" -ForegroundColor Cyan
     Write-Host "║                  Multi-Dimensional System Startup                 ║" -ForegroundColor Cyan
     Write-Host "║                                                                   ║" -ForegroundColor Cyan
@@ -71,7 +71,7 @@ function Stop-AllServices {
     
     # Stop Python processes (only project-related)
     $pythonProcesses = Get-Process | Where-Object {
-        $_.ProcessName -match "python" -and $_.Path -like "*clisonix-cloud*"
+        $_.ProcessName -match "python" -and $_.Path -like "*kloud-cloud*"
     }
     if ($pythonProcesses) {
         $pythonProcesses | ForEach-Object {
@@ -154,7 +154,7 @@ function Start-Frontend {
     Write-Host "`n[5/6] 🌐 Starting Frontend..." -ForegroundColor Yellow
     
     Start-Process powershell -ArgumentList "-NoExit", "-Command", @"
-        `$Host.UI.RawUI.WindowTitle = 'Clisonix Frontend - Port $($Global:ServicePorts.Frontend)';
+        `$Host.UI.RawUI.WindowTitle = 'Kloud Frontend - Port $($Global:ServicePorts.Frontend)';
         cd $ProjectRoot\apps\web;
         Write-Host '🌐 Frontend starting on port $($Global:ServicePorts.Frontend)...' -ForegroundColor Cyan;
         Write-Host '⚠️  Note: Next.js may have workspace bugs (ENOWORKSPACES)' -ForegroundColor Yellow;
@@ -170,7 +170,7 @@ function Start-Backend {
     Write-Host "`n[6/6] ⚡ Starting Backend API (Python FastAPI)..." -ForegroundColor Yellow
     
     Start-Process powershell -ArgumentList "-NoExit", "-Command", @"
-        `$Host.UI.RawUI.WindowTitle = 'Clisonix Backend API - Port $($Global:ServicePorts.Backend)';
+        `$Host.UI.RawUI.WindowTitle = 'Kloud Backend API - Port $($Global:ServicePorts.Backend)';
         cd $ProjectRoot\apps\api;
         Write-Host '⚡ Backend API starting on port $($Global:ServicePorts.Backend)...' -ForegroundColor Cyan;
         Write-Host '📦 Python FastAPI with 78+ endpoints' -ForegroundColor Green;
@@ -285,4 +285,5 @@ Write-Host "Monitoring services..." -ForegroundColor Gray
 while ($true) {
     Start-Sleep -Seconds 10
 }
+
 

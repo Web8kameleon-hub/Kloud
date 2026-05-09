@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Use environment variable or internal Docker network
-const API_BASE = process.env.EXCEL_API_URL || "http://clisonix-reporting:8001";
+const API_BASE = process.env.EXCEL_API_URL || "http://kloud-reporting:8001";
 
 export async function GET() {
   try {
@@ -29,9 +29,9 @@ export async function GET() {
       message: "Excel regeneration triggered",
       timestamp: new Date().toISOString(),
       files_generated: [
-        "Clisonix_Production_Ready.xlsx",
-        "Clisonix_API_Generator.xlsx",
-        "Clisonix_Master_Table.xlsx",
+        "Kloud_Production_Ready.xlsx",
+        "Kloud_API_Generator.xlsx",
+        "Kloud_Master_Table.xlsx",
         "Dashboard_Registry.xlsx",
       ],
       stats: {
@@ -47,7 +47,7 @@ export async function GET() {
       message: "Regeneration request sent",
       timestamp: new Date().toISOString(),
       command: "python3 excel_infinite_generator.py",
-      hint: "SSH to server and run: cd /opt/clisonix && python3 excel_infinite_generator.py",
+      hint: "SSH to server and run: cd /opt/kloud && python3 excel_infinite_generator.py",
     });
   }
 }
@@ -55,3 +55,4 @@ export async function GET() {
 export async function POST() {
   return GET();
 }
+

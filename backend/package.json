@@ -1,7 +1,7 @@
 {
-  "name": "@Clisonix/backend-industrial",
+  "name": "@Kloud/backend-industrial",
   "version": "2.0.0",
-  "description": "Clisonix Industrial Backend - Layer 1-12 Architecture + Enterprise Security",
+  "description": "Kloud Industrial Backend - Layer 1-12 Architecture + Enterprise Security",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
@@ -12,8 +12,8 @@
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
     "test": "jest",
-    "docker:build": "docker build -t Clisonix-backend .",
-    "docker:run": "docker run -p 8000:8000 Clisonix-backend"
+    "docker:build": "docker build -t Kloud-backend .",
+    "docker:run": "docker run -p 8000:8000 Kloud-backend"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -67,7 +67,7 @@
     "node": ">=18.0.0"
   },
   "keywords": [
-    "Clisonix",
+    "Kloud",
     "industrial",
     "layer-architecture",
     "alba",
@@ -79,6 +79,7 @@
     "websocket",
     "redis"
   ],
-  "author": "Clisonix Industrial Team",
+  "author": "Kloud Industrial Team",
   "license": "MIT"
 }
+

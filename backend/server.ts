@@ -29,7 +29,7 @@ async function bootstrap() {
   await initSignalCore({
     redisUrl: cfg.REDIS_URL,
     httpWebhook: cfg.SIGNAL_HTTP,
-    secretKey: process.env.SIGNAL_SECRET ?? "Clisonix-key",
+    secretKey: process.env.SIGNAL_SECRET ?? "Kloud-key",
   });
 
   // Layer 1 â€“ Core (health, logger, monitor)
@@ -87,3 +87,4 @@ void bootstrap().catch((err) => {
   console.error("[System] Bootstrap failed", err);
   process.exitCode = 1;
 });
+

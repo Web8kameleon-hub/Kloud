@@ -1,24 +1,24 @@
 #!/bin/bash
 # =============================================================================
-# 🚀 CLISONIX AUTO-LEARNING DEPLOY - Hetzner Production
+# 🚀 KLOUD AUTO-LEARNING DEPLOY - Hetzner Production
 # =============================================================================
 # Features:
 #   - Backup automatic
 #   - Git pull/clone
 #   - 61 layers + meta-layer verification
 #   - Systemd service with auto-restart
-#   - Logging to /var/log/clisonix/
+#   - Logging to /var/log/kloud/
 # =============================================================================
 
 set -e  # Exit on error
 
 # ----------------- SETTINGS -----------------
-REPO="git@github.com:LedjanAhmati/Clisonix-cloud.git"
-DEPLOY_DIR="/root/Clisonix-cloud"
-BACKUP_DIR="/opt/backup/clisonix-cloud-$(date +%F-%H%M)"
+REPO="git@github.com:LedjanAhmati/Kloud-cloud.git"
+DEPLOY_DIR="/root/Kloud-cloud"
+BACKUP_DIR="/opt/backup/kloud-cloud-$(date +%F-%H%M)"
 PYTHON_ENV="/usr/bin/python3"
-LOG_DIR="/var/log/clisonix"
-SERVICE_NAME="clisonix-autolearning"
+LOG_DIR="/var/log/kloud"
+SERVICE_NAME="kloud-autolearning"
 
 # Colors
 GREEN='\033[0;32m'
@@ -26,7 +26,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}📦 Starting Clisonix Auto-Learning Deploy...${NC}"
+echo -e "${GREEN}📦 Starting Kloud Auto-Learning Deploy...${NC}"
 echo "=============================================="
 
 mkdir -p "$LOG_DIR"
@@ -115,7 +115,7 @@ echo -e "${YELLOW}5️⃣ Setting up Systemd Service...${NC}"
 
 cat > /etc/systemd/system/${SERVICE_NAME}.service << EOF
 [Unit]
-Description=Clisonix Auto-Learning Production Service
+Description=Kloud Auto-Learning Production Service
 After=network.target docker.service
 Wants=network-online.target
 
@@ -177,3 +177,4 @@ echo "   - Stop:    systemctl stop ${SERVICE_NAME}"
 echo "   - Restart: systemctl restart ${SERVICE_NAME}"
 echo ""
 echo -e "${GREEN}✅ Auto-restart enabled - service will restart on crash${NC}"
+

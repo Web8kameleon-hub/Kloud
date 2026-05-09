@@ -1,4 +1,4 @@
-# 🔐 Clisonix Cloud - Production Security Guide
+# 🔐 Kloud Cloud - Production Security Guide
 
 **Last Updated:** December 12, 2025  
 **Environment:** Hetzner Cloud Production
@@ -23,7 +23,7 @@
 ### **3. Docker Security**
 - ✅ Health checks on all critical services
 - ✅ Container restart policies
-- ✅ Network isolation (`clisonix-network`)
+- ✅ Network isolation (`kloud-network`)
 - ✅ Volume permissions
 - ✅ Non-root users where possible
 
@@ -105,22 +105,22 @@ systemctl status certbot.timer
 
 # Manual renewal if needed:
 certbot renew
-docker compose -f /opt/clisonix/docker-compose.prod.yml restart nginx
+docker compose -f /opt/kloud/docker-compose.prod.yml restart nginx
 ```
 
 ### **4. Database Backups**
 
 ```bash
 # Create backup script
-cat > /opt/clisonix/backup-db.sh <<'EOF'
+cat > /opt/kloud/backup-db.sh <<'EOF'
 #!/bin/bash
-BACKUP_DIR="/opt/clisonix/backups"
+BACKUP_DIR="/opt/kloud/backups"
 DATE=$(date +%Y%m%d_%H%M%S)
 mkdir -p $BACKUP_DIR
 
 # Backup PostgreSQL
-docker compose -f /opt/clisonix/docker-compose.prod.yml exec -T postgres \
-  pg_dump -U clisonix_prod clisonixdb | gzip > $BACKUP_DIR/db_$DATE.sql.gz
+docker compose -f /opt/kloud/docker-compose.prod.yml exec -T postgres \
+  pg_dump -U kloud_prod klouddb | gzip > $BACKUP_DIR/db_$DATE.sql.gz
 
 # Keep only last 30 days
 find $BACKUP_DIR -name "db_*.sql.gz" -mtime +30 -delete
@@ -128,10 +128,10 @@ find $BACKUP_DIR -name "db_*.sql.gz" -mtime +30 -delete
 echo "Backup completed: db_$DATE.sql.gz"
 EOF
 
-chmod +x /opt/clisonix/backup-db.sh
+chmod +x /opt/kloud/backup-db.sh
 
 # Add to crontab (daily at 2 AM)
-(crontab -l 2>/dev/null; echo "0 2 * * * /opt/clisonix/backup-db.sh") | crontab -
+(crontab -l 2>/dev/null; echo "0 2 * * * /opt/kloud/backup-db.sh") | crontab -
 ```
 
 ### **5. Docker Security Audit**
@@ -139,19 +139,19 @@ chmod +x /opt/clisonix/backup-db.sh
 ```bash
 # Scan for vulnerabilities
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-  aquasec/trivy image clisonix-api:latest
+  aquasec/trivy image kloud-api:latest
 
 # Check container resource limits
 docker stats --no-stream
 
 # Review security settings
-docker inspect clisonix-api | grep -A 20 SecurityOpt
+docker inspect kloud-api | grep -A 20 SecurityOpt
 ```
 
 ### **6. Monitoring & Alerts**
 
 Enable alerts in Grafana:
-1. Go to https://clisonix.com:3001
+1. Go to https://kloud.com:3001
 2. Navigate to **Alerting → Alert Rules**
 3. Create alerts for:
    - High CPU/Memory usage (>80%)
@@ -166,7 +166,7 @@ Already configured in `nginx.conf`:
 - API: 10 requests/second (burst: 10)
 - Web: 30 requests/second (burst: 20)
 
-To modify, edit `/opt/clisonix/nginx/nginx.conf` and restart nginx.
+To modify, edit `/opt/kloud/nginx/nginx.conf` and restart nginx.
 
 ### **8. Secret Rotation Schedule**
 
@@ -181,10 +181,10 @@ Rotate these every 90 days:
 NEW_SECRET=$(openssl rand -hex 32)
 
 # Update .env.production
-nano /opt/clisonix/.env.production
+nano /opt/kloud/.env.production
 
 # Restart services
-cd /opt/clisonix
+cd /opt/kloud
 docker compose -f docker-compose.prod.yml restart
 ```
 
@@ -197,7 +197,7 @@ docker compose -f docker-compose.prod.yml restart
 1. **Immediate Actions:**
    ```bash
    # Rotate all secrets
-   cd /opt/clisonix
+   cd /opt/kloud
    
    # Generate new secrets
    openssl rand -hex 32  # Use for SECRET_KEY
@@ -217,7 +217,7 @@ docker compose -f docker-compose.prod.yml restart
    tail -n 1000 /var/log/nginx/access.log | grep -v "200\|301\|304"
    
    # Check database connections
-   docker compose exec postgres psql -U clisonix_prod -c "SELECT * FROM pg_stat_activity;"
+   docker compose exec postgres psql -U kloud_prod -c "SELECT * FROM pg_stat_activity;"
    ```
 
 3. **Notify users** if data breach suspected
@@ -236,10 +236,10 @@ docker compose -f docker-compose.prod.yml restart
 
 ```bash
 # Run this monthly security check
-cat > /opt/clisonix/security-check.sh <<'EOF'
+cat > /opt/kloud/security-check.sh <<'EOF'
 #!/bin/bash
 echo "════════════════════════════════════════════════════════════"
-echo "CLISONIX CLOUD - MONTHLY SECURITY CHECK"
+echo "KLOUD CLOUD - MONTHLY SECURITY CHECK"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
@@ -260,7 +260,7 @@ grep "Failed password" /var/log/auth.log | tail -n 20
 
 echo ""
 echo "[5/8] Docker container health..."
-docker compose -f /opt/clisonix/docker-compose.prod.yml ps
+docker compose -f /opt/kloud/docker-compose.prod.yml ps
 
 echo ""
 echo "[6/8] Disk usage..."
@@ -268,12 +268,12 @@ df -h
 
 echo ""
 echo "[7/8] Database size..."
-docker compose -f /opt/clisonix/docker-compose.prod.yml exec postgres \
-  psql -U clisonix_prod -c "SELECT pg_size_pretty(pg_database_size('clisonixdb'));"
+docker compose -f /opt/kloud/docker-compose.prod.yml exec postgres \
+  psql -U kloud_prod -c "SELECT pg_size_pretty(pg_database_size('klouddb'));"
 
 echo ""
 echo "[8/8] Recent backup status..."
-ls -lht /opt/clisonix/backups/ | head -n 5
+ls -lht /opt/kloud/backups/ | head -n 5
 
 echo ""
 echo "════════════════════════════════════════════════════════════"
@@ -281,10 +281,10 @@ echo "Security check completed: $(date)"
 echo "════════════════════════════════════════════════════════════"
 EOF
 
-chmod +x /opt/clisonix/security-check.sh
+chmod +x /opt/kloud/security-check.sh
 ```
 
-Run monthly: `/opt/clisonix/security-check.sh`
+Run monthly: `/opt/kloud/security-check.sh`
 
 ---
 
@@ -297,11 +297,11 @@ Enable comprehensive logging:
 tail -f /var/log/nginx/access.log
 
 # Application logs
-docker compose -f /opt/clisonix/docker-compose.prod.yml logs -f api
+docker compose -f /opt/kloud/docker-compose.prod.yml logs -f api
 
 # Database audit logging (optional)
-docker compose -f /opt/clisonix/docker-compose.prod.yml exec postgres \
-  psql -U clisonix_prod -c "ALTER SYSTEM SET log_statement = 'all';"
+docker compose -f /opt/kloud/docker-compose.prod.yml exec postgres \
+  psql -U kloud_prod -c "ALTER SYSTEM SET log_statement = 'all';"
 ```
 
 ---
@@ -324,3 +324,4 @@ docker compose -f /opt/clisonix/docker-compose.prod.yml exec postgres \
 ---
 
 **Remember:** Security is an ongoing process, not a one-time setup!
+

@@ -27,7 +27,7 @@ export async function GET() {
 
     // Get customer email from Clerk session
     const user = await currentUser();
-    const customerEmail = user?.emailAddresses?.[0]?.emailAddress || process.env.USER_EMAIL || "customer@clisonix.com";
+    const customerEmail = user?.emailAddresses?.[0]?.emailAddress || process.env.USER_EMAIL || "customer@kloud.com";
 
     // Search for customer by email
     const customers = await stripe.customers.list({
@@ -70,9 +70,9 @@ export async function GET() {
         const product = await stripe.products.retrieve(
           priceItem.price.product as string,
         );
-        planName = product.name || "Clisonix Plan";
+        planName = product.name || "Kloud Plan";
       } catch {
-        planName = "Clisonix Plan";
+        planName = "Kloud Plan";
       }
     }
 
@@ -172,4 +172,5 @@ export async function DELETE(request: Request) {
     );
   }
 }
+
 

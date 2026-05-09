@@ -1,5 +1,5 @@
 /**
- * Clisonix Signal Core
+ * Kloud Signal Core
  * ----------------------
  * Unified event propagation layer between modules (ALBA, ALBI, JONA, ASI).
  * Handles Redis Pub/Sub, HTTP webhooks, and local diagnostics.
@@ -117,7 +117,7 @@ export async function emitSignal(source: string, type: SignalPayload["type"], da
 
   await Promise.all([
     dispatchHttp(config.httpWebhook, body),
-    dispatchRedis(options?.channel ?? config.redisChannel ?? "Clisonix:signals", body),
+    dispatchRedis(options?.channel ?? config.redisChannel ?? "Kloud:signals", body),
   ]);
 
   console.log(`ðŸ“¢ [SignalCore] ${type.toUpperCase()} from ${source} @ ${payload.timestamp}`);
@@ -153,3 +153,4 @@ export async function shutdownSignalCore() {
     console.log("ðŸ›‘ [SignalCore] Redis connection closed.");
   }
 }
+

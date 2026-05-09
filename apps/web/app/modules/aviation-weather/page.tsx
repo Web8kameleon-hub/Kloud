@@ -1,6 +1,6 @@
 /**
  * Aviation Weather Intelligence Dashboard
- * Clisonix Platform - Professional Aviation Module
+ * Kloud Platform - Professional Aviation Module
  * 
  * REAL APIs:
  * - Open-Meteo: Weather data (FREE, no key)
@@ -305,7 +305,7 @@ const AviationWeatherDashboard: React.FC = () => {
 
   // Load airports from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('clisonix-airports')
+    const saved = localStorage.getItem('kloud-airports')
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
@@ -322,7 +322,7 @@ const AviationWeatherDashboard: React.FC = () => {
   // Save airports to localStorage when changed
   useEffect(() => {
     if (airports !== DEFAULT_AIRPORTS) {
-      localStorage.setItem('clisonix-airports', JSON.stringify(airports))
+      localStorage.setItem('kloud-airports', JSON.stringify(airports))
     }
   }, [airports])
 
@@ -367,7 +367,7 @@ const AviationWeatherDashboard: React.FC = () => {
   const handleResetAirports = () => {
     setAirports(DEFAULT_AIRPORTS)
     setSelectedAirport(DEFAULT_AIRPORTS[0])
-    localStorage.removeItem('clisonix-airports')
+    localStorage.removeItem('kloud-airports')
   }
 
   // Toggle data source
@@ -1695,7 +1695,7 @@ const AviationWeatherDashboard: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-gray-600">Host</span>
-                      <span className="font-mono font-bold text-gray-900">clisonix.com</span>
+                      <span className="font-mono font-bold text-gray-900">kloud.com</span>
                     </div>
                     <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-gray-600">Port</span>
@@ -2138,7 +2138,7 @@ const AviationWeatherDashboard: React.FC = () => {
               <p className="text-gray-500">{airports.length} airports | Albania, Kosovo, Europe</p>
             </div>
             <div>
-              <p className="text-purple-600 font-bold text-lg">Clisonix Platform v2.2</p>
+              <p className="text-purple-600 font-bold text-lg">Kloud Platform v2.2</p>
               <p className="text-gray-500">2025-2026 Ledjan Ahmati</p>
             </div>
           </div>
@@ -2149,6 +2149,7 @@ const AviationWeatherDashboard: React.FC = () => {
 }
 
 export default AviationWeatherDashboard
+
 
 
 

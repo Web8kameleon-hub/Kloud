@@ -1,7 +1,7 @@
-# 🚀 CLISONIX INTELLIGENCE SYSTEM
-## Sistemi i Inteligjencës Artificiale dhe AGI për Clisonix Cloud
+# 🚀 KLOUD INTELLIGENCE SYSTEM
+## Sistemi i Inteligjencës Artificiale dhe AGI për Kloud Cloud
 
-Një sistem i avancuar për gjenerimin, menaxhimin dhe orkestrimin e inteligjencës artificiale dhe AGI (Artificial General Intelligence) në platformën Clisonix Cloud.
+Një sistem i avancuar për gjenerimin, menaxhimin dhe orkestrimin e inteligjencës artificiale dhe AGI (Artificial General Intelligence) në platformën Kloud Cloud.
 
 ## 📋 Përmbajtja
 
@@ -18,20 +18,20 @@ Një sistem i avancuar për gjenerimin, menaxhimin dhe orkestrimin e inteligjenc
 
 ## 🧠 Vështrim i Përgjithshëm
 
-Clisonix Intelligence System është një platformë gjithëpërfshirëse që kombinon:
+Kloud Intelligence System është një platformë gjithëpërfshirëse që kombinon:
 
 - **Enhanced ASI (Artificial Super Intelligence)**: Gjeneron dhe menaxhon inteligjencë artificiale të avancuar
 - **Cycle Engine**: Orkestron cycles inteligjente për përpunim të dhënash dhe detyrash
 - **Scalability Engine**: Zbulon dhe përpunon burime të hapura të dhënash
 - **AI/AGI Pipelines**: Krijon dhe ekzekuton pipeline të sofistikuara për përpunim inteligjent
-- **API Scanner**: Zbulon dhe analizon API-të e Clisonix dhe sistemeve të tjera
+- **API Scanner**: Zbulon dhe analizon API-të e Kloud dhe sistemeve të tjera
 - **Integration Runner**: Orkestron të gjithë komponentët në një sistem të integruar
 
 ## 🏗️ Arkitektura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    CLISONIX INTELLIGENCE                    │
+│                    KLOUD INTELLIGENCE                    │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
 │  │ Enhanced    │ │ Cycle       │ │ Scalability │           │
@@ -45,7 +45,7 @@ Clisonix Intelligence System është një platformë gjithëpërfshirëse që ko
 ├─────────────────────────────────────────────────────────────┤
 │                JONA Ethical Oversight                       │
 ├─────────────────────────────────────────────────────────────┤
-│            Clisonix Cloud Infrastructure                   │
+│            Kloud Cloud Infrastructure                   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -75,13 +75,13 @@ Clisonix Intelligence System është një platformë gjithëpërfshirëse që ko
 - Menaxhon komponentë dhe rrjedha të dhënash
 - Ofron adaptive learning dhe real-time processing
 
-### 5. API Scanner (`clisonix_api_scanner.ts`)
-- Zbulon dhe analizon API-të e Clisonix
+### 5. API Scanner (`kloud_api_scanner.ts`)
+- Zbulon dhe analizon API-të e Kloud
 - Gjeneron OpenAPI dhe Postman collections
 - Kontrollon autentifikim dhe rate limiting
 - Krijon dokumentacion automatik
 
-### 6. Integration Runner (`clisonix_integration_runner.py`)
+### 6. Integration Runner (`kloud_integration_runner.py`)
 - Orkestron të gjithë komponentët
 - Ofron modalitete të ndryshme integrimi
 - Monitoron performancën dhe metrikat
@@ -100,7 +100,7 @@ Clisonix Intelligence System është një platformë gjithëpërfshirëse që ko
 1. **Clone dhe setup:**
 ```bash
 git clone <repository-url>
-cd clisonix-cloud
+cd kloud-cloud
 ```
 
 2. **Instalimi i dependencies:**
@@ -111,7 +111,7 @@ npm install typescript @types/node axios
 
 3. **Deploy automatik:**
 ```bash
-python deploy_clisonix_intelligence.py --deployment-dir ./clisonix_deployment
+python deploy_kloud_intelligence.py --deployment-dir ./kloud_deployment
 ```
 
 ### Deploy Manual
@@ -138,7 +138,7 @@ scalability = await get_scalability_engine()
 ### Fillimi i Shpejtë
 
 ```python
-from clisonix_integration_runner import ClisonixIntegrationRunner, IntegrationMode, IntegrationConfig
+from kloud_integration_runner import KloudIntegrationRunner, IntegrationMode, IntegrationConfig
 
 # Konfigurimi
 config = IntegrationConfig(
@@ -148,7 +148,7 @@ config = IntegrationConfig(
 )
 
 # Krijimi dhe ekzekutimi
-runner = ClisonixIntegrationRunner(config)
+runner = KloudIntegrationRunner(config)
 results = await runner.run_integration()
 
 print(f"✅ Integrimi përfunduar: {results}")
@@ -228,17 +228,17 @@ execution = await builder.execute_pipeline(
 
 ### API Scanner (TypeScript)
 ```typescript
-import { scanClisonixAPI, ClisonixAPIScanner } from './clisonix_api_scanner';
+import { scanKloudAPI, KloudAPIScanner } from './kloud_api_scanner';
 
 // Skanim i shpejtë
-const result = await scanClisonixAPI({
-    baseUrl: 'https://api.clisonix.cloud',
+const result = await scanKloudAPI({
+    baseUrl: 'https://api.kloud.cloud',
     timeout: 30000
 });
 
 // Skaner i avancuar
-const scanner = new ClisonixAPIScanner({
-    baseUrl: 'https://api.clisonix.cloud',
+const scanner = new KloudAPIScanner({
+    baseUrl: 'https://api.kloud.cloud',
     includeAuth: true,
     authToken: 'your-jwt-token'
 });
@@ -294,7 +294,7 @@ ws.onmessage = (event) => {
 
 ```bash
 # Nis monitoring
-python clisonix_integration_runner.py --mode monitoring_mode
+python kloud_integration_runner.py --mode monitoring_mode
 
 # Shiko metrika
 curl http://localhost:8080/metrics
@@ -349,10 +349,10 @@ python -m pytest tests/test_cycle_engine.py
 
 ```bash
 # Teste të plota të sistemit
-python deploy_clisonix_intelligence.py --run-tests
+python deploy_kloud_intelligence.py --run-tests
 
 # Teste manuale
-python clisonix_integration_runner.py --mode api_discovery
+python kloud_integration_runner.py --mode api_discovery
 ```
 
 ### Performance Testing
@@ -362,7 +362,7 @@ python clisonix_integration_runner.py --mode api_discovery
 ab -n 1000 -c 10 http://localhost:8080/api/v1/intelligence/generate
 
 # Memory profiling
-python -m memory_profiler clisonix_integration_runner.py
+python -m memory_profiler kloud_integration_runner.py
 ```
 
 ## 📚 Dokumentacioni
@@ -385,7 +385,7 @@ python -m memory_profiler clisonix_integration_runner.py
 
 - [CYCLE_ENGINE_DEMO.py](./CYCLE_ENGINE_DEMO.py) - Demo cycle engine
 - [DEMO_SCRIPT.sh](./DEMO_SCRIPT.sh) - Demo script
-- Postman Collections në direktorinë `clisonix-postman-collection/`
+- Postman Collections në direktorinë `kloud-postman-collection/`
 
 ## 🤝 Kontributi
 
@@ -401,13 +401,14 @@ Ky projekt është licencuar nën MIT License - shiko [LICENSE](LICENSE) për de
 
 ## 📞 Support
 
-- **Email**: support@clisonix.cloud
-- **Documentation**: https://docs.clisonix.cloud
-- **Issues**: https://github.com/clisonix/clisonix-cloud/issues
-- **Discussions**: https://github.com/clisonix/clisonix-cloud/discussions
+- **Email**: support@kloud.cloud
+- **Documentation**: https://docs.kloud.cloud
+- **Issues**: https://github.com/kloud/kloud-cloud/issues
+- **Discussions**: https://github.com/kloud/kloud-cloud/discussions
 
 ---
 
-**Built with ❤️ by Clisonix Team**
+**Built with ❤️ by Kloud Team**
 
 *Për një të ardhme më inteligjente dhe etike.*
+

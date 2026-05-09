@@ -10,7 +10,7 @@ Hapat urgjentë (minimal):
 
 1) Importo zonën
 
-   - Shko në Cloudflare → DNS → Import dhe ngarko `docs/clisonix.cloudflare.zone`.
+   - Shko në Cloudflare → DNS → Import dhe ngarko `docs/kloud.cloudflare.zone`.
 
 2) Proxy A records kritike
 
@@ -66,9 +66,9 @@ Hapat urgjentë (minimal):
 
 9) Page Rules (shembuj)
 
-   - `api.clisonix.com/*` → Cache Level: `Bypass`, Security: `High`.
+   - `api.kloud.com/*` → Cache Level: `Bypass`, Security: `High`.
 
-   - `clisonix.com/*` → Cache Everything (opsionale), Edge Cache TTL si dëshiron.
+   - `kloud.com/*` → Cache Everything (opsionale), Edge Cache TTL si dëshiron.
 
 10) DNS nameservers
 
@@ -112,7 +112,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/<ZONE_ID>/rate_limits" 
    "threshold": 10,
    "period": 10,
    "action": {"mode": "block", "timeout": 60},
-   "match": {"request": {"methods": ["POST"], "schemes": ["HTTP","HTTPS"], "url": "https://api.clisonix.com/api/ask*"}},
+   "match": {"request": {"methods": ["POST"], "schemes": ["HTTP","HTTPS"], "url": "https://api.kloud.com/api/ask*"}},
    "enabled": true,
    "description": "Protect /api/ask"
  }'
@@ -129,3 +129,4 @@ Small checklist for immediate run:
 - Enable WAF + OWASP rules
 - Add firewall rules + rate-limits shown above
 - Monitor and enable Under Attack if needed
+

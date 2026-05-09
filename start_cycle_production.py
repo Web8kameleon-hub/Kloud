@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 🚀 COMPLETE CYCLE PRODUCTION STARTER
-Inicion dhe nis prodhimin e cycles të reja për të gjithë sistemin Clisonix Cloud
+Inicion dhe nis prodhimin e cycles të reja për të gjithë sistemin Kloud Cloud
 
 Përfshin:
 - ALBA: EEG nga burime të hapura falas
@@ -616,3 +616,4 @@ async def start_complete_cycle_production():
 
 if __name__ == "__main__":
     asyncio.run(start_complete_cycle_production())
+

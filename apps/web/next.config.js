@@ -1,5 +1,5 @@
 /**
- * Clisonix Cloud Industrial Next.js Configuration
+ * Kloud Cloud Industrial Next.js Configuration
  * Production-ready with API rewrites for backend proxy
  */
 
@@ -14,13 +14,13 @@ const __dirname = path.dirname(__filename);
 const isDev = process.env.NODE_ENV === "development";
 const API_BASE =
   process.env.API_INTERNAL_URL ||
-  (isDev ? "http://localhost:8000" : "http://clisonix-api:8000");
+  (isDev ? "http://localhost:8000" : "http://kloud-api:8000");
 const REPORTING_BASE =
   process.env.REPORTING_INTERNAL_URL ||
-  (isDev ? "http://localhost:8000" : "http://clisonix-api:8000");
+  (isDev ? "http://localhost:8000" : "http://kloud-api:8000");
 const OCEAN_BASE =
   process.env.OCEAN_INTERNAL_URL ||
-  (isDev ? "http://localhost:8030" : "http://clisonix-ocean-core:8030");
+  (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -47,11 +47,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "clisonix.com",
+        hostname: "kloud.com",
       },
       {
         protocol: "https",
-        hostname: "*.clisonix.com",
+        hostname: "*.kloud.com",
       },
       {
         protocol: "https",
@@ -288,7 +288,7 @@ const nextConfig = {
   httpAgentOptions: {
     keepAlive: true,
   },
-  allowedDevOrigins: ["localhost:3000", "127.0.0.1:3000", "clisonix.com"],
+  allowedDevOrigins: ["localhost:3000", "127.0.0.1:3000", "kloud.com"],
 };
 
 export default async () => {
@@ -315,3 +315,4 @@ export default async () => {
 
   return withPWA(nextConfig);
 };
+

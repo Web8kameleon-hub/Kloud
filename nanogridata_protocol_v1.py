@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLISONIX NANOGRIDATA PROTOCOL v1.0 - SERVER DECODER (PRODUCTION)
+KLOUD NANOGRIDATA PROTOCOL v1.0 - SERVER DECODER (PRODUCTION)
 
 Python implementation për server-side decoding, storage, and analysis
 Compatibility me Ocean Core 8030 database
@@ -765,3 +765,4 @@ if __name__ == "__main__":
     print("\n" + "=" * 70)
     print("✓ All examples completed successfully")
     print("=" * 70)
+

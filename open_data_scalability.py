@@ -264,7 +264,7 @@ class OpenDataScalabilityEngine:
         """Inicializon motorin"""
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={'User-Agent': 'Clisonix-Scalability-Engine/1.0'}
+            headers={'User-Agent': 'Kloud-Scalability-Engine/1.0'}
         )
 
         # Ngarkon burime ekzistuese nga disku
@@ -767,3 +767,4 @@ async def discover_and_feed_system():
     finally:
         if _scalability_engine:
             await _scalability_engine.shutdown()
+

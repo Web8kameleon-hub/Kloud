@@ -1,7 +1,7 @@
 /**
  * HEAD METADATA - Production Level
  * SEO, Performance Monitoring, Analytics Integration
- * Clisonix Cloud - Final Phase Optimization
+ * Kloud Cloud - Final Phase Optimization
  */
 
 declare global {
@@ -16,9 +16,9 @@ export default function Head() {
       {/* Primary Meta Tags */}
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-      <meta name="description" content="Clisonix Industrial Cloud Platform - Real-time AI monitoring, advanced analytics, and distributed orchestration" />
+      <meta name="description" content="Kloud Industrial Cloud Platform - Real-time AI monitoring, advanced analytics, and distributed orchestration" />
       <meta name="keywords" content="industrial cloud, AI monitoring, Analytical Intelligence, Creative Intelligence, ASI, real-time analytics" />
-      <meta name="author" content="Clisonix Team" />
+      <meta name="author" content="Kloud Team" />
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       <meta name="theme-color" content="#1a1a2e" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,15 +26,15 @@ export default function Head() {
 
       {/* Open Graph */}
       <meta property="og:type" content="website" />
-      <meta property="og:title" content="Clisonix Industrial Cloud Platform" />
+      <meta property="og:title" content="Kloud Industrial Cloud Platform" />
       <meta property="og:description" content="Advanced AI monitoring and distributed orchestration for industrial applications" />
       <meta property="og:image" content="/og-image.png" />
-      <meta property="og:site_name" content="Clisonix Cloud" />
+      <meta property="og:site_name" content="Kloud Cloud" />
       <meta property="og:locale" content="en_US" />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Clisonix Industrial Cloud Platform" />
+      <meta name="twitter:title" content="Kloud Industrial Cloud Platform" />
       <meta name="twitter:description" content="Real-time AI monitoring and analytics" />
       <meta name="twitter:image" content="/twitter-image.png" />
 
@@ -55,9 +55,9 @@ export default function Head() {
       <link rel="prefetch" href="/api/health" as="fetch" crossOrigin="use-credentials" />
 
       {/* DNS Prefetch */}
-      <link rel="dns-prefetch" href="//api.clisonix.com" />
-      <link rel="dns-prefetch" href="//analytics.clisonix.com" />
-      <link rel="dns-prefetch" href="//cdn.clisonix.com" />
+      <link rel="dns-prefetch" href="//api.kloud.com" />
+      <link rel="dns-prefetch" href="//analytics.kloud.com" />
+      <link rel="dns-prefetch" href="//cdn.kloud.com" />
 
       {/* Performance Monitoring */}
       <script
@@ -159,14 +159,14 @@ export default function Head() {
       />
 
       {/* Title - Dynamic based on Page */}
-      <title>Clisonix Industrial Cloud | AI Monitoring & Orchestration</title>
+      <title>Kloud Industrial Cloud | AI Monitoring & Orchestration</title>
 
       {/* Canonical URL */}
-      <link rel="canonical" href="https://clisonix.com" />
+      <link rel="canonical" href="https://kloud.com" />
 
       {/* Alternate Links */}
-      <link rel="alternate" hrefLang="en" href="https://clisonix.com" />
-      <link rel="alternate" hrefLang="sq" href="https://clisonix.com/sq" />
+      <link rel="alternate" hrefLang="en" href="https://kloud.com" />
+      <link rel="alternate" hrefLang="sq" href="https://kloud.com/sq" />
 
       {/* Color Scheme */}
       <meta name="color-scheme" content="dark light" />
@@ -191,3 +191,4 @@ export default function Head() {
     </>
   )
 }
+

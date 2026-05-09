@@ -1,11 +1,11 @@
 """
-CLISONIX EEG API ROUTER
+KLOUD EEG API ROUTER
 =======================
 
 Dedicated EEG processing endpoints for the API Marketplace.
 Exposes all EEG functionality under /api/eeg prefix.
 
-Author: Clisonix Cloud
+Author: Kloud Cloud
 """
 
 import random
@@ -102,7 +102,7 @@ async def eeg_info():
     Get EEG API information and capabilities
     """
     return {
-        "service": "Clisonix EEG Analysis",
+        "service": "Kloud EEG Analysis",
         "version": "1.0.0",
         "capabilities": [
             "frequency_band_analysis",
@@ -307,7 +307,8 @@ async def start_eeg_stream(
         "session_id": session_id,
         "device_id": device_id,
         "channels": channels,
-        "websocket_url": f"wss://api.clisonix.cloud/ws/eeg/{session_id}",
+        "websocket_url": f"wss://api.kloud.cloud/ws/eeg/{session_id}",
         "expires_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + 3600)),
         "status": "ready"
     }
+

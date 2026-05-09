@@ -6,7 +6,7 @@ export class AlbaCore {
   }
 
   getStatus() {
-    // Stub implementation for minimal Clisonix setup
+    // Stub implementation for minimal Kloud setup
     return {
       status: "operational",
       securityLevel: "minimal",
@@ -28,3 +28,4 @@ export class AlbaCore {
     return [];
   }
 }
+

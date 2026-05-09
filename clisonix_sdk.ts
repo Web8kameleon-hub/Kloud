@@ -1,9 +1,9 @@
 /**
- * Clisonix Cloud SDK – TypeScript/JavaScript Client
+ * Kloud Cloud SDK – TypeScript/JavaScript Client
  * Part of UltraWebThinking / Euroweb
  */
 
-interface ClisonixConfig {
+interface KloudConfig {
   baseUrl?: string;
   token?: string;
   timeout?: number;
@@ -16,15 +16,15 @@ interface RequestOptions {
   timeout?: number;
 }
 
-export class ClisonixClient {
+export class KloudClient {
   private baseUrl: string;
   private token: string | null;
   private refreshToken: string | null;
   private apiKey: string | null;
   private timeout: number;
 
-  constructor(config: ClisonixConfig = {}) {
-    this.baseUrl = (config.baseUrl || "https://api.clisonix.com").replace(/\/$/, "");
+  constructor(config: KloudConfig = {}) {
+    this.baseUrl = (config.baseUrl || "https://api.kloud.com").replace(/\/$/, "");
     this.token = config.token || null;
     this.refreshToken = null;
     this.apiKey = null;
@@ -34,7 +34,7 @@ export class ClisonixClient {
   private getHeaders(extra: Record<string, string> = {}): Record<string, string> {
     const headers: Record<string, string> = {
       "Accept": "application/json",
-      "User-Agent": "Clisonix-TypeScript-SDK/1.0",
+      "User-Agent": "Kloud-TypeScript-SDK/1.0",
       ...extra
     };
 
@@ -477,8 +477,8 @@ export class ClisonixClient {
 
 export const exampleUsage = async () => {
   // Initialize client
-  const client = new ClisonixClient({
-    baseUrl: "https://api.clisonix.com",
+  const client = new KloudClient({
+    baseUrl: "https://api.kloud.com",
     token: "your-jwt-token-here"
   });
 
@@ -488,7 +488,7 @@ export const exampleUsage = async () => {
     console.log("✓ Health:", health.status);
 
     // Ask a question
-    const answer = await client.ask("Çfarë është Clisonix?");
+    const answer = await client.ask("Çfarë është Kloud?");
     console.log("✓ Answer:", answer.answer.substring(0, 100) + "...");
 
     // Start data stream
@@ -511,4 +511,5 @@ export const exampleUsage = async () => {
   }
 };
 
-export default ClisonixClient;
+export default KloudClient;
+

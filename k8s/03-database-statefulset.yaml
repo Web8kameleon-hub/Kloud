@@ -7,7 +7,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: postgres
     tier: database
@@ -44,17 +44,17 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: clisonix-config
+                  name: kloud-config
                   key: DB_NAME
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: clisonix-secrets
+                  name: kloud-secrets
                   key: DB_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: clisonix-secrets
+                  name: kloud-secrets
                   key: DB_PASSWORD
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -122,7 +122,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: clisonix-storage
+        storageClassName: kloud-storage
         resources:
           requests:
             storage: 100Gi
@@ -133,7 +133,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: postgres
     tier: database
@@ -154,7 +154,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-init-scripts
-  namespace: clisonix
+  namespace: kloud
 data:
   01-init.sql: |
     -- Create extensions
@@ -186,7 +186,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: redis
     tier: cache
@@ -273,7 +273,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: clisonix-storage
+        storageClassName: kloud-storage
         resources:
           requests:
             storage: 10Gi
@@ -284,7 +284,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
-  namespace: clisonix
+  namespace: kloud
   labels:
     app: redis
     tier: cache
@@ -298,4 +298,5 @@ spec:
   selector:
     app: redis
     tier: cache
+
 

@@ -102,21 +102,21 @@ class UniversalSignalIntegrator:
         
         # Docker containers
         docker_sources = [
-            ("clisonix-api", "Main API", "docker", 8000),
-            ("clisonix-ocean-core", "Ocean Core", "docker", 8030),
-            ("clisonix-aviation", "Aviation Weather", "docker", 8080),
-            ("clisonix-behavioral", "Behavioral Science", "docker", 8003),
-            ("clisonix-marketplace", "Marketplace", "docker", 8004),
-            ("clisonix-asi", "ASI Engine", "docker", 9094),
-            ("clisonix-alba", "ALBA Neural", "docker", 5555),
-            ("clisonix-albi", "ALBI Brain", "docker", 6666),
-            ("clisonix-excel", "Excel Generator", "docker", 8002),
-            ("clisonix-reporting", "Reporting", "docker", 8001),
-            ("clisonix-economy", "Economy API", "docker", 9093),
-            ("clisonix-web", "Web Frontend", "docker", 3000),
-            ("clisonix-redis", "Redis Cache", "databases", 6379),
-            ("clisonix-postgres", "PostgreSQL", "databases", 5432),
-            ("clisonix-victoriametrics", "Victoria Metrics", "infrastructure", 8428),
+            ("kloud-api", "Main API", "docker", 8000),
+            ("kloud-ocean-core", "Ocean Core", "docker", 8030),
+            ("kloud-aviation", "Aviation Weather", "docker", 8080),
+            ("kloud-behavioral", "Behavioral Science", "docker", 8003),
+            ("kloud-marketplace", "Marketplace", "docker", 8004),
+            ("kloud-asi", "ASI Engine", "docker", 9094),
+            ("kloud-alba", "ALBA Neural", "docker", 5555),
+            ("kloud-albi", "ALBI Brain", "docker", 6666),
+            ("kloud-excel", "Excel Generator", "docker", 8002),
+            ("kloud-reporting", "Reporting", "docker", 8001),
+            ("kloud-economy", "Economy API", "docker", 9093),
+            ("kloud-web", "Web Frontend", "docker", 3000),
+            ("kloud-redis", "Redis Cache", "databases", 6379),
+            ("kloud-postgres", "PostgreSQL", "databases", 5432),
+            ("kloud-victoriametrics", "Victoria Metrics", "infrastructure", 8428),
         ]
         
         for container_id, name, category, port in docker_sources:
@@ -423,3 +423,4 @@ def get_signal_integrator() -> UniversalSignalIntegrator:
     if _integrator is None:
         _integrator = UniversalSignalIntegrator()
     return _integrator
+

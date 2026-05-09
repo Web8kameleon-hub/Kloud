@@ -1,8 +1,8 @@
-# Clisonix Cloud - ASI-API Documentation
+# Kloud Cloud - ASI-API Documentation
 
 ## Overview
 
-The **ASI-API** (Advanced System Intelligence API) is the core REST interface for the Clisonix Cloud system. It provides comprehensive endpoints for neural processing, signal analysis, system monitoring, and intelligent operations.
+The **ASI-API** (Advanced System Intelligence API) is the core REST interface for the Kloud Cloud system. It provides comprehensive endpoints for neural processing, signal analysis, system monitoring, and intelligent operations.
 
 **Base URL:** `http://localhost:8000`
 
@@ -30,7 +30,7 @@ Currently, the API uses **internal header validation** for trusted services.
 ### Header Requirements (Optional)
 
 ```
-x-Clisonix-internal: 1
+x-Kloud-internal: 1
 ```
 
 **Note:** Production deployment should implement:
@@ -570,3 +570,4 @@ ws.onerror = (error) => {
 
 **Last Updated:** November 30, 2025
 **Version:** 1.0.0
+

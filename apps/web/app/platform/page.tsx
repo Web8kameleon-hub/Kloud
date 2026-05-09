@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 /**
  * PLATFORM OVERVIEW PAGE - Technical Architecture
- * Shows the complete Clisonix ecosystem
+ * Shows the complete Kloud ecosystem
  */
 
 export default function PlatformPage() {
@@ -48,10 +48,10 @@ export default function PlatformPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link href="/why-clisonix" className="text-gray-400 hover:text-white transition-colors">Why Clisonix</Link>
+            <Link href="/why-kloud" className="text-gray-400 hover:text-white transition-colors">Why Kloud</Link>
             <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link>
             <Link href="/modules" className="px-4 py-2 bg-violet-600 hover:bg-violet-500 rounded-lg transition-colors">
               Open Dashboard
@@ -216,7 +216,7 @@ export default function PlatformPage() {
 
           <div className="p-6 rounded-xl bg-slate-900 border border-slate-700 font-mono text-sm overflow-x-auto">
             <div className="text-gray-500 mb-2"># Quick start example</div>
-            <pre className="text-green-400">{`curl -X GET "https://clisonix.com/api/asi/health" \\
+            <pre className="text-green-400">{`curl -X GET "https://kloud.com/api/asi/health" \\
   -H "Authorization: Bearer your-api-key"
 
 # Response:
@@ -259,7 +259,7 @@ export default function PlatformPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/security" className="hover:text-violet-400 ml-2">Security</Link> | 
           <Link href="/status" className="hover:text-violet-400 ml-2">Status</Link> | 
           <Link href="/company" className="hover:text-violet-400 ml-2">Company</Link>
@@ -268,6 +268,7 @@ export default function PlatformPage() {
     </div>
   );
 }
+
 
 
 

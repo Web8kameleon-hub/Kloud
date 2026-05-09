@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🔄 CLISONIX AUTO-COMMIT SERVICE
+🔄 KLOUD AUTO-COMMIT SERVICE
 ================================
 Bën commit automatik çdo 10 minuta
 
@@ -19,7 +19,7 @@ from pathlib import Path
 
 # Konfigurimi
 COMMIT_INTERVAL_MINUTES = 10
-REPO_PATH = Path(__file__).parent.parent  # Clisonix-cloud root
+REPO_PATH = Path(__file__).parent.parent  # Kloud-cloud root
 KNOWLEDGE_PATH = Path(__file__).parent / "learned_knowledge"
 
 def run_git_command(args: list, cwd: str = None) -> tuple:
@@ -83,7 +83,7 @@ def print_status():
     """Printo statusin aktual"""
     os.system('cls' if os.name == 'nt' else 'clear')
     print("\n" + "=" * 60)
-    print("🔄 CLISONIX AUTO-COMMIT SERVICE")
+    print("🔄 KLOUD AUTO-COMMIT SERVICE")
     print("=" * 60)
     print(f"📁 Repo: {REPO_PATH}")
     print(f"⏱️  Interval: {COMMIT_INTERVAL_MINUTES} minuta")
@@ -159,3 +159,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

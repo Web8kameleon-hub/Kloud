@@ -8,4 +8,5 @@ crons = ["*/10 * * * *"]
 [vars]
 KLOUD_MESH_API = "https://kloud.aiagi.io"
 # Optional: set your edge hostname in Cloudflare dashboard variables
-# MESH_EDGE_HOST = "www.clisonix.com"
+# MESH_EDGE_HOST = "www.kloud.com"
+

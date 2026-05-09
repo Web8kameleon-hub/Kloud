@@ -5,7 +5,7 @@
  * për personalizim të përgjigjeve.
  * 
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { useAuth, useUser } from "@clerk/nextjs";
@@ -142,3 +142,4 @@ export function useOceanUserContext() {
     isAdmin: user?.publicMetadata?.role === "admin",
   };
 }
+

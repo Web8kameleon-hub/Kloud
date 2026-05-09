@@ -1,5 +1,5 @@
 """
-Clisonix Brain Engine - REAL DATA ONLY (FIXED - NO HARDCODED VALUES)
+Kloud Brain Engine - REAL DATA ONLY (FIXED - NO HARDCODED VALUES)
 =====================================
 All metrics calculated dynamically from real sources
 """
@@ -40,7 +40,7 @@ class RealDataCollector:
     
     def __init__(self):
         self.session = requests.Session()
-        self.session.headers.update({'User-Agent': 'Clisonix-Brain/2.0'})
+        self.session.headers.update({'User-Agent': 'Kloud-Brain/2.0'})
         self.baseline_metrics = {}  # Store baseline for comparisons
     
     async def get_weather_data(self, lat: float = 41.33, lon: float = 19.82) -> Dict:
@@ -457,7 +457,7 @@ class CognitiveEngine:
     
     async def get_error_log(self) -> List[Dict[str, Any]]:
         """REAL error log from files"""
-        log_path = Path("logs/Clisonix_real.log")
+        log_path = Path("logs/Kloud_real.log")
         errors = []
         
         if log_path.exists():
@@ -506,3 +506,4 @@ class CognitiveEngine:
 
 # Global instance
 cog = CognitiveEngine()
+

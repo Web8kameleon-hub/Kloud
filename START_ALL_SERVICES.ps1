@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Start all 76+ Clisonix microservices with health checks
+    Start all 76+ Kloud microservices with health checks
 .DESCRIPTION
     Orchestrates all backend services, checks dependencies, and validates functionality
 #>
@@ -46,11 +46,11 @@ function Test-Port {
 }
 
 Write-Status "╔════════════════════════════════════════════════════════════╗" "Header"
-Write-Status "║   CLISONIX MICROSERVICES ORCHESTRATOR - 76+ SERVICES       ║" "Header"
+Write-Status "║   KLOUD MICROSERVICES ORCHESTRATOR - 76+ SERVICES       ║" "Header"
 Write-Status "╚════════════════════════════════════════════════════════════╝" "Header"
 
 # Set working directory
-$workdir = "c:\Users\pc\Clisonix-cloud\clisonix.com"
+$workdir = "c:\Users\pc\Kloud-cloud\kloud.com"
 Push-Location $workdir
 
 # Venv path
@@ -239,3 +239,4 @@ Write-Status "`n(Services running in background. Press Ctrl+C to exit.)" "Info"
 while ($true) {
     Start-Sleep -Seconds 60
 }
+

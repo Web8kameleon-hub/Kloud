@@ -1,7 +1,7 @@
 /**
  * Cloudflare Worker — Mesh Edge Node
  * Announces self to Kloud mesh every 10 minutes
- * Deploy to: clisonix.com, aiagi.io, or any Cloudflare domain
+ * Deploy to: kloud.com, aiagi.io, or any Cloudflare domain
  */
 
 const KLOUD_MESH_API = "https://kloud.aiagi.io";
@@ -88,3 +88,4 @@ function hashToId(str) {
   }
   return Math.abs(hash) % 1000000000;
 }
+

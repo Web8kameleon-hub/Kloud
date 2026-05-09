@@ -18,7 +18,7 @@ COUNTRY = sys.argv[4] if len(sys.argv) > 4 else "Unknown"
 
 app = FastAPI(
     title=f"{CITY} {SPECIALTY} Lab",
-    description=f"Clisonix Research Laboratory - {SPECIALTY} specialization in {CITY}, {COUNTRY}",
+    description=f"Kloud Research Laboratory - {SPECIALTY} specialization in {CITY}, {COUNTRY}",
     version="1.0.0"
 )
 
@@ -107,3 +107,4 @@ def get_research(project_id: str):
 if __name__ == "__main__":
     print(f"🔬 Starting {CITY} {SPECIALTY} Lab on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

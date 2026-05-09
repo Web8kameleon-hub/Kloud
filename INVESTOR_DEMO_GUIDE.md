@@ -13,7 +13,7 @@
 ## STEP 1: Start API Server (1 minute)
 
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
@@ -21,7 +21,7 @@ python -m uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 INFO:     Application startup complete.
-2025-12-03 16:00:00 | INFO | Clisonix_real | Fitness training module routes loaded
+2025-12-03 16:00:00 | INFO | Kloud_real | Fitness training module routes loaded
 ```
 
 ✅ **API is LIVE** → http://localhost:8000
@@ -33,7 +33,7 @@ INFO:     Application startup complete.
 **In another terminal:**
 
 ```powershell
-cd c:\clisonix-cloud\apps\web
+cd c:\kloud-cloud\apps\web
 npm run dev
 ```
 
@@ -212,14 +212,14 @@ pip install -q sqlalchemy psycopg2-binary alembic
 **If Frontend doesn't start:**
 
 ```powershell
-cd c:\clisonix-cloud\apps\web
+cd c:\kloud-cloud\apps\web
 npm install --legacy-peer-deps
 npm run dev
 ```
 
 ---
 
-**🎯 YOU'VE GOT THIS! Show them what Clisonix can do.**
+**🎯 YOU'VE GOT THIS! Show them what Kloud can do.**
 
 *Remember: This is production-ready code. You're not pitching vapor - you're pitching a working MVP.*
 
@@ -229,3 +229,4 @@ npm run dev
 **Status**: 🟢 100% READY
 **Demo Time**: ~5 minutes
 **Impact**: 💰 Series A Ready
+

@@ -1,15 +1,15 @@
 ---
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Cloud - API Deployment
+# Kloud Cloud - API Deployment
 # ═══════════════════════════════════════════════════════════════
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: clisonix-api
-  namespace: clisonix
+  name: kloud-api
+  namespace: kloud
   labels:
-    app: clisonix-api
+    app: kloud-api
     tier: backend
     version: v1
 spec:
@@ -21,19 +21,19 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: clisonix-api
+      app: kloud-api
       tier: backend
   template:
     metadata:
       labels:
-        app: clisonix-api
+        app: kloud-api
         tier: backend
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: clisonix-api
+      serviceAccountName: kloud-api
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -50,7 +50,7 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - clisonix-api
+                        - kloud-api
                 topologyKey: kubernetes.io/hostname
       
       # Init containers
@@ -62,7 +62,7 @@ spec:
             - 'sh'
             - '-c'
             - |
-              until nc -z postgres-service.clisonix.svc.cluster.local 5432; do
+              until nc -z postgres-service.kloud.svc.cluster.local 5432; do
                 echo 'Waiting for PostgreSQL...'
                 sleep 2
               done
@@ -70,19 +70,19 @@ spec:
         
         # Run database migrations
         - name: db-migrate
-          image: clisonix/api:latest
+          image: kloud/api:latest
           imagePullPolicy: IfNotPresent
           command: ["alembic", "upgrade", "head"]
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: clisonix-secrets
+                  name: kloud-secrets
                   key: DATABASE_URL
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
-                  name: clisonix-config
+                  name: kloud-config
                   key: LOG_LEVEL
           securityContext:
             allowPrivilegeEscalation: false
@@ -94,7 +94,7 @@ spec:
       # Main containers
       containers:
         - name: api
-          image: clisonix/api:latest
+          image: kloud/api:latest
           imagePullPolicy: IfNotPresent
           
           ports:
@@ -108,9 +108,9 @@ spec:
           # Environment from ConfigMap and Secrets
           envFrom:
             - configMapRef:
-                name: clisonix-config
+                name: kloud-config
             - secretRef:
-                name: clisonix-secrets
+                name: kloud-secrets
           
           # Additional environment variables
           env:
@@ -187,7 +187,7 @@ spec:
       volumes:
         - name: uploads
           persistentVolumeClaim:
-            claimName: clisonix-uploads-pvc
+            claimName: kloud-uploads-pvc
         - name: logs
           emptyDir: {}
         - name: tmp
@@ -204,10 +204,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clisonix-api-service
-  namespace: clisonix
+  name: kloud-api-service
+  namespace: kloud
   labels:
-    app: clisonix-api
+    app: kloud-api
     tier: backend
 spec:
   type: ClusterIP
@@ -221,7 +221,7 @@ spec:
       protocol: TCP
       name: metrics
   selector:
-    app: clisonix-api
+    app: kloud-api
     tier: backend
   sessionAffinity: None
 
@@ -230,15 +230,15 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: clisonix-uploads-pvc
-  namespace: clisonix
+  name: kloud-uploads-pvc
+  namespace: kloud
   labels:
-    app: clisonix
+    app: kloud
     component: uploads
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: clisonix-storage
+  storageClassName: kloud-storage
   resources:
     requests:
       storage: 50Gi
@@ -248,14 +248,14 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: clisonix-api-startup
-  namespace: clisonix
+  name: kloud-api-startup
+  namespace: kloud
 data:
   startup.sh: |
     #!/bin/bash
     set -e
     
-    echo "Starting Clisonix API..."
+    echo "Starting Kloud API..."
     
     # Wait for dependencies
     echo "Checking database connection..."
@@ -280,16 +280,17 @@ data:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: clisonix-api-monitor
-  namespace: clisonix
+  name: kloud-api-monitor
+  namespace: kloud
   labels:
-    app: clisonix-api
+    app: kloud-api
 spec:
   selector:
     matchLabels:
-      app: clisonix-api
+      app: kloud-api
   endpoints:
     - port: metrics
       interval: 30s
       path: /metrics
+
 

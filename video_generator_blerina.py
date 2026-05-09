@@ -2,7 +2,7 @@
 """
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  VIDEO GENERATOR BLERINA — AI Video Production Pipeline                       ║
-║  Part of Clisonix Cloud Industrial Backend                                    ║
+║  Part of Kloud Cloud Industrial Backend                                    ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Features:                                                                    ║
 ║  - BLERINA script generation (using existing content factory)                 ║
@@ -13,7 +13,7 @@
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
 Date: 2026-02-08
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 from __future__ import annotations
@@ -185,10 +185,10 @@ Beyond medicine, BCIs are being explored for gaming, meditation enhancement,
 and even direct brain-to-brain communication.
 """
         },
-        "clisonix_approach": {
-            "title": "The Clisonix Approach",
+        "kloud_approach": {
+            "title": "The Kloud Approach",
             "narration": """
-Clisonix has developed advanced EEG analysis systems that make brain-computer 
+Kloud has developed advanced EEG analysis systems that make brain-computer 
 interfaces more accessible and reliable.
 
 Our ALBA system provides real-time EEG signal processing with high accuracy.
@@ -220,10 +220,10 @@ Brain-Computer Interfaces represent a paradigm shift in how we interact with tec
 From helping patients regain lost abilities to enhancing human cognition, 
 BCIs are not just science fiction—they're becoming reality.
 
-At Clisonix, we're proud to be part of this revolution, building the tools 
+At Kloud, we're proud to be part of this revolution, building the tools 
 that will shape the future of neural technology.
 
-Thank you for watching. To learn more, visit clisonix.com.
+Thank you for watching. To learn more, visit kloud.com.
 """
         }
     }
@@ -263,7 +263,7 @@ Thank you for watching. To learn more, visit clisonix.com.
         
         section_order = [
             "intro", "eeg_basics", "how_bcis_work", 
-            "applications", "clisonix_approach", "future", "outro"
+            "applications", "kloud_approach", "future", "outro"
         ]
         
         for idx, section_key in enumerate(section_order):
@@ -535,14 +535,14 @@ class ImageGenerator:
         # Main text
         draw.text((x, y), title, fill=colors["text"], font=font)
         
-        # Add Clisonix branding
+        # Add Kloud branding
         small_font: FreeTypeFont | ImageFont.ImageFont
         try:
             small_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 28)
         except (OSError, IOError):
             small_font = ImageFont.load_default()
         
-        draw.text((50, height - 60), "© Clisonix 2026", fill="#888888", font=small_font)
+        draw.text((50, height - 60), "© Kloud 2026", fill="#888888", font=small_font)
         
         img.save(output_path, quality=95)
     
@@ -976,3 +976,4 @@ if __name__ == "__main__":
             add_subtitles=True
         ))
         print(f"\nResult: {result}")
+

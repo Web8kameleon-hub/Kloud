@@ -1,23 +1,23 @@
 #!/bin/bash
 #
-# Clisonix Cloud - Hetzner Production Deployment Script
+# Kloud Cloud - Hetzner Production Deployment Script
 # Auto-installs Docker, configures services, and deploys the platform
 #
-# Usage: curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Clisonix-cloud/main/deploy-hetzner.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/LedjanAhmati/Kloud-cloud/main/deploy-hetzner.sh | bash
 #
 
 set -e
 
 echo "════════════════════════════════════════════════════════════"
-echo "  CLISONIX CLOUD - HETZNER DEPLOYMENT"
+echo "  KLOUD CLOUD - HETZNER DEPLOYMENT"
 echo "════════════════════════════════════════════════════════════"
 echo ""
 
 # Configuration
 SERVER_IP="${SERVER_IP:-$(curl -s ifconfig.me)}"
-DOMAIN="${DOMAIN:-clisonix.com}"
-API_DOMAIN="${API_DOMAIN:-api.clisonix.com}"
-PROJECT_DIR="/opt/clisonix"
+DOMAIN="${DOMAIN:-kloud.com}"
+API_DOMAIN="${API_DOMAIN:-api.kloud.com}"
+PROJECT_DIR="/opt/kloud"
 
 echo "📍 Server IP: $SERVER_IP"
 echo "🌐 Domain: $DOMAIN"
@@ -74,9 +74,9 @@ echo "✅ Project directory: $PROJECT_DIR"
 
 # Step 5: Clone Repository
 echo ""
-echo "[5/8] Cloning Clisonix Cloud repository..."
+echo "[5/8] Cloning Kloud Cloud repository..."
 if [ ! -d ".git" ]; then
-    git clone https://github.com/LedjanAhmati/Clisonix-cloud.git .
+    git clone https://github.com/LedjanAhmati/Kloud-cloud.git .
 else
     git pull origin main
 fi
@@ -96,7 +96,7 @@ MINIO_PASSWORD=$(openssl rand -hex 16)
 
 cat > .env.production <<EOF
 # ════════════════════════════════════════════════════════════
-# CLISONIX CLOUD - PRODUCTION ENVIRONMENT
+# KLOUD CLOUD - PRODUCTION ENVIRONMENT
 # Auto-generated on $(date)
 # ════════════════════════════════════════════════════════════
 
@@ -120,16 +120,16 @@ NEXT_PUBLIC_API_URL=https://$API_DOMAIN
 NEXT_PUBLIC_WEB_URL=https://$DOMAIN
 
 # Database Configuration
-POSTGRES_USER=clisonix_prod
+POSTGRES_USER=kloud_prod
 POSTGRES_PASSWORD=$DB_PASSWORD
-POSTGRES_DB=clisonixdb
-DATABASE_URL=postgresql://clisonix_prod:$DB_PASSWORD@postgres:5432/clisonixdb
+POSTGRES_DB=klouddb
+DATABASE_URL=postgresql://kloud_prod:$DB_PASSWORD@postgres:5432/klouddb
 
 # Redis
 REDIS_URL=redis://redis:6379/0
 
 # MinIO Object Storage
-MINIO_ROOT_USER=clisonix_admin
+MINIO_ROOT_USER=kloud_admin
 MINIO_ROOT_PASSWORD=$MINIO_PASSWORD
 MINIO_ENDPOINT=http://minio:9000
 
@@ -179,15 +179,15 @@ EOF
 # Save credentials to secure file
 cat > .credentials.txt <<EOF
 ════════════════════════════════════════════════════════════
-CLISONIX CLOUD - SECURE CREDENTIALS
+KLOUD CLOUD - SECURE CREDENTIALS
 Generated: $(date)
 Server IP: $SERVER_IP
 ════════════════════════════════════════════════════════════
 
 Database:
-  User: clisonix_prod
+  User: kloud_prod
   Password: $DB_PASSWORD
-  Database: clisonixdb
+  Database: klouddb
 
 Grafana Dashboard:
   URL: https://$DOMAIN:3001
@@ -195,7 +195,7 @@ Grafana Dashboard:
   Password: $GRAFANA_PASSWORD
 
 MinIO Storage:
-  Username: clisonix_admin
+  Username: kloud_admin
   Password: $MINIO_PASSWORD
 
 API Keys:
@@ -225,7 +225,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    container_name: clisonix-api
+    container_name: kloud-api
     ports:
       - "8000:8000"
     environment:
@@ -242,21 +242,21 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: clisonix_web
+    container_name: kloud_web
     restart: unless-stopped
     ports:
       - "3000:3000"
     env_file:
       - .env.production
     networks:
-      - clisonix_network
+      - kloud_network
     depends_on:
       - api
 
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: clisonix_nginx
+    container_name: kloud_nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -266,7 +266,7 @@ services:
       - ./ssl:/etc/nginx/ssl:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
-      - clisonix_network
+      - kloud_network
     depends_on:
       - api
       - web
@@ -274,36 +274,36 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: clisonix_postgres
+    container_name: kloud_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: clisonix
-      POSTGRES_USER: clisonix
+      POSTGRES_DB: kloud
+      POSTGRES_USER: kloud
       POSTGRES_PASSWORD: \${DATABASE_PASSWORD:-changeme}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - clisonix_network
+      - kloud_network
     ports:
       - "5432:5432"
 
   # Redis Cache
   redis:
     image: redis:7-alpine
-    container_name: clisonix_redis
+    container_name: kloud_redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     networks:
-      - clisonix_network
+      - kloud_network
     ports:
       - "6379:6379"
 
   # Prometheus (Monitoring)
   prometheus:
     image: prom/prometheus:latest
-    container_name: clisonix_prometheus
+    container_name: kloud_prometheus
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -312,14 +312,14 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     networks:
-      - clisonix_network
+      - kloud_network
     ports:
       - "9090:9090"
 
   # Grafana (Dashboards)
   grafana:
     image: grafana/grafana:latest
-    container_name: clisonix_grafana
+    container_name: kloud_grafana
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=\${GRAFANA_PASSWORD:-admin}
@@ -327,14 +327,14 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
-      - clisonix_network
+      - kloud_network
     ports:
       - "3001:3000"
     depends_on:
       - prometheus
 
 networks:
-  clisonix_network:
+  kloud_network:
     driver: bridge
 
 volumes:
@@ -371,10 +371,10 @@ http {
     limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
     limit_req_zone $binary_remote_addr zone=web_limit:10m rate=30r/s;
 
-    # Frontend - clisonix.com
+    # Frontend - kloud.com
     server {
         listen 80;
-        server_name clisonix.com www.clisonix.com;
+        server_name kloud.com www.kloud.com;
 
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
@@ -387,10 +387,10 @@ http {
 
     server {
         listen 443 ssl http2;
-        server_name clisonix.com www.clisonix.com;
+        server_name kloud.com www.kloud.com;
 
-        ssl_certificate /etc/letsencrypt/live/clisonix.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/clisonix.com/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/kloud.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/kloud.com/privkey.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -411,10 +411,10 @@ http {
         }
     }
 
-    # API - api.clisonix.com
+    # API - api.kloud.com
     server {
         listen 80;
-        server_name api.clisonix.com;
+        server_name api.kloud.com;
 
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
@@ -427,10 +427,10 @@ http {
 
     server {
         listen 443 ssl http2;
-        server_name api.clisonix.com;
+        server_name api.kloud.com;
 
-        ssl_certificate /etc/letsencrypt/live/api.clisonix.com/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/api.clisonix.com/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/api.kloud.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/api.kloud.com/privkey.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -460,17 +460,17 @@ echo ""
 echo "Next steps:"
 echo ""
 echo "1. Configure DNS at STRATO:"
-echo "   - A Record: clisonix.com → $SERVER_IP"
-echo "   - A Record: www.clisonix.com → $SERVER_IP"
-echo "   - A Record: api.clisonix.com → $SERVER_IP"
+echo "   - A Record: kloud.com → $SERVER_IP"
+echo "   - A Record: www.kloud.com → $SERVER_IP"
+echo "   - A Record: api.kloud.com → $SERVER_IP"
 echo ""
 echo "2. Wait for DNS propagation (5-30 minutes)"
-echo "   Check with: nslookup clisonix.com"
+echo "   Check with: nslookup kloud.com"
 echo ""
 echo "3. Install SSL certificates:"
 echo "   apt install -y certbot"
-echo "   certbot certonly --standalone -d clisonix.com -d www.clisonix.com"
-echo "   certbot certonly --standalone -d api.clisonix.com"
+echo "   certbot certonly --standalone -d kloud.com -d www.kloud.com"
+echo "   certbot certonly --standalone -d api.kloud.com"
 echo ""
 echo "4. Start the platform:"
 echo "   cd $PROJECT_DIR"
@@ -486,4 +486,5 @@ echo "📁 Project directory: $PROJECT_DIR"
 echo "🔐 Credentials file: $PROJECT_DIR/.credentials.txt (chmod 600)"
 echo ""
 echo "════════════════════════════════════════════════════════════"
+
 

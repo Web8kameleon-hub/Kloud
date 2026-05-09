@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document defines alert rules for Clisonix Cloud's production monitoring.
+This document defines alert rules for Kloud Cloud's production monitoring.
 
 ---
 
@@ -154,11 +154,11 @@ groups:
 
 ## Business Logic Alerts
 
-### Clisonix-Specific Metrics
+### Kloud-Specific Metrics
 
 ```yaml
 groups:
-  - name: clisonix_business
+  - name: kloud_business
     rules:
       - alert: ALBAFrameGenerationStalled
         expr: |
@@ -264,7 +264,7 @@ route:
 receivers:
   - name: 'default'
     email_configs:
-      - to: 'ops@clisonix.com'
+      - to: 'ops@kloud.com'
 
   - name: 'pagerduty'
     pagerduty_configs:
@@ -278,7 +278,7 @@ receivers:
 
   - name: 'email'
     email_configs:
-      - to: 'monitoring@clisonix.com'
+      - to: 'monitoring@kloud.com'
 ```
 
 ---
@@ -291,12 +291,12 @@ receivers:
 **Severity:** Critical
 
 **Diagnosis:**
-1. Check service status: `systemctl status clisonix-api`
-2. Review logs: `journalctl -u clisonix-api -n 100`
+1. Check service status: `systemctl status kloud-api`
+2. Review logs: `journalctl -u kloud-api -n 100`
 3. Test connectivity: `curl http://localhost:8000/health`
 
 **Resolution:**
-1. Restart service: `systemctl restart clisonix-api`
+1. Restart service: `systemctl restart kloud-api`
 2. If still down, check dependencies (PostgreSQL, Redis)
 3. Escalate to on-call engineer if not resolved in 5 minutes
 
@@ -361,3 +361,4 @@ sum(rate(alerts_silenced_total[7d])) by (alertname) / sum(rate(alerts_fired_tota
 ---
 
 **Next:** [Anomalies Report →](anomalies-report.md)
+

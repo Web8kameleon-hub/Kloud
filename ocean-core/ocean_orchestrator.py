@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(name)s - %(messa
 logger = logging.getLogger("OceanOrchestrator")
 
 PORT = int(os.getenv("PORT", "8030"))
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://clisonix-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 DEFAULT_MODEL = os.getenv("MODEL", "llama3.1:8b")
 
 # ═══════════════════════════════════════════════════════════════════
@@ -78,7 +78,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # ASI Trinity
     "alba": ServiceConfig(
         name="ALBA - Analytical Intelligence",
-        host="clisonix-alba",
+        host="kloud-alba",
         port=5555,
         endpoints={
             "analyze": "/api/v1/analyze",
@@ -90,7 +90,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     ),
     "albi": ServiceConfig(
         name="ALBI - Creative Intelligence",
-        host="clisonix-albi",
+        host="kloud-albi",
         port=6680,
         endpoints={
             "create": "/api/v1/create",
@@ -102,7 +102,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     ),
     "jona": ServiceConfig(
         name="JONA - Emotional Intelligence",
-        host="clisonix-jona",
+        host="kloud-jona",
         port=6681,
         endpoints={
             "emotion": "/api/v1/emotion",
@@ -113,7 +113,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     ),
     "asi": ServiceConfig(
         name="ASI - Superintelligence Core",
-        host="clisonix-asi",
+        host="kloud-asi",
         port=8020,
         endpoints={
             "think": "/api/v1/think",
@@ -126,7 +126,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Translation
     "translation": ServiceConfig(
         name="Translation Node",
-        host="clisonix-translation",
+        host="kloud-translation",
         port=8036,
         endpoints={
             "translate": "/api/v1/translate",
@@ -139,7 +139,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Backend API
     "api": ServiceConfig(
         name="Main API",
-        host="clisonix-api",
+        host="kloud-api",
         port=8000,
         endpoints={
             "fitness": "/fitness",
@@ -154,7 +154,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Aviation Weather
     "aviation": ServiceConfig(
         name="Aviation Weather",
-        host="clisonix-aviation",
+        host="kloud-aviation",
         port=8040,
         endpoints={
             "metar": "/api/v1/metar",
@@ -168,7 +168,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Reporting
     "reporting": ServiceConfig(
         name="Reporting Service",
-        host="clisonix-reporting",
+        host="kloud-reporting",
         port=8010,
         endpoints={
             "generate": "/api/v1/report",
@@ -181,7 +181,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Excel Service
     "excel": ServiceConfig(
         name="Excel Service",
-        host="clisonix-excel",
+        host="kloud-excel",
         port=8011,
         endpoints={
             "process": "/api/v1/process",
@@ -194,7 +194,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Behavioral Science
     "behavioral": ServiceConfig(
         name="Behavioral Science",
-        host="clisonix-behavioral",
+        host="kloud-behavioral",
         port=8012,
         endpoints={
             "analyze": "/api/v1/analyze",
@@ -207,7 +207,7 @@ SERVICES: Dict[str, ServiceConfig] = {
     # Economy
     "economy": ServiceConfig(
         name="Economy Service",
-        host="clisonix-economy",
+        host="kloud-economy",
         port=8013,
         endpoints={
             "market": "/api/v1/market",
@@ -384,7 +384,7 @@ class ServiceCaller:
 app = FastAPI(
     title="Ocean Orchestrator",
     version="1.0.0",
-    description="Dynamic Multi-Service Router for Clisonix Cloud"
+    description="Dynamic Multi-Service Router for Kloud Cloud"
 )
 
 app.add_middleware(
@@ -744,3 +744,4 @@ if __name__ == "__main__":
     logger.info(f"📡 Registered {len(SERVICES)} services")
     logger.info(f"🔗 Ollama: {OLLAMA_HOST}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

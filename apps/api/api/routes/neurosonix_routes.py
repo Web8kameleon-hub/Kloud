@@ -1,5 +1,5 @@
 """
-Clisonix Routes - Industrial API
+Kloud Routes - Industrial API
 Author: Ledjan Ahmati
 License: Closed Source
 """
@@ -10,9 +10,9 @@ import psutil
 
 router = APIRouter()
 
-@router.get("/Clisonix/status", tags=["Clisonix"])
+@router.get("/Kloud/status", tags=["Kloud"])
 def get_status():
-    """Kthen statusin real tÃ« sistemit Clisonix industrial."""
+    """Kthen statusin real tÃ« sistemit Kloud industrial."""
     return {
         "status": "active",
         "timestamp": time.time(),
@@ -22,14 +22,15 @@ def get_status():
         "hostname": psutil.users()[0].name if psutil.users() else "unknown"
     }
 
-@router.get("/Clisonix/metrics", tags=["Clisonix"])
+@router.get("/Kloud/metrics", tags=["Kloud"])
 def get_metrics():
-    """Kthen metrika reale tÃ« sistemit Clisonix industrial."""
+    """Kthen metrika reale tÃ« sistemit Kloud industrial."""
     return {
         "uptime": time.time() - psutil.boot_time(),
         "process_count": len(psutil.pids()),
         "load_avg": psutil.getloadavg() if hasattr(psutil, "getloadavg") else None,
         "timestamp": time.time()
     }
+
 
 

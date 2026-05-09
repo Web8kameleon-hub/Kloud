@@ -1,5 +1,5 @@
 export async function eegAnalyze(config: { PYTHON: string }, filePath: string) {
-  // Stub implementation for minimal Clisonix setup
+  // Stub implementation for minimal Kloud setup
   // In a real implementation, this would analyze EEG data
   return {
     ok: true,
@@ -13,3 +13,4 @@ export async function eegAnalyze(config: { PYTHON: string }, filePath: string) {
     }
   };
 }
+

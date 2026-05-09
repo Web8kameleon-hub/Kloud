@@ -1,5 +1,5 @@
 # =============================================================================
-# CLISONIX CLOUD - FULL MICROSERVICES HELM DEPLOYMENT
+# KLOUD CLOUD - FULL MICROSERVICES HELM DEPLOYMENT
 # =============================================================================
 # Deploys ALL 56+ containers to Hetzner Kubernetes
 # Server: 46.225.14.83 (rocky-32gb-nbg1-1)
@@ -60,9 +60,9 @@ permissions:
 env:
   REGISTRY: ghcr.io
   # Use lowercase repo name for GHCR compatibility
-  IMAGE_NAME: web8kameleon-hub/clisonix-cloud
+  IMAGE_NAME: web8kameleon-hub/kloud-cloud
   HETZNER_IP: 46.225.14.83
-  NAMESPACE_PREFIX: clisonix
+  NAMESPACE_PREFIX: kloud
 
 jobs:
   # =========================================================================
@@ -369,7 +369,7 @@ jobs:
         continue-on-error: true
         run: |
           ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 root@${{ env.HETZNER_IP }} << 'ENDSSH'
-          cd /root/Clisonix-cloud
+          cd /root/Kloud-cloud
           echo "📥 Pulling latest code..."
           git pull origin main || true
           echo "🔄 Restarting core services..."
@@ -434,8 +434,8 @@ jobs:
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
           helm upgrade --install postgres bitnami/postgresql \
             --namespace $NAMESPACE \
-            --set auth.postgresPassword=${{ secrets.DB_PASSWORD || 'clisonix' }} \
-            --set auth.database=clisonixdb \
+            --set auth.postgresPassword=${{ secrets.DB_PASSWORD || 'kloud' }} \
+            --set auth.database=klouddb \
             --set primary.persistence.size=20Gi \
             --wait --timeout 5m
 
@@ -476,7 +476,7 @@ jobs:
                   - containerPort: 7687
                   env:
                   - name: NEO4J_AUTH
-                    value: neo4j/clisonix123
+                    value: neo4j/kloud123
           ---
           apiVersion: v1
           kind: Service
@@ -554,7 +554,7 @@ jobs:
           metadata:
             name: $SERVICE
             labels:
-              app: clisonix
+              app: kloud
               component: $SERVICE
               role: asi-trinity
           spec:
@@ -576,7 +576,7 @@ jobs:
                   - name: REDIS_URL
                     value: "redis://redis-master:6379"
                   - name: POSTGRES_URL
-                    value: "postgresql://clisonix:clisonix@postgres-postgresql:5432/clisonixdb"
+                    value: "postgresql://kloud:kloud@postgres-postgresql:5432/klouddb"
           ---
           apiVersion: v1
           kind: Service
@@ -897,7 +897,7 @@ jobs:
           metadata:
             name: lab-$LAB
             labels:
-              app: clisonix
+              app: kloud
               component: laboratory
               city: $LAB
           spec:
@@ -967,7 +967,7 @@ jobs:
                   - containerPort: 8000
                   env:
                   - name: DATABASE_URL
-                    value: "postgresql://clisonix:clisonix@postgres-postgresql:5432/clisonixdb"
+                    value: "postgresql://kloud:kloud@postgres-postgresql:5432/klouddb"
                   - name: REDIS_URL
                     value: "redis://redis-master:6379"
           ---
@@ -1106,7 +1106,7 @@ jobs:
         if: steps.ssh_deploy.outcome != 'success' && env.HAS_KUBECONFIG == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
-          DOMAIN="${{ inputs.environment == 'staging' && 'staging.clisonix.cloud' || 'clisonix.cloud' }}"
+          DOMAIN="${{ inputs.environment == 'staging' && 'staging.kloud.cloud' || 'kloud.cloud' }}"
           
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace $NAMESPACE \
@@ -1117,7 +1117,7 @@ jobs:
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: clisonix-ingress
+            name: kloud-ingress
             annotations:
               nginx.ingress.kubernetes.io/ssl-redirect: "true"
           spec:
@@ -1178,7 +1178,7 @@ jobs:
     steps:
       - name: Generate summary
         run: |
-          echo "## ⛵ Clisonix Full Microservices Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "## ⛵ Kloud Full Microservices Deployment" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🏗️ Architecture Deployed" >> $GITHUB_STEP_SUMMARY
           echo "| Category | Count |" >> $GITHUB_STEP_SUMMARY
@@ -1204,7 +1204,8 @@ jobs:
           echo "**Image Tag:** ${{ needs.build-images.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🌐 Access Points" >> $GITHUB_STEP_SUMMARY
-          echo "- **Frontend:** https://clisonix.cloud" >> $GITHUB_STEP_SUMMARY
-          echo "- **API:** https://clisonix.cloud/api" >> $GITHUB_STEP_SUMMARY
-          echo "- **Ocean:** https://clisonix.cloud/ocean" >> $GITHUB_STEP_SUMMARY
-          echo "- **ASI:** https://clisonix.cloud/asi" >> $GITHUB_STEP_SUMMARY
+          echo "- **Frontend:** https://kloud.cloud" >> $GITHUB_STEP_SUMMARY
+          echo "- **API:** https://kloud.cloud/api" >> $GITHUB_STEP_SUMMARY
+          echo "- **Ocean:** https://kloud.cloud/ocean" >> $GITHUB_STEP_SUMMARY
+          echo "- **ASI:** https://kloud.cloud/asi" >> $GITHUB_STEP_SUMMARY
+

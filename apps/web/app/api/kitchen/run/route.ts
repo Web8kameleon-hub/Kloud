@@ -80,9 +80,10 @@ export async function GET() {
       environment: "object (optional) - Environment variables",
     },
     example: {
-      collection: "clisonix-api-tests",
-      baseUrl: "https://api.clisonix.cloud",
+      collection: "kloud-api-tests",
+      baseUrl: "https://api.kloud.cloud",
       priority: 8,
     },
   });
 }
+

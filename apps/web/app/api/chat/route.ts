@@ -1,10 +1,10 @@
 /**
- * Clisonix Cloud - Chat API with History
+ * Kloud Cloud - Chat API with History
  *
  * Persistent chat with Ocean Core AI
  *
  * @author Ledjan Ahmati
- * @copyright 2026 Clisonix Cloud
+ * @copyright 2026 Kloud Cloud
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -243,3 +243,4 @@ async function saveChatToDatabase(userId: string, session: ChatSession) {
     console.error("Failed to save chat to database:", error);
   }
 }
+

@@ -13,7 +13,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="Data Source Container for Open Free Data"
 LABEL version="1.0.0"
 
@@ -69,7 +69,7 @@ PORT_MAP = {
 DATASOURCE_PORT = PORT_MAP.get(REGION, 9300)
 
 app = FastAPI(
-    title=f"Clisonix Data Source - {REGION.replace('_', ' ').title()}",
+    title=f"Kloud Data Source - {REGION.replace('_', ' ').title()}",
     description=f"Open Free Data Sources for {REGION}",
     version="1.0.0",
     docs_url="/api/v1/docs",
@@ -267,3 +267,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:${DATASOURCE_PORT:-9300}/health || exit 1
 
 CMD ["python", "datasource_service.py"]
+

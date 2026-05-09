@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Publish documentation to clisonix-blog GitHub repo.
+Publish documentation to kloud-blog GitHub repo.
 
 Sistem publikimi për dokumenta në GitHub, nga ku publisheri merr
 automatikisht dhe i poston në LinkedIn.
@@ -21,9 +21,9 @@ from typing import Dict, Any, Optional
 import re
 
 class BlogPublisher:
-    def __init__(self, blog_repo_url: str = "https://github.com/LedjanAhmati/clisonix-blog.git"):
+    def __init__(self, blog_repo_url: str = "https://github.com/LedjanAhmati/kloud-blog.git"):
         self.blog_repo_url = blog_repo_url
-        self.blog_dir = Path(".clisonix-blog-tmp")
+        self.blog_dir = Path(".kloud-blog-tmp")
         self.posts_dir = self.blog_dir / "posts"
         self.metadata_file = self.blog_dir / "publications.json"
         
@@ -119,7 +119,7 @@ class BlogPublisher:
             "description": description,
             "tags": tags,
             "published": frontmatter.get("published", datetime.utcnow().isoformat()),
-            "author": frontmatter.get("author", "Clisonix Team"),
+            "author": frontmatter.get("author", "Kloud Team"),
             "image": frontmatter.get("image", ""),
             "source_file": str(doc_path),
             "content_hash": hash(content) & 0x7fffffff,
@@ -143,7 +143,7 @@ tags: {json.dumps(metadata['tags'])}
 author: {metadata['author']}
 published: {metadata['published']}
 image: {metadata['image']}
-source: https://github.com/LedjanAhmati/clisonix-cloud/blob/main/{metadata['source_file']}
+source: https://github.com/LedjanAhmati/kloud-cloud/blob/main/{metadata['source_file']}
 ---
 
 """
@@ -278,7 +278,7 @@ source: https://github.com/LedjanAhmati/clisonix-cloud/blob/main/{metadata['sour
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Publish documentation to clisonix-blog GitHub repo"
+        description="Publish documentation to kloud-blog GitHub repo"
     )
     parser.add_argument(
         "--doc",
@@ -291,7 +291,7 @@ def main():
     )
     parser.add_argument(
         "--repo",
-        default="https://github.com/LedjanAhmati/clisonix-blog.git",
+        default="https://github.com/LedjanAhmati/kloud-blog.git",
         help="Blog repository URL"
     )
     parser.add_argument(
@@ -345,7 +345,7 @@ def main():
                 print("⚠️  Warning: Commit/push failed, but document prepared locally")
         
         print("\n✅ Publication complete!")
-        print(f"📍 Blog post available at: .clisonix-blog-tmp/posts/")
+        print(f"📍 Blog post available at: .kloud-blog-tmp/posts/")
         
     finally:
         if not args.keep_repo:
@@ -354,3 +354,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -1,11 +1,11 @@
 """
-Clisonix Module Map Loader
+Kloud Module Map Loader
 ============================
 Loads the module map and provides routing utilities.
 Internal configuration is read from environment variables.
 
 Usage:
-    from clisonix_prompt import get_module_map, get_user_prompt, get_route
+    from kloud_prompt import get_module_map, get_user_prompt, get_route
     
     # Get user-facing prompt
     prompt = get_user_prompt()
@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Optional
 
 # Module map file location
-MODULE_MAP_FILE = "CLISONIX_MODULE_MAP.md"
+MODULE_MAP_FILE = "KLOUD_MODULE_MAP.md"
 
 # Public routes only (no ports, no containers)
 ROUTES = {
@@ -37,7 +37,7 @@ ROUTES = {
 def _find_module_map() -> Path:
     """Find the module map file."""
     # Environment variable (recommended for Docker)
-    env_path = os.environ.get("CLISONIX_MODULE_MAP_PATH")
+    env_path = os.environ.get("KLOUD_MODULE_MAP_PATH")
     if env_path and Path(env_path).exists():
         return Path(env_path)
     
@@ -84,9 +84,10 @@ def get_safety_rules() -> list:
 # Auto-load on import
 _map = get_module_map()
 if _map:
-    print(f"[Clisonix] Module map loaded")
+    print(f"[Kloud] Module map loaded")
 
 
 if __name__ == "__main__":
     print("ROUTES:", get_all_routes())
     print("MAP:", "loaded" if get_module_map() else "not found")
+

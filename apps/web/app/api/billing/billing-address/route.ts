@@ -36,7 +36,7 @@ export async function GET() {
     });
 
     // Get customer email from session/auth
-    const customerEmail = process.env.USER_EMAIL || "customer@clisonix.com";
+    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
 
     // Search for customer by email
     const customers = await stripe.customers.list({
@@ -123,7 +123,7 @@ export async function PUT(request: Request) {
     }
 
     // Get customer
-    const customerEmail = process.env.USER_EMAIL || "customer@clisonix.com";
+    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
     const customers = await stripe.customers.list({
       email: customerEmail,
       limit: 1,
@@ -168,4 +168,5 @@ export async function PUT(request: Request) {
     );
   }
 }
+
 

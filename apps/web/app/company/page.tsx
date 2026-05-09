@@ -3,13 +3,13 @@
 import Link from 'next/link';
 
 /**
- * COMPANY PAGE - About Clisonix
+ * COMPANY PAGE - About Kloud
  * Trust, credibility, and story
  */
 
 export default function CompanyPage() {
   const milestones = [
-    { year: '2024', title: 'Founded', desc: 'Clisonix founded with vision to democratize AI' },
+    { year: '2024', title: 'Founded', desc: 'Kloud founded with vision to democratize AI' },
     { year: '2024', title: 'ASI Trinity', desc: 'Core AI architecture developed (Neural Trinity System)' },
     { year: '2025', title: 'Platform Launch', desc: '15+ modules released, platform goes live' },
     { year: '2026', title: 'Public Beta', desc: 'Open access with 6-month free trial for early adopters' },
@@ -62,7 +62,7 @@ export default function CompanyPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <span className="text-2xl">🧠</span>
-            <span className="text-xl font-bold">Clisonix</span>
+            <span className="text-xl font-bold">Kloud</span>
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/platform" className="text-gray-400 hover:text-white transition-colors">Platform</Link>
@@ -77,7 +77,7 @@ export default function CompanyPage() {
       {/* Hero */}
       <section className="pt-32 pb-16 px-6 text-center">
         <h1 className="text-5xl font-bold mb-6">
-          About Clisonix
+          About Kloud
         </h1>
         <p className="text-xl text-gray-400 max-w-3xl mx-auto">
           We&apos;re building the future of AI infrastructure — powerful, accessible, 
@@ -118,7 +118,7 @@ export default function CompanyPage() {
           
           <div className="prose prose-invert max-w-none">
             <p className="text-lg text-gray-300 mb-6">
-              Clisonix was born from a simple frustration: why is AI infrastructure so 
+              Kloud was born from a simple frustration: why is AI infrastructure so 
               complex, expensive, and fragmented? We believed developers deserved better.
             </p>
             <p className="text-lg text-gray-300 mb-6">
@@ -127,7 +127,7 @@ export default function CompanyPage() {
               ASI Trinity: Core-A, Core-B, and Core-C) into a single, coherent API.
             </p>
             <p className="text-lg text-gray-300 mb-6">
-              Today, Clisonix powers applications across industries — from healthcare 
+              Today, Kloud powers applications across industries — from healthcare 
               to fintech, from startups to enterprises. Our 15+ modules provide 
               everything developers need: neural processing, vision AI, workflow 
               automation, and much more.
@@ -198,22 +198,22 @@ export default function CompanyPage() {
             <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 text-center">
               <div className="text-3xl mb-3">📧</div>
               <h3 className="font-semibold mb-2">General</h3>
-              <a href="mailto:support@clisonix.com" className="text-blue-600 hover:underline">
-                support@clisonix.com
+              <a href="mailto:support@kloud.com" className="text-blue-600 hover:underline">
+                support@kloud.com
               </a>
             </div>
             <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 text-center">
               <div className="text-3xl mb-3">💼</div>
               <h3 className="font-semibold mb-2">Enterprise Sales</h3>
-              <a href="mailto:investors@clisonix.com" className="text-blue-600 hover:underline">
-                investors@clisonix.com
+              <a href="mailto:investors@kloud.com" className="text-blue-600 hover:underline">
+                investors@kloud.com
               </a>
             </div>
             <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 text-center">
               <div className="text-3xl mb-3">🔒</div>
               <h3 className="font-semibold mb-2">Security</h3>
-              <a href="mailto:support@clisonix.com?subject=Security" className="text-blue-600 hover:underline">
-                support@clisonix.com
+              <a href="mailto:support@kloud.com?subject=Security" className="text-blue-600 hover:underline">
+                support@kloud.com
               </a>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function CompanyPage() {
       <section className="py-20 px-6 text-center">
         <h2 className="text-3xl font-bold mb-4">Ready to Build with Us?</h2>
         <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-          Join thousands of developers building the future with Clisonix.
+          Join thousands of developers building the future with Kloud.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
@@ -245,7 +245,7 @@ export default function CompanyPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto text-center text-gray-500 text-sm">
-          © 2026 Clisonix. All rights reserved. | 
+          © 2026 Kloud. All rights reserved. | 
           <Link href="/security" className="hover:text-blue-600 ml-2">Security</Link> | 
           <Link href="/status" className="hover:text-blue-600 ml-2">Status</Link> | 
           <Link href="/platform" className="hover:text-blue-600 ml-2">Platform</Link>
@@ -254,6 +254,7 @@ export default function CompanyPage() {
     </div>
   );
 }
+
 
 
 

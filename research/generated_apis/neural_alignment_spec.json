@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Clisonix Neural Alignment API",
+    "title": "Kloud Neural Alignment API",
     "version": "1.0.0",
     "description": "This specification was generated automatically. It addresses the\ndetected requirement: Expose alignment metrics for remediation workflows. Review the manifest for the\nsource context.",
     "tags": [
@@ -72,4 +72,5 @@
     }
   }
 }
+
 

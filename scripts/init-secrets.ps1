@@ -45,7 +45,7 @@ function New-SecretFile {
 Write-Host "`n📝 Generating secure passwords..." -ForegroundColor Yellow
 
 New-SecretFile -Name "postgres_password" -Value (New-SecurePassword)
-New-SecretFile -Name "postgres_user" -Value "clisonix"
+New-SecretFile -Name "postgres_user" -Value "kloud"
 New-SecretFile -Name "redis_password" -Value (New-SecurePassword)
 New-SecretFile -Name "minio_root_password" -Value (New-SecurePassword)
 New-SecretFile -Name "elastic_password" -Value (New-SecurePassword)
@@ -105,5 +105,6 @@ Write-Host "`n✅ Secrets initialization complete!" -ForegroundColor Green
 Write-Host "📝 Next steps:" -ForegroundColor Cyan
 Write-Host "   1. Review generated passwords above" -ForegroundColor White
 Write-Host "   2. Update API keys in secrets/ directory" -ForegroundColor White
-Write-Host "   3. Run: docker stack deploy -c docker-compose.secrets.yml clisonix" -ForegroundColor White
+Write-Host "   3. Run: docker stack deploy -c docker-compose.secrets.yml kloud" -ForegroundColor White
+
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🔐 CLISONIX BINARY PROTOCOL - AES-GCM ENCRYPTION LAYER
+🔐 KLOUD BINARY PROTOCOL - AES-GCM ENCRYPTION LAYER
 =======================================================
 
 Enterprise-grade encryption for CBP protocol.
@@ -17,7 +17,7 @@ Features:
 - Key derivation with HKDF
 - Automatic key rotation support
 
-Author: Clisonix Team
+Author: Kloud Team
 """
 
 import os
@@ -83,7 +83,7 @@ class EncryptedPayload:
 
 class CbpEncryption:
     """
-    AES-256-GCM Encryption for Clisonix Binary Protocol
+    AES-256-GCM Encryption for Kloud Binary Protocol
     
     Usage:
         enc = CbpEncryption(master_key)
@@ -91,7 +91,7 @@ class CbpEncryption:
         decrypted = enc.decrypt(encrypted)
     """
     
-    def __init__(self, key: bytes, info: bytes = b"clisonix-cbp-v1"):
+    def __init__(self, key: bytes, info: bytes = b"kloud-cbp-v1"):
         """
         Initialize encryption with master key
         
@@ -120,7 +120,7 @@ class CbpEncryption:
         hkdf = HKDF(
             algorithm=hashes.SHA256(),
             length=KEY_SIZE,
-            salt=b"clisonix-salt-v1",
+            salt=b"kloud-salt-v1",
             info=info,
             backend=default_backend()
         )
@@ -402,18 +402,18 @@ def get_key_manager() -> CbpKeyManager:
 # ==================== TESTING ====================
 
 if __name__ == "__main__":
-    print("🔐 Clisonix CBP Encryption Test")
+    print("🔐 Kloud CBP Encryption Test")
     print("=" * 40)
     
     # Test key
-    key = b"clisonix-secret-key-2026"
+    key = b"kloud-secret-key-2026"
     
     # Get encryption
     enc = get_encryption(key)
     print(f"Algorithm: {enc.get_stats().get('algorithm', 'unknown')}")
     
     # Test encrypt/decrypt
-    plaintext = b"Hello, Clisonix! This is a test message."
+    plaintext = b"Hello, Kloud! This is a test message."
     print(f"\nPlaintext: {plaintext}")
     
     encrypted = enc.encrypt(plaintext)
@@ -436,3 +436,4 @@ if __name__ == "__main__":
     
     # Print stats
     print(f"\nStats: {enc.get_stats()}")
+

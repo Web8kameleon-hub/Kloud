@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-	Quick recovery helper for the Clisonix backend stack when running on Windows.
+	Quick recovery helper for the Kloud backend stack when running on Windows.
 
 .DESCRIPTION
 	Stops residual Python and Node processes, clears transient build artefacts,
@@ -12,7 +12,7 @@ param(
 	[switch]$DeepClean
 )
 
-Write-Host "[Clisonix] Fix script started..." -ForegroundColor Cyan
+Write-Host "[Kloud] Fix script started..." -ForegroundColor Cyan
 
 # Stop stray processes that often lock ports.
 Get-Process python, node -ErrorAction SilentlyContinue |
@@ -43,4 +43,5 @@ Write-Host "Restoring npm workspaces" -ForegroundColor Cyan
 npm install | Out-Null
 
 Write-Host "Fix script complete. Run 'npm run dev' or 'scripts\start-all.ps1' to relaunch." -ForegroundColor Green
+
 

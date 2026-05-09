@@ -2,7 +2,7 @@
 
 ## Çfarë u realizua?
 
-Sistemi i Research Data Ecosystem tani është i lidhur plotësisht me **Cycle Engine** – motorin e clisonix që krijon dokumente automatikisht.
+Sistemi i Research Data Ecosystem tani është i lidhur plotësisht me **Cycle Engine** – motorin e kloud që krijon dokumente automatikisht.
 
 ## Si funksionon?
 
@@ -388,10 +388,11 @@ custom_cycle = cycle_engine.create_cycle(
 ✅ **INTEGRIMI I PLOTË**  
 📅 **Data**: 15 Dhjetor 2025  
 🔢 **Versioni**: 1.0.0  
-👥 **Ekipi**: clisonix
+👥 **Ekipi**: kloud
 
 ---
 
 **Gatshëm për të përdorur!** 🚀
 
 Hap notebook-un dhe fillo të krijosh cycles automatike për kërkimin tënd!
+

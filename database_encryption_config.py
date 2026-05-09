@@ -67,7 +67,7 @@ def get_encrypted_db_url():
     db_password = os.getenv("DB_PASSWORD", "")
     db_host = os.getenv("DB_HOST", "localhost")
     db_port = os.getenv("DB_PORT", "5432")
-    db_name = os.getenv("DB_NAME", "clisonix")
+    db_name = os.getenv("DB_NAME", "kloud")
     
     return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?sslmode=require"
 
@@ -102,3 +102,4 @@ if __name__ == "__main__":
     print(f"   Key: {key_status}")
     print("   Cipher: AES-256 (Fernet)")
     print(f"   DB URL: {get_encrypted_db_url()}")
+

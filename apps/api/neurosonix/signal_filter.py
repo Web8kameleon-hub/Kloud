@@ -1,5 +1,5 @@
 """
-Clisonix Signal Filter
+Kloud Signal Filter
 Real-time signal filtering and noise reduction for EEG data
 """
 
@@ -159,5 +159,6 @@ class SignalFilter:
             "power_line_notch": "50 Hz",
             "outlier_threshold": "3 std deviations"
         }
+
 
 

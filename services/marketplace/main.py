@@ -1,5 +1,5 @@
 """
-Clisonix Marketplace API Service
+Kloud Marketplace API Service
 ================================
 Lightweight FastAPI service for API marketplace functionality.
 Runs on port 8004.
@@ -24,8 +24,8 @@ import time
 from collections import defaultdict
 
 app = FastAPI(
-    title="Clisonix Marketplace API",
-    description="API Key management and developer portal for Clisonix Cloud",
+    title="Kloud Marketplace API",
+    description="API Key management and developer portal for Kloud Cloud",
     version="1.0.0"
 )
 
@@ -166,7 +166,7 @@ def reset_daily_usage_if_needed(key_hash: str):
 @app.get("/")
 async def root():
     return {
-        "service": "Clisonix Marketplace API",
+        "service": "Kloud Marketplace API",
         "version": "1.0.0",
         "status": "active",
         "endpoints": {
@@ -362,29 +362,29 @@ async def get_sdk_info():
     return {
         "sdks": {
             "typescript": {
-                "name": "@clisonix/sdk",
+                "name": "@kloud/sdk",
                 "version": "1.0.0",
-                "install": "npm install @clisonix/sdk",
-                "docs": "https://clisonix.cloud/docs/sdk/typescript",
-                "github": "https://github.com/clisonix/sdk-typescript"
+                "install": "npm install @kloud/sdk",
+                "docs": "https://kloud.cloud/docs/sdk/typescript",
+                "github": "https://github.com/kloud/sdk-typescript"
             },
             "python": {
-                "name": "clisonix",
+                "name": "kloud",
                 "version": "1.0.0",
-                "install": "pip install clisonix",
-                "docs": "https://clisonix.cloud/docs/sdk/python",
-                "github": "https://github.com/clisonix/sdk-python"
+                "install": "pip install kloud",
+                "docs": "https://kloud.cloud/docs/sdk/python",
+                "github": "https://github.com/kloud/sdk-python"
             }
         },
         "postman": {
-            "collection": "https://clisonix.cloud/postman/Clisonix-Cloud-Marketplace.postman_collection.json",
-            "environment": "https://clisonix.cloud/postman/clisonix-environment-hetzner.json"
+            "collection": "https://kloud.cloud/postman/Kloud-Cloud-Marketplace.postman_collection.json",
+            "environment": "https://kloud.cloud/postman/kloud-environment-hetzner.json"
         },
-        "openapi": "https://api.clisonix.com/openapi.json",
+        "openapi": "https://api.kloud.com/openapi.json",
         "docs": {
-            "getting_started": "https://clisonix.cloud/docs/getting-started",
-            "api_reference": "https://clisonix.cloud/docs/api",
-            "examples": "https://clisonix.cloud/docs/examples"
+            "getting_started": "https://kloud.cloud/docs/getting-started",
+            "api_reference": "https://kloud.cloud/docs/api",
+            "examples": "https://kloud.cloud/docs/examples"
         }
     }
 
@@ -407,10 +407,10 @@ async def get_marketplace_stats():
             "plans_distribution": dict(plan_distribution)
         },
         "api_status": {
-            "main_api": "https://api.clisonix.com",
-            "reporting": "https://reporting.clisonix.com",
-            "excel": "https://excel.clisonix.com",
-            "marketplace": "https://marketplace.clisonix.com"
+            "main_api": "https://api.kloud.com",
+            "reporting": "https://reporting.kloud.com",
+            "excel": "https://excel.kloud.com",
+            "marketplace": "https://marketplace.kloud.com"
         },
         "uptime": "99.9%",
         "timestamp": datetime.now().isoformat()
@@ -425,14 +425,14 @@ async def get_quickstart():
     """Get quick start code examples"""
     return {
         "curl": {
-            "health_check": 'curl -X GET "https://api.clisonix.com/health" -H "X-API-Key: YOUR_API_KEY"',
-            "asi_status": 'curl -X GET "https://api.clisonix.com/asi/status" -H "X-API-Key: YOUR_API_KEY"',
-            "brain_ask": 'curl -X POST "https://api.clisonix.com/brain/ask" -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY" -d \'{"question": "What is alpha wave activity?"}\''
+            "health_check": 'curl -X GET "https://api.kloud.com/health" -H "X-API-Key: YOUR_API_KEY"',
+            "asi_status": 'curl -X GET "https://api.kloud.com/asi/status" -H "X-API-Key: YOUR_API_KEY"',
+            "brain_ask": 'curl -X POST "https://api.kloud.com/brain/ask" -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY" -d \'{"question": "What is alpha wave activity?"}\''
         },
         "typescript": """
-import Clisonix from '@clisonix/sdk';
+import Kloud from '@kloud/sdk';
 
-const client = new Clisonix({ apiKey: 'YOUR_API_KEY' });
+const client = new Kloud({ apiKey: 'YOUR_API_KEY' });
 
 // Check health
 const health = await client.core.health();
@@ -443,9 +443,9 @@ const asi = await client.asi.getStatus();
 console.log(asi.components);
 """,
         "python": """
-from clisonix import Clisonix
+from kloud import Kloud
 
-client = Clisonix(api_key='YOUR_API_KEY')
+client = Kloud(api_key='YOUR_API_KEY')
 
 # Check health
 health = client.core.health()
@@ -464,3 +464,4 @@ print(asi['components'])
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8004)
+

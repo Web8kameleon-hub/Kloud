@@ -53,7 +53,7 @@
 ## 📁 STRUKTURA E FAJLLAVE
 
 ```
-Clisonix-cloud/
+Kloud-cloud/
 │
 ├── 🆕 sdk/
 │   ├── mobile-hybrid-sdk.ts           (500+ lines)
@@ -458,3 +458,4 @@ Sistemi **Hybrid Biometric v1.0** është zhvilluar plotësisht me:
 ---
 
 **Për më shumë informacione, shihni dokumentacionin në `HYBRID_BIOMETRIC_DOCUMENTATION.md`**
+

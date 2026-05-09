@@ -108,7 +108,7 @@ def extract_requests_from_items(items: List[Dict], parent_folder: str = "") -> L
 def merge_postman_collections(
     collection_files: List[str],
     output_file: str = 'merged_postman_collection.json',
-    collection_name: str = 'Clisonix Ultra Mega Collection'
+    collection_name: str = 'Kloud Ultra Mega Collection'
 ) -> Dict:
     """
     Merge multiple Postman collections into one.
@@ -303,7 +303,7 @@ if __name__ == '__main__':
                         help='Output path for merged collection')
     parser.add_argument('--excel-output', type=str, default='postman_canonical_table.xlsx',
                         help='Output path for Excel canonical table')
-    parser.add_argument('--name', type=str, default='Clisonix Ultra Mega Collection',
+    parser.add_argument('--name', type=str, default='Kloud Ultra Mega Collection',
                         help='Name for merged collection')
     parser.add_argument('--merge-only', action='store_true',
                         help='Only merge, skip Excel export')
@@ -324,3 +324,4 @@ if __name__ == '__main__':
             args.collections,
             args.excel_output
         )
+

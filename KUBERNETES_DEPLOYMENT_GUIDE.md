@@ -1,8 +1,8 @@
-# Kubernetes Deployment Guide - Clisonix Cloud
+# Kubernetes Deployment Guide - Kloud Cloud
 
 ## Overview
 
-This guide provides complete instructions for deploying Clisonix Cloud to Kubernetes (K8s) in production environments.
+This guide provides complete instructions for deploying Kloud Cloud to Kubernetes (K8s) in production environments.
 
 **Architecture:**
 - Multi-node Kubernetes cluster (3+ nodes recommended)
@@ -78,18 +78,18 @@ REGISTRY=your-docker-hub-username
 REGISTRY=your-ecr-registry.dkr.ecr.us-east-1.amazonaws.com
 
 # Build API image
-docker build -f Dockerfile -t $REGISTRY/clisonix-api:1.0.0 .
-docker push $REGISTRY/clisonix-api:1.0.0
+docker build -f Dockerfile -t $REGISTRY/kloud-api:1.0.0 .
+docker push $REGISTRY/kloud-api:1.0.0
 
 # Build frontend image
-docker build -f Dockerfile.frontend -t $REGISTRY/clisonix-frontend:1.0.0 .
-docker push $REGISTRY/clisonix-frontend:1.0.0
+docker build -f Dockerfile.frontend -t $REGISTRY/kloud-frontend:1.0.0 .
+docker push $REGISTRY/kloud-frontend:1.0.0
 
 # Tag as latest
-docker tag $REGISTRY/clisonix-api:1.0.0 $REGISTRY/clisonix-api:latest
-docker tag $REGISTRY/clisonix-frontend:1.0.0 $REGISTRY/clisonix-frontend:latest
-docker push $REGISTRY/clisonix-api:latest
-docker push $REGISTRY/clisonix-frontend:latest
+docker tag $REGISTRY/kloud-api:1.0.0 $REGISTRY/kloud-api:latest
+docker tag $REGISTRY/kloud-frontend:1.0.0 $REGISTRY/kloud-frontend:latest
+docker push $REGISTRY/kloud-api:latest
+docker push $REGISTRY/kloud-frontend:latest
 ```
 
 ### Create Image Pull Secret (if using private registry)
@@ -101,10 +101,10 @@ kubectl create secret docker-registry regcred \
   --docker-username=your-username \
   --docker-password=your-password \
   --docker-email=your-email@example.com \
-  -n clisonix
+  -n kloud
 
 # Verify
-kubectl get secret regcred -n clisonix
+kubectl get secret regcred -n kloud
 ```
 
 ## Step 2: Install Prerequisites
@@ -152,16 +152,16 @@ helm install kube-prometheus prometheus-community/kube-prometheus-stack \
 kubectl get all -n monitoring
 ```
 
-## Step 3: Deploy Clisonix Cloud
+## Step 3: Deploy Kloud Cloud
 
 ### Create Namespace
 
 ```bash
 # Create namespace
-kubectl create namespace clisonix
+kubectl create namespace kloud
 
 # Label namespace
-kubectl label namespace clisonix app=clisonix environment=production
+kubectl label namespace kloud app=kloud environment=production
 ```
 
 ### Update Configuration
@@ -187,18 +187,18 @@ kubectl apply -f k8s/04-ingress-tls.yaml
 kubectl apply -f k8s/05-monitoring.yaml
 
 # Verify deployments
-kubectl get all -n clisonix
+kubectl get all -n kloud
 ```
 
 ### Wait for Deployments
 
 ```bash
 # Watch rollout progress
-kubectl rollout status deployment/clisonix-api -n clisonix --timeout=300s
-kubectl rollout status deployment/clisonix-frontend -n clisonix --timeout=300s
+kubectl rollout status deployment/kloud-api -n kloud --timeout=300s
+kubectl rollout status deployment/kloud-frontend -n kloud --timeout=300s
 
 # Check pod status
-kubectl get pods -n clisonix
+kubectl get pods -n kloud
 
 # Expected: All pods in Running state
 ```
@@ -209,16 +209,16 @@ kubectl get pods -n clisonix
 
 ```bash
 # Check pod logs
-kubectl logs -n clisonix deployment/clisonix-api -f
+kubectl logs -n kloud deployment/kloud-api -f
 
 # Check database connection
-kubectl exec -it -n clisonix postgres-0 -- psql -U clisonix -d clisonix_db -c "SELECT version();"
+kubectl exec -it -n kloud postgres-0 -- psql -U kloud -d kloud_db -c "SELECT version();"
 
 # Check Redis connection
-kubectl exec -it -n clisonix redis-0 -- redis-cli ping
+kubectl exec -it -n kloud redis-0 -- redis-cli ping
 
 # Check API health
-kubectl port-forward -n clisonix svc/clisonix-api-service 8000:8000
+kubectl port-forward -n kloud svc/kloud-api-service 8000:8000
 curl http://localhost:8000/health
 ```
 
@@ -226,31 +226,31 @@ curl http://localhost:8000/health
 
 ```bash
 # Get Ingress IP/hostname
-kubectl get ingress -n clisonix
+kubectl get ingress -n kloud
 
 # Add to /etc/hosts if using hostname
-echo "YOUR_IP_ADDRESS clisonix.com api.clisonix.com app.clisonix.com" | sudo tee -a /etc/hosts
+echo "YOUR_IP_ADDRESS kloud.com api.kloud.com app.kloud.com" | sudo tee -a /etc/hosts
 
 # Access via browser
-# http://clisonix.com
-# http://api.clisonix.com/docs (Swagger UI)
-# http://app.clisonix.com
+# http://kloud.com
+# http://api.kloud.com/docs (Swagger UI)
+# http://app.kloud.com
 ```
 
 ### Access Monitoring
 
 ```bash
 # Prometheus
-kubectl port-forward -n clisonix svc/prometheus-service 9090:9090
+kubectl port-forward -n kloud svc/prometheus-service 9090:9090
 # Open: http://localhost:9090
 
 # Grafana
-kubectl port-forward -n clisonix svc/grafana-service 3000:3000
+kubectl port-forward -n kloud svc/grafana-service 3000:3000
 # Open: http://localhost:3000
 # Default credentials: admin / change-me-in-production
 
 # Jaeger
-kubectl port-forward -n clisonix svc/jaeger-service 16686:16686
+kubectl port-forward -n kloud svc/jaeger-service 16686:16686
 # Open: http://localhost:16686
 ```
 
@@ -260,26 +260,26 @@ kubectl port-forward -n clisonix svc/jaeger-service 16686:16686
 
 ```bash
 # Get Ingress IP
-kubectl get ingress -n clisonix -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
+kubectl get ingress -n kloud -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
 
 # Add DNS records
-# clisonix.com        A  <IP>
-# *.clisonix.com      A  <IP>
-# api.clisonix.com    A  <IP>
-# app.clisonix.com    A  <IP>
+# kloud.com        A  <IP>
+# *.kloud.com      A  <IP>
+# api.kloud.com    A  <IP>
+# app.kloud.com    A  <IP>
 ```
 
 ### SSL Certificate
 
 ```bash
 # Check certificate status
-kubectl get certificate -n clisonix
+kubectl get certificate -n kloud
 
 # View certificate details
-kubectl describe certificate clisonix-cert -n clisonix
+kubectl describe certificate kloud-cert -n kloud
 
 # Verify SSL
-curl -v https://api.clisonix.com/health
+curl -v https://api.kloud.com/health
 
 # Expected: HTTP/2 200 with valid SSL certificate
 ```
@@ -290,19 +290,19 @@ curl -v https://api.clisonix.com/health
 
 ```bash
 # Create backup
-kubectl exec -it -n clisonix postgres-0 -- pg_dump -U clisonix clisonix_db | gzip > backup_$(date +%Y%m%d_%H%M%S).sql.gz
+kubectl exec -it -n kloud postgres-0 -- pg_dump -U kloud kloud_db | gzip > backup_$(date +%Y%m%d_%H%M%S).sql.gz
 
 # Restore from backup
-gunzip < backup.sql.gz | kubectl exec -i -n clisonix postgres-0 -- psql -U clisonix clisonix_db
+gunzip < backup.sql.gz | kubectl exec -i -n kloud postgres-0 -- psql -U kloud kloud_db
 ```
 
 ### PersistentVolume Backup
 
 ```bash
 # Backup all PVCs
-for pvc in $(kubectl get pvc -n clisonix -o jsonpath='{.items[*].metadata.name}'); do
+for pvc in $(kubectl get pvc -n kloud -o jsonpath='{.items[*].metadata.name}'); do
   echo "Backing up $pvc..."
-  kubectl get pvc $pvc -n clisonix -o yaml > pvc_$pvc.yaml
+  kubectl get pvc $pvc -n kloud -o yaml > pvc_$pvc.yaml
 done
 
 # Backup PV data (requires direct access to cluster nodes)
@@ -314,14 +314,14 @@ done
 
 ```bash
 # Scale API
-kubectl scale deployment clisonix-api -n clisonix --replicas=5
+kubectl scale deployment kloud-api -n kloud --replicas=5
 
 # Watch scaling
-kubectl get deployment -n clisonix -w
+kubectl get deployment -n kloud -w
 
 # Scale with HPA (automatic)
 kubectl apply -f k8s/hpa.yaml
-kubectl get hpa -n clisonix
+kubectl get hpa -n kloud
 ```
 
 ### Resource Management
@@ -329,10 +329,10 @@ kubectl get hpa -n clisonix
 ```bash
 # View resource usage
 kubectl top nodes
-kubectl top pods -n clisonix
+kubectl top pods -n kloud
 
 # Edit resource limits
-kubectl edit deployment clisonix-api -n clisonix
+kubectl edit deployment kloud-api -n kloud
 
 # Example limits:
 # requests:
@@ -347,7 +347,7 @@ kubectl edit deployment clisonix-api -n clisonix
 
 ```bash
 # Connect to PostgreSQL
-kubectl exec -it -n clisonix postgres-0 -- psql -U clisonix -d clisonix_db
+kubectl exec -it -n kloud postgres-0 -- psql -U kloud -d kloud_db
 
 # Analyze tables
 ANALYZE;
@@ -365,12 +365,12 @@ VACUUM ANALYZE;
 
 ```bash
 # Prometheus queries
-# CPU usage: rate(container_cpu_usage_seconds_total{namespace="clisonix"}[5m])
-# Memory usage: container_memory_usage_bytes{namespace="clisonix"}
-# HTTP requests: rate(http_requests_total{namespace="clisonix"}[1m])
+# CPU usage: rate(container_cpu_usage_seconds_total{namespace="kloud"}[5m])
+# Memory usage: container_memory_usage_bytes{namespace="kloud"}
+# HTTP requests: rate(http_requests_total{namespace="kloud"}[1m])
 
 # View in Prometheus UI
-kubectl port-forward -n clisonix svc/prometheus-service 9090:9090
+kubectl port-forward -n kloud svc/prometheus-service 9090:9090
 # Open: http://localhost:9090
 ```
 
@@ -378,7 +378,7 @@ kubectl port-forward -n clisonix svc/prometheus-service 9090:9090
 
 ```bash
 # Edit AlertManager config
-kubectl edit configmap alertmanager -n clisonix
+kubectl edit configmap alertmanager -n kloud
 
 # Add notification channels (Slack, PagerDuty, etc.)
 # Example:
@@ -388,15 +388,15 @@ kubectl edit configmap alertmanager -n clisonix
 #   - name: 'slack'
 #     slack_configs:
 #       - api_url: 'YOUR_SLACK_WEBHOOK'
-#         channel: '#clisonix-alerts'
+#         channel: '#kloud-alerts'
 ```
 
 ### Log Aggregation
 
 ```bash
 # Access Kibana for logs
-kubectl port-forward -n clisonix svc/elasticsearch-service 9200:9200
-kubectl port-forward -n clisonix svc/kibana-service 5601:5601
+kubectl port-forward -n kloud svc/elasticsearch-service 9200:9200
+kubectl port-forward -n kloud svc/kibana-service 5601:5601
 # Open: http://localhost:5601
 ```
 
@@ -406,8 +406,8 @@ kubectl port-forward -n clisonix svc/kibana-service 5601:5601
 
 ```bash
 # Pods not starting
-kubectl describe pod <pod-name> -n clisonix
-kubectl logs <pod-name> -n clisonix
+kubectl describe pod <pod-name> -n kloud
+kubectl logs <pod-name> -n kloud
 
 # ImagePullBackOff error
 # - Check image name and registry
@@ -421,8 +421,8 @@ kubectl logs <pod-name> -n clisonix
 # - Verify database connectivity
 
 # Ingress not working
-kubectl describe ingress clisonix-ingress -n clisonix
-kubectl get ingress -n clisonix -o yaml
+kubectl describe ingress kloud-ingress -n kloud
+kubectl get ingress -n kloud -o yaml
 
 # Check Nginx logs
 kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
@@ -432,18 +432,18 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
 
 ```bash
 # Get detailed events
-kubectl get events -n clisonix --sort-by='.lastTimestamp'
+kubectl get events -n kloud --sort-by='.lastTimestamp'
 
 # Describe resources
 kubectl describe node
-kubectl describe pvc -n clisonix
+kubectl describe pvc -n kloud
 kubectl describe pv
 
 # Execute commands in pod
-kubectl exec -it <pod> -n clisonix -- /bin/bash
+kubectl exec -it <pod> -n kloud -- /bin/bash
 
 # Port forward to local
-kubectl port-forward pod/<pod> 8000:8000 -n clisonix
+kubectl port-forward pod/<pod> 8000:8000 -n kloud
 ```
 
 ## Step 10: Updates & Rollouts
@@ -452,24 +452,24 @@ kubectl port-forward pod/<pod> 8000:8000 -n clisonix
 
 ```bash
 # Update image
-kubectl set image deployment/clisonix-api clisonix-api=$REGISTRY/clisonix-api:2.0.0 -n clisonix
+kubectl set image deployment/kloud-api kloud-api=$REGISTRY/kloud-api:2.0.0 -n kloud
 
 # Watch rollout
-kubectl rollout status deployment/clisonix-api -n clisonix
+kubectl rollout status deployment/kloud-api -n kloud
 
 # Rollback if needed
-kubectl rollout undo deployment/clisonix-api -n clisonix
-kubectl rollout undo deployment/clisonix-api -n clisonix --to-revision=1
+kubectl rollout undo deployment/kloud-api -n kloud
+kubectl rollout undo deployment/kloud-api -n kloud --to-revision=1
 ```
 
 ### View Deployment History
 
 ```bash
 # History
-kubectl rollout history deployment/clisonix-api -n clisonix
+kubectl rollout history deployment/kloud-api -n kloud
 
 # Details of specific revision
-kubectl rollout history deployment/clisonix-api -n clisonix --revision=2
+kubectl rollout history deployment/kloud-api -n kloud --revision=2
 ```
 
 ## Production Checklist
@@ -495,29 +495,29 @@ kubectl rollout history deployment/clisonix-api -n clisonix --revision=2
 
 ```bash
 # Check pod status daily
-kubectl get pods -n clisonix -w
+kubectl get pods -n kloud -w
 
 # Monitor resource usage
-kubectl top pods -n clisonix
+kubectl top pods -n kloud
 
 # Check certificate expiration
-kubectl get certificate -n clisonix
+kubectl get certificate -n kloud
 
 # Review logs
-kubectl logs -n clisonix --all-containers=true -l app=clisonix-api --tail=100
+kubectl logs -n kloud --all-containers=true -l app=kloud-api --tail=100
 ```
 
 ### Cleanup
 
 ```bash
 # Remove old pods
-kubectl delete pod <pod-name> -n clisonix
+kubectl delete pod <pod-name> -n kloud
 
 # Prune old images
 docker image prune -a
 
 # Clean up old deployments
-kubectl delete deployment <old-deployment> -n clisonix
+kubectl delete deployment <old-deployment> -n kloud
 ```
 
 ## Advanced Topics
@@ -526,7 +526,7 @@ kubectl delete deployment <old-deployment> -n clisonix
 
 ```bash
 # Scale PostgreSQL with replication
-kubectl edit statefulset postgres -n clisonix
+kubectl edit statefulset postgres -n kloud
 # Change replicas from 1 to 3
 # Automatic replication will be configured
 ```
@@ -535,11 +535,11 @@ kubectl edit statefulset postgres -n clisonix
 
 ```bash
 # View applied policies
-kubectl get networkpolicies -n clisonix
+kubectl get networkpolicies -n kloud
 
 # Create custom policy
 kubectl create networkpolicy allow-api \
-  --selector=app=clisonix-api \
+  --selector=app=kloud-api \
   --ingress-namespace=ingress-nginx
 ```
 
@@ -552,7 +552,7 @@ apiVersion: autoscaling.custom.metrics.k8s.io/v1beta1
 kind: ExternalMetric
 metadata:
   name: requests_per_second
-  namespace: clisonix
+  namespace: kloud
 spec:
   selector:
     matchLabels:
@@ -570,10 +570,11 @@ EOF
 
 ## Contact
 
-For deployment issues, contact: devops@clisonix.com
+For deployment issues, contact: devops@kloud.com
 
 ---
 
 **Last Updated**: 2024
 **Version**: 1.0.0
-**Maintainer**: Clisonix DevOps Team
+**Maintainer**: Kloud DevOps Team
+

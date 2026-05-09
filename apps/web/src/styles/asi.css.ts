@@ -2,7 +2,7 @@
  * ASI Styles with Vanilla Extract
  * ===============================
  * 
- * Type-safe CSS styles for Clisonix ASI components
+ * Type-safe CSS styles for Kloud ASI components
  */
 
 import { style, keyframes, globalStyle } from '@vanilla-extract/css';
@@ -367,4 +367,5 @@ export const terminalDotYellow = style([terminalDot, {
 export const terminalDotGreen = style([terminalDot, {
   background: theme.colors.success
 }]);
+
 

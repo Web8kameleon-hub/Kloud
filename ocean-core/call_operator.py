@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX CALL OPERATOR
+🌊 KLOUD CALL OPERATOR
 =========================
 Mekanizmi që thërret çdo qelizë të brendshme/jashtme.
 
@@ -11,7 +11,7 @@ Mënyrat e thirrjes:
 - Targeted: "Qelizat që kanë parë anomali X"
 - Cascade: Një qelizë thërret të tjerat e lidhura
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0
 """
 
@@ -525,3 +525,4 @@ if __name__ == "__main__":
         print(f"\nStats: {operator.get_stats()}")
     
     asyncio.run(test())
+

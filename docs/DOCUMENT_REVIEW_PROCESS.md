@@ -146,7 +146,7 @@ Publish Date: [data planifikuar]
 |----------|-----------|----------|-------------|
 | `LAGTER_PROTOCOLS.md` | ⏸️ **PAUZUAR** - Në Ristudim | ❌ Në pret | - |
 | `NANOGRIDATA_SYSTEM_ARCHITECTURE.md` | 📋 Në radhë | ❌ Në pret | - |
-| `CLISONIX_ARCHITECTURE_BASELINE_2025.md` | 📋 Në radhë | ❌ Në pret | - |
+| `KLOUD_ARCHITECTURE_BASELINE_2025.md` | 📋 Në radhë | ❌ Në pret | - |
 | `LAGTER_LAB.md` | 📋 Në radhë | ❌ Në pret | - |
 | `LAGTER_LAWS.md` | 📋 Në radhë | ❌ Në pret | - |
 
@@ -279,4 +279,5 @@ Kur të 5 fazat janë ✅: **Dokumenta e gatshme për publikim**
 ---
 
 _Proces i dokumentar: 28 Shkurt 2026_  
-_Clisonix Cloud Quality Assurance_
+_Kloud Cloud Quality Assurance_
+

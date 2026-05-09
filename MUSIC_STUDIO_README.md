@@ -141,7 +141,7 @@ Three main tabs:
 - **MP3**: Compressed, smaller file size
 
 ### File Naming
-- Downloads as: `clisonix-music.{wav|mp3}`
+- Downloads as: `kloud-music.{wav|mp3}`
 - Can be renamed in browser
 
 ### Offline Capability
@@ -290,3 +290,4 @@ Content-Type: application/json
 **Version**: 1.0.0 (Beta)  
 **Status**: ✅ Production Ready  
 **PWA**: ✅ Fully Installable
+

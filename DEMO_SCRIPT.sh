@@ -1,7 +1,7 @@
 #!/bin/bash
-# CLISONIX CLOUD - INVESTOR DEMO SCRIPT
+# KLOUD CLOUD - INVESTOR DEMO SCRIPT
 
-echo "🚀 CLISONIX CLOUD - LIVE DEMO"
+echo "🚀 KLOUD CLOUD - LIVE DEMO"
 echo "====================================="
 echo ""
 echo "✅ SYSTEM STATUS:"
@@ -48,4 +48,5 @@ echo "   ✓ Dashboard with animations"
 echo ""
 echo "====================================="
 echo "Demo prepared. Ready to impress investors! 🎯"
+
 

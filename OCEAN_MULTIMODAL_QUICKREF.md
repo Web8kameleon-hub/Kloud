@@ -37,9 +37,9 @@ ocean-multimodal:
 ### Step 2: Pull Models
 
 ```bash
-docker exec clisonix-06-ollama ollama pull llava:latest
-docker exec clisonix-06-ollama ollama pull whisper:latest
-docker exec clisonix-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-ollama ollama pull llava:latest
+docker exec kloud-06-ollama ollama pull whisper:latest
+docker exec kloud-06-ollama ollama pull llama3.1:8b
 ```
 
 ### Step 3: Deploy
@@ -152,3 +152,4 @@ curl http://localhost:8031/health
 **Status**: ✅ Production Ready  
 **Version**: 1.0.0  
 **Released**: Feb 4, 2026
+

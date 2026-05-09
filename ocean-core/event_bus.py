@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX UNIFIED EVENT BUS
+🌊 KLOUD UNIFIED EVENT BUS
 =============================
 Deti ku derdhen të gjitha valët - Unified Event Stream.
 
@@ -9,7 +9,7 @@ Curiosity Ocean dëgjon çdo puls.
 
 Event = (source, type, payload, timestamp, confidence, tags)
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0
 """
 
@@ -497,3 +497,4 @@ if __name__ == "__main__":
     print(f"\nLast 3 events:")
     for e in bus.get_last(3):
         print(f"  - {e.event_type.value}: {e.payload}")
+

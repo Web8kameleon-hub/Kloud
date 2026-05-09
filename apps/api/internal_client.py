@@ -1,6 +1,6 @@
 """
 Internal API Client - Self-Consumption Layer
-Enables Clisonix modules to consume own APIs FIRST before external sources.
+Enables Kloud modules to consume own APIs FIRST before external sources.
 Implements fallback logic, circuit breaker, and hybrid data collection.
 """
 
@@ -67,7 +67,7 @@ class CircuitBreaker:
 
 class InternalAPIClient:
     """
-    Client for consuming Clisonix's own APIs with automatic fallback.
+    Client for consuming Kloud's own APIs with automatic fallback.
     Implements self-consumption pattern for self-evolution.
     """
     
@@ -311,3 +311,4 @@ if __name__ == '__main__':
         print(f\"  Circuit state: {stats['circuit_state']}\")
     
     asyncio.run(demo())
+

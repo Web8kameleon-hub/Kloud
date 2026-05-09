@@ -98,7 +98,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_cpu_percent",
+          "expr": "kloud_balancer_cpu_percent",
           "legendFormat": "{{node}} - CPU",
           "refId": "A"
         },
@@ -107,7 +107,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_mem_percent",
+          "expr": "kloud_balancer_mem_percent",
           "legendFormat": "{{node}} - Memory",
           "refId": "B"
         }
@@ -172,7 +172,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_capacity_score",
+          "expr": "kloud_balancer_capacity_score",
           "legendFormat": "{{node}}",
           "refId": "A"
         }
@@ -248,7 +248,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_is_leader",
+          "expr": "kloud_balancer_is_leader",
           "legendFormat": "{{node}}",
           "refId": "A"
         }
@@ -304,7 +304,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_peer_count",
+          "expr": "kloud_balancer_peer_count",
           "legendFormat": "",
           "refId": "A"
         }
@@ -360,7 +360,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_alive_peers",
+          "expr": "kloud_balancer_alive_peers",
           "legendFormat": "",
           "refId": "A"
         }
@@ -438,7 +438,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_net_sent_mb",
+          "expr": "kloud_balancer_net_sent_mb",
           "legendFormat": "{{node}} - Sent",
           "refId": "A"
         },
@@ -447,7 +447,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_net_recv_mb",
+          "expr": "kloud_balancer_net_recv_mb",
           "legendFormat": "{{node}} - Received",
           "refId": "B"
         }
@@ -512,7 +512,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_disk_percent",
+          "expr": "kloud_balancer_disk_percent",
           "legendFormat": "{{node}}",
           "refId": "A"
         }
@@ -572,7 +572,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_open_circuits",
+          "expr": "kloud_balancer_open_circuits",
           "legendFormat": "",
           "refId": "A"
         }
@@ -628,7 +628,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_procs",
+          "expr": "kloud_balancer_procs",
           "legendFormat": "",
           "refId": "A"
         }
@@ -718,7 +718,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_peer_cpu",
+          "expr": "kloud_balancer_peer_cpu",
           "legendFormat": "{{peer}} CPU",
           "refId": "A"
         },
@@ -727,7 +727,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "clisonix_balancer_peer_mem",
+          "expr": "kloud_balancer_peer_mem",
           "legendFormat": "{{peer}} Mem",
           "refId": "B"
         }
@@ -739,7 +739,7 @@
   "refresh": "5s",
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["clisonix", "pulse-balancer", "cluster"],
+  "tags": ["kloud", "pulse-balancer", "cluster"],
   "templating": {
     "list": []
   },
@@ -749,8 +749,9 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Clisonix Pulse Balancer Dashboard",
-  "uid": "clisonix-pulse-balancer",
+  "title": "Kloud Pulse Balancer Dashboard",
+  "uid": "kloud-pulse-balancer",
   "version": 1,
   "weekStart": ""
 }
+

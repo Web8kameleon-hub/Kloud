@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Resonant Core is the shared technical contract for the Clisonix/Kloud ecosystem. It defines how noise, resonance, traces, and operational pressure are represented across services, dashboards, and storage layers without breaking existing REST/JSON interfaces.
+Resonant Core is the shared technical contract for the Kloud/Kloud ecosystem. It defines how noise, resonance, traces, and operational pressure are represented across services, dashboards, and storage layers without breaking existing REST/JSON interfaces.
 
 ## Core Primitives
 
@@ -102,3 +102,4 @@ This file is the starting point for the shared architecture model.
 ## LPRI and Fluid Architecture
 
 - `docs/LPRI_STIGMA_FLUID_ARCHITECTURE.md`
+

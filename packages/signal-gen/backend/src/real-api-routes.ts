@@ -1,5 +1,5 @@
 /**
- * clisonix REAL API ROUTES - NO FAKE DATA
+ * kloud REAL API ROUTES - NO FAKE DATA
  * =========================================
  * Pure real system data, real file operations, real metrics only
  * Integrated ALBI+ALBA+JONA routes with proper aliases
@@ -79,7 +79,7 @@ const ALLOWED_BASE_DIRS = [
   path.resolve(process.cwd(), "data"),
   path.resolve(process.cwd(), "exports"),
   path.resolve(process.cwd(), "uploads"),
-  "/tmp/clisonix",
+  "/tmp/kloud",
 ];
 
 function isPathSafe(targetPath: string): boolean {
@@ -754,7 +754,7 @@ export async function registerRealApiRoutes(app: FastifyInstance) {
     "/api/sensors",
     async (request: FastifyRequest, reply: FastifyReply) => {
       return {
-        service: "Clisonix Real Sensors API",
+        service: "Kloud Real Sensors API",
         policy: "NO_MOCK_NO_FAKE_REAL_DATA_ONLY",
         endpoints: {
           "/api/sensors/weather":
@@ -811,3 +811,4 @@ export async function registerRealApiRoutes(app: FastifyInstance) {
     return reply.redirect("/status");
   });
 }
+

@@ -1,7 +1,7 @@
 """
 routes.py
 ----------
-Real Clisonix routes (no mocks)
+Real Kloud routes (no mocks)
 ---------------------------------
 Ofron endpoint-e REST pÃ«r analizÃ«n e trurit, statusin e sistemit ALBI,
 dhe metrikat e shÃ«ndetit kognitiv nÃ« kohÃ« reale.
@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 from datetime import datetime
 import traceback
 
-from app.clisonix.cognitive_arch import CognitiveArchitecture
+from app.kloud.cognitive_arch import CognitiveArchitecture
 
 # Inicializo router-in
 router = APIRouter()
@@ -95,4 +95,5 @@ async def get_uptime():
         return {"uptime_seconds": uptime_seconds}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 

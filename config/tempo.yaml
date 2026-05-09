@@ -40,6 +40,7 @@ metrics_generator:
   registry:
     external_labels:
       source: tempo
-      cluster: clisonix
+      cluster: kloud
   storage:
     path: /var/tempo/generator/wal
+

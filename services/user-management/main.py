@@ -1,5 +1,5 @@
 """
-CLISONIX USER API - REST API for User Management
+KLOUD USER API - REST API for User Management
 =================================================
 
 API endpoints për regjistrimin dhe menaxhimin e përdoruesve.
@@ -86,7 +86,7 @@ class AddCreditsRequest(BaseModel):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 app = FastAPI(
-    title="Clisonix User Management API",
+    title="Kloud User Management API",
     description="""
     🔐 **Sistemi Qendror i Menaxhimit të Përdoruesve**
     
@@ -177,7 +177,7 @@ async def health_check():
 async def root():
     """API info"""
     return {
-        "name": "Clisonix User Management API",
+        "name": "Kloud User Management API",
         "version": "1.0.0",
         "endpoints": {
             "register": "POST /api/users/register",
@@ -609,3 +609,4 @@ async def startup_event():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8070)
+

@@ -5,7 +5,7 @@ from .billing_controller import router as billing_router
 from .usage_controller import router as usage_router
 
 app = FastAPI(
-    title="Clisonix Cloud API",
+    title="Kloud Cloud API",
     version="1.0.0",
     description="Industrial EEG + Audio + Neuro Feedback API (REAL DATA)"
 )
@@ -24,7 +24,7 @@ app.include_router(usage_router, prefix="/api/usage", tags=["Usage"])
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "Clisonix Cloud API"}
+    return {"status": "ok", "service": "Kloud Cloud API"}
 
 # ASI Trinity status endpoint for frontend integration
 @app.get("/asi/status")
@@ -34,4 +34,5 @@ def asi_status():
         "albi": {"consciousness": 0.95},
         "jona": {"protection": 0.98}
     }
+
 

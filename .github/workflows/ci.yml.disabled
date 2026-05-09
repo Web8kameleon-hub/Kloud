@@ -18,7 +18,7 @@ permissions:
   actions: read
 
 env:
-  IMAGE_NAME: clisonix-cloud
+  IMAGE_NAME: kloud-cloud
   REGISTRY: ghcr.io
 
 jobs:
@@ -271,7 +271,7 @@ jobs:
 
       - name: Generate quantum report
         run: |
-          echo "# 🔐 Clisonix Cloud - Quantum CI Report" >> $GITHUB_STEP_SUMMARY
+          echo "# 🔐 Kloud Cloud - Quantum CI Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Pipeline Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -332,4 +332,5 @@ jobs:
               body: `${icon} **Quantum Pipeline Report**\n\n${status}\n\n**Blocking gates:** Secrets, Critical Env Vars, CRITICAL/HIGH vulns\n**Non-blocking:** Code quality, policies, optional vars\n\n[View full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
             })
         continue-on-error: true
+
 

@@ -3,7 +3,7 @@
 🧠 ADVANCED ANALYTICS API
 ==========================
 API për analiza të avancuara dhe insights inteligjente
-Pjesë e Clisonix Industrial Backend
+Pjesë e Kloud Industrial Backend
 """
 
 from __future__ import annotations
@@ -401,7 +401,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Clisonix Advanced Analytics API",
+    title="Kloud Advanced Analytics API",
     version="1.0.0",
     description="Advanced analytics and insights API"
 )
@@ -423,3 +423,4 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8007)
+

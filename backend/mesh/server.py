@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import json, time, os
 
-app = FastAPI(title="Mesh HQ - Clisonix Real Telemetry")
+app = FastAPI(title="Mesh HQ - Kloud Real Telemetry")
 
 app.add_middleware(
     CORSMiddleware,
@@ -62,4 +62,5 @@ async def dashboard():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7777)
+
 

@@ -1,4 +1,4 @@
-# 🚀 Clisonix Advanced Monitoring Stack
+# 🚀 Kloud Advanced Monitoring Stack
 
 **Status:** ✅ Configured and Ready for Deployment  
 **Date:** December 10, 2025  
@@ -89,7 +89,7 @@
 **Configuration:**
 - Security enabled (xpack)
 - Username: `elastic`
-- Password: `clisonix123`
+- Password: `kloud123`
 - Retention: Configurable (default: unlimited)
 
 ### 6. **Kibana** (Port 5601)
@@ -100,7 +100,7 @@
 
 **Default Credentials:**
 - Username: `elastic`
-- Password: `clisonix123`
+- Password: `kloud123`
 
 ### 7. **Filebeat** (Collector)
 - Docker container log collection
@@ -162,7 +162,7 @@ export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
 ```
 
 Alert channels:
-- `#clisonix-monitoring` - General alerts and warnings
+- `#kloud-monitoring` - General alerts and warnings
 - `#critical-alerts` - Critical severity only
 
 ### Email Integration
@@ -174,7 +174,7 @@ receivers:
   - name: email
     email_configs:
       - smarthost: smtp.gmail.com:587
-        auth_username: alerts@clisonix.com
+        auth_username: alerts@kloud.com
         auth_password: ${SMTP_PASSWORD}
 ```
 
@@ -194,8 +194,8 @@ receivers:
 | VictoriaMetrics | http://localhost:8428 | None |
 | VMAlert | http://localhost:8880 | None |
 | AlertManager | http://localhost:9093 | None |
-| Grafana | http://localhost:3001 | admin/clisonix123 |
-| Kibana | http://localhost:5601 | elastic/clisonix123 |
+| Grafana | http://localhost:3001 | admin/kloud123 |
+| Kibana | http://localhost:5601 | elastic/kloud123 |
 | API Metrics | http://localhost:8000/metrics | None |
 
 ## 📝 Configuration Files
@@ -221,7 +221,7 @@ receivers:
 - `ops/filebeat.yml`
 - Docker container log collection
 - Elasticsearch output
-- Index pattern: `clisonix-logs-*`
+- Index pattern: `kloud-logs-*`
 
 ## 🎯 Deployment Steps
 
@@ -236,7 +236,7 @@ docker-compose -f docker-compose.prod.yml up -d victoria-metrics prometheus vmal
 curl http://localhost:8428/health
 
 # Check Elasticsearch
-curl -u elastic:clisonix123 http://localhost:9200/_cluster/health
+curl -u elastic:kloud123 http://localhost:9200/_cluster/health
 
 # Check Grafana
 curl http://localhost:3001/api/health
@@ -359,28 +359,28 @@ curl 'http://localhost:8428/api/v1/query?query=up'
 ### Elasticsearch cluster issues
 ```bash
 # Check cluster status
-curl -u elastic:clisonix123 http://localhost:9200/_cluster/health
+curl -u elastic:kloud123 http://localhost:9200/_cluster/health
 
 # Check indices
-curl -u elastic:clisonix123 http://localhost:9200/_cat/indices
+curl -u elastic:kloud123 http://localhost:9200/_cat/indices
 ```
 
 ### Kibana can't connect to Elasticsearch
 ```bash
 # Check logs
-docker logs clisonix-kibana
+docker logs kloud-kibana
 
 # Verify credentials
-curl -u elastic:clisonix123 http://elasticsearch:9200/_security/user
+curl -u elastic:kloud123 http://elasticsearch:9200/_security/user
 ```
 
 ### Alerts not firing
 ```bash
 # Check VMAlert logs
-docker logs clisonix-vmalert
+docker logs kloud-vmalert
 
 # Check AlertManager logs
-docker logs clisonix-alertmanager
+docker logs kloud-alertmanager
 
 # Test alert rule
 curl 'http://localhost:8880/api/v1/rules'
@@ -396,7 +396,7 @@ curl 'http://localhost:8880/api/v1/rules'
 
 ## 🎉 Summary
 
-Your Clisonix Cloud now has **enterprise-grade monitoring**:
+Your Kloud Cloud now has **enterprise-grade monitoring**:
 - ✅ 10x faster metrics (VictoriaMetrics vs Prometheus)
 - ✅ Advanced log analysis (Elasticsearch + Kibana)
 - ✅ Intelligent alerting (VMAlert + AlertManager)
@@ -410,3 +410,4 @@ Your Clisonix Cloud now has **enterprise-grade monitoring**:
 3. Create custom dashboards
 4. Set up log retention policies
 5. Test alert notifications
+

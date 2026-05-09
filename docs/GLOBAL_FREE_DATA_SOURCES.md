@@ -1,6 +1,6 @@
 # 🌍 GLOBAL FREE DATA SOURCES - COMPLETE LIST
 
-> All sources are FREE and Open Access for Clisonix Cloud Platform  
+> All sources are FREE and Open Access for Kloud Cloud Platform  
 > Last Updated: January 2026
 
 ---
@@ -282,7 +282,7 @@
 
 ---
 
-## ☁️ API ENDPOINTS FOR CLISONIX
+## ☁️ API ENDPOINTS FOR KLOUD
 
 All these sources feed into:
 - **ALBA** (Scientific Intelligence)
@@ -338,4 +338,5 @@ OPEN_DATA_SOURCES = {
 
 ---
 
-*Generated for Clisonix Cloud Platform - ALBA, ALBI, JONA, ASI Integration*
+*Generated for Kloud Cloud Platform - ALBA, ALBI, JONA, ASI Integration*
+

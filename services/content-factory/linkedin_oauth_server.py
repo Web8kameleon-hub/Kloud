@@ -1,5 +1,5 @@
 """
-LinkedIn OAuth Server - Clisonix Content Factory
+LinkedIn OAuth Server - Kloud Content Factory
 =================================================
 
 Endpoint për LinkedIn OAuth dhe auto-publishing.
@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("linkedin_oauth")
 
 app = FastAPI(
-    title="Clisonix LinkedIn Integration",
+    title="Kloud LinkedIn Integration",
     description="OAuth dhe Auto-Publishing për LinkedIn",
     version="1.0.0"
 )
@@ -32,7 +32,7 @@ app = FastAPI(
 
 LINKEDIN_CLIENT_ID = os.environ.get("LINKEDIN_CLIENT_ID", "")
 LINKEDIN_CLIENT_SECRET = os.environ.get("LINKEDIN_CLIENT_SECRET", "")
-LINKEDIN_REDIRECT_URI = os.environ.get("LINKEDIN_REDIRECT_URI", "https://clisonix.com/api/linkedin/callback")
+LINKEDIN_REDIRECT_URI = os.environ.get("LINKEDIN_REDIRECT_URI", "https://kloud.com/api/linkedin/callback")
 LINKEDIN_ORGANIZATION_URN = os.environ.get("LINKEDIN_ORGANIZATION_URN", "urn:li:organization:111866162")
 
 # OAuth scopes for organization posting
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     
     print("""
 ╔═══════════════════════════════════════════════════════════════════╗
-║     🔗 CLISONIX LINKEDIN INTEGRATION SERVER                       ║
+║     🔗 KLOUD LINKEDIN INTEGRATION SERVER                       ║
 ╠═══════════════════════════════════════════════════════════════════╣
 ║  1. Set environment variables:                                    ║
 ║     - LINKEDIN_CLIENT_ID                                          ║
@@ -290,3 +290,4 @@ if __name__ == "__main__":
     """)
     
     uvicorn.run(app, host="0.0.0.0", port=8040)
+

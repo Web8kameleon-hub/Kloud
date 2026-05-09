@@ -2,7 +2,7 @@
 """
 SYSTEM PIPELINE - Health, Admin, Logs
 =====================================
-Sistemi nervor i Clisonix Cloud.
+Sistemi nervor i Kloud Cloud.
 """
 
 import logging
@@ -216,3 +216,4 @@ def get_system_pipeline() -> SystemPipeline:
     if _pipeline is None:
         _pipeline = SystemPipeline()
     return _pipeline
+

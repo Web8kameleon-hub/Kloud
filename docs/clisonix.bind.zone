@@ -1,16 +1,16 @@
-$ORIGIN clisonix.com.
+$ORIGIN kloud.com.
 $TTL 3600
 
 ; BIND9 / Registrar-ready zone file with SOA, NS and glue records
-@   IN  SOA  ns1.clisonix.com. hostmaster.clisonix.com. (
+@   IN  SOA  ns1.kloud.com. hostmaster.kloud.com. (
         2025101701 ; Serial: YYYYMMDDnn
         3600       ; Refresh (1 hour)
         900        ; Retry (15 minutes)
         1209600    ; Expire (14 days)
         3600 )     ; Minimum TTL (1 hour)
 
-@       IN  NS  ns1.clisonix.com.
-@       IN  NS  ns2.clisonix.com.
+@       IN  NS  ns1.kloud.com.
+@       IN  NS  ns2.kloud.com.
 
 ; Glue (nameserver A records)
 ns1     IN  A   76.76.21.21
@@ -32,14 +32,15 @@ system      IN  A   76.76.21.21
 neuro       IN  A   76.76.21.21
 
 ; MX
-@           IN  MX 10 mail.clisonix.com.
+@           IN  MX 10 mail.kloud.com.
 
 ; TXT & Security
 @           IN  TXT "v=spf1 include:_spf.google.com ~all"
-_dmarc      IN  TXT "v=DMARC1; p=none; rua=mailto:postmaster@clisonix.com"
+_dmarc      IN  TXT "v=DMARC1; p=none; rua=mailto:postmaster@kloud.com"
 selector1._domainkey IN TXT "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCt7"
 
 ; CAA
 @           IN  CAA 0 issue "letsencrypt.org"
 @           IN  CAA 0 issuewild "letsencrypt.org"
-@           IN  CAA 0 iodef "mailto:admin@clisonix.com"
+@           IN  CAA 0 iodef "mailto:admin@kloud.com"
+

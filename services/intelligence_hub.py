@@ -1,14 +1,14 @@
 # ============================================================================
-# CLISONIX INTELLIGENCE HUB - Unified Entry Point
+# KLOUD INTELLIGENCE HUB - Unified Entry Point
 # ============================================================================
 # Connects Internal AGI, Curiosity Ocean, and Knowledge Index
 # ============================================================================
 
 """
-CLISONIX INTELLIGENCE ARCHITECTURE v1.0.0
+KLOUD INTELLIGENCE ARCHITECTURE v1.0.0
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         CLISONIX INTELLIGENCE HUB                           │
+│                         KLOUD INTELLIGENCE HUB                           │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │   ┌───────────────────────────────────────────────────────────────────┐    │
@@ -62,7 +62,7 @@ NO EXTERNAL AI DEPENDENCIES:
 ✓ Semantic Search (local)
 
 API PORTS (NO CONFLICTS):
-- HQ Server:        8000 (clisonix.com - MAIN API)
+- HQ Server:        8000 (kloud.com - MAIN API)
 - ALBA Service:     5555 (Frame Generation)
 - ALBI Service:     6680 (AI Processing)
 - JONA Service:     7777 (Orchestration)
@@ -105,7 +105,7 @@ from services.knowledge_index import (
 # UNIFIED INTELLIGENCE CLASS
 # ============================================================================
 
-class ClisonixIntelligence:
+class KloudIntelligence:
     """
     Unified intelligence hub connecting all modules
     
@@ -155,7 +155,7 @@ class ClisonixIntelligence:
             "exploration": exploration,
             "sources": links,
             "meta": {
-                "engine": "Clisonix Internal AGI",
+                "engine": "Kloud Internal AGI",
                 "version": __version__,
                 "external_ai": False
             }
@@ -196,13 +196,13 @@ class ClisonixIntelligence:
 # SINGLETON
 # ============================================================================
 
-_intelligence: ClisonixIntelligence = None
+_intelligence: KloudIntelligence = None
 
-def get_intelligence() -> ClisonixIntelligence:
+def get_intelligence() -> KloudIntelligence:
     """Get the global intelligence instance"""
     global _intelligence
     if _intelligence is None:
-        _intelligence = ClisonixIntelligence()
+        _intelligence = KloudIntelligence()
     return _intelligence
 
 
@@ -212,7 +212,7 @@ def get_intelligence() -> ClisonixIntelligence:
 
 __all__ = [
     # Main
-    "ClisonixIntelligence",
+    "KloudIntelligence",
     "get_intelligence",
     
     # AGI
@@ -234,3 +234,4 @@ __all__ = [
     "IndexBuilder",
     "LinkScorer",
 ]
+

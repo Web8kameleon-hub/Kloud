@@ -1,5 +1,5 @@
 """
-Clisonix Brain Wave Analyzer
+Kloud Brain Wave Analyzer
 Advanced analysis of brain wave patterns and cognitive states
 """
 
@@ -228,5 +228,6 @@ class BrainWaveAnalyzer:
             return "fair"
         else:
             return "poor"
+
 
 

@@ -1,5 +1,5 @@
 /**
- * Clisonix Data Sources Dashboard
+ * Kloud Data Sources Dashboard
  * Enterprise-grade data source management with real-time metrics
  * Connects to: /api/proxy/user-data-sources, /api/proxy/system-metrics
  */
@@ -478,7 +478,7 @@ export default function DataSourcesDashboard() {
             <Link href="/developers" className="text-cyan-400 hover:text-cyan-300 text-sm font-medium">
               View API Documentation →
             </Link>
-            <a href="https://github.com/Web8kameleon-hub/clisonix.com" className="text-slate-400 hover:text-white text-sm font-medium">
+            <a href="https://github.com/Web8kameleon-hub/kloud.com" className="text-slate-400 hover:text-white text-sm font-medium">
               GitHub Examples →
             </a>
           </div>
@@ -760,7 +760,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'Industrial Temperature Array',
     type: 'iot',
     status: 'connected',
-    endpoint: 'mqtt://sensors.clisonix.cloud:1883/temp/*',
+    endpoint: 'mqtt://sensors.kloud.cloud:1883/temp/*',
     lastSync: '12s ago',
     dataPoints: 284930,
     throughput: '1.2K/s',
@@ -772,7 +772,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'Weather Service API',
     type: 'api',
     status: 'connected',
-    endpoint: 'https://api.weather.clisonix.cloud/v2',
+    endpoint: 'https://api.weather.kloud.cloud/v2',
     lastSync: '2m ago',
     dataPoints: 45120,
     throughput: '50/s',
@@ -784,7 +784,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'LoRaWAN Gateway EU868',
     type: 'lora',
     status: 'connected',
-    endpoint: 'lorawan://eu868.clisonix.cloud',
+    endpoint: 'lorawan://eu868.kloud.cloud',
     lastSync: '45s ago',
     dataPoints: 128450,
     throughput: '200/s',
@@ -796,7 +796,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'Cellular Modem Fleet',
     type: 'gsm',
     status: 'disconnected',
-    endpoint: 'gsm://fleet.clisonix.cloud',
+    endpoint: 'gsm://fleet.kloud.cloud',
     lastSync: '4h ago',
     dataPoints: 12340,
     throughput: '0/s',
@@ -808,7 +808,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'Production MQTT Cluster',
     type: 'mqtt',
     status: 'connected',
-    endpoint: 'mqtts://prod.clisonix.cloud:8883',
+    endpoint: 'mqtts://prod.kloud.cloud:8883',
     lastSync: '3s ago',
     dataPoints: 1892340,
     throughput: '5.8K/s',
@@ -820,7 +820,7 @@ const DEMO_SOURCES: DataSource[] = [
     name: 'Stripe Payment Webhooks',
     type: 'webhook',
     status: 'connected',
-    endpoint: 'https://clisonix.cloud/api/webhooks/stripe',
+    endpoint: 'https://kloud.cloud/api/webhooks/stripe',
     lastSync: '8m ago',
     dataPoints: 4520,
     throughput: '2/s',
@@ -839,6 +839,7 @@ const DEMO_METRICS: DashboardMetrics = {
   avgLatency: 52,
   uptime: '99.97%'
 }
+
 
 
 

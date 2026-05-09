@@ -389,4 +389,5 @@ All documentation is complete in both English and Albanian. The system is ready 
 
 **Version**: 1.0.0  
 **Date**: December 15, 2025  
-**Team**: clisonix
+**Team**: kloud
+

@@ -121,7 +121,7 @@ def main():
         print("🎉 All systems operational!")
         print("🔍 Access Grafana: http://localhost:3001")
         print("   Username: admin")
-        print("   Password: clisonix123")
+        print("   Password: kloud123")
         return 0
     else:
         print("⚠️  Some services are not responding")
@@ -129,4 +129,5 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
 

@@ -11,9 +11,9 @@
 ### 1. ❌ Hard-coded Passwords
 ```yaml
 # BEFORE (INSECURE)
-POSTGRES_PASSWORD: clisonix
-GF_SECURITY_ADMIN_PASSWORD: clisonix123
-ELASTIC_PASSWORD: clisonix123
+POSTGRES_PASSWORD: kloud
+GF_SECURITY_ADMIN_PASSWORD: kloud123
+ELASTIC_PASSWORD: kloud123
 ```
 
 ### 2. ❌ Empty Webhooks
@@ -168,7 +168,7 @@ docker-compose -f docker-compose.base.yml -f docker-compose.dev.yml up
 docker-compose -f docker-compose.base.yml -f docker-compose.staging.yml up
 
 # Production (with secrets)
-docker stack deploy -c docker-compose.secrets.yml clisonix
+docker stack deploy -c docker-compose.secrets.yml kloud
 ```
 
 ---
@@ -253,7 +253,7 @@ notepad .\secrets\slack_webhook_url.txt
 docker-compose -f docker-compose.base.yml -f docker-compose.dev.yml up
 
 # Production (using Docker secrets)
-docker stack deploy -c docker-compose.secrets.yml clisonix
+docker stack deploy -c docker-compose.secrets.yml kloud
 ```
 
 ### Step 4: Verify Security
@@ -263,7 +263,7 @@ ls -la secrets/
 
 # Verify services using secrets
 docker secret ls
-docker service ps clisonix_postgres
+docker service ps kloud_postgres
 ```
 
 ---
@@ -301,7 +301,7 @@ docker service ps clisonix_postgres
 
 | Aspect | Before | After |
 |--------|--------|-------|
-| **Passwords** | Hard-coded `clisonix123` | Generated 32-char secrets |
+| **Passwords** | Hard-coded `kloud123` | Generated 32-char secrets |
 | **Configuration** | Redundant in each service | Centralized with anchors |
 | **Ports** | Hard-coded `5050` | Dynamic `${ALBA_PORT}` |
 | **Versions** | Fixed in compose | Externalized to `.env` |
@@ -358,7 +358,7 @@ ls -la secrets/
 docker secret ls
 
 # Check service logs
-docker service logs clisonix_postgres
+docker service logs kloud_postgres
 ```
 
 ### Problem: Permission denied
@@ -378,7 +378,7 @@ icacls secrets\*.txt /inheritance:r /grant:r "%USERNAME%:F"
 docker-compose config
 
 # Verify secrets mounted
-docker exec -it clisonix-postgres ls -la /run/secrets/
+docker exec -it kloud-postgres ls -la /run/secrets/
 ```
 
 ---
@@ -424,3 +424,4 @@ Before deploying to production:
 **Implemented by**: GitHub Copilot  
 **Date**: December 16, 2025  
 **Version**: 2.0.0 (Secure)
+

@@ -189,7 +189,7 @@ export default function MarketplacePage() {
               C
             </div>
             <div>
-              <h1 className="text-white font-bold text-xl">Clisonix Cloud</h1>
+              <h1 className="text-white font-bold text-xl">Kloud Cloud</h1>
               <p className="text-slate-400 text-xs">API Marketplace</p>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function MarketplacePage() {
             <code className="block bg-slate-900 rounded-lg p-4 text-left overflow-x-auto">
               <span className="text-violet-400">curl</span>
               <span className="text-slate-300"> -X GET </span>
-              <span className="text-blue-700">&quot;https://clisonix.com/api/ping&quot;</span>
+              <span className="text-blue-700">&quot;https://kloud.com/api/ping&quot;</span>
               <span className="text-slate-300"> \</span>
               <br />
               <span className="text-slate-300">  -H </span>
@@ -391,9 +391,9 @@ export default function MarketplacePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { name: 'TypeScript', icon: '🔷', cmd: 'npm install @clisonix/sdk' },
-              { name: 'Python', icon: '🐍', cmd: 'pip install clisonix-sdk' },
-              { name: 'Go', icon: '🔵', cmd: 'go get clisonix.com/sdk' },
+              { name: 'TypeScript', icon: '🔷', cmd: 'npm install @kloud/sdk' },
+              { name: 'Python', icon: '🐍', cmd: 'pip install kloud-sdk' },
+              { name: 'Go', icon: '🔵', cmd: 'go get kloud.com/sdk' },
               { name: 'cURL', icon: '📟', cmd: 'curl -X GET ...' }
             ].map((sdk) => (
               <div key={sdk.name} className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 text-center">
@@ -426,11 +426,11 @@ export default function MarketplacePage() {
             </div>
             <pre className="p-6 overflow-x-auto">
               <code className="text-sm">
-{`import { ClisonixClient } from '@clisonix/sdk';
+{`import { KloudClient } from '@kloud/sdk';
 
-const client = new ClisonixClient({
+const client = new KloudClient({
   apiKey: 'your_api_key_here',
-  baseUrl: 'https://clisonix.com/api'
+  baseUrl: 'https://kloud.com/api'
 });
 
 // Get system status
@@ -462,7 +462,7 @@ console.log('Alpha Power:', eeg.bands.alpha);`}
             <div className="w-8 h-8 bg-gradient-to-r from-blue-800 to-violet-500 rounded-lg flex items-center justify-center text-white font-bold">
               C
             </div>
-            <span className="text-slate-400">© 2026 Clisonix Cloud. Part of Webultrathinking Euroweb.</span>
+            <span className="text-slate-400">© 2026 Kloud Cloud. Part of Webultrathinking Euroweb.</span>
           </div>
           <div className="flex gap-6 text-slate-400">
             <a href="#" className="hover:text-white transition">API Docs</a>
@@ -475,6 +475,7 @@ console.log('Alpha Power:', eeg.bands.alpha);`}
     </div>
   )
 }
+
 
 
 

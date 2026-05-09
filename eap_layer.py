@@ -2,7 +2,7 @@
 EAP LAYER - Evresi → Analysi → Proposi
 ======================================
 
-Three-stage conceptual processing layer for Clisonix Content Factory.
+Three-stage conceptual processing layer for Kloud Content Factory.
 
 Layer 1: EVRESI (Observation)
     - Nxjerr faktet e ftohta
@@ -20,7 +20,7 @@ Layer 3: PROPOSI (Reconstruction)
     - Jep zgjidhjen që nuk ekziston ende
 
 Author: Ledjan Ahmati (CEO, ABA GmbH)
-System: Clisonix Cloud
+System: Kloud Cloud
 """
 
 from __future__ import annotations
@@ -282,7 +282,7 @@ class EAPDocument:
     analysi: AnalysiDocument
     proposi: ProposiDocument
     executive_summary: str
-    author: str = "Clisonix Cloud"
+    author: str = "Kloud Cloud"
     version: str = "1.0"
     tags: List[str] = field(default_factory=list)
     category: str = "analysis"
@@ -378,7 +378,7 @@ class EAPLayer:
     """
     EAP Layer - Evresi → Analysi → Proposi
     
-    Three-stage conceptual processing for Clisonix Content Factory.
+    Three-stage conceptual processing for Kloud Content Factory.
     
     Usage:
         eap = EAPLayer()
@@ -1096,7 +1096,7 @@ Respond in JSON format.
             analysi=analysi,
             proposi=proposi,
             executive_summary=exec_summary,
-            author="Clisonix Cloud",
+            author="Kloud Cloud",
             version="1.0",
             tags=tags,
             category=category,
@@ -1318,3 +1318,4 @@ if __name__ == "__main__":
         print("\n✅ EAP Layer test complete!")
     
     asyncio.run(test_eap())
+

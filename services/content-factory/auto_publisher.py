@@ -1,5 +1,5 @@
 """
-CLISONIX AUTO-PUBLISHER - Quality-First Content Pipeline
+KLOUD AUTO-PUBLISHER - Quality-First Content Pipeline
 =========================================================
 
 UPDATED STRATEGY (February 2026):
@@ -91,7 +91,7 @@ class AutoPublishConfig:
     reddit_password: Optional[str] = field(default_factory=lambda: os.environ.get("REDDIT_PASSWORD"))
     reddit_subreddit: str = field(
         default_factory=lambda: os.environ.get(
-            "REDDIT_SUBREDDIT", "clisonix"
+            "REDDIT_SUBREDDIT", "kloud"
         )
     )
     # Content storage
@@ -105,11 +105,11 @@ class AutoPublishConfig:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# TOPIC DOMAINS - What Clisonix is about
+# TOPIC DOMAINS - What Kloud is about
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class TopicDomain(str, Enum):
-    """Clisonix expertise domains"""
+    """Kloud expertise domains"""
     EEG_NEUROSCIENCE = "eeg_neuroscience"
     AUDIO_PROCESSING = "audio_processing"
     AI_ML_SYSTEMS = "ai_ml_systems"
@@ -363,10 +363,10 @@ Return ONLY the topic title, nothing else."""
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CLISONIX IDENTITY & TECHNOLOGY
+# KLOUD IDENTITY & TECHNOLOGY
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CLISONIX_TECH_IDENTITY = {
+KLOUD_TECH_IDENTITY = {
     "tide_engine": {
         "name": "Tide Engine",
         "description": "Real-time data synchronization using tidal flow patterns",
@@ -406,14 +406,14 @@ CLISONIX_TECH_IDENTITY = {
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CONTENT GENERATOR - Premium Clisonix Articles
+# CONTENT GENERATOR - Premium Kloud Articles
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class ContentGenerator:
     """
-    Generates premium Clisonix articles with:
+    Generates premium Kloud articles with:
     - Real data tables from LIAM/ALDA/Excel Core
-    - Clisonix technology identity
+    - Kloud technology identity
     - Technical depth with code snippets
     - Professional but distinctive voice
     """
@@ -422,11 +422,11 @@ class ContentGenerator:
         self.config = config
         self.intelligence_lab_url = os.environ.get(
             "INTELLIGENCE_LAB_URL",
-            "http://clisonix-intelligence-lab:8099"
+            "http://kloud-intelligence-lab:8099"
         )
         self.blerina_url = os.environ.get(
             "BLERINA_URL",
-            "http://clisonix-blerina:8035"
+            "http://kloud-blerina:8035"
         )
 
     async def _fetch_real_metrics(self) -> str:
@@ -475,8 +475,8 @@ class ContentGenerator:
             logger.warning("Could not fetch tables: %s", e)
         return {}
 
-    def _select_clisonix_tech(self, domain: str) -> List[Dict[str, Any]]:
-        """Select relevant Clisonix technologies for the domain"""
+    def _select_kloud_tech(self, domain: str) -> List[Dict[str, Any]]:
+        """Select relevant Kloud technologies for the domain"""
         tech_map = {
             "eeg_neuroscience": ["signal_fabric", "neural_mesh", "liam_algebra"],
             "audio_processing": ["signal_fabric", "tide_engine"],
@@ -488,13 +488,13 @@ class ContentGenerator:
         }
 
         tech_keys = tech_map.get(domain, ["tide_engine", "signal_fabric"])
-        return [CLISONIX_TECH_IDENTITY[k] for k in tech_keys if k in CLISONIX_TECH_IDENTITY]
+        return [KLOUD_TECH_IDENTITY[k] for k in tech_keys if k in KLOUD_TECH_IDENTITY]
 
     def _generate_code_snippet(self, domain: str) -> str:
         """Generate relevant code snippet for the domain"""
         snippets = {
             "eeg_neuroscience": '''```python
-# Clisonix EEG Processing - Real Production Code
+# Kloud EEG Processing - Real Production Code
 import numpy as np
 from liam_core import BinaryAlgebra
 
@@ -535,14 +535,14 @@ print(f"Rank: {patterns['rank']}, Condition: {patterns['condition_number']:.2f}"
 ```''',
             "real_time_systems": '''```python
 # Tide Engine - Real-time Sync
-from clisonix.tide import TideEngine
+from kloud.tide import TideEngine
 
 tide = TideEngine(nodes=['edge-1', 'edge-2', 'cloud'])
 tide.sync_state(patient_data, consistency='eventual')
 ```''',
             "healthcare_tech": '''```python
 # CRDT Merge - Collaborative Editing
-from clisonix.crdt import DocumentMerge
+from kloud.crdt import DocumentMerge
 
 doc = DocumentMerge(document_id='patient-123')
 doc.apply_edit(clinician_a_changes)
@@ -697,7 +697,7 @@ print(f"Processed: {results['processed']}, Remaining: {results['remaining']}")
         return image_map.get(domain, image_map["ai_ml_systems"])
 
     def _get_youtube_embed(self, domain: str) -> Dict[str, str]:
-        """Get relevant Clisonix/tech YouTube video embed by domain"""
+        """Get relevant Kloud/tech YouTube video embed by domain"""
         video_map = {
             "eeg_neuroscience": {"id": "rSQfAR_Kn9k", "title": "How EEG Brain-Computer Interfaces Work"},
             "audio_processing": {"id": "tDnMOLgWmQE", "title": "Digital Signal Processing Explained"},
@@ -724,13 +724,13 @@ print(f"Processed: {results['processed']}, Remaining: {results['remaining']}")
         return re.sub(r'\[IMAGE:\s*[^\]]*\]', replace_marker, content)
 
     async def generate_article(self, topic: str, domain: str) -> Dict[str, Any]:
-        """Generate premium article with Clisonix identity, images, video, and FAQ"""
+        """Generate premium article with Kloud identity, images, video, and FAQ"""
 
         # Fetch real tables
         tables = await self._fetch_tables()
 
-        # Select relevant Clisonix tech
-        tech_stack = self._select_clisonix_tech(domain)
+        # Select relevant Kloud tech
+        tech_stack = self._select_kloud_tech(domain)
         tech_names = [t["name"] for t in tech_stack]
 
         # Get code snippet
@@ -745,12 +745,12 @@ print(f"Processed: {results['processed']}, Remaining: {results['remaining']}")
 | LLM Models Loaded | 2 | ✅ Ready |
 | Processing Latency | <50ms | ✅ Optimal |"""
         metrics_table = tables.get('system_metrics', {}).get('markdown', default_table)
-        prompt = f"""Write a premium technical article for Clisonix, a healthcare AI company.
+        prompt = f"""Write a premium technical article for Kloud, a healthcare AI company.
 
 TOPIC: "{topic}"
 DOMAIN: {domain.replace('_', ' ').title()}
 
-CLISONIX IDENTITY (weave these naturally into the article):
+KLOUD IDENTITY (weave these naturally into the article):
 {json.dumps([{"name": t["name"], "use": t["use_case"]} for t in tech_stack], indent=2)}
 
 STRUCTURE:
@@ -777,7 +777,7 @@ IMAGE PLACEMENT:
 REQUIREMENTS:
 - 1200-1800 words (including FAQ)
 - Technical but accessible
-- Include the Clisonix technologies listed above naturally
+- Include the Kloud technologies listed above naturally
 - Use the provided table and code snippet
 - Include the FAQ section with real, useful answers
 - Include [IMAGE: ...] markers where images should go
@@ -814,7 +814,7 @@ Write the complete article:"""
                                 "content": content,
                                 "word_count": len(content.split()),
                                 "domain": domain,
-                                "clisonix_tech": tech_names,
+                                "kloud_tech": tech_names,
                                 "has_table": bool(tables),
                                 "has_code": True,
                                 "has_faq": "FAQ" in content or "Frequently Asked" in content,
@@ -844,13 +844,13 @@ Write the complete article:"""
         summary = paragraphs[0] if paragraphs else content[:300]
 
         return {
-            "linkedin": f"🚀 {title}\n\n{summary[:500]}...\n\n#HealthTech #AI #Innovation #Clisonix",
+            "linkedin": f"🚀 {title}\n\n{summary[:500]}...\n\n#HealthTech #AI #Innovation #Kloud",
             "twitter": f"{title[:200]}\n\n{summary[:180]}...\n\n#HealthTech #AI",
             "reddit_title": title,
             "reddit_body": (
                 f"{summary[:800]}\n\n---\n"
-                "*Published by [Clisonix]"
-                "(https://clisonix.com)"
+                "*Published by [Kloud]"
+                "(https://kloud.com)"
                 " - AI-Powered Healthcare"
                 " Intelligence*"
             ),
@@ -879,7 +879,7 @@ class LocalPublisher:
         title: str,
         domain: str = "general",
         tags: Optional[List[str]] = None,
-        clisonix_tech: Optional[List[str]] = None,
+        kloud_tech: Optional[List[str]] = None,
         has_table: bool = False,
         has_code: bool = False,
         video: Optional[Dict[str, str]] = None,
@@ -899,12 +899,12 @@ class LocalPublisher:
             # Jekyll-compatible filename
             filename = f"{date_str}-{slug}"
 
-            actual_tags = tags if tags else ["clisonix", "technology", "ai"]
-            tech_stack = clisonix_tech if clisonix_tech else []
+            actual_tags = tags if tags else ["kloud", "technology", "ai"]
+            tech_stack = kloud_tech if kloud_tech else []
 
             # Get first image for og:image if available
-            og_image = "https://clisonix.com/images/clisonix-og-default.png"
-            if clisonix_tech:  # reuse param to pass images through pipeline
+            og_image = "https://kloud.com/images/kloud-og-default.png"
+            if kloud_tech:  # reuse param to pass images through pipeline
                 pass  # og_image set below from content
 
             # Extract first image URL from content for og:image
@@ -923,11 +923,11 @@ title: "{title}"
 date: {timestamp}
 categories: [{domain}]
 tags: [{', '.join(actual_tags)}]
-author: Clisonix AI
+author: Kloud AI
 description: "{seo_desc}"
 image: "{og_image}"
-canonical_url: "https://ledjanahmati.github.io/clisonix-blog/static/{date_str}-{canonical_slug}.html"
-clisonix_tech: [{', '.join(tech_stack)}]
+canonical_url: "https://ledjanahmati.github.io/kloud-blog/static/{date_str}-{canonical_slug}.html"
+kloud_tech: [{', '.join(tech_stack)}]
 has_table: {str(has_table).lower()}
 has_code: {str(has_code).lower()}
 has_faq: true
@@ -1066,15 +1066,15 @@ lab_generated: true
     </section>'''
 
         # og:image
-        og_image = "https://clisonix.com/images/clisonix-og-default.png"
+        og_image = "https://kloud.com/images/kloud-og-default.png"
         if images and len(images) > 0:
             og_image = images[0].get("url", og_image)
 
         seo_desc = title[:155]
         date_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         date_display = datetime.now(timezone.utc).strftime('%B %d, %Y')
-        canonical = f"https://ledjanahmati.github.io/clisonix-blog/static/{date_str}-{domain}.html"
-        keywords = ', '.join(tags + ["clisonix", "healthcare AI", "industrial intelligence"])
+        canonical = f"https://ledjanahmati.github.io/kloud-blog/static/{date_str}-{domain}.html"
+        keywords = ', '.join(tags + ["kloud", "healthcare AI", "industrial intelligence"])
 
         # Schema.org Article structured data
         schema_data = {
@@ -1083,8 +1083,8 @@ lab_generated: true
             "headline": title,
             "description": seo_desc,
             "image": og_image,
-            "author": {"@type": "Organization", "name": "Clisonix", "url": "https://clisonix.com"},
-            "publisher": {"@type": "Organization", "name": "Clisonix - ABA GmbH", "url": "https://clisonix.com"},
+            "author": {"@type": "Organization", "name": "Kloud", "url": "https://kloud.com"},
+            "publisher": {"@type": "Organization", "name": "Kloud - ABA GmbH", "url": "https://kloud.com"},
             "datePublished": date_str,
             "dateModified": date_str,
             "mainEntityOfPage": canonical,
@@ -1117,7 +1117,7 @@ lab_generated: true
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{seo_desc}">
     <meta name="keywords" content="{keywords}">
-    <meta name="author" content="Clisonix">
+    <meta name="author" content="Kloud">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{canonical}">
     <!-- Open Graph -->
@@ -1126,13 +1126,13 @@ lab_generated: true
     <meta property="og:description" content="{seo_desc}">
     <meta property="og:image" content="{og_image}">
     <meta property="og:url" content="{canonical}">
-    <meta property="og:site_name" content="Clisonix Blog">
+    <meta property="og:site_name" content="Kloud Blog">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{title}">
     <meta name="twitter:description" content="{seo_desc}">
     <meta name="twitter:image" content="{og_image}">
-    <title>{title} | Clisonix Blog</title>
+    <title>{title} | Kloud Blog</title>
     <!-- Schema.org -->
     <script type="application/ld+json">{schema_json}</script>
     {faq_schema}
@@ -1181,7 +1181,7 @@ lab_generated: true
         <div class="meta">
             <span>📅 <time itemprop="datePublished" datetime="{date_str}">{date_display}</time></span>
             <span>📁 {domain.replace('_', ' ').title()}</span>
-            <span>🏢 <span itemprop="author">Clisonix AI</span></span>
+            <span>🏢 <span itemprop="author">Kloud AI</span></span>
         </div>
         <div class="tags">
             {''.join([f'<span class="tag">{tag}</span>' for tag in tags])}
@@ -1192,14 +1192,14 @@ lab_generated: true
         {video_html}
     </article>
     <div class="cta">
-        <h3>🚀 Ready to explore Clisonix?</h3>
-        <p>Visit <a href="https://clisonix.com">clisonix.com</a> |
-           <a href="https://github.com/Web8kameleon-hub/clisonix.com">GitHub</a> |
-           <a href="mailto:clisonix@pm.me">Contact Us</a></p>
+        <h3>🚀 Ready to explore Kloud?</h3>
+        <p>Visit <a href="https://kloud.com">kloud.com</a> |
+           <a href="https://github.com/Web8kameleon-hub/kloud.com">GitHub</a> |
+           <a href="mailto:kloud@pm.me">Contact Us</a></p>
     </div>
     <footer class="footer">
         <p>© {datetime.now().year}
-            <a href="https://clisonix.com">Clisonix</a>
+            <a href="https://kloud.com">Kloud</a>
             - ABA GmbH | Advancing Healthcare
             Through Intelligent Signal Processing</p>
     </footer>
@@ -1268,11 +1268,11 @@ class GitHubPagesPublisher:
 
             # Configure user
             subprocess.run(
-                ["git", "config", "user.email", "clisonix@pm.me"],
+                ["git", "config", "user.email", "kloud@pm.me"],
                 cwd=self.repo_path, check=True
             )
             subprocess.run(
-                ["git", "config", "user.name", "Clisonix AI"],
+                ["git", "config", "user.name", "Kloud AI"],
                 cwd=self.repo_path, check=True
             )
 
@@ -1565,7 +1565,7 @@ class TwitterPublisher:
 class RedditPublisher:
     """Publish to Reddit via OAuth2 (script app)"""
 
-    def __init__(self, client_id: str, client_secret: str, username: str, password: str, subreddit: str = "clisonix"):
+    def __init__(self, client_id: str, client_secret: str, username: str, password: str, subreddit: str = "kloud"):
         self.client_id = client_id
         self.client_secret = client_secret
         self.username = username
@@ -1573,7 +1573,7 @@ class RedditPublisher:
         self.subreddit = subreddit
         self.token_url = "https://www.reddit.com/api/v1/access_token"
         self.api_url = "https://oauth.reddit.com"
-        self.user_agent = "Clisonix-AutoPublisher/1.0 (by /u/{})".format(username or "clisonix")
+        self.user_agent = "Kloud-AutoPublisher/1.0 (by /u/{})".format(username or "kloud")
 
     async def _get_token(self) -> Optional[str]:
         """Get Reddit OAuth2 token via password grant"""
@@ -1955,3 +1955,4 @@ if __name__ == "__main__":
             await publisher.run_continuous()
 
     asyncio.run(main())
+

@@ -1,8 +1,8 @@
 {
-  "name": "@clisonix/frontend",
+  "name": "@kloud/frontend",
   "version": "1.0.0",
   "type": "module",
-  "description": "Clisonix Industrial Frontend - Next.js Dashboard",
+  "description": "Kloud Industrial Frontend - Next.js Dashboard",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -71,3 +71,4 @@
     "glob": "^11.0.0"
   }
 }
+

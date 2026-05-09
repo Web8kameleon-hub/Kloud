@@ -1,8 +1,8 @@
-# deploy.ps1 - Clisonix Cloud Industrial Deployment Script
+# deploy.ps1 - Kloud Cloud Industrial Deployment Script
 # Author: Ledjan Ahmati
 # License: Closed Source
 
-Write-Host "ðŸš€ Clisonix Cloud Industrial Deployment Starting..."
+Write-Host "ðŸš€ Kloud Cloud Industrial Deployment Starting..."
 
 # Step 1: Build Docker images
 Write-Host "ðŸ”¨ Building Docker images..."
@@ -16,4 +16,5 @@ docker compose up -d
 # You can add health check logic here if needed
 
 Write-Host "âœ… Deployment complete!"
+
 

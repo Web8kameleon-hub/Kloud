@@ -107,7 +107,7 @@ const pricingPlans = [
     support: 'Dedicated',
     features: ['Contract pricing', 'Custom meter definitions', 'Private infrastructure', 'SLA guarantee', 'Advanced auth and compliance'],
     cta: 'Contact Sales',
-    ctaLink: 'mailto:enterprise@clisonix.com',
+    ctaLink: 'mailto:enterprise@kloud.com',
     popular: false,
   },
 ]
@@ -188,22 +188,22 @@ export default function DevelopersPage() {
 
   const codeExamples = {
     curl: `# Health check
-curl -s https://clisonix.com/api/ping
+curl -s https://kloud.com/api/ping
 
 # System status
-curl -s https://clisonix.com/api/system-status | jq .
+curl -s https://kloud.com/api/system-status | jq .
 
 # Chat with Ocean AI
-curl -X POST https://clisonix.com/api/ocean \\
+curl -X POST https://kloud.com/api/ocean \\
   -H "Content-Type: application/json" \\
   -d '{"message": "What is neural audio processing?", "language": "en"}'
 
 # Streaming chat
-curl -N -X POST https://clisonix.com/api/ocean/stream \\
+curl -N -X POST https://kloud.com/api/ocean/stream \\
   -H "Content-Type: application/json" \\
   -d '{"message": "Explain EEG analysis", "language": "en"}'`,
-    typescript: `// Clisonix Cloud API — TypeScript
-const BASE = 'https://clisonix.com/api'
+    typescript: `// Kloud Cloud API — TypeScript
+const BASE = 'https://kloud.com/api'
 
 // Health check
 const ping = await fetch(\`\${BASE}/ping\`)
@@ -228,7 +228,7 @@ const { data } = await metrics.json()
 console.log(\`CPU: \${data.cpu_percent}%, RAM: \${data.memory_percent}%\`)`,
     python: `import requests
 
-BASE = "https://clisonix.com/api"
+BASE = "https://kloud.com/api"
 
 # Health check
 r = requests.get(f"{BASE}/ping")
@@ -258,7 +258,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">C</span>
             </div>
-            <span className="font-semibold text-lg">Clisonix <span className="text-slate-500 font-normal">Developers</span></span>
+            <span className="font-semibold text-lg">Kloud <span className="text-slate-500 font-normal">Developers</span></span>
           </Link>
           <div className="hidden md:flex items-center gap-8 text-sm">
             <a href="#endpoints" className="text-slate-400 hover:text-white transition-colors">Endpoints</a>
@@ -295,7 +295,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
           <div className="max-w-2xl mx-auto bg-slate-900/60 border border-slate-800 rounded-2xl p-6 mb-8">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm text-slate-400">Try it now — live from production</span>
-              <span className="text-xs text-slate-600">clisonix.com</span>
+              <span className="text-xs text-slate-600">kloud.com</span>
             </div>
             <div className="flex gap-3">
               <code className="flex-1 bg-slate-950 rounded-lg px-4 py-3 text-left text-sm text-emerald-400 font-mono">
@@ -366,7 +366,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
                     <span className="hidden sm:block text-xs text-slate-500 flex-shrink-0">{ep.desc}</span>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => copy(`curl ${ep.method === 'POST' ? '-X POST ' : '-s '}https://clisonix.com${ep.path}${ep.method === 'POST' ? ' -H "Content-Type: application/json" -d \'{"message":"test"}\'': ''}`, key + '-copy')}
+                        onClick={() => copy(`curl ${ep.method === 'POST' ? '-X POST ' : '-s '}https://kloud.com${ep.path}${ep.method === 'POST' ? ' -H "Content-Type: application/json" -d \'{"message":"test"}\'': ''}`, key + '-copy')}
                         className="p-2 text-slate-500 hover:text-white transition-colors"
                         title="Copy cURL"
                       >
@@ -557,11 +557,11 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
             <h2 className="text-2xl font-bold mb-4">Company & Owner</h2>
             <div className="space-y-3 text-sm text-slate-300">
-              <div><span className="text-slate-500">Brand:</span> Clisonix Cloud</div>
+              <div><span className="text-slate-500">Brand:</span> Kloud Cloud</div>
               <div><span className="text-slate-500">Legal entity:</span> ABA GmbH</div>
               <div><span className="text-slate-500">Owner:</span> Ledjan Ahmati</div>
-              <div><span className="text-slate-500">Support:</span> support@clisonix.com</div>
-              <div><span className="text-slate-500">Developers:</span> https://clisonix.com/developers</div>
+              <div><span className="text-slate-500">Support:</span> support@kloud.com</div>
+              <div><span className="text-slate-500">Developers:</span> https://kloud.com/developers</div>
             </div>
           </div>
         </div>
@@ -573,14 +573,14 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
           <h2 className="text-3xl font-bold text-center mb-12">FAQ</h2>
           <div className="space-y-4">
             {[
-              { q: 'How do I get started?', a: 'Sign up for a free account at clisonix.com/sign-up. You can start calling public endpoints immediately — no API key required for read-only status and health endpoints.' },
+              { q: 'How do I get started?', a: 'Sign up for a free account at kloud.com/sign-up. You can start calling public endpoints immediately — no API key required for read-only status and health endpoints.' },
               { q: 'Do these APIs actually work?', a: 'Yes. Every endpoint listed on this page is live on production. Click "Try" next to any endpoint above to see the real response.' },
               { q: 'What AI models power Ocean?', a: 'Curiosity Ocean uses Llama 3.1 8B for text, LLaVA for vision, and Faster-Whisper for audio transcription. All models run on our infrastructure — no external API calls.' },
               { q: 'Can I bill per usage instead of fixed tiers?', a: 'Yes. The platform supports metered billing. Track billable units such as api_request, ocean_chat, vision_job, audio_job, and export_job, then attach them to Stripe metered products.' },
               { q: 'How do I enable phone and SMS login?', a: 'Use Clerk as the identity provider and enable phone number sign-in plus SMS verification in the Clerk dashboard. The app UI already supports Clerk-based auth surfaces.' },
               { q: 'Can I upgrade or downgrade anytime?', a: 'Yes. Upgrades take effect immediately. Downgrades apply at the next billing cycle. All payments are processed through Stripe.' },
               { q: 'Is there an SDK?', a: 'SDKs are in development. For now, all endpoints work with any HTTP client — cURL, fetch, requests, axios, etc. See the code examples above.' },
-              { q: 'Do you offer enterprise solutions?', a: 'Yes — custom API limits, dedicated infrastructure, SLA guarantees, and on-premise deployment. Contact enterprise@clisonix.com.' },
+              { q: 'Do you offer enterprise solutions?', a: 'Yes — custom API limits, dedicated infrastructure, SLA guarantees, and on-premise deployment. Contact enterprise@kloud.com.' },
             ].map((item) => (
               <div key={item.q} className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
                 <h3 className="font-semibold mb-2">{item.q}</h3>
@@ -624,16 +624,17 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
             <div className="w-6 h-6 bg-gradient-to-br from-emerald-400 to-teal-500 rounded flex items-center justify-center">
               <span className="text-white font-bold text-xs">C</span>
             </div>
-            <span className="text-slate-500 text-sm">© 2026 Clisonix Cloud · ABA GmbH</span>
+            <span className="text-slate-500 text-sm">© 2026 Kloud Cloud · ABA GmbH</span>
           </div>
           <div className="flex gap-6 text-sm">
             <Link href="/terms" className="text-slate-500 hover:text-white transition-colors">Terms</Link>
             <Link href="/privacy" className="text-slate-500 hover:text-white transition-colors">Privacy</Link>
             <Link href="/status" className="text-slate-500 hover:text-white transition-colors">Status</Link>
-            <a href="mailto:support@clisonix.com" className="text-slate-500 hover:text-white transition-colors">Support</a>
+            <a href="mailto:support@kloud.com" className="text-slate-500 hover:text-white transition-colors">Support</a>
           </div>
         </div>
       </footer>
     </div>
   )
 }
+

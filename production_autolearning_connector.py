@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🌊 CLISONIX PRODUCTION AUTO-LEARNING CONNECTOR
+🌊 KLOUD PRODUCTION AUTO-LEARNING CONNECTOR
 ===============================================
 Lidh Auto-Learning Engine me:
 - Mega Signal Integrator (5000+ data sources)
@@ -9,7 +9,7 @@ Lidh Auto-Learning Engine me:
 
 Production-grade: CPU/Disk optimized, batch processing
 
-Author: Clisonix Team
+Author: Kloud Team
 Version: 1.0.0 Production
 """
 
@@ -40,8 +40,8 @@ logger = logging.getLogger(__name__)
 class ProductionConfig:
     """Production configuration"""
     # Hetzner API
-    hetzner_api_url: str = os.getenv('HETZNER_API_URL', 'http://clisonix-api:8000')
-    hetzner_external_url: str = os.getenv('HETZNER_EXTERNAL_URL', 'https://api.clisonix.com')
+    hetzner_api_url: str = os.getenv('HETZNER_API_URL', 'http://kloud-api:8000')
+    hetzner_external_url: str = os.getenv('HETZNER_EXTERNAL_URL', 'https://api.kloud.com')
     
     # Signal processing
     signal_batch_size: int = 50          # Process 50 signals at a time
@@ -327,7 +327,7 @@ class ProductionAutoLearningConnector:
         self.stats['start_time'] = datetime.now(timezone.utc).isoformat()
         
         print("\n" + "=" * 60)
-        print("🌊 CLISONIX PRODUCTION AUTO-LEARNING")
+        print("🌊 KLOUD PRODUCTION AUTO-LEARNING")
         print("=" * 60)
         print(f"📡 Connected to: {self.config.hetzner_api_url}")
         print(f"📊 Signal batch size: {self.config.signal_batch_size}")
@@ -413,7 +413,7 @@ def main():
     """Production entry point"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Clisonix Production Auto-Learning')
+    parser = argparse.ArgumentParser(description='Kloud Production Auto-Learning')
     parser.add_argument('--iterations', '-i', type=int, default=0, 
                         help='Max iterations (0=forever)')
     parser.add_argument('--batch-size', '-b', type=int, default=50,
@@ -436,3 +436,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

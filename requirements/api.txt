@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix API Requirements - FastAPI Services
+# Kloud API Requirements - FastAPI Services
 # ═══════════════════════════════════════════════════════════════
 # For: backend, alba, albi, jona, alda, liam, blerina, agiem
 
@@ -33,3 +33,4 @@ paypalrestsdk>=1.7.1
 
 # Extended Types
 pydantic-extra-types>=2.10.0
+

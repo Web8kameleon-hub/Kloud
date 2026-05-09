@@ -1,8 +1,8 @@
-# Clisonix - Business Strategy & Positioning
+# Kloud - Business Strategy & Positioning
 
 ## 📊 Executive Summary
 
-**Clisonix** është një platformë cloud-native për real-time industrial monitoring dhe microservice orchestration. Kombinon fuqinë e një backend-i enterprise-grade me thjeshtësinë e një developer experience moderne.
+**Kloud** është një platformë cloud-native për real-time industrial monitoring dhe microservice orchestration. Kombinon fuqinë e një backend-i enterprise-grade me thjeshtësinë e një developer experience moderne.
 
 ---
 
@@ -11,7 +11,7 @@
 ### A. Kush jemi?
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  CLISONIX = Industrial Backend-as-a-Service                 │
+│  KLOUD = Industrial Backend-as-a-Service                 │
 │                                                             │
 │  ✓ Real-time monitoring & analytics                         │
 │  ✓ Microservice orchestration                               │
@@ -44,9 +44,9 @@
 
 ## 🆚 2. KRAHASIM ME KONKURRENTËT
 
-### Clisonix vs Supabase vs Vercel vs Render
+### Kloud vs Supabase vs Vercel vs Render
 
-| Feature | Clisonix | Supabase | Vercel | Render |
+| Feature | Kloud | Supabase | Vercel | Render |
 |---------|----------|----------|--------|--------|
 | **Real-time DB** | ✅ PostgreSQL + Redis | ✅ PostgreSQL | ❌ | ❌ |
 | **API Auto-gen** | ✅ FastAPI | ✅ PostgREST | ❌ | ❌ |
@@ -68,7 +68,7 @@
     COMPLEX ────────────┼────────────── SIMPLE
          │              │              │
          │        ┌─────┴─────┐        │
-         │        │ CLISONIX  │        │
+         │        │ KLOUD  │        │
          │        │  ★★★★★    │        │
          │        └───────────┘        │
          │    Supabase    Vercel       │
@@ -96,12 +96,12 @@
 
 | Ditë | Task | Deliverable |
 |------|------|-------------|
-| 1 | Setup domain clisonix.com | DNS + SSL |
-| 2 | GitHub organization setup | github.com/clisonix |
-| 3 | Python SDK publish | PyPI: clisonix |
-| 4 | TypeScript SDK publish | npm: @clisonix/sdk |
-| 5 | Documentation site | docs.clisonix.com |
-| 6 | Blog post #1 | "Why We Built Clisonix" |
+| 1 | Setup domain kloud.com | DNS + SSL |
+| 2 | GitHub organization setup | github.com/kloud |
+| 3 | Python SDK publish | PyPI: kloud |
+| 4 | TypeScript SDK publish | npm: @kloud/sdk |
+| 5 | Documentation site | docs.kloud.com |
+| 6 | Blog post #1 | "Why We Built Kloud" |
 | 7 | Social media setup | Twitter, LinkedIn |
 
 **Milestone**: Produkti live me domain dhe SDK-të e publikuara.
@@ -113,8 +113,8 @@
 | 8 | Video demo | YouTube: 5-min demo |
 | 9 | Tutorial #1 | "Getting Started" |
 | 10 | Tutorial #2 | "Industrial Monitoring" |
-| 11 | Blog post #2 | "Clisonix vs Supabase" |
-| 12 | Discord community | discord.gg/clisonix |
+| 11 | Blog post #2 | "Kloud vs Supabase" |
+| 12 | Discord community | discord.gg/kloud |
 | 13 | Product Hunt prep | Screenshots, copy |
 | 14 | Press kit | Logo, screenshots, bio |
 
@@ -139,7 +139,7 @@
 | Ditë | Task | Deliverable |
 |------|------|-------------|
 | 22 | **Product Hunt Launch** | Front page target |
-| 23 | Hacker News post | "Show HN: Clisonix" |
+| 23 | Hacker News post | "Show HN: Kloud" |
 | 24 | Reddit posts | r/selfhosted, r/devops |
 | 25 | Twitter thread viral | 10-part thread |
 | 26 | LinkedIn article | Professional audience |
@@ -189,7 +189,7 @@
 ┌─────────────────────────────────────────┐
 │  THE SOLUTION                           │
 │                                         │
-│  Clisonix: All-in-one industrial        │
+│  Kloud: All-in-one industrial        │
 │  backend deployed in 5 minutes          │
 │                                         │
 │  ✓ Real-time monitoring                 │
@@ -197,7 +197,7 @@
 │  ✓ Microservice orchestration           │
 │  ✓ Self-hosted or cloud                 │
 │                                         │
-│  [LIVE DEMO: clisonix.com]              │
+│  [LIVE DEMO: kloud.com]              │
 └─────────────────────────────────────────┘
 ```
 
@@ -264,7 +264,7 @@
 ┌─────────────────────────────────────────┐
 │  TRACTION                               │
 │                                         │
-│  ✓ Product live at clisonix.com         │
+│  ✓ Product live at kloud.com         │
 │  ✓ 12 microservices deployed            │
 │  ✓ 5 services 99.9% uptime              │
 │  ✓ SDK ready (Python + TypeScript)      │
@@ -284,7 +284,7 @@
 │                                         │
 │              Industrial    Self-Hosted  │
 │              Focus         Option       │
-│  Clisonix    ████████████  ████████████ │
+│  Kloud    ████████████  ████████████ │
 │  Supabase    ░░░░░░░░░░░░  ████████████ │
 │  Vercel      ░░░░░░░░░░░░  ░░░░░░░░░░░░ │
 │  Render      ░░░░░░░░░░░░  ░░░░░░░░░░░░ │
@@ -332,7 +332,7 @@
 │                                         │
 │  18-month runway to Series A            │
 │                                         │
-│  Contact: founder@clisonix.com          │
+│  Contact: founder@kloud.com          │
 └─────────────────────────────────────────┘
 ```
 
@@ -358,7 +358,7 @@
 ## 🚀 6. IMMEDIATE ACTION ITEMS
 
 ### Sot (Prioritet 1)
-- [ ] Bli domain clisonix.com
+- [ ] Bli domain kloud.com
 - [ ] Setup SSL certificate
 - [ ] Create GitHub organization
 
@@ -376,14 +376,15 @@
 
 ## 📞 CONTACT
 
-**Clisonix Cloud Platform**
-- Website: https://clisonix.com
-- API: https://api.clisonix.com
-- Docs: https://docs.clisonix.com
-- GitHub: https://github.com/clisonix
-- Email: hello@clisonix.com
+**Kloud Cloud Platform**
+- Website: https://kloud.com
+- API: https://api.kloud.com
+- Docs: https://docs.kloud.com
+- GitHub: https://github.com/kloud
+- Email: hello@kloud.com
 
 ---
 
 *Last Updated: January 2026*
 *Version: 1.0*
+

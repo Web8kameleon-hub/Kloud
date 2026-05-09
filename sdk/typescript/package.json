@@ -1,7 +1,7 @@
 {
-  "name": "@clisonix/sdk",
+  "name": "@kloud/sdk",
   "version": "1.0.0",
-  "description": "Official TypeScript SDK for Clisonix Cloud API - Neural harmonic processing, EEG analysis, and ASI Trinity integration",
+  "description": "Official TypeScript SDK for Kloud Cloud API - Neural harmonic processing, EEG analysis, and ASI Trinity integration",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -9,14 +9,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup clisonix-sdk.ts --format cjs,esm --dts",
-    "dev": "tsup clisonix-sdk.ts --format cjs,esm --dts --watch",
+    "build": "tsup kloud-sdk.ts --format cjs,esm --dts",
+    "dev": "tsup kloud-sdk.ts --format cjs,esm --dts --watch",
     "test": "vitest",
     "lint": "eslint . --ext .ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "clisonix",
+    "kloud",
     "api",
     "sdk",
     "neural",
@@ -26,15 +26,15 @@
     "asi",
     "typescript"
   ],
-  "author": "Clisonix Cloud <support@clisonix.cloud>",
+  "author": "Kloud Cloud <support@kloud.cloud>",
   "license": "MIT",
-  "homepage": "https://clisonix.cloud/docs/sdk/typescript",
+  "homepage": "https://kloud.cloud/docs/sdk/typescript",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clisonix/sdk-typescript.git"
+    "url": "https://github.com/kloud/sdk-typescript.git"
   },
   "bugs": {
-    "url": "https://github.com/clisonix/sdk-typescript/issues"
+    "url": "https://github.com/kloud/sdk-typescript/issues"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -49,3 +49,4 @@
     "@typescript-eslint/parser": "^6.0.0"
   }
 }
+

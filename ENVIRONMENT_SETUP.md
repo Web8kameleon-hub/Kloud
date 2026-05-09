@@ -27,7 +27,7 @@
    - STRIPE_API_KEY, SENTRY_DSN (if using)
 
 3. **Add to GitHub Secrets:**
-   - Go to: `https://github.com/LedjanAhmati/Clisonix-cloud/settings/secrets/actions`
+   - Go to: `https://github.com/LedjanAhmati/Kloud-cloud/settings/secrets/actions`
    - Add each secret individually
 
 ## Required Secrets for Production
@@ -45,4 +45,5 @@
 
 - **Development Mode:** No secrets configured → CI passes with warnings
 - **Production Mode:** Secrets configured → CI requires all critical vars
+
 

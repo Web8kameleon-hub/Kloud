@@ -305,7 +305,7 @@ async def get_full_system_status():
     """
     try:
         status = {
-            "service": "Clisonix Ocean Core",
+            "service": "Kloud Ocean Core",
             "version": "4.0.0 - Full Integration",
             "timestamp": datetime.now().isoformat(),
             "components": {}
@@ -451,7 +451,7 @@ async def get_sources():
                 for v in internal_data.values() if v
             ])
         },
-        "note": "✅ ONLY internal Clisonix APIs - NO external data sources (Wikipedia, ArXiv, GitHub disabled)"
+        "note": "✅ ONLY internal Kloud APIs - NO external data sources (Wikipedia, ArXiv, GitHub disabled)"
     }
 
 
@@ -2367,3 +2367,4 @@ if __name__ == "__main__":
         port=port,
         log_level="info"
     )
+

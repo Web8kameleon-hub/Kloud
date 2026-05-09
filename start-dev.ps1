@@ -1,5 +1,5 @@
 Write-Host "[1] Starting PostgreSQL..." -ForegroundColor Green
-docker run -d --rm --name pg-dev -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=clisonix -p 5432:5432 postgres:16-alpine
+docker run -d --rm --name pg-dev -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=kloud -p 5432:5432 postgres:16-alpine
 Start-Sleep -Seconds 5
 
 Write-Host "[2] Starting Redis..." -ForegroundColor Green
@@ -28,3 +28,4 @@ Write-Host "Stop: docker stop pg-dev redis-dev"
 Write-Host "=========================================="
 
 Read-Host "Press Enter to exit"
+

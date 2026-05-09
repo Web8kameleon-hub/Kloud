@@ -1,4 +1,4 @@
-# Clisonix Cloud - Labs, Engines & Agents Reference
+# Kloud Cloud - Labs, Engines & Agents Reference
 > Complete architectural documentation of all laboratories, engines, and agents
 
 ## 🤖 AGENTS ARCHITECTURE
@@ -192,7 +192,7 @@ class ResearchProposalLab:
 ## 📁 FILE STRUCTURE OVERVIEW
 
 ```
-Clisonix-cloud/
+Kloud-cloud/
 ├── apps/
 │   ├── api/
 │   │   ├── modules/          # Python modules
@@ -219,4 +219,5 @@ Clisonix-cloud/
 ---
 
 *Last Updated: December 2025*
-*Clisonix Cloud Platform v2.1.0*
+*Kloud Cloud Platform v2.1.0*
+

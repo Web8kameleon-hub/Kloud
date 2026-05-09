@@ -265,7 +265,7 @@ async def get_sources():
                 "status": "operational"
             }
         },
-        "note": "ONLY internal Clisonix APIs - NO external data sources"
+        "note": "ONLY internal Kloud APIs - NO external data sources"
     }
 
 
@@ -514,3 +514,4 @@ if __name__ == "__main__":
         port=8030,
         log_level="info"
     )
+

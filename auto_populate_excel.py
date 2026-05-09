@@ -18,11 +18,11 @@ mature_fill = PatternFill(start_color='DDEBF7', end_color='DDEBF7', fill_type='s
 method_get = PatternFill(start_color='E2EFDA', end_color='E2EFDA', fill_type='solid')  # Green
 method_post = PatternFill(start_color='FFF2CC', end_color='FFF2CC', fill_type='solid')  # Yellow
 
-# TË GJITHA API-të REALE nga sistemi Clisonix
+# TË GJITHA API-të REALE nga sistemi Kloud
 apis = [
     {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/health', 'desc': 'Kontrollon gjendjen e shëndetit të sistemit', 'response': '{"status":"healthy","version":"2.1.0"}'},
     {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/status', 'desc': 'Merr statusin e detajuar të sistemit', 'response': '{"status":"operational","cpu_percent":23.5}'},
-    {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/api/system-status', 'desc': 'Statusin e plotë të sistemit industrial', 'response': '{"system":"clisonix-industrial","status":"running"}'},
+    {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/api/system-status', 'desc': 'Statusin e plotë të sistemit industrial', 'response': '{"system":"kloud-industrial","status":"running"}'},
     {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/db/ping', 'desc': 'Teston lidhjen me PostgreSQL', 'response': '{"database":"postgresql","status":"connected"}'},
     {'folder': 'Health & Status', 'method': 'GET', 'endpoint': '/redis/ping', 'desc': 'Teston lidhjen me Redis', 'response': '{"redis":"connected","ping":"PONG"}'},
     {'folder': 'ASI Trinity', 'method': 'GET', 'endpoint': '/asi/status', 'desc': 'Merr statusin e ASI Trinity (ALBA, ALBI, JONA)', 'response': '{"trinity_status":"active"}'},
@@ -66,7 +66,7 @@ apis = [
 start_row = ws.max_row + 1
 
 ts = datetime.now().isoformat()
-base_url = 'https://api.clisonix.com'
+base_url = 'https://api.kloud.com'
 
 for i, api in enumerate(apis):
     row = start_row + i
@@ -82,7 +82,7 @@ for i, api in enumerate(apis):
     ws.cell(row=row, column=1).border = border
     ws.cell(row=row, column=2, value=ts).alignment = wrap_align
     ws.cell(row=row, column=2).border = border
-    ws.cell(row=row, column=3, value='Clisonix-Cloud').alignment = wrap_align
+    ws.cell(row=row, column=3, value='Kloud-Cloud').alignment = wrap_align
     ws.cell(row=row, column=3).border = border
     ws.cell(row=row, column=4, value=api['folder']).alignment = wrap_align
     ws.cell(row=row, column=4).border = border
@@ -131,3 +131,4 @@ wb.save('c:/Users/Admin/Desktop/real_excel_report.xlsx')
 print(f'✅ Shtova {len(apis)} API endpoints në Excel!')
 print(f'📊 Total rreshta: {ws.max_row}')
 print(f'📁 File: c:/Users/Admin/Desktop/real_excel_report.xlsx')
+

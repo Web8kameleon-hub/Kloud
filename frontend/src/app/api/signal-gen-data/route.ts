@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     // Metadata industriale
     const now = Date.now();
     const config = {
-      engine: 'Clisonix-signal-gen-pro',
+      engine: 'Kloud-signal-gen-pro',
       version: '2.1.0',
       location: 'Industrial Lab 3',
       operator: 'Ledjan Ahmati',
@@ -134,3 +134,4 @@ export async function GET(request: Request) {
     }, { status: 400 });
   }
 }
+

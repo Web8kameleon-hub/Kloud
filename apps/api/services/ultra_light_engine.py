@@ -1,5 +1,5 @@
 """
-Ultra-Light Data Engine for Clisonix Ocean Core
+Ultra-Light Data Engine for Kloud Ocean Core
 Zero PostgreSQL, Zero MySQL - Redis + SQLite + DuckDB Architecture
 
 Architecture:
@@ -28,12 +28,12 @@ logger = logging.getLogger(__name__)
 class UltraLightDataEngine:
     """Main orchestrator for ultra-light data infrastructure"""
     
-    def __init__(self, data_dir: str = "/data/clisonix"):
+    def __init__(self, data_dir: str = "/data/kloud"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         
         # SQLite for operational data
-        self.sqlite_path = self.data_dir / "clisonix_operational.db"
+        self.sqlite_path = self.data_dir / "kloud_operational.db"
         self.init_sqlite()
         
         logger.info(f"✓ Ultra-Light Engine initialized at {self.data_dir}")
@@ -401,7 +401,7 @@ _engine_instance: Optional[UltraLightDataEngine] = None
 _redis_instance: Optional[RedisIngestionBuffer] = None
 
 
-def initialize_ultra_light_engine(data_dir: str = "/data/clisonix") -> UltraLightDataEngine:
+def initialize_ultra_light_engine(data_dir: str = "/data/kloud") -> UltraLightDataEngine:
     """Initialize the ultra-light data engine (singleton)"""
     global _engine_instance
     if not _engine_instance:
@@ -425,3 +425,4 @@ def get_data_engine() -> UltraLightDataEngine:
 def get_redis_buffer() -> RedisIngestionBuffer:
     """Get Redis buffer instance"""
     return initialize_redis_buffer()
+

@@ -101,7 +101,7 @@ python generate_observability_docs.py --format all
 
 ### For GitHub
 - HTML is automatically committed via CI/CD
-- Available at: `https://github.com/LedjanAhmati/Clisonix-cloud/blob/main/docs/observability/exports/observability-docs.html`
+- Available at: `https://github.com/LedjanAhmati/Kloud-cloud/blob/main/docs/observability/exports/observability-docs.html`
 - GitHub renders HTML files (limited styling)
 
 ## 🎨 Customization
@@ -145,3 +145,4 @@ See `.github/workflows/docs-observability.yml` for full configuration.
 
 **Last Updated:** December 11, 2025  
 **Generator:** `generate_observability_docs.py`
+

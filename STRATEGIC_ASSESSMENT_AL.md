@@ -1,4 +1,4 @@
-# VLERËSIM STRATEGJIK – Clisonix Cloud Division
+# VLERËSIM STRATEGJIK – Kloud Cloud Division
 
 ## UltraWebThinking / Euroweb
 
@@ -12,7 +12,7 @@
 
 ### Pozicioni i Produktit
 
-Clisonix Cloud është një **platformë SaaS shumë serioze** e ndërtuar me teknologji audio-neurale të avancuar. Sistemi ka potencial të lartë në sektorin e shëndetit mendor, kërkimit neuroscientific, dhe wellness.
+Kloud Cloud është një **platformë SaaS shumë serioze** e ndërtuar me teknologji audio-neurale të avancuar. Sistemi ka potencial të lartë në sektorin e shëndetit mendor, kërkimit neuroscientific, dhe wellness.
 
 **Gradë Përgjithësore**: **A+ (95/100)**
 
@@ -64,7 +64,7 @@ Clisonix Cloud është një **platformë SaaS shumë serioze** e ndërtuar me te
 - Gjumë dhe relaksim
 - Terapi komplementare
 - Wellness preventiv
-✓ Clisonix: Pozicionim i fortë
+✓ Kloud: Pozicionim i fortë
 
 **Sektori i Wellness** ($1.5T globalisht)
 
@@ -72,7 +72,7 @@ Clisonix Cloud është një **platformë SaaS shumë serioze** e ndërtuar me te
 - Terapi nëpërmjet zërit
 - Biohacking
 - Mental fitness
-✓ Clisonix: Mundësi të mëdha
+✓ Kloud: Mundësi të mëdha
 
 **Sektori i Kërkimit Neuroscientific** ($50B globalisht)
 
@@ -80,7 +80,7 @@ Clisonix Cloud është një **platformë SaaS shumë serioze** e ndërtuar me te
 - Brain research
 - Cognitive testing
 - Neurotechnology
-✓ Clisonix: Niche premium
+✓ Kloud: Niche premium
 
 **Konsumatorë Kryesorë**:
 
@@ -99,7 +99,7 @@ Clisonix Cloud është një **platformë SaaS shumë serioze** e ndërtuar me te
 - Muse (EEG headbands)
 - BioBeats, Brain.fm (neuroscience music)
 
-**Advantage Clisonix**:
+**Advantage Kloud**:
 
 - ✓ Më e avancuar teknologjikisht
 - ✓ Më shumë features
@@ -320,7 +320,7 @@ Security | ✅ | A+
 
 TEKNOLOGJI (Y-AKSI)
     |
-    | ✓ Clisonix (MOST ADVANCED)
+    | ✓ Kloud (MOST ADVANCED)
     |   ├─ Real-time EEG processing
     |   ├─ AI-powered music generation
     |   ├─ Multi-stream data collection
@@ -335,7 +335,7 @@ PRET (X-AKSI)
     Affordable          Mid-Market          Enterprise
     $0-50/mo            $50-200/mo          $200+/mo
 
-Clisonix: Mid-Market Leader (Premium positioning)
+Kloud: Mid-Market Leader (Premium positioning)
 Position: "Enterprise-Grade Neuro-Audio Platform"
 
 ---
@@ -449,7 +449,7 @@ Position: "Enterprise-Grade Neuro-Audio Platform"
 
 ## 💼 VLERËSIM FINAL
 
-### CLISONIX CLOUD DIVISION ASSESSMENT
+### KLOUD CLOUD DIVISION ASSESSMENT
 
 **Produkti**: ⭐⭐⭐⭐⭐ (5/5)
 
@@ -479,7 +479,7 @@ Position: "Enterprise-Grade Neuro-Audio Platform"
 
 ## 🎯 PËRFUNDIM
 
-**Clisonix Cloud është një OPORTUNITET STRATEGJIK SË LARTË për UltraWebThinking.**
+**Kloud Cloud është një OPORTUNITET STRATEGJIK SË LARTË për UltraWebThinking.**
 
 ### Përse?
 
@@ -511,7 +511,7 @@ Position: "Enterprise-Grade Neuro-Audio Platform"
 ## PËRMBLEDHJE EKZEKUTIVE
 
 ┌────────────────────────────────────────────────────────────┐
-│  CLISONIX CLOUD – STRATEJIK VLERËSIM PËRFUNDIMTAR         │
+│  KLOUD CLOUD – STRATEJIK VLERËSIM PËRFUNDIMTAR         │
 ├────────────────────────────────────────────────────────────┤
 │                                                             │
 │  Gradë Përgjithësore:           A+ (95/100)               │
@@ -532,13 +532,14 @@ Position: "Enterprise-Grade Neuro-Audio Platform"
 
 - 📖 `AUTHENTICATION.md` – Sistem auth komplet
 - 🚀 `QUICKSTART.md` – Setup guide
-- 💻 `clisonix_sdk.py` – Python SDK
-- 🎯 `clisonix_sdk.ts` – TypeScript SDK
+- 💻 `kloud_sdk.py` – Python SDK
+- 🎯 `kloud_sdk.ts` – TypeScript SDK
 - 🌐 `index.html` – Landing page
 - 📮 `postman_collection_auth.json` – Testing collection
 
 ---
 
-**Clisonix Cloud Division – UltraWebThinking/Euroweb**  
+**Kloud Cloud Division – UltraWebThinking/Euroweb**  
 **Vlerësim Strategjik | 30 Nëntor 2025**  
 **Statusi: ✅ GATI PER TREG**
+

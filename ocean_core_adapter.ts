@@ -507,7 +507,7 @@ async function exampleOceanIntegration() {
   const adapter = new OceanCoreAdapter({
     influxUrl: process.env.INFLUX_URL || 'http://localhost:8086',
     influxToken: process.env.INFLUX_TOKEN || 'demo-token',
-    influxOrg: 'Clisonix',
+    influxOrg: 'Kloud',
     influxBucket: 'nanogridata',
     databaseUrl: process.env.DATABASE_URL || 'postgresql://localhost/nanogridata',
     logLevel: 'info',
@@ -564,3 +564,4 @@ export {
   TimeseriesStore,
   ProcessingPipeline,
 };
+

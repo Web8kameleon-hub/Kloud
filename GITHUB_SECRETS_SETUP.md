@@ -14,7 +14,7 @@ These are injected by GitHub Secrets (not in .env file, which is local-only).
 
 ## 📋 STEP 1: Go to GitHub Settings
 
-1. Open: https://github.com/LedjanAhmati/Clisonix-cloud
+1. Open: https://github.com/LedjanAhmati/Kloud-cloud
 2. Click **Settings** (top-right)
 3. Left sidebar → **Secrets and variables** → **Actions**
 4. Click **New repository secret**
@@ -34,7 +34,7 @@ Value: (your database host - e.g., localhost or IP)
 ### 2. DB_USER
 ```
 Name: DB_USER
-Value: (your database username - e.g., clisonix)
+Value: (your database username - e.g., kloud)
 ```
 
 ### 3. DB_PASSWORD
@@ -85,14 +85,14 @@ When deploying to Hetzner:
 1. Create `.env.production` locally with SAME values:
    ```
    DB_HOST=hetzner-ip
-   DB_USER=clisonix
+   DB_USER=kloud
    DB_PASSWORD=your-password
    JWT_SECRET=same-as-github-secret
    ```
 
 2. Copy to Hetzner server:
    ```bash
-   scp .env.production root@server-ip:/home/clisonix/
+   scp .env.production root@server-ip:/home/kloud/
    ```
 
 3. Load in docker-compose:
@@ -110,4 +110,5 @@ When deploying to Hetzner:
 - NOT logged in workflow output
 - Safe to use in CI/CD pipeline
 - Different from local .env (which stays on your machine)
+
 

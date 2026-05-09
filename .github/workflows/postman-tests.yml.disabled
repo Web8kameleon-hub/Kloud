@@ -18,7 +18,7 @@ on:
           - local
 
 env:
-  API_URL: ${{ vars.API_URL || 'https://clisonix.cloud' }}
+  API_URL: ${{ vars.API_URL || 'https://kloud.cloud' }}
 
 jobs:
   postman-tests:
@@ -40,7 +40,7 @@ jobs:
         
       - name: Run Core API Tests
         run: |
-          newman run Clisonix-Cloud-Real-APIs.postman_collection.json \
+          newman run Kloud-Cloud-Real-APIs.postman_collection.json \
             --env-var "base_url=${{ env.API_URL }}" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export reports/core-api-report.html \
@@ -85,3 +85,4 @@ jobs:
           echo "| Auth | ✅ |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Reports available as artifacts." >> $GITHUB_STEP_SUMMARY
+

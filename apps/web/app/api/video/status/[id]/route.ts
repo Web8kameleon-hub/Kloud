@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * Check status of video generation job
  */
 
-const VIDEO_GENERATOR_URL = process.env.VIDEO_GENERATOR_URL || 'http://clisonix-video-generator:8029';
+const VIDEO_GENERATOR_URL = process.env.VIDEO_GENERATOR_URL || 'http://kloud-video-generator:8029';
 
 export async function GET(
   request: NextRequest,
@@ -47,3 +47,4 @@ export async function GET(
     );
   }
 }
+

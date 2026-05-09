@@ -12,13 +12,13 @@ from backend.system.exporter import generate_pdf_report  # use the project expor
 def send_daily_report():
     pdf_path = generate_pdf_report()  # creates PDF in runtime/reports/
     to_addr = os.getenv("REPORT_TO", "amati.bau@gmail.com")
-    from_addr = os.getenv("REPORT_FROM", os.getenv("SMTP_USER", "no-reply@clisonix.local"))
+    from_addr = os.getenv("REPORT_FROM", os.getenv("SMTP_USER", "no-reply@kloud.local"))
 
     msg = EmailMessage()
-    msg["Subject"] = f"Clisonix Daily System Report — {time.strftime('%Y-%m-%d')}"
+    msg["Subject"] = f"Kloud Daily System Report — {time.strftime('%Y-%m-%d')}"
     msg["From"] = from_addr
     msg["To"] = to_addr
-    msg.set_content("Përshëndetje,\n\nGjeni bashkëngjitur raportin ditor të Clisonix.\n\n— Smart Orchestrator")
+    msg.set_content("Përshëndetje,\n\nGjeni bashkëngjitur raportin ditor të Kloud.\n\n— Smart Orchestrator")
 
     with open(pdf_path, "rb") as f:
         pdf_bytes = f.read()
@@ -40,4 +40,5 @@ def send_daily_report():
         server.login(user, pwd)
         server.send_message(msg)
     return pdf_path
+
 

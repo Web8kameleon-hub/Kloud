@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 /**
- * CLISONIX VIRAL REELS CREATOR
+ * KLOUD VIRAL REELS CREATOR
  * Professional short-form video generation
  */
 
@@ -145,7 +145,7 @@ export default function CreatePage() {
           <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl">🎬</span>
             <span className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors">
-              CLISONIX CREATOR
+              KLOUD CREATOR
             </span>
           </Link>
           <nav className="flex gap-6 text-sm">
@@ -322,9 +322,10 @@ export default function CreatePage() {
       {/* Footer */}
       <footer className="border-t border-slate-800 bg-slate-950/50 backdrop-blur-xl mt-20">
         <div className="container mx-auto px-4 py-8 text-center text-slate-500 text-sm">
-          <p>Powered by <span className="text-blue-400 font-semibold">Clisonix AI</span> • Professional Video Generation</p>
+          <p>Powered by <span className="text-blue-400 font-semibold">Kloud AI</span> • Professional Video Generation</p>
         </div>
       </footer>
     </div>
   );
 }
+

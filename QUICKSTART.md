@@ -1,10 +1,10 @@
-# Clisonix Cloud API – Quick Start Guide
+# Kloud Cloud API – Quick Start Guide
 
 ## 🚀 5-Minute Setup
 
 ### Prerequisites
 - Node.js 14+ or Python 3.8+
-- API endpoint: `https://api.clisonix.com`
+- API endpoint: `https://api.kloud.com`
 - Valid email account for login
 
 ---
@@ -14,15 +14,15 @@
 ### 1. Install
 ```bash
 pip install requests
-# Copy clisonix_sdk.py to your project
+# Copy kloud_sdk.py to your project
 ```
 
 ### 2. Login & Use
 ```python
-from clisonix_sdk import ClisonixClient
+from kloud_sdk import KloudClient
 
 # Create client
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 
 # Login
 login = client.login("user@example.com", "password123")
@@ -44,7 +44,7 @@ print(f"✓ API Key: {api_key['api_key']}")
 ### 3. Use API Key Instead
 ```python
 # For server-to-server auth
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 client.set_api_key("api_sk_your_key_here")
 
 # All requests now use X-API-Key header
@@ -58,16 +58,16 @@ response = client.health()
 ### 1. Install
 ```bash
 npm install
-# Copy clisonix_sdk.ts to your project
+# Copy kloud_sdk.ts to your project
 ```
 
 ### 2. Login & Use
 ```typescript
-import { ClisonixClient } from './clisonix_sdk';
+import { KloudClient } from './kloud_sdk';
 
 // Create client
-const client = new ClisonixClient({
-  baseUrl: 'https://api.clisonix.com'
+const client = new KloudClient({
+  baseUrl: 'https://api.kloud.com'
 });
 
 // Login
@@ -90,8 +90,8 @@ console.log(`✓ API Key: ${apiKey.api_key}`);
 ### 3. Use API Key Instead
 ```typescript
 // For server-to-server auth
-const client = new ClisonixClient({
-  baseUrl: 'https://api.clisonix.com'
+const client = new KloudClient({
+  baseUrl: 'https://api.kloud.com'
 });
 client.setApiKey('api_sk_your_key_here');
 
@@ -111,7 +111,7 @@ const response = await client.health();
 
 ### 2. Setup Environment Variables
 Collection includes pre-configured variables:
-- `base_url`: `https://api.clisonix.com`
+- `base_url`: `https://api.kloud.com`
 - `auth_token`: (auto-populated after login)
 - `refresh_token`: (auto-populated after login)
 - `api_key`: (auto-populated after creating key)
@@ -197,16 +197,16 @@ Header: Authorization: Bearer <new_token>
 
 ### Development (.env)
 ```bash
-CLISONIX_API_URL=https://api.clisonix.com
-CLISONIX_EMAIL=dev@example.com
-CLISONIX_PASSWORD=dev_password
+KLOUD_API_URL=https://api.kloud.com
+KLOUD_EMAIL=dev@example.com
+KLOUD_PASSWORD=dev_password
 ```
 
 ### Production (Secrets Manager)
 ```bash
 # Never commit these!
-CLISONIX_API_KEY=api_sk_production_xxxxx
-CLISONIX_API_URL=https://api.clisonix.com
+KLOUD_API_KEY=api_sk_production_xxxxx
+KLOUD_API_URL=https://api.kloud.com
 ```
 
 ### Load from Environment
@@ -214,20 +214,20 @@ CLISONIX_API_URL=https://api.clisonix.com
 **Python:**
 ```python
 import os
-from clisonix_sdk import ClisonixClient
+from kloud_sdk import KloudClient
 
-client = ClisonixClient(base_url=os.getenv("CLISONIX_API_URL"))
-client.set_api_key(os.getenv("CLISONIX_API_KEY"))
+client = KloudClient(base_url=os.getenv("KLOUD_API_URL"))
+client.set_api_key(os.getenv("KLOUD_API_KEY"))
 ```
 
 **TypeScript:**
 ```typescript
-import { ClisonixClient } from './clisonix_sdk';
+import { KloudClient } from './kloud_sdk';
 
-const client = new ClisonixClient({
-  baseUrl: process.env.CLISONIX_API_URL
+const client = new KloudClient({
+  baseUrl: process.env.KLOUD_API_URL
 });
-client.setApiKey(process.env.CLISONIX_API_KEY);
+client.setApiKey(process.env.KLOUD_API_KEY);
 ```
 
 ---
@@ -236,10 +236,10 @@ client.setApiKey(process.env.CLISONIX_API_KEY);
 
 ### Example 1: Ask a Question
 ```python
-client = ClisonixClient(base_url="https://api.clisonix.com")
+client = KloudClient(base_url="https://api.kloud.com")
 client.login("user@example.com", "password")
 
-answer = client.ask("What is Clisonix?", include_details=True)
+answer = client.ask("What is Kloud?", include_details=True)
 print(answer['answer'])
 print(answer['details'])
 ```
@@ -340,13 +340,14 @@ print(f"Active streams: {status['alba_streams']}")
 
 - 📖 **Full Guide**: [AUTHENTICATION.md](AUTHENTICATION.md)
 - 🔗 **API Spec**: [openapi.yaml](openapi.yaml)
-- 💻 **Python SDK**: [clisonix_sdk.py](clisonix_sdk.py)
-- 🎯 **TypeScript SDK**: [clisonix_sdk.ts](clisonix_sdk.ts)
+- 💻 **Python SDK**: [kloud_sdk.py](kloud_sdk.py)
+- 🎯 **TypeScript SDK**: [kloud_sdk.ts](kloud_sdk.ts)
 - 📮 **Postman**: [postman_collection_auth.json](postman_collection_auth.json)
 - 🌐 **Landing Page**: [index.html](index.html)
 - 📋 **Implementation**: [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
 
 ---
 
-**Clisonix Cloud** • Enterprise Neural Audio Engine  
+**Kloud Cloud** • Enterprise Neural Audio Engine  
 **Part of UltraWebThinking / Euroweb**
+

@@ -1,5 +1,5 @@
 {
-  "project": "Clisonix Cloud",
+  "project": "Kloud Cloud",
   "version": "1.0.0",
   "environment": "production",
   "api": {
@@ -10,16 +10,16 @@
     "type": "postgresql",
     "host": "localhost",
     "port": 5432,
-    "user": "Clisonix",
+    "user": "Kloud",
     "password": "changeme",
-    "name": "Clisonix_db"
+    "name": "Kloud_db"
   },
   "storage": {
     "path": "./storage"
   },
   "logging": {
     "level": "INFO",
-    "file": "./logs/Clisonix.log"
+    "file": "./logs/Kloud.log"
   },
   "modules": [
     "asi_trinity",
@@ -30,4 +30,5 @@
     "neuroacoustic_converter"
   ]
 }
+
 

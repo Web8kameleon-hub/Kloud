@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Distributed Trace Testing Script for Clisonix Cloud
+Distributed Trace Testing Script for Kloud Cloud
 Tests the ALBA → ALBI → JONA → API pipeline with OpenTelemetry tracing.
 """
 
@@ -200,7 +200,7 @@ def main():
     """Run all tests"""
     print("\n")
     print("╔════════════════════════════════════════════════════════════════════╗")
-    print("║          CLISONIX DISTRIBUTED TRACING - FULL PIPELINE TEST         ║")
+    print("║          KLOUD DISTRIBUTED TRACING - FULL PIPELINE TEST         ║")
     print("║                                                                    ║")
     print("║  This test generates traces through:                              ║")
     print("║  ALBA (5555) → ALBI (6680) → JONA (7777) → Orchestrator (9999)    ║")
@@ -256,7 +256,7 @@ def main():
 1. Open Grafana:
    URL: http://localhost:3001
    User: admin
-   Pass: clisonix123
+   Pass: kloud123
 
 2. Navigate to Explore (Compass icon)
 
@@ -284,4 +284,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

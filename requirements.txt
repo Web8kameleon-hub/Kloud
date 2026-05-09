@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Main Requirements - Updated Feb 2026
+# Kloud Main Requirements - Updated Feb 2026
 # ═══════════════════════════════════════════════════════════════
 
 fastapi>=0.115.6
@@ -60,4 +60,5 @@ opentelemetry-exporter-otlp-proto-http>=1.30.0
 # Payments
 stripe>=12.1.0
 pydantic-extra-types>=2.10.1
+
 

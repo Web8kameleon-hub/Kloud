@@ -1,10 +1,10 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CLISONIX AGENTS - CORE AGENTS                            ║
+║                    KLOUD AGENTS - CORE AGENTS                            ║
 ║           ALBA, ALBI, JONA - The ASI Trinity System                         ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-Core agents for the Clisonix intelligent system:
+Core agents for the Kloud intelligent system:
 - ALBA: Network Telemetry & Data Collection
 - ALBI: Neural Analytics & Pattern Recognition  
 - JONA: Strategic Advisor & Synthesis
@@ -823,3 +823,4 @@ class TrinitySystem:
                 "jona": {"id": self.jona.id, "status": self.jona.status.value}
             }
         }
+

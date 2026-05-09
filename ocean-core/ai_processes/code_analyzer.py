@@ -192,7 +192,7 @@ class CodeAnalyzer:
     }
     
     def __init__(self, ollama_host: Optional[str] = None):
-        self.ollama_host = ollama_host or "http://clisonix-ollama:11434"
+        self.ollama_host = ollama_host or "http://kloud-ollama:11434"
         self._initialized = False
         logger.info("💻 CodeAnalyzer initialized")
     
@@ -595,3 +595,4 @@ def get_code_analyzer() -> CodeAnalyzer:
     if _code_analyzer is None:
         _code_analyzer = CodeAnalyzer()
     return _code_analyzer
+

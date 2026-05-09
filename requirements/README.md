@@ -1,4 +1,4 @@
-# 📦 Clisonix Dependency Management
+# 📦 Kloud Dependency Management
 
 ## Isolation Strategy
 
@@ -79,7 +79,7 @@ pip install -r requirements/ocean.txt
 ### Excel Worker (Separate Container)
 
 ```bash
-docker run clisonix-excel:latest
+docker run kloud-excel:latest
 # Uses requirements/excel.txt internally
 ```
 
@@ -114,3 +114,4 @@ services:
 | openpyxl | ❌  | ❌    | ✅    | ❌  |
 | torch    | ❌  | ❌    | ❌    | ✅  |
 | duckdb   | ❌  | ✅    | ❌    | ❌  |
+

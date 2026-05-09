@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix PyTorch Requirements - Deep Learning (CPU optimized)
+# Kloud PyTorch Requirements - Deep Learning (CPU optimized)
 # ═══════════════════════════════════════════════════════════════
 # For GPU support, use: pip install torch --index-url https://download.pytorch.org/whl/cu121
 
@@ -16,3 +16,4 @@ sentence-transformers>=3.3.0
 
 # Tokenizers
 tokenizers>=0.21.0
+

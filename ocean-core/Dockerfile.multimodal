@@ -27,7 +27,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Environment
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8031
-ENV OLLAMA_HOST=http://clisonix-06-ollama:11434
+ENV OLLAMA_HOST=http://kloud-06-ollama:11434
 
 # Run multimodal service
 CMD ["python", "ocean_multimodal.py"]
+

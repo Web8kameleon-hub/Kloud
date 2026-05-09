@@ -1,7 +1,7 @@
 FROM node:20-alpine
 
-LABEL maintainer="Clisonix Team"
-LABEL description="Kitchen Worker - Newman Test Runner for Clisonix"
+LABEL maintainer="Kloud Team"
+LABEL description="Kitchen Worker - Newman Test Runner for Kloud"
 
 # Install dependencies for newman
 RUN apk add --no-cache \
@@ -53,3 +53,4 @@ RUN addgroup -g 1001 -S nodejs && \
 USER kitchen
 
 CMD ["node", "worker.js"]
+

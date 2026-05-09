@@ -1,4 +1,4 @@
-# CLISONIX NANOGRIDATA PROTOCOL v1.0 - PRODUCTION DEPLOYMENT GUIDE
+# KLOUD NANOGRIDATA PROTOCOL v1.0 - PRODUCTION DEPLOYMENT GUIDE
 
 **Status:** ✅ PRODUCTION READY  
 **Date:** 2026-01-17  
@@ -48,7 +48,7 @@
 
 ```
 HEADER (14 bytes):
-  ├─ Magic: 0xC1 0x53 (Clisonix signature)
+  ├─ Magic: 0xC1 0x53 (Kloud signature)
   ├─ Version: 0x01
   ├─ Model ID: 0x10-0xFF (chip/lab identifier)
   ├─ Payload Type: TELEMETRY | CONFIG | EVENT | COMMAND | CALIBRATION
@@ -161,7 +161,7 @@ ESP32_SECRET=strong_secret_key_32bytes_minimum_required!
 STM32_SECRET=another_strong_secret_key_for_stm32!!
 INFLUX_URL=http://localhost:8086
 INFLUX_TOKEN=your_token_here
-INFLUX_ORG=Clisonix
+INFLUX_ORG=Kloud
 INFLUX_BUCKET=nanogridata
 DATABASE_URL=postgresql://user:pass@localhost/nanogridata
 ```
@@ -266,8 +266,8 @@ void send_sensor_data(uint32_t pressure_pa) {
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 
 # 2. Install dependencies
 npm install
@@ -355,7 +355,7 @@ import { OceanCoreAdapter } from './ocean_core_adapter';
 const adapter = new OceanCoreAdapter({
   influxUrl: process.env.INFLUX_URL!,
   influxToken: process.env.INFLUX_TOKEN!,
-  influxOrg: 'Clisonix',
+  influxOrg: 'Kloud',
   influxBucket: 'nanogridata',
   databaseUrl: process.env.DATABASE_URL!,
   logLevel: 'info',
@@ -568,13 +568,14 @@ errors.forEach(({ timestamp, error }) => {
 ## 📞 SUPPORT
 
 For issues or questions:
-- GitHub Issues: https://github.com/LedjanAhmati/Clisonix-cloud/issues
-- Email: support@clisonix.com
-- Documentation: https://docs.clisonix.com/nanogridata
+- GitHub Issues: https://github.com/LedjanAhmati/Kloud-cloud/issues
+- Email: support@kloud.com
+- Documentation: https://docs.kloud.com/nanogridata
 
 ---
 
 **Created:** 2026-01-17  
 **Last Updated:** 2026-01-17  
 **Maintainer:** Ledjan Ahmati  
-**License:** Proprietary (Clisonix)
+**License:** Proprietary (Kloud)
+

@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Favicon states with their configurations
 const FAVICON_STATES = {
   // Core states
-  default:    { emoji: '🧠', primary: '#8b5cf6', background: '#1e1b4b', label: 'Clisonix Brain' },
+  default:    { emoji: '🧠', primary: '#8b5cf6', background: '#1e1b4b', label: 'Kloud Brain' },
   thinking:   { emoji: '💭', primary: '#8b5cf6', background: '#1e1b4b', label: 'Processing' },
   success:    { emoji: '✅', primary: '#22c55e', background: '#052e16', label: 'Success' },
   alert:      { emoji: '⚠️', primary: '#ef4444', background: '#450a0a', label: 'Alert' },
@@ -243,3 +243,4 @@ function getSuggestedTimeState(): FaviconState {
   if (hour >= 22 || hour < 5) return 'night';
   return 'default';
 }
+

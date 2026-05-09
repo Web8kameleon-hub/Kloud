@@ -64,11 +64,11 @@ curl http://localhost:8000/health  # ✅ Success
 
 ### **Option B: Kubernetes Staging (5 minutes)**
 ```bash
-kubectl create namespace clisonix
+kubectl create namespace kloud
 kubectl apply -f k8s/
-kubectl get all -n clisonix  # ✅ All running
+kubectl get all -n kloud  # ✅ All running
 ```
-- Access: http://api.clisonix.local/docs
+- Access: http://api.kloud.local/docs
 - Monitor: http://prometheus:9090
 - Logs: http://kibana:5601
 - Traces: http://jaeger:16686
@@ -82,16 +82,16 @@ nano .env
 helm install cert-manager jetstack/cert-manager
 helm install nginx-ingress ingress-nginx/ingress-nginx
 
-# 3. Deploy Clisonix
+# 3. Deploy Kloud
 kubectl apply -f k8s/
 
 # 4. Configure DNS + SSL
-# clisonix.com → ingress IP
+# kloud.com → ingress IP
 # Automatic SSL via Let's Encrypt (cert-manager)
 
 # 5. Verify
-kubectl get ingress -n clisonix
-curl https://api.clisonix.com/health  # ✅ HTTPS Working
+kubectl get ingress -n kloud
+curl https://api.kloud.com/health  # ✅ HTTPS Working
 ```
 
 ---
@@ -200,7 +200,7 @@ curl https://api.clisonix.com/health  # ✅ HTTPS Working
 ### Zero Downtime Deployments
 ```bash
 # Rolling update - no downtime
-kubectl set image deployment/clisonix-api clisonix-api=registry:v2.0 -n clisonix
+kubectl set image deployment/kloud-api kloud-api=registry:v2.0 -n kloud
 ```
 
 ### Auto-scaling
@@ -271,15 +271,15 @@ kubectl set image deployment/clisonix-api clisonix-api=registry:v2.0 -n clisonix
 ```bash
 # Check all services
 docker-compose ps  # Local
-kubectl get all -n clisonix  # K8s
+kubectl get all -n kloud  # K8s
 
 # View logs
 docker-compose logs -f api  # Local
-kubectl logs -f deployment/clisonix-api -n clisonix  # K8s
+kubectl logs -f deployment/kloud-api -n kloud  # K8s
 
 # Access shell
 docker-compose exec api /bin/bash  # Local
-kubectl exec -it pod/<name> -n clisonix -- /bin/bash  # K8s
+kubectl exec -it pod/<name> -n kloud -- /bin/bash  # K8s
 ```
 
 ### Monitoring & Debugging
@@ -302,10 +302,10 @@ kubectl exec -it pod/<name> -n clisonix -- /bin/bash  # K8s
 ### Manual Backup
 ```bash
 # Database backup
-docker-compose exec postgres pg_dump -U clisonix clisonix_db | gzip > backup.sql.gz
+docker-compose exec postgres pg_dump -U kloud kloud_db | gzip > backup.sql.gz
 
 # Restore backup
-gunzip < backup.sql.gz | docker-compose exec -T postgres psql -U clisonix clisonix_db
+gunzip < backup.sql.gz | docker-compose exec -T postgres psql -U kloud kloud_db
 ```
 
 ---
@@ -388,8 +388,9 @@ Everything you need to:
 
 ---
 
-**🚀 Ready to deploy Clisonix Cloud!**
+**🚀 Ready to deploy Kloud Cloud!**
 
 **Last Updated**: 2024
 **Version**: 1.0.0
 **Status**: ✅ Production Ready
+

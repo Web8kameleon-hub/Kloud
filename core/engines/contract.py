@@ -4,7 +4,7 @@ ENGINE ADAPTER CONTRACT - Kontrata Unike për të Gjithë Motorët AI
 ═══════════════════════════════════════════════════════════════════════════════
 
 Çdo motor (Ollama, Llama.cpp, vLLM, OpenAI, etc.) implementon këtë kontratë.
-Clisonix nuk pyet "kush" është motori—vetëm flet me adapterin.
+Kloud nuk pyet "kush" është motori—vetëm flet me adapterin.
 
 Request:
 {
@@ -24,7 +24,7 @@ Response:
   "metadata": {...}
 }
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 from abc import ABC, abstractmethod
@@ -392,3 +392,4 @@ __all__ = [
     "list_engines",
     "generate",
 ]
+

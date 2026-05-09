@@ -1,5 +1,5 @@
 /**
- * Clisonix Backend - Layer Architecture Index
+ * Kloud Backend - Layer Architecture Index
  *
  * Layers 1-12: Core AI & Intelligence
  * Layers 13-18: Enterprise Infrastructure
@@ -81,3 +81,4 @@ export const getLayerHealth = () => ({
   version: "2.0.0",
   timestamp: new Date().toISOString(),
 });
+

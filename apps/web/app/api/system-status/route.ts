@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 
 // SERVER-TO-SERVER: Use localhost in development, Docker container name in production
 // In development: localhost:8000
-// In production (Docker): clisonix-api:8000
+// In production (Docker): kloud-api:8000
 const isDev = process.env.NODE_ENV === "development";
 const API_INTERNAL =
   process.env.API_INTERNAL_URL ||
-  (isDev ? "http://localhost:8000" : "http://clisonix-api:8000");
+  (isDev ? "http://localhost:8000" : "http://kloud-api:8000");
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -59,3 +59,4 @@ export async function GET() {
     );
   }
 }
+

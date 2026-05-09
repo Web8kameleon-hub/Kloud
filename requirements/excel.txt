@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Clisonix Excel Requirements - Office Processing (ISOLATED)
+# Kloud Excel Requirements - Office Processing (ISOLATED)
 # ═══════════════════════════════════════════════════════════════
 # ⚠️ INSTALL IN SEPARATE VENV OR CONTAINER
 # ⚠️ DO NOT MIX WITH ML DEPENDENCIES
@@ -30,3 +30,4 @@ python-multipart>=0.0.22
 
 # Config
 python-dotenv>=1.0.1
+

@@ -21,7 +21,7 @@
     "layers/**/*",
     "lib/**/*",
     "../app/modules/**/*",
-    "../app/Clisonix/**/*.ts"
+    "../app/Kloud/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -29,4 +29,5 @@
     "**/*.test.ts"
   ]
 }
+
 

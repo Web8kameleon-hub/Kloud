@@ -1,5 +1,5 @@
 """
-Clisonix Blog Paywall Service
+Kloud Blog Paywall Service
 Premium content access control with Stripe subscriptions
 """
 
@@ -140,8 +140,8 @@ class BlogPaywallService:
         self, 
         email: str, 
         tier: SubscriptionTier,
-        success_url: str = "https://clisonix.com/subscription/success",
-        cancel_url: str = "https://clisonix.com/subscription/cancel"
+        success_url: str = "https://kloud.com/subscription/success",
+        cancel_url: str = "https://kloud.com/subscription/cancel"
     ) -> dict[str, Any]:
         """Create Stripe Checkout session for subscription"""
         if not stripe:
@@ -261,7 +261,7 @@ class BlogPaywallService:
             "has_access": has_access,
             "required_tier": required_tier.value,
             "user_tier": user_tier.value,
-            "upgrade_url": f"https://clisonix.com/subscribe/{required_tier.value}"
+            "upgrade_url": f"https://kloud.com/subscribe/{required_tier.value}"
             if not has_access else None
         }
     
@@ -308,7 +308,7 @@ class BlogPaywallService:
     
     def generate_access_token(self, email: str) -> str:
         """Generate a simple access token for content"""
-        secret = os.getenv("PAYWALL_SECRET", "clisonix-paywall-secret")
+        secret = os.getenv("PAYWALL_SECRET", "kloud-paywall-secret")
         timestamp = datetime.utcnow().isoformat()
         raw = f"{email}:{timestamp}:{secret}"
         return hashlib.sha256(raw.encode()).hexdigest()[:32]
@@ -319,14 +319,14 @@ class BlogPaywallService:
 # ============================================
 
 app = FastAPI(
-    title="Clisonix Blog Paywall",
+    title="Kloud Blog Paywall",
     description="Premium content access with Stripe subscriptions",
     version="1.0.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://clisonix.com", "https://www.clisonix.com"],
+    allow_origins=["https://kloud.com", "https://www.kloud.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -431,7 +431,7 @@ PREMIUM_ARTICLES = {
     "distributed-inference-patterns": SubscriptionTier.PRO,
     
     # Enterprise tier articles
-    "clisonix-architecture-blueprint": SubscriptionTier.ENTERPRISE,
+    "kloud-architecture-blueprint": SubscriptionTier.ENTERPRISE,
     "custom-integration-guide": SubscriptionTier.ENTERPRISE,
 }
 
@@ -442,10 +442,11 @@ for article_id, tier in PREMIUM_ARTICLES.items():
 
 if __name__ == "__main__":
     import uvicorn
-    print("🔒 Clisonix Blog Paywall Service")
+    print("🔒 Kloud Blog Paywall Service")
     print("=" * 50)
     print("Tiers:")
     for tier, config in TIER_CONFIG.items():
         print(f"  {tier.value}: {config.price_cents/100}€/month - {config.name}")
     print("=" * 50)
     uvicorn.run(app, host="0.0.0.0", port=8020)
+

@@ -164,7 +164,7 @@ log "Post-deployment checks..."
 
 # List running containers
 log "Running containers:"
-docker ps --filter "label=project=clisonix" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | tee -a "$LOG_FILE"
+docker ps --filter "label=project=kloud" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | tee -a "$LOG_FILE"
 
 # Show resource usage
 log "Gateway resource usage:"
@@ -210,3 +210,4 @@ cat << 'EOF'
 EOF
 
 log "Deployment log saved to: $LOG_FILE"
+

@@ -33,9 +33,9 @@
 
 | Qëllimi | Email |
 |---------|-------|
-| Suport Teknik | support@clisonix.com |
-| Kontakt i Përgjithshëm | contact@clisonix.com |
-| Investitorë | investors@clisonix.com |
+| Suport Teknik | support@kloud.com |
+| Kontakt i Përgjithshëm | contact@kloud.com |
+| Investitorë | investors@kloud.com |
 
 ---
 
@@ -49,4 +49,5 @@
 
 ---
 
-© 2024-2026 Clisonix Cloud - Të gjitha të drejtat e rezervuara
+© 2024-2026 Kloud Cloud - Të gjitha të drejtat e rezervuara
+

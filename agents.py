@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CLISONIX CLOUD - UNIFIED AGENTS SYSTEM                   ║
+║                    KLOUD CLOUD - UNIFIED AGENTS SYSTEM                   ║
 ║           Scalable Agent Registry + Pool + Communication + Telemetry        ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -1012,7 +1012,7 @@ async def shutdown_agents():
 async def demo():
     """Demo the agent system"""
     print("\n" + "="*70)
-    print("🤖 CLISONIX UNIFIED AGENTS SYSTEM - DEMO")
+    print("🤖 KLOUD UNIFIED AGENTS SYSTEM - DEMO")
     print("="*70 + "\n")
     
     # Create orchestrator
@@ -1066,3 +1066,4 @@ async def demo():
 
 if __name__ == "__main__":
     asyncio.run(demo())
+

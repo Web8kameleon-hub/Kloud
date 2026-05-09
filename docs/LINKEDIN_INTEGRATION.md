@@ -1,4 +1,4 @@
-# 🔗 LinkedIn Integration Guide for Clisonix
+# 🔗 LinkedIn Integration Guide for Kloud
 
 ## Quick Setup (5 minutes)
 
@@ -7,9 +7,9 @@
 1. Go to: **<https://www.linkedin.com/developers/apps>**
 2. Click **"Create App"**
 3. Fill in:
-   - **App name**: `Clisonix Content Factory`
-   - **LinkedIn Page**: Select your company page (ABA GmbH / Clisonix)
-   - **App logo**: Upload Clisonix logo
+   - **App name**: `Kloud Content Factory`
+   - **LinkedIn Page**: Select your company page (ABA GmbH / Kloud)
+   - **App logo**: Upload Kloud logo
    - **Legal agreement**: ✓ Check
 
 ### Step 2: Request Access Products
@@ -35,7 +35,7 @@ Client Secret: xxxxxxxxxxxx
 
 In **Auth** tab → **OAuth 2.0 settings**:
 
-- Add: `https://clisonix.com/api/linkedin/callback`
+- Add: `https://kloud.com/api/linkedin/callback`
 
 ### Step 5: Set Environment Variables
 
@@ -44,7 +44,7 @@ On your server:
 ```bash
 export LINKEDIN_CLIENT_ID="your_client_id"
 export LINKEDIN_CLIENT_SECRET="your_client_secret"
-export LINKEDIN_REDIRECT_URI="https://clisonix.com/api/linkedin/callback"
+export LINKEDIN_REDIRECT_URI="https://kloud.com/api/linkedin/callback"
 export LINKEDIN_ORGANIZATION_URN="urn:li:organization:111866162"
 ```
 
@@ -57,7 +57,7 @@ export LINKEDIN_ORGANIZATION_URN="urn:li:organization:111866162"
    python linkedin_oauth_server.py
    ```
 
-2. Visit: `https://clisonix.com/api/linkedin/auth`
+2. Visit: `https://kloud.com/api/linkedin/auth`
 3. Authorize the app
 4. Save the access token
 
@@ -84,12 +84,12 @@ Full URN: `urn:li:organization:111866162`
 ## Post Example
 
 ```bash
-curl -X POST "https://clisonix.com/api/linkedin/post" \
+curl -X POST "https://kloud.com/api/linkedin/post" \
   -H "Content-Type: application/json" \
   -d '{
-    "commentary": "🧠 Introducing Clisonix Cloud\n\nAI-Powered Industrial Intelligence Platform\n\n✅ Real-time EEG Analysis\n✅ Curiosity Ocean AI Assistant\n✅ 63+ Research Articles\n\n#AI #MedTech #IndustrialAI",
-    "article_url": "https://clisonix.com",
-    "article_title": "Clisonix Cloud - AI Intelligence Platform",
+    "commentary": "🧠 Introducing Kloud Cloud\n\nAI-Powered Industrial Intelligence Platform\n\n✅ Real-time EEG Analysis\n✅ Curiosity Ocean AI Assistant\n✅ 63+ Research Articles\n\n#AI #MedTech #IndustrialAI",
+    "article_url": "https://kloud.com",
+    "article_title": "Kloud Cloud - AI Intelligence Platform",
     "article_description": "Industrial AI platform for EEG analysis and compliance"
   }'
 ```
@@ -157,4 +157,5 @@ results = await publisher.publish(
 
 - LinkedIn Developer Portal: <https://www.linkedin.com/developers/>
 - API Documentation: <https://learn.microsoft.com/en-us/linkedin/marketing/>
-- Clisonix Support: <support@clisonix.com>
+- Kloud Support: <support@kloud.com>
+

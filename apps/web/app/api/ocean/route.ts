@@ -25,7 +25,7 @@ import { NextResponse } from "next/server";
 const isDev = process.env.NODE_ENV !== "production";
 const OCEAN_CORE_URL =
   process.env.OCEAN_CORE_URL ||
-  (isDev ? "http://localhost:8030" : "http://clisonix-ocean-core:8030");
+  (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
 
 // Fallback URL for internal API (used when ocean-core not available)
 const BACKEND_API_URL =
@@ -244,3 +244,4 @@ export async function GET() {
     ],
   });
 }
+

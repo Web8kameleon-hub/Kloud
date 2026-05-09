@@ -3,7 +3,7 @@
 Mesh Cluster Startup Script
 Industrial Launcher for:
  - Distributed Pulse Balancer
- - Clisonix Integrated System
+ - Kloud Integrated System
  - Mesh HQ Receiver
 
 Business: Ledjan Ahmati - WEB8euroweb GmbH
@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent / "apps" / "api"))
 
 try:
-    from Clisonix.colored_logger import setup_logger
+    from Kloud.colored_logger import setup_logger
 except ImportError:
     # Fallback logger if module not found
     import logging
@@ -39,7 +39,7 @@ LOGS_DIR = BASE_DIR / "logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 
-logger = setup_logger("ClisonixCluster")
+logger = setup_logger("KloudCluster")
 
 
 def launch_process(name: str, command: list[str], logfile: Path) -> subprocess.Popen:
@@ -105,7 +105,7 @@ def monitor_processes(processes: Dict[str, subprocess.Popen]) -> None:
 
 if __name__ == "__main__":
     balancer_file = BASE_DIR / "distributed_pulse_balancer.py"
-    integrated_file = BASE_DIR / "Clisonix_integrated_system.py"
+    integrated_file = BASE_DIR / "Kloud_integrated_system.py"
     mesh_file = BASE_DIR / "mesh_hq_receiver.py"
 
     processes: Dict[str, subprocess.Popen] = {}
@@ -118,8 +118,8 @@ if __name__ == "__main__":
 
     time.sleep(3)
 
-    processes["Clisonix Integrated System"] = launch_process(
-        "Clisonix Integrated System",
+    processes["Kloud Integrated System"] = launch_process(
+        "Kloud Integrated System",
         ["python", str(integrated_file)],
         LOGS_DIR / "integrated_run.log",
     )
@@ -135,4 +135,5 @@ if __name__ == "__main__":
     logger.info("All cluster services launched successfully.")
     logger.info("Press CTRL+C to stop all.")
     monitor_processes(processes)
+
 

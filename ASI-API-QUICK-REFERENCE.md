@@ -72,7 +72,7 @@ Invoke-WebRequest -Uri 'http://localhost:8000/api/status/services' | ConvertFrom
 ### Run Full Test Suite
 
 ```powershell
-cd c:\clisonix-cloud
+cd c:\kloud-cloud
 .\scripts\test-cycle.ps1
 ```
 
@@ -187,3 +187,4 @@ Invoke-WebRequest -Uri 'http://localhost:8000/api/metrics?interval=24h' -UseBasi
 
 **Created:** November 30, 2025
 **System Version:** 1.0.0
+

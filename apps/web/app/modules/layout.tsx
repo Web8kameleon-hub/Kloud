@@ -1,12 +1,12 @@
 /**
- * Clisonix Modules Layout
+ * Kloud Modules Layout
  * Advanced neuroacoustic processing, EEG analysis, and industrial monitoring
  */
 
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Clisonix Modules - Advanced Neural Processing',
+  title: 'Kloud Modules - Advanced Neural Processing',
   description: 'Industrial-grade EEG analysis, neuroacoustic conversion, biofeedback training, and spectrum analysis',
 }
 
@@ -23,6 +23,7 @@ export default function ModulesLayout({
     </div>
   )
 }
+
 
 
 

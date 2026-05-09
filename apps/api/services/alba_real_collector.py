@@ -1,7 +1,7 @@
 """
 ðŸ“¡ ALBA - Artificial Laboratory Bits Algorithms (REAL DATA COLLECTOR)
 =====================================================================
-KolektorÃ« real i tÃ« dhÃ«nave qÃ« mbledh informacione nga sistemi Clisonix.
+KolektorÃ« real i tÃ« dhÃ«nave qÃ« mbledh informacione nga sistemi Kloud.
 Real file scanner, real data processor, real metrics collector.
 
 NO FAKE DATA, NO MOCK, REAL COLLECTION ONLY
@@ -22,7 +22,7 @@ class ALBA_RealCollector:
     ðŸ“Š ALBA Real Data Collector qÃ« mbledh tÃ« dhÃ«na reale nga sistemi
     """
     
-    def __init__(self, base_dir="C:/Clisonix-cloud"):
+    def __init__(self, base_dir="C:/Kloud-cloud"):
         self.base_dir = Path(base_dir)
         self.collection_log = self.base_dir / "data" / "alba_collection_log.json"
         self.collected_files = []
@@ -215,5 +215,6 @@ async def create_alba_real() -> ALBA_RealCollector:
     """Krijon njÃ« instance ALBA qÃ« mbledh tÃ« dhÃ«na reale"""
     alba = ALBA_RealCollector()
     return alba
+
 
 

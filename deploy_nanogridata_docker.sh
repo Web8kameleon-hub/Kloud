@@ -105,8 +105,8 @@ log_info "Building Docker image..."
 
 docker build \
   -f Dockerfile.nanogridata \
-  -t clisonix/nanogridata-gateway:latest \
-  -t clisonix/nanogridata-gateway:$(date +%Y%m%d-%H%M%S) \
+  -t kloud/nanogridata-gateway:latest \
+  -t kloud/nanogridata-gateway:$(date +%Y%m%d-%H%M%S) \
   .
 
 if [ $? -eq 0 ]; then
@@ -140,8 +140,8 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -p 5678:5678 \
   -p 5679:5679 \
-  --network clisonix \
-  clisonix/nanogridata-gateway:latest
+  --network kloud \
+  kloud/nanogridata-gateway:latest
 
 if [ $? -eq 0 ]; then
   log_success "Container started successfully"
@@ -194,7 +194,7 @@ echo ""
 echo "Service:        Nanogridata Gateway"
 echo "Status:         🟢 RUNNING"
 echo "Container ID:   $(docker ps --filter name=nanogridata-gateway -q | head -c 12)"
-echo "Image:          clisonix/nanogridata-gateway:latest"
+echo "Image:          kloud/nanogridata-gateway:latest"
 echo ""
 echo "Ports:"
 echo "  - TCP Data:   0.0.0.0:5678"
@@ -222,3 +222,4 @@ echo ""
 
 log_success "🎉 Nanogridata Gateway deployment complete!"
 log_success "Gateway is ready to receive embedded device packets on port 5678"
+

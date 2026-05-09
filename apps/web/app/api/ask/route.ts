@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     const actionProposal = {
       id: uuidv4(),
       description: "Neural command processing from mobile interface",
-      origin: "Clisonix Cloud",
+      origin: "Kloud Cloud",
     };
     const context = { user: userContext.user, environment: "industrial", signal: eeg?.bands };
     const ethics = await jona.evaluateEthicalAction(actionProposal, context);
@@ -105,3 +105,4 @@ export async function POST(request: Request) {
     return NextResponse.json(errorResp, { status: 500 });
   }
 }
+

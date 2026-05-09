@@ -29,10 +29,10 @@ interface ApiToolResponse {
 
 const DEFAULT_TOOLS: ChatTool[] = [
 	{
-		id: 'clisonix-health-scan',
-		label: 'Clisonix Health Scan',
+		id: 'kloud-health-scan',
+		label: 'Kloud Health Scan',
 		description:
-			'Run an instant diagnostic against Clisonix mesh nodes, pipeline latency, and Core-A/Core-B heartbeat.',
+			'Run an instant diagnostic against Kloud mesh nodes, pipeline latency, and Core-A/Core-B heartbeat.',
 		category: 'triage',
 		latency: '~1.4s',
 		endpoint: '/api/diagnostics/mesh-health',
@@ -196,7 +196,7 @@ const LiveChatTools = () => {
 					</span>
 				</h2>
 				<p className={styles.subtitle}>
-					Activate Clisonix runbooks, neural diagnostics, and ASI automations directly from the chat console.
+					Activate Kloud runbooks, neural diagnostics, and ASI automations directly from the chat console.
 				</p>
 				<button className={styles.refreshButton} type="button" onClick={fetchTools} disabled={loading}>
 					🔄 {loading ? 'Refreshing…' : 'Refresh Catalogue'}
@@ -251,4 +251,5 @@ const LiveChatTools = () => {
 };
 
 export default LiveChatTools;
+
 

@@ -19,7 +19,7 @@ import os
 
 # Config
 EXCEL_PATH = 'c:/Users/Admin/Desktop/LIVE_API_DASHBOARD.xlsx'
-BASE_URL = 'https://clisonix.com'
+BASE_URL = 'https://kloud.com'
 REFRESH_INTERVAL = 30  # sekonda
 
 # Styles
@@ -235,7 +235,7 @@ def create_live_excel():
 def run_continuous():
     """Ekzekuton përditësimin e vazhdueshëm"""
     print('=' * 60)
-    print('🔴 LIVE EXCEL DASHBOARD - Clisonix API Monitor')
+    print('🔴 LIVE EXCEL DASHBOARD - Kloud API Monitor')
     print('=' * 60)
     print(f'📁 File: {EXCEL_PATH}')
     print(f'🔄 Refresh: çdo {REFRESH_INTERVAL} sekonda')
@@ -262,3 +262,4 @@ if __name__ == '__main__':
         run_continuous()
     except KeyboardInterrupt:
         print('\n\n👋 Dashboard u ndal. Mirupafshim!')
+

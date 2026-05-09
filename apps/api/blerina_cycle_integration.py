@@ -10,7 +10,7 @@ from datetime import datetime
 class BlerinaCycleIntegration:
     """Integrimi i Blerina (YouTube reformatter) me Cycle Engine"""
     
-    def __init__(self, api_url: str = "http://clisonix-api:8000"):
+    def __init__(self, api_url: str = "http://kloud-api:8000"):
         self.api_url = api_url
         self.source = "youtube"
         self.task = "reformat"
@@ -18,7 +18,7 @@ class BlerinaCycleIntegration:
     async def create_blerina_cycle(
         self,
         domain: str = "media",
-        youtube_query: str = "clisonix",
+        youtube_query: str = "kloud",
         interval: int = 3600,  # 1 hour
         alignment: str = "moderate"
     ) -> Dict[str, Any]:
@@ -109,3 +109,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

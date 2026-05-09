@@ -1,17 +1,17 @@
 """
-Clisonix Cloud Python SDK
+Kloud Cloud Python SDK
 ==========================
 
-Official Python SDK for Clisonix Cloud API - Neural harmonic processing,
+Official Python SDK for Kloud Cloud API - Neural harmonic processing,
 EEG analysis, and ASI Trinity integration.
 
 Installation:
-    pip install clisonix
+    pip install kloud
 
 Quick Start:
-    from clisonix import Clisonix
+    from kloud import Kloud
     
-    client = Clisonix(api_key="your-api-key")
+    client = Kloud(api_key="your-api-key")
     
     # Check system health
     health = client.core.health()
@@ -33,19 +33,19 @@ import urllib.error
 import urllib.parse
 
 __version__ = "1.0.0"
-__author__ = "Clisonix Cloud"
+__author__ = "Kloud Cloud"
 
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
 
 @dataclass
-class ClisonixConfig:
+class KloudConfig:
     """SDK Configuration"""
     api_key: str
-    base_url: str = "https://api.clisonix.com"
-    reporting_url: str = "https://reporting.clisonix.com"
-    excel_url: str = "https://excel.clisonix.com"
+    base_url: str = "https://api.kloud.com"
+    reporting_url: str = "https://reporting.kloud.com"
+    excel_url: str = "https://excel.kloud.com"
     timeout: int = 30
     retries: int = 3
     debug: bool = False
@@ -55,8 +55,8 @@ class ClisonixConfig:
 # EXCEPTIONS
 # =============================================================================
 
-class ClisonixError(Exception):
-    """Base exception for Clisonix SDK"""
+class KloudError(Exception):
+    """Base exception for Kloud SDK"""
     def __init__(self, message: str, code: str = "UNKNOWN", status_code: int = 500):
         self.message = message
         self.code = code
@@ -64,25 +64,25 @@ class ClisonixError(Exception):
         super().__init__(self.message)
 
 
-class AuthenticationError(ClisonixError):
+class AuthenticationError(KloudError):
     """Authentication failed"""
     def __init__(self, message: str = "Invalid API key"):
         super().__init__(message, "AUTHENTICATION_FAILED", 401)
 
 
-class RateLimitError(ClisonixError):
+class RateLimitError(KloudError):
     """Rate limit exceeded"""
     def __init__(self, message: str = "Rate limit exceeded"):
         super().__init__(message, "RATE_LIMIT_EXCEEDED", 429)
 
 
-class ValidationError(ClisonixError):
+class ValidationError(KloudError):
     """Request validation failed"""
     def __init__(self, message: str):
         super().__init__(message, "VALIDATION_ERROR", 400)
 
 
-class NotFoundError(ClisonixError):
+class NotFoundError(KloudError):
     """Resource not found"""
     def __init__(self, message: str = "Resource not found"):
         super().__init__(message, "NOT_FOUND", 404)
@@ -95,7 +95,7 @@ class NotFoundError(ClisonixError):
 class HttpClient:
     """HTTP client with retry logic"""
     
-    def __init__(self, config: ClisonixConfig):
+    def __init__(self, config: KloudConfig):
         self.config = config
     
     def _request(
@@ -110,7 +110,7 @@ class HttpClient:
         default_headers = {
             "Content-Type": "application/json",
             "X-API-Key": self.config.api_key,
-            "User-Agent": f"clisonix-python-sdk/{__version__}"
+            "User-Agent": f"kloud-python-sdk/{__version__}"
         }
         
         if headers:
@@ -154,12 +154,12 @@ class HttpClient:
                 elif status_code == 400:
                     raise ValidationError(error_msg)
                 else:
-                    last_error = ClisonixError(error_msg, error_code, status_code)
+                    last_error = KloudError(error_msg, error_code, status_code)
                     
             except urllib.error.URLError as e:
-                last_error = ClisonixError(f"Connection error: {e.reason}", "CONNECTION_ERROR", 0)
+                last_error = KloudError(f"Connection error: {e.reason}", "CONNECTION_ERROR", 0)
             except Exception as e:
-                last_error = ClisonixError(str(e), "UNKNOWN", 0)
+                last_error = KloudError(str(e), "UNKNOWN", 0)
             
             # Exponential backoff
             if attempt < self.config.retries - 1:
@@ -167,7 +167,7 @@ class HttpClient:
         
         if last_error:
             raise last_error
-        raise ClisonixError("Request failed after retries")
+        raise KloudError("Request failed after retries")
     
     def get(self, path: str, base_url: Optional[str] = None) -> Dict[str, Any]:
         url = (base_url or self.config.base_url) + path
@@ -464,7 +464,7 @@ class BillingAPI:
 class ReportingAPI:
     """Reporting API - Docker and system metrics (Port 8001)"""
     
-    def __init__(self, client: HttpClient, config: ClisonixConfig):
+    def __init__(self, client: HttpClient, config: KloudConfig):
         self._client = client
         self._base_url = config.reporting_url
     
@@ -496,7 +496,7 @@ class ReportingAPI:
 class ExcelAPI:
     """Excel API - Excel and reporting operations (Port 8002)"""
     
-    def __init__(self, client: HttpClient, config: ClisonixConfig):
+    def __init__(self, client: HttpClient, config: KloudConfig):
         self._client = client
         self._base_url = config.excel_url
     
@@ -545,17 +545,17 @@ class ExcelAPI:
 # MAIN SDK CLASS
 # =============================================================================
 
-class Clisonix:
+class Kloud:
     """
-    Clisonix Cloud SDK
+    Kloud Cloud SDK
     
-    Official Python SDK for Clisonix Cloud API - Neural harmonic processing,
+    Official Python SDK for Kloud Cloud API - Neural harmonic processing,
     EEG analysis, and ASI Trinity integration.
     
     Example:
-        >>> from clisonix import Clisonix
+        >>> from kloud import Kloud
         >>> 
-        >>> client = Clisonix(api_key="your-api-key")
+        >>> client = Kloud(api_key="your-api-key")
         >>> 
         >>> # Check system health
         >>> health = client.core.health()
@@ -584,18 +584,18 @@ class Clisonix:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = "https://api.clisonix.com",
-        reporting_url: str = "https://reporting.clisonix.com",
-        excel_url: str = "https://excel.clisonix.com",
+        base_url: str = "https://api.kloud.com",
+        reporting_url: str = "https://reporting.kloud.com",
+        excel_url: str = "https://excel.kloud.com",
         timeout: int = 30,
         retries: int = 3,
         debug: bool = False
     ):
         """
-        Initialize Clisonix SDK
+        Initialize Kloud SDK
         
         Args:
-            api_key: API key (or set CLISONIX_API_KEY environment variable)
+            api_key: API key (or set KLOUD_API_KEY environment variable)
             base_url: Base URL for main API
             reporting_url: URL for Reporting microservice
             excel_url: URL for Excel microservice
@@ -604,13 +604,13 @@ class Clisonix:
             debug: Enable debug logging
         """
         # Get API key from environment if not provided
-        api_key = api_key or os.environ.get("CLISONIX_API_KEY")
+        api_key = api_key or os.environ.get("KLOUD_API_KEY")
         if not api_key:
             raise ValueError(
-                "API key required. Pass api_key parameter or set CLISONIX_API_KEY environment variable."
+                "API key required. Pass api_key parameter or set KLOUD_API_KEY environment variable."
             )
         
-        self._config = ClisonixConfig(
+        self._config = KloudConfig(
             api_key=api_key,
             base_url=base_url,
             reporting_url=reporting_url,
@@ -656,9 +656,9 @@ class Clisonix:
 def create_client(
     api_key: Optional[str] = None,
     **kwargs
-) -> Clisonix:
+) -> Kloud:
     """
-    Create a Clisonix client
+    Create a Kloud client
     
     Convenience function to create a client instance.
     
@@ -667,9 +667,9 @@ def create_client(
         **kwargs: Additional config options
         
     Returns:
-        Clisonix: Client instance
+        Kloud: Client instance
     """
-    return Clisonix(api_key=api_key, **kwargs)
+    return Kloud(api_key=api_key, **kwargs)
 
 
 # =============================================================================
@@ -680,7 +680,7 @@ def main():
     """CLI interface for testing"""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Clisonix Cloud SDK CLI")
+    parser = argparse.ArgumentParser(description="Kloud Cloud SDK CLI")
     parser.add_argument("--api-key", help="API key")
     parser.add_argument("--health", action="store_true", help="Check health")
     parser.add_argument("--status", action="store_true", help="Get status")
@@ -690,7 +690,7 @@ def main():
     args = parser.parse_args()
     
     try:
-        client = Clisonix(api_key=args.api_key)
+        client = Kloud(api_key=args.api_key)
         
         if args.health:
             result = client.core.health()
@@ -705,13 +705,14 @@ def main():
             result = client.reporting.docker_containers()
             print(json.dumps(result, indent=2))
         else:
-            print(f"Clisonix SDK v{__version__}")
+            print(f"Kloud SDK v{__version__}")
             print("Use --help for available commands")
             
-    except ClisonixError as e:
+    except KloudError as e:
         print(f"Error: {e.message} (code: {e.code})")
         exit(1)
 
 
 if __name__ == "__main__":
     main()
+

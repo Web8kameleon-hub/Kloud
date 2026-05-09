@@ -146,7 +146,7 @@ async def chat(req: Req, request: Request):
     # Rate limit
     allowed, remaining = check_rate(user_id, admin)
     if not allowed:
-        raise HTTPException(429, "Rate limit exceeded - upgrade at clisonix.com/pricing")
+        raise HTTPException(429, "Rate limit exceeded - upgrade at kloud.com/pricing")
     
     add_memory(session, "user", q)
     
@@ -250,3 +250,4 @@ async def clear_memory(session_id: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

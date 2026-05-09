@@ -20,7 +20,7 @@ Ruajtur si YAML:
     - type: llm
       engine: ollama:deepthink
 
-Author: Ledjan Ahmati / Clisonix
+Author: Ledjan Ahmati / Kloud
 """
 
 from dataclasses import dataclass, field
@@ -376,7 +376,7 @@ class PipelineExecutor:
                     messages.append(EngineMessage(role=msg.get("role", "user"), content=msg.get("content", "")))
         
         request = EngineRequest(
-            engine_id=step.engine or "ollama:clisonix-ocean:v2",
+            engine_id=step.engine or "ollama:kloud-ocean:v2",
             mode=EngineMode.CHAT,
             messages=messages,
         )
@@ -522,7 +522,7 @@ RAG_PIPELINE = Pipeline(
             id="generate_answer",
             name="Generate Answer",
             type=StepType.LLM,
-            engine="ollama:clisonix-ocean:v2",
+            engine="ollama:kloud-ocean:v2",
             config={
                 "system_prompt": "Answer the question based on the provided context. Be concise and accurate."
             },
@@ -541,7 +541,7 @@ SIMPLE_CHAT_PIPELINE = Pipeline(
             id="generate",
             name="Generate Response",
             type=StepType.LLM,
-            engine="ollama:clisonix-ocean:v2",
+            engine="ollama:kloud-ocean:v2",
         ),
     ],
     tags=["chat", "simple"],
@@ -651,3 +651,4 @@ __all__ = [
     "execute_pipeline",
     "list_pipelines",
 ]
+

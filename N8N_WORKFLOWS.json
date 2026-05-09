@@ -1,8 +1,8 @@
 {
   "n8n_workflows": {
     "metadata": {
-      "title": "Clisonix Cloud - n8n Workflow Templates",
-      "description": "Ready-to-use n8n workflows for Clisonix monitoring and automation",
+      "title": "Kloud Cloud - n8n Workflow Templates",
+      "description": "Ready-to-use n8n workflows for Kloud monitoring and automation",
       "date_created": "2025-12-10",
       "version": "1.0",
       "instructions": "Import these workflows into n8n by: Settings → Import → Paste JSON"
@@ -24,7 +24,7 @@
             }
           },
           {
-            "name": "Fetch Clisonix Status",
+            "name": "Fetch Kloud Status",
             "type": "n8n-nodes-base.httpRequest",
             "config": {
               "method": "GET",
@@ -36,9 +36,9 @@
             "name": "Extract ALBI EEG Metrics",
             "type": "n8n-nodes-base.set",
             "config": {
-              "alpha_band": "{{ $node['Fetch Clisonix Status'].json.asi.albi.eeg_metrics.alpha }}",
-              "theta_band": "{{ $node['Fetch Clisonix Status'].json.asi.albi.eeg_metrics.theta }}",
-              "beta_band": "{{ $node['Fetch Clisonix Status'].json.asi.albi.eeg_metrics.beta }}"
+              "alpha_band": "{{ $node['Fetch Kloud Status'].json.asi.albi.eeg_metrics.alpha }}",
+              "theta_band": "{{ $node['Fetch Kloud Status'].json.asi.albi.eeg_metrics.theta }}",
+              "beta_band": "{{ $node['Fetch Kloud Status'].json.asi.albi.eeg_metrics.beta }}"
             }
           },
           {
@@ -67,7 +67,7 @@
             "name": "Send Slack Alert",
             "type": "n8n-nodes-base.slack",
             "config": {
-              "channel": "#clisonix-alerts",
+              "channel": "#kloud-alerts",
               "text": "🚨 **EEG Anomaly Detected**\n\nAlpha: {{ $node['Extract ALBI EEG Metrics'].json.alpha_band }}\nTheta: {{ $node['Extract ALBI EEG Metrics'].json.theta_band }}\n\n**AI Analysis:**\n{{ $node['Call Claude Interpretation'].json.interpretation }}"
             }
           },
@@ -135,9 +135,9 @@
                 "routing_key": "{{ env.PAGERDUTY_KEY }}",
                 "event_action": "trigger",
                 "payload": {
-                  "summary": "Clisonix: High request rate detected",
+                  "summary": "Kloud: High request rate detected",
                   "severity": "critical",
-                  "source": "n8n-clisonix-monitor",
+                  "source": "n8n-kloud-monitor",
                   "custom_details": {
                     "current_rate": "{{ $node['Query Prometheus'].json.data.result[0].value[1] }}",
                     "threshold": 100,
@@ -151,7 +151,7 @@
       },
       {
         "id": "workflow_daily_health_report",
-        "name": "Daily Clisonix Health Report",
+        "name": "Daily Kloud Health Report",
         "description": "Generate and email daily health report every morning",
         "trigger": "Every day at 8 AM",
         "nodes": [
@@ -180,7 +180,7 @@
               "method": "GET",
               "url": "http://localhost:9090/api/v1/query",
               "queryParameters": {
-                "query": "up{job='clisonix'}"
+                "query": "up{job='kloud'}"
               },
               "responseFormat": "json"
             }
@@ -202,7 +202,7 @@
             "name": "Format HTML Report",
             "type": "n8n-nodes-base.set",
             "config": {
-              "html_report": "{{ `<h1>Clisonix Daily Health Report</h1><p>Generated: {{ new Date().toISOString() }}</p><h2>System Status</h2><pre>${JSON.stringify($node['Fetch System Health'].json, null, 2)}</pre><h2>AI Trinity Analysis</h2><pre>${JSON.stringify($node['Call CrewAI Trinity Analysis'].json, null, 2)}</pre>` }}"
+              "html_report": "{{ `<h1>Kloud Daily Health Report</h1><p>Generated: {{ new Date().toISOString() }}</p><h2>System Status</h2><pre>${JSON.stringify($node['Fetch System Health'].json, null, 2)}</pre><h2>AI Trinity Analysis</h2><pre>${JSON.stringify($node['Call CrewAI Trinity Analysis'].json, null, 2)}</pre>` }}"
             }
           },
           {
@@ -210,7 +210,7 @@
             "type": "n8n-nodes-base.emailSendGmail",
             "config": {
               "to": "{{ env.REPORT_EMAIL }}",
-              "subject": "Clisonix Daily Health Report - {{ new Date().toLocaleDateString() }}",
+              "subject": "Kloud Daily Health Report - {{ new Date().toLocaleDateString() }}",
               "html": "{{ $node['Format HTML Report'].json.html_report }}"
             }
           },
@@ -279,7 +279,7 @@
             "type": "n8n-nodes-base.httpRequest",
             "config": {
               "method": "PATCH",
-              "url": "{{ env.KUBERNETES_API }}/apis/apps/v1/namespaces/default/deployments/clisonix-alba/scale",
+              "url": "{{ env.KUBERNETES_API }}/apis/apps/v1/namespaces/default/deployments/kloud-alba/scale",
               "headers": {
                 "Authorization": "Bearer {{ env.KUBERNETES_TOKEN }}"
               },
@@ -310,15 +310,15 @@
       {
         "id": "workflow_slack_integration",
         "name": "Slack Integration & Notifications",
-        "description": "Send Clisonix updates and alerts to Slack",
-        "trigger": "Webhook from Clisonix API",
+        "description": "Send Kloud updates and alerts to Slack",
+        "trigger": "Webhook from Kloud API",
         "nodes": [
           {
             "name": "Webhook Trigger",
             "type": "n8n-nodes-base.webhook",
             "config": {
-              "path": "clisonix-webhook",
-              "description": "Receives events from Clisonix API"
+              "path": "kloud-webhook",
+              "description": "Receives events from Kloud API"
             }
           },
           {
@@ -376,14 +376,14 @@
       "KUBERNETES_API": "Kubernetes API endpoint for auto-scaling",
       "KUBERNETES_TOKEN": "Kubernetes authentication token",
       "REPORT_EMAIL": "Email address for daily reports",
-      "CLISONIX_API_URL": "Base URL of Clisonix API (default: http://localhost:8000)"
+      "KLOUD_API_URL": "Base URL of Kloud API (default: http://localhost:8000)"
     },
     "usage_examples": {
       "eeg_monitoring": "Monitors EEG anomalies every 5 min, interprets with Claude, alerts via Slack",
       "prometheus_monitoring": "Checks Prometheus metrics every 10 min, triggers PagerDuty if threshold exceeded",
       "daily_reports": "Generates comprehensive reports using CrewAI Trinity at 8 AM daily",
       "auto_scaling": "Monitors load every 30s, scales Kubernetes deployment when needed",
-      "slack_integration": "Receives webhook events from Clisonix, formats and sends to appropriate Slack channel"
+      "slack_integration": "Receives webhook events from Kloud, formats and sends to appropriate Slack channel"
     },
     "next_steps": [
       "Install n8n: docker run -it --rm -p 5678:5678 -v ~/.n8n:/home/node/.n8n n8nio/n8n:latest",
@@ -396,4 +396,5 @@
     ]
   }
 }
+
 

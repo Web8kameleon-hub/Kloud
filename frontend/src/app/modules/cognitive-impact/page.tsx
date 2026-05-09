@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 /**
  * COGNITIVE IMPACT MONITOR
- * Clisonix Neural Performance Module
+ * Kloud Neural Performance Module
  * 
  * Real-time weather data with cognitive impact analysis
  * How environment affects your brain performance
@@ -622,7 +622,7 @@ export default function WeatherDashboard() {
 
                 {/* Footer */}
                 <div className="mt-8 text-center text-xs text-gray-600">
-                    Cognitive Impact Monitor - Clisonix Cloud - Real-time Open-Meteo Data
+                    Cognitive Impact Monitor - Kloud Cloud - Real-time Open-Meteo Data
                 </div>
             </div>
         </div>
@@ -635,3 +635,4 @@ export default dynamic(() => Promise.resolve(CognitiveImpactDashboard), { ssr: f
 function CognitiveImpactDashboard() {
     return <WeatherDashboard />;
 }
+

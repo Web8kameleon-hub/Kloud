@@ -1,5 +1,5 @@
 """
-Clisonix Industrial File Upload System
+Kloud Industrial File Upload System
 Advanced file handling, validation, storage, and metadata extraction
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 
@@ -389,5 +389,6 @@ class IndustrialFileValidator:
 
 # Initialize validator
 file_validator = IndustrialFileValidator()
+
 
 

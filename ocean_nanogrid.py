@@ -41,7 +41,7 @@ def load_api_keys() -> dict:
         with open(API_KEYS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
-        return {"dev": "clisonix-dev-key-2025"}
+        return {"dev": "kloud-dev-key-2025"}
 
 
 def verify_api_key(api_key: Optional[str] = Security(api_key_header)) -> str:
@@ -97,7 +97,7 @@ def get_realtime_context() -> str:
 - Air Quality (OpenAQ)
 - Earthquake data (USGS)
 
-## CLISONIX AGENTS (Internal Services)
+## KLOUD AGENTS (Internal Services)
 - ALBA: Audio/EEG Analysis (port 5555)
 - ALBI: Neural Biofeedback (port 6680)
 - ASI: Advanced System Intelligence
@@ -362,7 +362,7 @@ For specific statistics, visit instat.gov.al or bankofalbania.org"""
 
 
 # ═══════════════════════════════════════════════════════════════════
-# CLISONIX INTERNAL SERVICES - ALBA, ALBI, ASI, Kitchen
+# KLOUD INTERNAL SERVICES - ALBA, ALBI, ASI, Kitchen
 # ═══════════════════════════════════════════════════════════════════
 
 INTERNAL_SERVICES = {
@@ -427,7 +427,7 @@ async def get_laboratory_status(lab_id: str = None) -> str:
         # All labs summary
         labs = _lab_network.get_all_laboratories()
         lab_list = "\n".join([f"- {lab.lab_id}: {lab.function} ({lab.location})" for lab in labs[:10]])
-        return f"""🔬 CLISONIX LABORATORY NETWORK ({len(labs)} labs):
+        return f"""🔬 KLOUD LABORATORY NETWORK ({len(labs)} labs):
 {lab_list}
 ... and {len(labs) - 10} more
 
@@ -505,7 +505,7 @@ async def get_binary_context() -> str:
 
 
 async def get_internal_service_status() -> str:
-    """Check status of all Clisonix internal services"""
+    """Check status of all Kloud internal services"""
     results = []
     async with httpx.AsyncClient(timeout=2.0) as client:
         for _name, config in INTERNAL_SERVICES.items():
@@ -517,7 +517,7 @@ async def get_internal_service_status() -> str:
                     results.append(f"⚠️ {config['name']} (:{config['port']}) - {r.status_code}")
             except Exception:  # noqa: BLE001
                 results.append(f"❌ {config['name']} (:{config['port']}) - offline")
-    return "🔧 Clisonix Services:\n" + "\n".join(results)
+    return "🔧 Kloud Services:\n" + "\n".join(results)
 
 
 async def call_alba_analyze(data: dict) -> dict:
@@ -803,7 +803,7 @@ async def fetch_webpage(url: str, max_chars: int = 8000) -> str:
             url = "https://" + url
 
         async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-            headers = {"User-Agent": "Mozilla/5.0 (compatible; ClisonixOcean/1.0)"}
+            headers = {"User-Agent": "Mozilla/5.0 (compatible; KloudOcean/1.0)"}
             resp = await client.get(url, headers=headers)
 
             if resp.status_code != 200:
@@ -833,7 +833,7 @@ async def search_web(query: str, num_results: int = 5) -> list:
     try:
         search_url = f"https://html.duckduckgo.com/html/?q={query}"
         async with httpx.AsyncClient(timeout=10.0) as client:
-            headers = {"User-Agent": "Mozilla/5.0 (compatible; ClisonixOcean/1.0)"}
+            headers = {"User-Agent": "Mozilla/5.0 (compatible; KloudOcean/1.0)"}
             resp = await client.get(search_url, headers=headers)
 
             if resp.status_code != 200:
@@ -1096,7 +1096,7 @@ def build_system_prompt(extra_context: str = "") -> str:
     realtime = get_realtime_context()
     identity = get_identity_short()
     return f"""{identity}
-When asked who you are, say: "I am Ocean 🌊, AI of Clisonix Cloud, created by Ledjan Ahmati."
+When asked who you are, say: "I am Ocean 🌊, AI of Kloud Cloud, created by Ledjan Ahmati."
 Never say you are ChatGPT, Llama, or any other AI.
 
 {realtime}
@@ -1267,7 +1267,7 @@ async def chat(req: Req, request: Request):
             "error": "Rate limit exceeded",
             "limit": FREE_TIER_LIMIT,
             "period": "1 hour",
-            "upgrade_url": "https://clisonix.com/pricing"
+            "upgrade_url": "https://kloud.com/pricing"
         })
 
     client = await get_client()
@@ -1512,7 +1512,7 @@ async def binary_convert(value: int, bits: int = 8):
 @app.get("/api/v1/labs")
 async def list_laboratories():
     """
-    Lista e 23 laboratorëve të Clisonix
+    Lista e 23 laboratorëve të Kloud
 
     Returns: All laboratories with their functions and locations
     """
@@ -2259,3 +2259,4 @@ async def start_keepalive():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

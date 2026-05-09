@@ -1,4 +1,4 @@
-"""OpenTelemetry Tracing Configuration for Clisonix Cloud.
+"""OpenTelemetry Tracing Configuration for Kloud Cloud.
 
 This module provides distributed tracing setup for all microservices,
 enabling enterprise-level observability through Grafana Tempo.
@@ -85,7 +85,7 @@ def setup_tracing(
         otlp_exporter = OTLPSpanExporter(
             endpoint=tempo_endpoint,
             timeout=10,
-            headers={"User-Agent": f"clisonix/{service_name}"},
+            headers={"User-Agent": f"kloud/{service_name}"},
         )
         batch_processor = BatchSpanProcessor(
             otlp_exporter,
@@ -213,4 +213,5 @@ __all__ = [
     "create_span_with_error_handling",
     "get_trace_context_headers",
 ]
+
 

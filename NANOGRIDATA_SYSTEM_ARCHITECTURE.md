@@ -387,7 +387,7 @@ PRODUCTION READY
 - `nanogridata_gateway.ts` - Gateway TypeScript source
 
 **GitHub Repository**:
-- https://github.com/LedjanAhmati/Clisonix-cloud
+- https://github.com/LedjanAhmati/Kloud-cloud
 - Latest commits: b4fa87f (gateway) → 0b3ee66 (guide)
 
 **Quick Links**:
@@ -401,3 +401,4 @@ PRODUCTION READY
 **Last Updated**: 2026-01-17 14:30 UTC  
 **Version**: 1.0.0 Final  
 **Quality**: Enterprise-Grade
+

@@ -1,4 +1,4 @@
-# 📋 CLISONIX OFFICE SCRIPTS
+# 📋 KLOUD OFFICE SCRIPTS
 
 ## 🗂️ Struktura e Kolonave në Excel
 
@@ -39,7 +39,7 @@
 
 **Variablat që duhet të ndryshosh:**
 ```typescript
-const BASE_URL = "https://api.clisonix.com";  // Ndryshoje me URL-në tënde
+const BASE_URL = "https://api.kloud.com";  // Ndryshoje me URL-në tënde
 const TOKEN = "YOUR_API_TOKEN";                // Vendos token-in
 ```
 
@@ -104,3 +104,4 @@ python production_ready_template.py
 # Automate → New Script → Paste kod
 # Run
 ```
+

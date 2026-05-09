@@ -89,7 +89,7 @@
 
 #### 6.4 Ingress & TLS (`k8s/04-ingress-tls.yaml`)
 - Nginx Ingress with rate limiting
-- Multiple routes (api.clisonix.com, app.clisonix.com)
+- Multiple routes (api.kloud.com, app.kloud.com)
 - Automatic SSL via cert-manager
 - Let's Encrypt integration (prod + staging)
 - Security headers
@@ -131,8 +131,8 @@ cp .env.example .env
 mkdir -p logs uploads nginx/ssl db/migrations
 
 # Create SSL certificates
-openssl req -x509 -newkey rsa:2048 -keyout nginx/ssl/clisonix.key \
-  -out nginx/ssl/clisonix.crt -days 365 -nodes \
+openssl req -x509 -newkey rsa:2048 -keyout nginx/ssl/kloud.key \
+  -out nginx/ssl/kloud.crt -days 365 -nodes \
   -subj "/CN=localhost"
 
 # Start all services
@@ -146,7 +146,7 @@ curl http://localhost:8000/health
 ### Kubernetes (Production)
 ```bash
 # Prerequisites
-kubectl create namespace clisonix
+kubectl create namespace kloud
 helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --create-namespace
 helm install cert-manager jetstack/cert-manager -n cert-manager --create-namespace --set installCRDs=true
 
@@ -158,8 +158,8 @@ kubectl apply -f k8s/04-ingress-tls.yaml
 kubectl apply -f k8s/05-monitoring.yaml
 
 # Verify
-kubectl get all -n clisonix
-kubectl get ingress -n clisonix
+kubectl get all -n kloud
+kubectl get ingress -n kloud
 ```
 
 ---
@@ -326,40 +326,40 @@ Application:
 ### Deployment Updates
 ```bash
 # Update image
-kubectl set image deployment/clisonix-api \
-  clisonix-api=registry/clisonix-api:2.0.0 -n clisonix
+kubectl set image deployment/kloud-api \
+  kloud-api=registry/kloud-api:2.0.0 -n kloud
 
 # Watch rollout
-kubectl rollout status deployment/clisonix-api -n clisonix
+kubectl rollout status deployment/kloud-api -n kloud
 
 # Rollback if needed
-kubectl rollout undo deployment/clisonix-api -n clisonix
+kubectl rollout undo deployment/kloud-api -n kloud
 ```
 
 ### Database Maintenance
 ```bash
 # Backup
-kubectl exec -it postgres-0 -n clisonix -- \
-  pg_dump -U clisonix clisonix_db | gzip > backup.sql.gz
+kubectl exec -it postgres-0 -n kloud -- \
+  pg_dump -U kloud kloud_db | gzip > backup.sql.gz
 
 # Run migrations
-kubectl exec -it deployment/clisonix-api -n clisonix -- \
+kubectl exec -it deployment/kloud-api -n kloud -- \
   alembic upgrade head
 ```
 
 ### Troubleshooting
 ```bash
 # View logs
-kubectl logs -f deployment/clisonix-api -n clisonix
+kubectl logs -f deployment/kloud-api -n kloud
 
 # Describe pod
-kubectl describe pod <pod-name> -n clisonix
+kubectl describe pod <pod-name> -n kloud
 
 # Execute command
-kubectl exec -it <pod> -n clisonix -- /bin/bash
+kubectl exec -it <pod> -n kloud -- /bin/bash
 
 # Port forward
-kubectl port-forward svc/clisonix-api-service 8000:8000 -n clisonix
+kubectl port-forward svc/kloud-api-service 8000:8000 -n kloud
 ```
 
 ---
@@ -483,8 +483,8 @@ kubectl port-forward svc/clisonix-api-service 8000:8000 -n clisonix
 - Common: Pod pending, CrashLoopBackOff, image pull errors
 
 **Production Issues**:
-- Review pod logs: `kubectl logs -f <pod> -n clisonix`
-- Check events: `kubectl get events -n clisonix`
+- Review pod logs: `kubectl logs -f <pod> -n kloud`
+- Check events: `kubectl get events -n kloud`
 - Access Prometheus for metrics
 - Access Kibana for logs
 
@@ -530,13 +530,14 @@ kubectl port-forward svc/clisonix-api-service 8000:8000 -n clisonix
 
 **Last Updated**: 2024
 **Version**: 1.0.0
-**Maintainer**: Clisonix Infrastructure Team
+**Maintainer**: Kloud Infrastructure Team
 **Next Review**: 2024 Q2
 
 ---
 
 ## 🚀 You Are Ready To Deploy!
 
-All infrastructure code is production-ready. Follow the guides and deployment procedures to launch Clisonix Cloud with enterprise-grade reliability, security, and scalability.
+All infrastructure code is production-ready. Follow the guides and deployment procedures to launch Kloud Cloud with enterprise-grade reliability, security, and scalability.
 
 **Happy Deploying!** 🎉
+

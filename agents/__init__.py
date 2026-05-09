@@ -1,6 +1,6 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                         CLISONIX AGENTS MODULE                               ║
+║                         KLOUD AGENTS MODULE                               ║
 ║                   Unified Agent System - No Overlap                          ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -168,7 +168,7 @@ from .cycles import (
 # ═══════════════════════════════════════════════════════════════════════════════
 
 __version__ = "2.0.0"
-__author__ = "Clisonix Team"
+__author__ = "Kloud Team"
 __description__ = "Unified Agent System - Consolidated without overlap"
 
 
@@ -253,3 +253,4 @@ __all__ = [
     "is_ml_ready",
     "link_agent_to_cycle",
 ]
+

@@ -6,7 +6,7 @@ import { Cloud, Brain, Thermometer, Wind, Droplets, AlertTriangle, Activity, Ref
 
 /**
  * BIOMETRIC ENVIRONMENT MONITOR
- * Clisonix Environmental Neuroscience Module
+ * Kloud Environmental Neuroscience Module
  * 
  * Analyzes how weather conditions affect cognitive performance
  * Real Open-Meteo API + Neural Performance Correlation
@@ -839,12 +839,13 @@ export default function BiometricEnvironmentMonitor() {
 
               {/* Footer */}
               <div className="mt-8 text-center text-xs text-gray-600">
-                  Biometric Environment Monitor • Clisonix Environmental Neuroscience • Real API Data
+                  Biometric Environment Monitor • Kloud Environmental Neuroscience • Real API Data
         </div>
       </div>
     </div>
   );
 }
+
 
 
 

@@ -44,7 +44,7 @@ class MetricsSnapshot:
 class UltraExcelExporter:
     """Eksporton metriken në Excel me grafike dhe formule"""
     
-    def __init__(self, title: str = "Clisonix Metrics Report"):
+    def __init__(self, title: str = "Kloud Metrics Report"):
         self.wb = Workbook()
         self.ws_summary = self.wb.active
         self.ws_summary.title = "Summary"
@@ -255,7 +255,7 @@ class UltraExcelExporter:
 class UltraPowerPointGenerator:
     """Gjeneron PowerPoint prezentim nga metriken"""
     
-    def __init__(self, title: str = "Clisonix Metrics Report"):
+    def __init__(self, title: str = "Kloud Metrics Report"):
         self.prs = Presentation()
         self.prs.slide_width = Inches(10)
         self.prs.slide_height = Inches(7.5)
@@ -443,7 +443,7 @@ class UltraReportGenerator:
     @staticmethod
     def generate_full_report(
         output_dir: str = "./reports",
-        title: str = "Clisonix Cloud Metrics Report"
+        title: str = "Kloud Cloud Metrics Report"
     ) -> Dict[str, str]:
         """Gjenero raportin e plotë"""
         
@@ -497,5 +497,6 @@ class UltraReportGenerator:
             "title": title,
             "generated": datetime.now().isoformat()
         }
+
 
 

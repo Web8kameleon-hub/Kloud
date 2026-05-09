@@ -2,7 +2,7 @@
 
 <#
 ╔════════════════════════════════════════════════════════════════════╗
-║     CLISONIX CLOUD - COMPLETE SYSTEM LAUNCHER                      ║
+║     KLOUD CLOUD - COMPLETE SYSTEM LAUNCHER                      ║
 ║     Launches all components: API, Frontend, ALBA, ALBI, JONA       ║
 ║     Port Layout: 3000 (FE), 8000 (API), 5555-7777 (SaaS)          ║
 ╚════════════════════════════════════════════════════════════════════╝
@@ -276,7 +276,7 @@ function Show-Dashboard {
 }
 
 function Show-Help {
-    Write-Header "CLISONIX LAUNCHER - USAGE"
+    Write-Header "KLOUD LAUNCHER - USAGE"
     Write-Host "Modes:" -ForegroundColor Yellow
     Write-Host "  full        - All services (API, Frontend, ALBA, ALBI, JONA, Orchestrator)" -ForegroundColor Cyan
     Write-Host "  saas-only   - Only SaaS services (ALBA, ALBI, JONA, Orchestrator)" -ForegroundColor Cyan
@@ -293,7 +293,7 @@ function Show-Help {
 # MAIN EXECUTION
 # ═══════════════════════════════════════════════════════════════════
 
-Write-Header "CLISONIX CLOUD - COMPLETE LAUNCHER"
+Write-Header "KLOUD CLOUD - COMPLETE LAUNCHER"
 Write-Info "Mode: $Mode"
 Write-Info "Root: $Root"
 
@@ -319,4 +319,5 @@ if (!$DryRun) {
 Write-Host ""
 Write-Host "Press Ctrl+C to stop services" -ForegroundColor Yellow
 Write-Host ""
+
 

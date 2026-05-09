@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 CLISONIX AUTO-LEARNING LOOP
+🧠 KLOUD AUTO-LEARNING LOOP
 ================================
 100% AUTOMATIK - Mëson pa fund, pa ndërprerje, pa konfigurime
 
@@ -276,7 +276,7 @@ class AutoLearningLoop:
         """Printo header-in"""
         os.system('cls' if os.name == 'nt' else 'clear')
         print("\n" + "=" * 70)
-        print("🧠 CLISONIX AUTO-LEARNING LOOP - 100% AUTOMATIK")
+        print("🧠 KLOUD AUTO-LEARNING LOOP - 100% AUTOMATIK")
         print("=" * 70)
         print(f"📅 Filloi: {self.start_time.strftime('%H:%M:%S')}")
         print(f"📚 Njohuri ekzistuese: {len(self.knowledge['entries'])}")
@@ -404,3 +404,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

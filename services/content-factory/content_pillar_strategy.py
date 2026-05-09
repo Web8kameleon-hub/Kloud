@@ -1,5 +1,5 @@
 """
-CLISONIX CONTENT PILLAR STRATEGY
+KLOUD CONTENT PILLAR STRATEGY
 ================================
 
 NEW STRATEGY: Quality over Quantity
@@ -232,7 +232,7 @@ class RealCodeExtractor:
                           start_line: Optional[int] = None, end_line: Optional[int] = None) -> str:
         """
         Extract REAL code from the repository.
-        No fake imports like 'from clisonix.alda import LaborArray'.
+        No fake imports like 'from kloud.alda import LaborArray'.
         Only actual, working code.
         """
         # Find the file
@@ -438,7 +438,7 @@ class ContentPillarGenerator:
         metrics_table = self.metrics_fetcher.format_metrics_table(metrics)
         
         prompt = f"""
-You are writing a deep, authoritative technical article for Clisonix.
+You are writing a deep, authoritative technical article for Kloud.
 
 Title: {definition["title"]}
 Target length: {definition["target_words"]} words
@@ -456,12 +456,12 @@ CRITICAL REQUIREMENTS:
 1. This must be a DEEP, EXPERT article - not surface-level content
 2. Use the REAL code examples provided - do not invent fake imports
 3. Include the REAL metrics table - do not make up numbers
-4. Write with authority - Clisonix has built this system
+4. Write with authority - Kloud has built this system
 5. Be specific and technical - this is for expert readers
 6. Include lessons learned, challenges overcome, specific decisions made
 7. Minimum {definition["target_words"]} words
 
-Author: Ledjan Ahmati, CEO of ABA GmbH and creator of Clisonix
+Author: Ledjan Ahmati, CEO of ABA GmbH and creator of Kloud
 
 Generate the complete article now:
 """
@@ -650,3 +650,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

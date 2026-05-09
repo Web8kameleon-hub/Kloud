@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-🔔 CLISONIX ALERT POLICY
+🔔 KLOUD ALERT POLICY
 =========================
 Politikat e alarmeve për Slack - pa spam, pa panik kot.
 
@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 
-logger = logging.getLogger("clisonix.alert_policy")
+logger = logging.getLogger("kloud.alert_policy")
 
 
 class AlertLevel(Enum):
@@ -404,3 +404,4 @@ if __name__ == "__main__":
     print(json.dumps(manager.get_stats(), indent=2))
     
     print("\n✅ Alert Policy test complete!")
+

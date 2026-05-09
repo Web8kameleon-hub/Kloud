@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Health Monitor - Monitors all 75 Clisonix microservices
+Health Monitor - Monitors all 75 Kloud microservices
 Provides real-time health status and service discovery
 """
 import asyncio
@@ -13,7 +13,7 @@ import uvicorn
 from fastapi import BackgroundTasks, FastAPI
 
 app = FastAPI(
-    title="Clisonix Health Monitor",
+    title="Kloud Health Monitor",
     description="Real-time health monitoring for all 75 microservices",
     version="1.0.0"
 )
@@ -177,7 +177,7 @@ async def check_all_services() -> Dict:
 @app.get("/")
 def root():
     return {
-        "service": "Clisonix Health Monitor",
+        "service": "Kloud Health Monitor",
         "version": "1.0.0",
         "total_services": len(SERVICES),
         "status": "operational"
@@ -277,6 +277,7 @@ async def summary():
 
 if __name__ == "__main__":
     PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8099
-    print(f"📊 Starting Clisonix Health Monitor on port {PORT}")
+    print(f"📊 Starting Kloud Health Monitor on port {PORT}")
     print(f"   Monitoring {len(SERVICES)} services")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

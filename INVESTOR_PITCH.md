@@ -1,8 +1,8 @@
-# 🚀 CLISONIX CLOUD - INVESTOR PITCH DECK
+# 🚀 KLOUD CLOUD - INVESTOR PITCH DECK
 
 ## EXECUTIVE SUMMARY
 
-**Clisonix Cloud** është një platform komprehensive për **neural-powered fitness training** dhe **real-time biometric monitoring**. 
+**Kloud Cloud** është një platform komprehensive për **neural-powered fitness training** dhe **real-time biometric monitoring**. 
 
 ### Market Opportunity
 - **Global Fitness Tech Market**: $96.7B (2024) → $150B+ (2030)
@@ -208,4 +208,5 @@
 
 **Ready to transform fitness training with AI. Let's talk.**
 
-*Clisonix Cloud © 2025*
+*Kloud Cloud © 2025*
+

@@ -1,10 +1,10 @@
 """
-Clisonix Cloud - Alembic Environment Configuration
+Kloud Cloud - Alembic Environment Configuration
 
 Handles database migrations for the authentication system.
 
 @author Ledjan Ahmati
-@copyright 2026 Clisonix Cloud
+@copyright 2026 Kloud Cloud
 """
 
 import os
@@ -36,7 +36,7 @@ target_metadata = Base.metadata
 def get_url():
     return os.getenv(
         "DATABASE_URL",
-        "postgresql://clisonix:clisonix@localhost:5432/clisonix"
+        "postgresql://kloud:kloud@localhost:5432/kloud"
     )
 
 
@@ -85,3 +85,4 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+

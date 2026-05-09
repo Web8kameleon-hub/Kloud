@@ -45,7 +45,7 @@
         "source_frame_count": 97
       },
       "alba": {
-        "source_dir": "C:\\Clisonix-cloud\\data\\alba",
+        "source_dir": "C:\\Kloud-cloud\\data\\alba",
         "processed_files": [
           "frame_20251030_200525.json",
           "frame_20251030_200535.json",
@@ -299,4 +299,5 @@
   },
   "attachments": {}
 }
+
 

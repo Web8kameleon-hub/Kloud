@@ -43,10 +43,10 @@ All Slack integration components have been updated to **v2.0.0** with:
 Visit: https://api.slack.com/apps
 ```
 1. Create New App → From scratch
-2. Name: "Clisonix Integration"
+2. Name: "Kloud Integration"
 3. Incoming Webhooks → Enable
 4. Add New Webhook to Workspace
-5. Select channel: #clisonix-monitoring
+5. Select channel: #kloud-monitoring
 6. Copy webhook URL
 ```
 
@@ -54,7 +54,7 @@ Visit: https://api.slack.com/apps
 Create or edit `.env.slack`:
 ```env
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/ID
-SLACK_CHANNEL=#clisonix-monitoring
+SLACK_CHANNEL=#kloud-monitoring
 SERVICE_MODE=production
 SLACK_PORT=8888
 ```
@@ -225,7 +225,7 @@ COPY slack_integration_service.py .
 RUN pip install fastapi aiohttp pydantic uvicorn
 
 ENV SLACK_WEBHOOK_URL=""
-ENV SLACK_CHANNEL="#clisonix-monitoring"
+ENV SLACK_CHANNEL="#kloud-monitoring"
 ENV SERVICE_MODE="production"
 ENV SLACK_PORT=8888
 
@@ -236,16 +236,16 @@ CMD ["python", "slack_integration_service.py"]
 ### Option 2: Systemd (Linux)
 ```ini
 [Unit]
-Description=Clisonix Slack Integration
+Description=Kloud Slack Integration
 After=network.target
 
 [Service]
 Type=simple
-User=clisonix
-WorkingDirectory=/opt/clisonix
+User=kloud
+WorkingDirectory=/opt/kloud
 Environment="SLACK_WEBHOOK_URL=..."
 Environment="SERVICE_MODE=production"
-ExecStart=/usr/bin/python /opt/clisonix/slack_integration_service.py
+ExecStart=/usr/bin/python /opt/kloud/slack_integration_service.py
 Restart=always
 RestartSec=10
 
@@ -256,9 +256,9 @@ WantedBy=multi-user.target
 ### Option 3: Windows Service
 ```powershell
 # Install NSSM: https://nssm.cc/download
-nssm install ClisonixSlack python C:\clisonix\slack_integration_service.py
-nssm set ClisonixSlack AppEnvironmentExtra SLACK_WEBHOOK_URL=...
-nssm start ClisonixSlack
+nssm install KloudSlack python C:\kloud\slack_integration_service.py
+nssm set KloudSlack AppEnvironmentExtra SLACK_WEBHOOK_URL=...
+nssm start KloudSlack
 ```
 
 ---
@@ -356,7 +356,7 @@ curl http://localhost:8888/health
 ### Issue: Messages not appearing
 **Cause**: Bot not in channel or channel doesn't exist
 **Solution**:
-1. Create channel: `#clisonix-monitoring`
+1. Create channel: `#kloud-monitoring`
 2. Add bot to channel
 3. Check channel privacy settings
 
@@ -453,7 +453,7 @@ Get-NetTCPConnection -LocalPort 8888 | Stop-Process -Force
 - [ ] Service tested with `-Mode test`
 - [ ] All 5 monitored services running
 - [ ] Health endpoints responding
-- [ ] Slack channel created (#clisonix-monitoring)
+- [ ] Slack channel created (#kloud-monitoring)
 - [ ] Bot invited to channel
 - [ ] Test message appears in Slack
 - [ ] Status report sent successfully
@@ -464,4 +464,5 @@ Get-NetTCPConnection -LocalPort 8888 | Stop-Process -Force
 **Last Updated**: December 2025
 **Version**: 2.0.0
 **Status**: ✅ Production Ready
+
 

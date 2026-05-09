@@ -1,10 +1,10 @@
-# Dockerfile for Clisonix Auto-Learning Service
+# Dockerfile for Kloud Auto-Learning Service
 # Production-grade, optimized for Hetzner deployment
 
 FROM python:3.11-slim
 
 # Labels
-LABEL maintainer="Clisonix Team"
+LABEL maintainer="Kloud Team"
 LABEL description="Production Auto-Learning Connector"
 LABEL version="1.0.0"
 
@@ -16,7 +16,7 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    HETZNER_API_URL=http://clisonix-api:8000
+    HETZNER_API_URL=http://kloud-api:8000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -41,8 +41,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
 # Run as non-root user
-RUN useradd -m -u 1000 clisonix && chown -R clisonix:clisonix /app
-USER clisonix
+RUN useradd -m -u 1000 kloud && chown -R kloud:kloud /app
+USER kloud
 
 # Default command
 CMD ["python", "production_autolearning_connector.py", "--interval", "1.0"]
+

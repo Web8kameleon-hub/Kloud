@@ -1,7 +1,7 @@
 """
 DATA SOURCES CONNECTOR LAYER - CONNECTED TO CENTRAL API
 =========================================================
-Connects Ocean-Core to Central Clisonix API (port 8000)
+Connects Ocean-Core to Central Kloud API (port 8000)
 Gets REAL data from ALL 23 laboratories and ALL APIs
 
 NO FAKE DATA - Everything comes from real APIs!
@@ -55,7 +55,7 @@ class AgentTelemetryStub:
 
 class InternalDataSources:
     """
-    Connects to Central Clisonix API (port 8000) for ALL data.
+    Connects to Central Kloud API (port 8000) for ALL data.
     This replaces the old isolated approach with real API connectivity.
     """
     
@@ -321,3 +321,4 @@ if __name__ == "__main__":
         print(f"    - {lab.get('name', lab.get('id', 'Unknown'))}")
     if len(labs) > 5:
         print(f"    ... and {len(labs) - 5} more")
+

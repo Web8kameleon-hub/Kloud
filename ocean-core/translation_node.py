@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-CLISONIX TRANSLATION NODE - Nanogrid Pulse Architecture
+KLOUD TRANSLATION NODE - Nanogrid Pulse Architecture
 ========================================================
 Ultra-lightweight translation microservice with 60+ languages
 Uses dictionary-based translations + fallback to deep-translator
@@ -133,20 +133,20 @@ CORE_PHRASES = {
         "tr": "Merhaba! Size nasıl yardımcı olabilirim?",
     },
     "identity": {
-        "en": "I am Curiosity Ocean, an AI assistant by Clisonix.",
-        "sq": "Jam Curiosity Ocean, një asistent AI nga Clisonix.",
-        "de": "Ich bin Curiosity Ocean, ein KI-Assistent von Clisonix.",
-        "fr": "Je suis Curiosity Ocean, un assistant IA de Clisonix.",
-        "it": "Sono Curiosity Ocean, un assistente AI di Clisonix.",
-        "es": "Soy Curiosity Ocean, un asistente de IA de Clisonix.",
-        "pt": "Sou Curiosity Ocean, um assistente de IA da Clisonix.",
-        "ru": "Я Curiosity Ocean, ИИ-ассистент от Clisonix.",
-        "zh": "我是Curiosity Ocean，Clisonix的AI助手。",
-        "ja": "私はCuriosity Ocean、ClisonixのAIアシスタントです。",
-        "ko": "저는 Clisonix의 AI 어시스턴트 Curiosity Ocean입니다.",
-        "ar": "أنا Curiosity Ocean، مساعد ذكاء اصطناعي من Clisonix.",
-        "hi": "मैं Curiosity Ocean हूं, Clisonix का AI सहायक।",
-        "tr": "Ben Curiosity Ocean, Clisonix'in yapay zeka asistanıyım.",
+        "en": "I am Curiosity Ocean, an AI assistant by Kloud.",
+        "sq": "Jam Curiosity Ocean, një asistent AI nga Kloud.",
+        "de": "Ich bin Curiosity Ocean, ein KI-Assistent von Kloud.",
+        "fr": "Je suis Curiosity Ocean, un assistant IA de Kloud.",
+        "it": "Sono Curiosity Ocean, un assistente AI di Kloud.",
+        "es": "Soy Curiosity Ocean, un asistente de IA de Kloud.",
+        "pt": "Sou Curiosity Ocean, um assistente de IA da Kloud.",
+        "ru": "Я Curiosity Ocean, ИИ-ассистент от Kloud.",
+        "zh": "我是Curiosity Ocean，Kloud的AI助手。",
+        "ja": "私はCuriosity Ocean、KloudのAIアシスタントです。",
+        "ko": "저는 Kloud의 AI 어시스턴트 Curiosity Ocean입니다.",
+        "ar": "أنا Curiosity Ocean، مساعد ذكاء اصطناعي من Kloud.",
+        "hi": "मैं Curiosity Ocean हूं, Kloud का AI सहायक।",
+        "tr": "Ben Curiosity Ocean, Kloud'in yapay zeka asistanıyım.",
     },
     "thanks": {
         "en": "Thank you!",
@@ -384,7 +384,7 @@ class TranslationNode:
 # FASTAPI APPLICATION
 # ============================================================================
 app = FastAPI(
-    title="Clisonix Translation Node",
+    title="Kloud Translation Node",
     description="Nanogrid Pulse Translation Microservice - 60+ Languages",
     version="1.0.0"
 )
@@ -403,7 +403,7 @@ node = TranslationNode()
 @app.get("/")
 async def root():
     return {
-        "service": "Clisonix Translation Node",
+        "service": "Kloud Translation Node",
         "architecture": "Nanogrid Pulse",
         "languages": len(SUPPORTED_LANGUAGES),
         "status": "operational"
@@ -481,3 +481,4 @@ if __name__ == "__main__":
     logger.info(f"🌍 Translation Node starting on port {PORT}")
     logger.info(f"📊 Supporting {len(SUPPORTED_LANGUAGES)} languages")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

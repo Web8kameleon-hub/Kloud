@@ -412,7 +412,7 @@ export default function ReportingDashboard() {
           <p className="text-gray-300">{error}</p>
           <p className="text-sm text-gray-500">Verify the FastAPI backend is running on port 8000.</p>
           <Link href="/" className="inline-block px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-gray-200 hover:bg-white/20 transition-all">
-            ← Back to Clisonix Cloud
+            ← Back to Kloud Cloud
           </Link>
         </div>
       </div>
@@ -620,3 +620,4 @@ export default function ReportingDashboard() {
     </div>
   );
 }
+

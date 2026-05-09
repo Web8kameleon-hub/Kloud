@@ -143,7 +143,7 @@ class OpenDataScalabilityEngine:
         """Inicializon motorin"""
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={'User-Agent': 'Clisonix-Scalability-Engine/1.0'}
+            headers={'User-Agent': 'Kloud-Scalability-Engine/1.0'}
         )
 
         # Ngarkon burime ekzistuese nga disku
@@ -764,4 +764,5 @@ async def discover_and_feed_system():
     finally:
         # Shutdown will be handled by the caller
         pass</content>
-<parameter name="filePath">c:\Users\pc\Clisonix-cloud\open_data_scalability.py
+<parameter name="filePath">c:\Users\pc\Kloud-cloud\open_data_scalability.py
+

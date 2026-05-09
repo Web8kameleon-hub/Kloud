@@ -1,8 +1,8 @@
-# Docker Compose Setup Guide - Clisonix Cloud
+# Docker Compose Setup Guide - Kloud Cloud
 
 ## Overview
 
-This docker-compose configuration provides a complete local development and production-ready stack for Clisonix Cloud including:
+This docker-compose configuration provides a complete local development and production-ready stack for Kloud Cloud including:
 
 - **API Server** (FastAPI on port 8000)
 - **Frontend** (Next.js on port 3000)
@@ -52,8 +52,8 @@ New-Item -ItemType Directory -Path "nginx\ssl" -Force
 New-Item -ItemType Directory -Path "db\migrations" -Force
 
 # Create self-signed SSL certificates for local development
-openssl req -x509 -newkey rsa:2048 -keyout nginx\ssl\clisonix.key -out nginx\ssl\clisonix.crt -days 365 -nodes \
-  -subj "/CN=localhost/O=Clisonix/C=US"
+openssl req -x509 -newkey rsa:2048 -keyout nginx\ssl\kloud.key -out nginx\ssl\kloud.crt -days 365 -nodes \
+  -subj "/CN=localhost/O=Kloud/C=US"
 ```
 
 ### 3. Start Services
@@ -84,7 +84,7 @@ curl http://localhost:8000/health
 curl http://localhost:3000
 
 # Test Database
-docker-compose exec postgres psql -U clisonix -d clisonix_db -c "SELECT version();"
+docker-compose exec postgres psql -U kloud -d kloud_db -c "SELECT version();"
 
 # Test Redis
 docker-compose exec redis redis-cli ping
@@ -138,7 +138,7 @@ docker-compose up -d frontend
 
 ```bash
 # Connect to database
-docker-compose exec postgres psql -U clisonix -d clisonix_db
+docker-compose exec postgres psql -U kloud -d kloud_db
 
 # Useful queries
 SELECT version();
@@ -146,13 +146,13 @@ SELECT * FROM users LIMIT 5;
 SELECT * FROM audio_files LIMIT 5;
 
 # Backup database
-docker-compose exec postgres pg_dump -U clisonix clisonix_db > backup_$(date +%Y%m%d_%H%M%S).sql
+docker-compose exec postgres pg_dump -U kloud kloud_db > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Restore database
-docker-compose exec postgres psql -U clisonix clisonix_db < backup.sql
+docker-compose exec postgres psql -U kloud kloud_db < backup.sql
 
 # Connect from host (if psql installed)
-psql -h localhost -U clisonix -d clisonix_db
+psql -h localhost -U kloud -d kloud_db
 ```
 
 ### Redis Cache
@@ -180,13 +180,13 @@ docker-compose exec redis redis-cli MONITOR
 
 # Upload test file using MinIO CLI
 mc alias set minio http://localhost:9000 minioadmin minioadmin
-mc cp test.wav minio/clisonix-audio/
+mc cp test.wav minio/kloud-audio/
 
 # List buckets
 mc ls minio/
 
 # View object
-mc cat minio/clisonix-audio/test.wav
+mc cat minio/kloud-audio/test.wav
 ```
 
 ### Elasticsearch & Kibana
@@ -202,15 +202,15 @@ curl http://localhost:9200/_cluster/health
 curl http://localhost:9200/_cat/indices
 
 # Create index
-curl -X PUT http://localhost:9200/logs-clisonix
+curl -X PUT http://localhost:9200/logs-kloud
 
 # Insert test document
-curl -X POST http://localhost:9200/logs-clisonix/_doc \
+curl -X POST http://localhost:9200/logs-kloud/_doc \
   -H "Content-Type: application/json" \
   -d '{"timestamp":"2024-01-01T00:00:00Z","message":"test"}'
 
 # View documents
-curl http://localhost:9200/logs-clisonix/_search
+curl http://localhost:9200/logs-kloud/_search
 ```
 
 ## Common Tasks
@@ -296,7 +296,7 @@ docker-compose up -d
 docker-compose ps
 
 # Inspect service
-docker inspect clisonix-api
+docker inspect kloud-api
 ```
 
 ## Production Considerations
@@ -320,8 +320,8 @@ docker inspect clisonix-api
    ```bash
    # Use real certificates (Let's Encrypt recommended)
    # Copy to nginx/ssl/
-   cp /path/to/cert.crt nginx/ssl/clisonix.crt
-   cp /path/to/key.key nginx/ssl/clisonix.key
+   cp /path/to/cert.crt nginx/ssl/kloud.crt
+   cp /path/to/key.key nginx/ssl/kloud.key
    ```
 
 4. **Enable Database Backups**
@@ -375,11 +375,11 @@ docker-compose ps
 # Manual health check
 docker-compose exec api curl http://localhost:8000/health
 docker-compose exec frontend curl http://localhost:3000
-docker-compose exec postgres pg_isready -U clisonix
+docker-compose exec postgres pg_isready -U kloud
 
 # Restart unhealthy services automatically
 docker update --health-cmd='curl -f http://localhost:8000/health' \
-  --health-interval=30s clisonix-api
+  --health-interval=30s kloud-api
 ```
 
 ## Logs
@@ -408,15 +408,15 @@ docker-compose logs > logs_$(date +%Y%m%d_%H%M%S).txt
 
 ```bash
 # Backup all data
-docker-compose exec postgres pg_dump -U clisonix clisonix_db | gzip > backup.sql.gz
+docker-compose exec postgres pg_dump -U kloud kloud_db | gzip > backup.sql.gz
 docker-compose exec redis redis-cli BGSAVE
-docker cp clisonix-minio:/minio_data minio_backup
+docker cp kloud-minio:/minio_data minio_backup
 
 # Restore database
-gunzip < backup.sql.gz | docker-compose exec -T postgres psql -U clisonix clisonix_db
+gunzip < backup.sql.gz | docker-compose exec -T postgres psql -U kloud kloud_db
 
 # Verify restore
-docker-compose exec postgres psql -U clisonix clisonix_db -c "SELECT COUNT(*) FROM users;"
+docker-compose exec postgres psql -U kloud kloud_db -c "SELECT COUNT(*) FROM users;"
 ```
 
 ## Cleanup
@@ -449,7 +449,7 @@ Already configured in docker-compose.yml:
 docker network ls
 
 # Inspect network
-docker network inspect clisonix-network
+docker network inspect kloud-network
 
 # Services can communicate via service name
 # Example: API can connect to postgres:5432
@@ -464,10 +464,10 @@ Data persistence:
 docker volume ls
 
 # Inspect volume
-docker volume inspect clisonix_postgres_data
+docker volume inspect kloud_postgres_data
 
 # Backup volume
-docker run --rm -v clisonix_postgres_data:/data -v $(pwd):/backup \
+docker run --rm -v kloud_postgres_data:/data -v $(pwd):/backup \
   alpine tar -czf /backup/postgres_backup.tar.gz /data
 ```
 
@@ -486,4 +486,5 @@ docker-compose up -d
 
 **Last Updated**: 2024
 **Version**: 1.0.0
-**Maintainer**: Clisonix Team
+**Maintainer**: Kloud Team
+

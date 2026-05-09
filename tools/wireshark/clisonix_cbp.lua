@@ -1,7 +1,7 @@
--- 🦈 CLISONIX BINARY PROTOCOL (CBP) - WIRESHARK DISSECTOR
+-- 🦈 KLOUD BINARY PROTOCOL (CBP) - WIRESHARK DISSECTOR
 -- ========================================================
 --
--- Wireshark dissector plugin for Clisonix Binary Protocol.
+-- Wireshark dissector plugin for Kloud Binary Protocol.
 --
 -- Installation:
 --   1. Copy this file to Wireshark plugins folder:
@@ -24,11 +24,11 @@
 --   6      | 2    | Payload length (big-endian)
 --   8      | N    | Payload
 --
--- Author: Clisonix Team
+-- Author: Kloud Team
 -- License: MIT
 
 -- Protocol declaration
-local cbp_proto = Proto("cbp", "Clisonix Binary Protocol")
+local cbp_proto = Proto("cbp", "Kloud Binary Protocol")
 
 -- Constants
 local CBP_MAGIC = "CLSN"
@@ -253,7 +253,7 @@ function cbp_proto.dissector(buffer, pinfo, tree)
     pinfo.cols.protocol = "CBP"
     
     -- Create protocol tree
-    local subtree = tree:add(cbp_proto, buffer(), "Clisonix Binary Protocol")
+    local subtree = tree:add(cbp_proto, buffer(), "Kloud Binary Protocol")
     
     -- Header subtree
     local header_tree = subtree:add(cbp_proto, buffer(0, CBP_HEADER_SIZE), "Header")
@@ -379,6 +379,7 @@ local function cbp_stats_tap()
 end
 
 -- Print load message
-print("🔷 Clisonix Binary Protocol (CBP) dissector loaded")
+print("🔷 Kloud Binary Protocol (CBP) dissector loaded")
 print("   Port: " .. CBP_DEFAULT_PORT)
 print("   Filter: cbp")
+

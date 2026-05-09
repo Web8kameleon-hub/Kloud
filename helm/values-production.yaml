@@ -31,16 +31,17 @@ env:
 ingress:
   enabled: true
   hosts:
-    - host: clisonix.com
+    - host: kloud.com
       paths:
         - path: /
           pathType: Prefix
-    - host: www.clisonix.com
+    - host: www.kloud.com
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: clisonix-tls
+    - secretName: kloud-tls
       hosts:
-        - clisonix.com
-        - www.clisonix.com
+        - kloud.com
+        - www.kloud.com
+

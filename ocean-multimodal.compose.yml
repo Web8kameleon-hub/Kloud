@@ -6,12 +6,12 @@ ocean-multimodal:
   build:
     context: ./ocean-core
     dockerfile: Dockerfile.multimodal
-  container_name: clisonix-ocean-multimodal
+  container_name: kloud-ocean-multimodal
   ports:
     - "8031:8031"
   environment:
     PORT: 8031
-    OLLAMA_HOST: http://clisonix-06-ollama:11434
+    OLLAMA_HOST: http://kloud-06-ollama:11434
     VISION_MODEL: llava:latest
     AUDIO_MODEL: whisper:latest
     REASONING_MODEL: llama3.1:8b
@@ -19,7 +19,7 @@ ocean-multimodal:
   depends_on:
     - ollama
   networks:
-    - clisonix
+    - kloud
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost:8031/health"]
     interval: 30s
@@ -32,3 +32,4 @@ ocean-multimodal:
     options:
       max-size: "10m"
       max-file: "3"
+

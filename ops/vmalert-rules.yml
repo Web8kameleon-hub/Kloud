@@ -1,5 +1,5 @@
 groups:
-  - name: clisonix_api_alerts
+  - name: kloud_api_alerts
     interval: 30s
     rules:
       # API AVAILABILITY & PERFORMANCE
@@ -128,7 +128,7 @@ groups:
           summary: "{{ $labels.service | toUpper }} Service Down"
           description: "{{ $labels.service }} is not responding"
 
-  - name: clisonix_business_alerts
+  - name: kloud_business_alerts
     interval: 1m
     rules:
       # SLA MONITORING
@@ -269,4 +269,5 @@ groups:
         annotations:
           summary: "Service {{ $labels.job }} restarted multiple times"
           description: "Service has restarted {{ $value }} times in last 15 minutes"
+
 

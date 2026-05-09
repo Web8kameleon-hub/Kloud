@@ -1,6 +1,6 @@
 """
 Binary Protocols Module - CBOR2, MessagePack - ONLY REAL BINARY
-Clisonix Cloud - Full Binary Support - NO FALLBACKS
+Kloud Cloud - Full Binary Support - NO FALLBACKS
 """
 
 import struct
@@ -364,11 +364,11 @@ class BinaryEncoder:
         return result
     
     def _encode_custom(self, data: Any) -> bytes:
-        """Custom binary encoding optimized for Clisonix"""
+        """Custom binary encoding optimized for Kloud"""
         buffer = io.BytesIO()
         
         # Magic header
-        buffer.write(b'CLSN')  # Clisonix magic
+        buffer.write(b'CLSN')  # Kloud magic
         buffer.write(struct.pack('>B', 1))  # Version
         
         # Encode data
@@ -424,7 +424,7 @@ class BinaryEncoder:
         # Verify magic
         magic = buffer.read(4)
         if magic != b'CLSN':
-            raise ValueError("Invalid Clisonix binary format")
+            raise ValueError("Invalid Kloud binary format")
         
         version = struct.unpack('>B', buffer.read(1))[0]
         if version != 1:
@@ -672,3 +672,4 @@ binary_service = BinaryProtocolService()
 def get_binary_service() -> BinaryProtocolService:
     """Get global binary service"""
     return binary_service
+

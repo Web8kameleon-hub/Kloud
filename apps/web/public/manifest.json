@@ -1,6 +1,6 @@
 {
-  "name": "Clisonix Cloud - AI Intelligence Platform",
-  "short_name": "Clisonix",
+  "name": "Kloud Cloud - AI Intelligence Platform",
+  "short_name": "Kloud",
   "description": "AI-Powered Industrial Intelligence, Music Studio, OpenMind, and Behavioral Science Platform",
   "start_url": "/",
   "display": "standalone",
@@ -86,14 +86,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Clisonix Dashboard"
+      "label": "Kloud Dashboard"
     },
     {
       "src": "/screenshots/mobile.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Clisonix Mobile"
+      "label": "Kloud Mobile"
     }
   ],
   "shortcuts": [
@@ -125,3 +125,4 @@
   "related_applications": [],
   "prefer_related_applications": false
 }
+

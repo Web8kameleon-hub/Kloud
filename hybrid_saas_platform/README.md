@@ -123,4 +123,5 @@ Environment variables:
 
 ## 📝 License
 
-Proprietary - Clisonix Cloud
+Proprietary - Kloud Cloud
+

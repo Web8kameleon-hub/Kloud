@@ -158,7 +158,7 @@ setup_logging()
 
 # Create FastAPI app
 app = FastAPI(
-    title="Clisonix Knowledge API",
+    title="Kloud Knowledge API",
     description="Unified API for scientific literature, clinical data, and industrial telemetry",
     version="1.0.0",
     docs_url=None,  # Disable default to customize
@@ -230,13 +230,13 @@ async def redoc_html(auth: str = Depends(auth_bearer)):
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting Clisonix Knowledge API")
+    logger.info("Starting Kloud Knowledge API")
     # Initialize database connections
     await init_database_pools()
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.info("Shutting down Clisonix Knowledge API")
+    logger.info("Shutting down Kloud Knowledge API")
     # Close database connections
     await close_database_pools()
 
@@ -671,7 +671,7 @@ volumes:
 set -e
 
 KONG_ADMIN="http://localhost:8001"
-KEYCLOAK_URL="http://keycloak:8080/realms/clisonix"
+KEYCLOAK_URL="http://keycloak:8080/realms/kloud"
 
 # Create service
 curl -i -X POST $KONG_ADMIN/services/ \
@@ -691,7 +691,7 @@ curl -i -X POST $KONG_ADMIN/services/knowledge-api/plugins \
   --data config.discovery=${KEYCLOAK_URL}/.well-known/openid-configuration \
   --data config.scope=openid \
   --data config.bearer_only=yes \
-  --data config.realm=clisonix \
+  --data config.realm=kloud \
   --data config.introspection_endpoint=${KEYCLOAK_URL}/protocol/openid-connect/token/introspect \
   --data config.logout_path=/logout
 
@@ -731,7 +731,7 @@ services:
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      KC_HOSTNAME: keycloak.clisonix.com
+      KC_HOSTNAME: keycloak.kloud.com
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
@@ -789,3 +789,4 @@ services:
 
 **Previous**: [Storage & Indexing Infrastructure](./STORAGE_INDEXING_INFRASTRUCTURE.md)  
 **Next**: Production Deployment
+

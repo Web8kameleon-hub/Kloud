@@ -2,7 +2,7 @@
 # Fillon: Backend 8000 + Frontend 3001 + Ocean-Core 8030
 
 Write-Host "====================================" -ForegroundColor Cyan
-Write-Host "CLISONIX ULTRA STARTUP - NJEKOHESISHT" -ForegroundColor Cyan
+Write-Host "KLOUD ULTRA STARTUP - NJEKOHESISHT" -ForegroundColor Cyan
 Write-Host "====================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -14,7 +14,7 @@ Start-Sleep -Seconds 2
 # START BACKEND 8000
 Write-Host "Starting Backend API (port 8000)..." -ForegroundColor Green
 $backendJob = Start-Job -ScriptBlock {
-    cd "c:\Users\Admin\Desktop\Clisonix-cloud"
+    cd "c:\Users\Admin\Desktop\Kloud-cloud"
     $env:PYTHONPATH = "."
     python -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8000 --reload
 } -Name "Backend-8000"
@@ -24,7 +24,7 @@ Start-Sleep -Seconds 5
 # START OCEAN-CORE 8030 (BEFORE FRONTEND - Ocean needs backend first)
 Write-Host "Starting Ocean-Core (port 8030)..." -ForegroundColor Green
 $oceanJob = Start-Job -ScriptBlock {
-    cd "c:\Users\Admin\Desktop\Clisonix-cloud\ocean-core"
+    cd "c:\Users\Admin\Desktop\Kloud-cloud\ocean-core"
     $env:PYTHONPATH = ".."
     python ocean_api.py
 } -Name "Ocean-Core-8030"
@@ -34,7 +34,7 @@ Start-Sleep -Seconds 4
 # START FRONTEND 3001
 Write-Host "Starting Frontend Next.js (port 3001)..." -ForegroundColor Green
 $frontendJob = Start-Job -ScriptBlock {
-    cd "c:\Users\Admin\Desktop\Clisonix-cloud\apps\web"
+    cd "c:\Users\Admin\Desktop\Kloud-cloud\apps\web"
     npm run dev
 } -Name "Frontend-3001"
 
@@ -62,3 +62,4 @@ Receive-Job -Name "Frontend-3001" | Select-Object -Last 3
 Write-Host ""
 Write-Host "Current Status:" -ForegroundColor Cyan
 Get-Job | Format-Table -Property Name, State
+

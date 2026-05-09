@@ -1,10 +1,10 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                    CLISONIX AGENTS - BASE CLASSES                           ║
+║                    KLOUD AGENTS - BASE CLASSES                           ║
 ║           Unified Base Agent, Config, Status, Task, Result                  ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-This module provides the foundational classes for all Clisonix agents.
+This module provides the foundational classes for all Kloud agents.
 All agents MUST inherit from BaseAgent to ensure consistency.
 
 Usage:
@@ -343,7 +343,7 @@ class TaskResult:
 
 class BaseAgent(ABC):
     """
-    Abstract base class for all Clisonix agents.
+    Abstract base class for all Kloud agents.
     
     ALL agents must inherit from this class and implement:
     - config property: Return agent configuration
@@ -663,3 +663,4 @@ class BaseAgent(ABC):
     
     def __str__(self) -> str:
         return f"{self.config.name}[{self._id}]"
+

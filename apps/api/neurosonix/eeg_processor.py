@@ -1,5 +1,5 @@
 """
-Clisonix Industrial EEG Processor
+Kloud Industrial EEG Processor
 Advanced real-time processing of EEG signals with industrial-grade algorithms
 Business: Ledjan Ahmati - WEB8euroweb GmbH
 
@@ -1260,5 +1260,6 @@ class IndustrialEEGProcessor:
 
 # Create backward compatibility alias
 EEGProcessor = IndustrialEEGProcessor
+
 
 

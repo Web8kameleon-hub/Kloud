@@ -38,7 +38,7 @@ const config = convict({
       origins: {
         doc: "Allowed CORS origins",
         format: Array,
-        default: ["http://localhost:3000", "https://clisonix.cloud"],
+        default: ["http://localhost:3000", "https://kloud.cloud"],
         env: "CORS_ORIGINS",
       },
     },
@@ -61,13 +61,13 @@ const config = convict({
       database: {
         doc: "Database name",
         format: String,
-        default: "clisonixdb",
+        default: "klouddb",
         env: "POSTGRES_DB",
       },
       user: {
         doc: "Database user",
         format: String,
-        default: "clisonix",
+        default: "kloud",
         env: "POSTGRES_USER",
       },
       password: {
@@ -167,3 +167,4 @@ export const isDevelopment = () => config.get("env") === "development";
 export const isTest = () => config.get("env") === "test";
 
 export default config;
+

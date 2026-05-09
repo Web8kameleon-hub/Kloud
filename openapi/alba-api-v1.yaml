@@ -3,7 +3,7 @@ info:
   title: Alba API
   version: 1.0.0
   description: |
-    Alba is Clisonix's content generation and creative workflow agent.
+    Alba is Kloud's content generation and creative workflow agent.
     
     **Features:**
     - Frame-by-frame animation generation
@@ -14,8 +14,8 @@ info:
     **Port:** 5555  
     **Health Check:** `GET /health`
   contact:
-    name: Clisonix Engineering
-    url: https://github.com/LedjanAhmati/Clisonix-cloud
+    name: Kloud Engineering
+    url: https://github.com/LedjanAhmati/Kloud-cloud
   license:
     name: MIT
     
@@ -24,7 +24,7 @@ servers:
     description: Development server
   - url: http://192.168.2.122:5555
     description: Local network
-  - url: https://api.clisonix.com/alba
+  - url: https://api.kloud.com/alba
     description: Production server
 
 tags:
@@ -181,7 +181,7 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-      description: Clisonix API key
+      description: Kloud API key
       
   schemas:
     HealthResponse:
@@ -395,4 +395,5 @@ components:
           schema:
             type: integer
           description: Unix timestamp when limit resets
+
 

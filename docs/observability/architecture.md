@@ -1,4 +1,4 @@
-# Clisonix Cloud — Observability Architecture
+# Kloud Cloud — Observability Architecture
 
 **Document Status:** Draft  
 **Version:** 1.0.0  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document describes the end-to-end observability architecture for Clisonix Cloud, covering metrics collection, storage, visualization, and alerting.
+This document describes the end-to-end observability architecture for Kloud Cloud, covering metrics collection, storage, visualization, and alerting.
 
 ---
 
@@ -16,7 +16,7 @@ This document describes the end-to-end observability architecture for Clisonix C
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Clisonix Services                        │
+│                    Kloud Services                        │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
 │  │   API    │  │  ALBA    │  │  ALBI    │  │  JONA    │   │
 │  │  :8000   │  │  :5555   │  │  :6666   │  │  :7777   │   │
@@ -54,7 +54,7 @@ This document describes the end-to-end observability architecture for Clisonix C
 
 ### 1. Metrics Exporters
 
-Each Clisonix service exposes metrics via `/metrics` endpoint:
+Each Kloud service exposes metrics via `/metrics` endpoint:
 
 - **FastAPI apps:** Built-in Prometheus middleware
 - **Custom metrics:** Business logic counters/gauges
@@ -136,3 +136,4 @@ Prometheus monitors itself:
 ---
 
 **Next:** [Metrics Overview →](metrics-overview.md)
+

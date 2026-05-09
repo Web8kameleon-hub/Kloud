@@ -1,20 +1,20 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Clisonix Cloud API - Part of Webultrathinking Euroweb",
+    "title": "Kloud Cloud API - Part of Webultrathinking Euroweb",
     "version": "1.0.0",
-    "description": "Clisonix Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,\nbilling integration, and real-time system observability.\n\n**Key Features:**\n- Neural harmonic synchronization engine\n- EEG signal processing and analysis\n- Brain-adaptive music generation\n- Real-time data streaming (ALBA)\n- Multi-channel payment integration\n- Industrial-grade system monitoring\n\n**Security:** All endpoints require Bearer JWT authentication.\n",
+    "description": "Kloud Cloud API – Enterprise-grade neuro-audio, EEG processing, brain-sync engine,\nbilling integration, and real-time system observability.\n\n**Key Features:**\n- Neural harmonic synchronization engine\n- EEG signal processing and analysis\n- Brain-adaptive music generation\n- Real-time data streaming (ALBA)\n- Multi-channel payment integration\n- Industrial-grade system monitoring\n\n**Security:** All endpoints require Bearer JWT authentication.\n",
     "contact": {
-      "name": "Clisonix Support",
-      "url": "https://clisonix.cloud/support",
-      "email": "support@clisonix.cloud"
+      "name": "Kloud Support",
+      "url": "https://kloud.cloud/support",
+      "email": "support@kloud.cloud"
     },
     "license": {
       "name": "Proprietary",
-      "url": "https://clisonix.cloud/license"
+      "url": "https://kloud.cloud/license"
     },
     "x-logo": {
-      "url": "https://clisonix.cloud/logo.png"
+      "url": "https://kloud.cloud/logo.png"
     }
   },
   "servers": [
@@ -24,22 +24,22 @@
       "variables": {}
     },
     {
-      "url": "https://api.clisonix.com",
+      "url": "https://api.kloud.com",
       "description": "Production API",
       "variables": { }
     },
     {
-      "url": "https://api.clisonix.cloud",
+      "url": "https://api.kloud.cloud",
       "description": "Production - Domain",
       "variables": {}
     },
     {
-      "url": "https://reporting.clisonix.com",
+      "url": "https://reporting.kloud.com",
       "description": "Reporting Microservice",
       "variables": { }
     },
     {
-      "url": "https://excel.clisonix.com",
+      "url": "https://excel.kloud.com",
       "description": "Excel Microservice",
       "variables": { }
     },
@@ -157,7 +157,7 @@
         "properties": {
           "service": {
             "type": "string",
-            "example": "clisonix-cloud"
+            "example": "kloud-cloud"
           },
           "status": {
             "type": "string",
@@ -2692,4 +2692,5 @@
     }
   }
 }
+
 

@@ -21,7 +21,7 @@ from knowledge_router import route_query\n\
 from reasoning_engine import reason\n\
 from module_registry import list_modules\n\
 \n\
-app = FastAPI(title="Clisonix AGI", version="1.0.0")\n\
+app = FastAPI(title="Kloud AGI", version="1.0.0")\n\
 \n\
 @app.get("/health")\n\
 def health(): return {"status": "healthy", "service": "agi"}\n\
@@ -36,3 +36,4 @@ async def api_reason(query: str): return await reason(query)\n\
 EXPOSE 8014
 
 CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8014"]
+

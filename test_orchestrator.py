@@ -62,7 +62,7 @@ agiem_registration = {
     ],
     "metadata": {
         "description": "AGIEM coordinates the full ALBA/ALBI/JONA/ASI pipeline",
-        "documentation_url": "https://docs.clisonix.com/agiem"
+        "documentation_url": "https://docs.kloud.com/agiem"
     }
 }
 
@@ -168,4 +168,5 @@ response = requests.get(f"{ORCHESTRATOR_URL}/services/alba/health")
 print(f"Alba health via proxy: {response.json()}")
 
 print("\n✅ All tests passed!")
+
 

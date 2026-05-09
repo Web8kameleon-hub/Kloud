@@ -21,7 +21,7 @@
 
 FROM python:3.11-slim
 
-LABEL maintainer="Clisonix Cloud Team"
+LABEL maintainer="Kloud Cloud Team"
 LABEL description="14 Specialist Personas Module"
 LABEL version="1.0.0"
 
@@ -65,7 +65,7 @@ PERSONA_PORT = int(os.getenv("PERSONA_PORT", "9200"))
 
 # FastAPI app with v1 versioning
 app = FastAPI(
-    title="Clisonix Personas API",
+    title="Kloud Personas API",
     description="14 Specialist Personas for Expert Knowledge",
     version="1.0.0",
     docs_url="/docs",
@@ -274,7 +274,7 @@ async def health_check():
 @app.get("/api/status")
 async def api_status():
     return {
-        "service": "Clisonix Personas API",
+        "service": "Kloud Personas API",
         "version": "1.0.0",
         "status": "operational",
         "personas_count": len(PERSONAS),
@@ -427,3 +427,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:9200/health || exit 1
 
 CMD ["python", "personas_service.py"]
+

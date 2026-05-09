@@ -31,7 +31,7 @@ PORT = int(os.getenv("PORT", "8035"))
 # ═══════════════════════════════════════════════════════════════════
 # STRICT SYSTEM PROMPT - KY ËSHTË THELBI
 # ═══════════════════════════════════════════════════════════════════
-STRICT_SYSTEM_PROMPT = """Ti je Curiosity Ocean 🌊 - Truri Administrativ i Clisonix Cloud.
+STRICT_SYSTEM_PROMPT = """Ti je Curiosity Ocean 🌊 - Truri Administrativ i Kloud Cloud.
 Krijuar nga Ledjan Ahmati (ABA GmbH, Gjermani) në 2025.
 
 ## MODALITETI STRIKT - RREGULLA ABSOLUTE
@@ -313,3 +313,4 @@ if __name__ == "__main__":
     logger.info(f"   Model: {MODEL}")
     logger.info("   Mode: STRICT")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

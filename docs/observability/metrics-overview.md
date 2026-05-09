@@ -8,7 +8,7 @@
 
 ## Metric Categories
 
-Clisonix Cloud collects metrics across 5 primary categories:
+Kloud Cloud collects metrics across 5 primary categories:
 
 ---
 
@@ -119,7 +119,7 @@ Clisonix Cloud collects metrics across 5 primary categories:
 
 ---
 
-## 5. Clisonix Neural Metrics
+## 5. Kloud Neural Metrics
 
 ### Brain Engine Metrics
 
@@ -149,13 +149,13 @@ Clisonix Cloud collects metrics across 5 primary categories:
 
 ## Metric Naming Convention
 
-Clisonix follows Prometheus naming best practices:
+Kloud follows Prometheus naming best practices:
 
 1. **Format:** `<namespace>_<subsystem>_<name>_<unit>`
 2. **Examples:**
-   - `clisonix_api_requests_total`
-   - `clisonix_neuro_processing_duration_seconds`
-   - `clisonix_alba_frames_bytes_total`
+   - `kloud_api_requests_total`
+   - `kloud_neuro_processing_duration_seconds`
+   - `kloud_alba_frames_bytes_total`
 
 3. **Label Guidelines:**
    - Use lowercase with underscores
@@ -186,3 +186,4 @@ delta(prometheus_tsdb_head_series[1h])
 ---
 
 **Next:** [TSDB Analysis →](tsdb-analysis.md)
+

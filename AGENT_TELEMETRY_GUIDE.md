@@ -403,14 +403,14 @@ router = TelemetryRouter(
 
 2. **Check network connectivity:**
    ```bash
-   docker network inspect clisonix-network
+   docker network inspect kloud-network
    ```
 
 3. **View service logs:**
    ```bash
-   docker logs clisonix-alba --tail 50
-   docker logs clisonix-albi --tail 50
-   docker logs clisonix-jona --tail 50
+   docker logs kloud-alba --tail 50
+   docker logs kloud-albi --tail 50
+   docker logs kloud-jona --tail 50
    ```
 
 ### Partial failures (1/3 or 2/3 success)
@@ -473,3 +473,4 @@ async def send_telemetry_async(metrics):
 **Services:** Alba (5050), Albi (6060), Jona (7070)  
 **Status:** ✅ Production Ready  
 **Last Updated:** December 13, 2025
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Marketplace Stub - Clisonix Plugin & Model Marketplace
+Marketplace Stub - Kloud Plugin & Model Marketplace
 """
 import sys
 import uvicorn
@@ -12,7 +12,7 @@ from typing import Dict, List, Optional
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8004
 
 app = FastAPI(
-    title="Clisonix Marketplace",
+    title="Kloud Marketplace",
     description="Plugins, models, and integrations marketplace",
     version="1.0.0"
 )
@@ -20,7 +20,7 @@ app = FastAPI(
 # Mock marketplace items - UPDATED: phi3:mini removed (doesn't speak Albanian)
 MODELS = {
     "llama3.1:8b": {"downloads": 100000, "rating": 4.9, "price": 0, "author": "Meta"},
-    "clisonix-ocean:v2": {"downloads": 25000, "rating": 4.9, "price": 0, "author": "Clisonix"},
+    "kloud-ocean:v2": {"downloads": 25000, "rating": 4.9, "price": 0, "author": "Kloud"},
     "gpt-oss:120b": {"downloads": 5000, "rating": 4.95, "price": 0, "author": "Community"}
 }
 
@@ -35,7 +35,7 @@ PLUGINS = {
 @app.get("/")
 def root():
     return {
-        "service": "Clisonix Marketplace",
+        "service": "Kloud Marketplace",
         "version": "1.0.0",
         "models": len(MODELS),
         "plugins": len(PLUGINS),
@@ -71,7 +71,7 @@ def list_plugins():
 def featured():
     """Get featured items"""
     return {
-        "featured_models": ["clisonix-ocean:v2", "llama3.1:8b"],
+        "featured_models": ["kloud-ocean:v2", "llama3.1:8b"],
         "featured_plugins": ["excel-export", "custom-personas"],
         "timestamp": datetime.utcnow().isoformat()
     }
@@ -112,3 +112,4 @@ def stats():
 if __name__ == "__main__":
     print(f"🛒 Starting Marketplace on port {PORT}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+

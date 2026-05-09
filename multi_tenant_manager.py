@@ -1,10 +1,10 @@
-"""Multi-Tenant Manager API - Clisonix Cloud."""
+"""Multi-Tenant Manager API - Kloud Cloud."""
 import os
 
 import uvicorn
 from fastapi import FastAPI
 
-app = FastAPI(title="Clisonix Multi-Tenant Manager", version="1.0.0")
+app = FastAPI(title="Kloud Multi-Tenant Manager", version="1.0.0")
 
 
 @app.get("/health")
@@ -25,3 +25,4 @@ def list_tenants():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8090))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

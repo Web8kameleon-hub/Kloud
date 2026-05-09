@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, TypedDict
 
 import numpy as np
 
-logger = logging.getLogger("clisonix.curiosity_bridge")
+logger = logging.getLogger("kloud.curiosity_bridge")
 
 
 class BridgeStats(TypedDict):
@@ -413,3 +413,4 @@ if __name__ == "__main__":
             print(f"  {k}: {v}")
     
     asyncio.run(main())
+

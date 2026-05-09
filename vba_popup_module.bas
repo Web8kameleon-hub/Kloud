@@ -1,5 +1,5 @@
 ' ============================================================================
-' 🔷 CLISONIX VBA POP-UP MODULE
+' 🔷 KLOUD VBA POP-UP MODULE
 ' ============================================================================
 ' Excel ∞ Notification System
 ' 
@@ -76,7 +76,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         Message = Message & "This API is now ready for production!"
         
         ' Show pop-up
-        MsgBox Message, vbInformation + vbOKOnly, "Clisonix API Ready"
+        MsgBox Message, vbInformation + vbOKOnly, "Kloud API Ready"
         
         ' Optional: Add visual formatting
         Call HighlightReadyRow(Row)
@@ -219,7 +219,7 @@ Public Sub ShowStatusSummary()
     Message = Message & "━━━━━━━━━━━━━━━━━━━━" & vbCrLf
     Message = Message & "Total APIs: " & (LastRow - 1)
     
-    MsgBox Message, vbInformation, "Clisonix API Summary"
+    MsgBox Message, vbInformation, "Kloud API Summary"
 End Sub
 
 ' ============================================================================
@@ -243,3 +243,4 @@ Public Sub MarkSelectedAsError()
     Set Cell = Cells(Selection.Row, STATUS_COLUMN)
     Cell.Value = "ERROR"
 End Sub
+

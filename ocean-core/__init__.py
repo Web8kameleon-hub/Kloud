@@ -11,7 +11,7 @@ Modules:
 - knowledge_engine.py: Data aggregation + response formulation
 - ocean_api.py: FastAPI app (standalone)
 
-Author: Clisonix
+Author: Kloud
 Version: 2.0.0
 """
 
@@ -23,3 +23,4 @@ __all__ = [
     "knowledge_engine",
     "ocean_api",
 ]
+

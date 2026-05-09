@@ -1,4 +1,4 @@
-name: "CodeQL Config (Clisonix Cloud)"
+name: "CodeQL Config (Kloud Cloud)"
 disable-default-queries: false
 queries:
   - uses: security-and-quality
@@ -24,3 +24,4 @@ paths-ignore:
   - dist
   - build
   - .next
+

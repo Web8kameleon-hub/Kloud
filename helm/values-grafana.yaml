@@ -2,7 +2,7 @@
 # Used by: deploy.yml, deploy-helm.yml
 
 adminUser: admin
-adminPassword: ${GRAFANA_PASSWORD:-clisonix}
+adminPassword: ${GRAFANA_PASSWORD:-kloud}
 
 persistence:
   enabled: true
@@ -38,3 +38,4 @@ dashboardProviders:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/default
+

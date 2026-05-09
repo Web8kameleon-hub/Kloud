@@ -77,7 +77,7 @@ export default function OceanPage() {
 📅 Sot është ${now.toLocaleDateString('sq-AL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
 🕐 Ora: ${now.toLocaleTimeString('sq-AL')}
 
-Jam i fuqizuar nga Clisonix AI me:
+Jam i fuqizuar nga Kloud AI me:
 - 📊 Data në kohë reale (data, ora, moti)
 - 📖 Wikipedia & Arxiv
 - 💻 GitHub API
@@ -372,13 +372,14 @@ Jam i fuqizuar nga Clisonix AI me:
             </button>
           </div>
           <p className="text-center text-xs text-gray-500 mt-2">
-            Powered by Clisonix Ocean Core • 61 Alphabet Layers • Real Knowledge Integration
+            Powered by Kloud Ocean Core • 61 Alphabet Layers • Real Knowledge Integration
           </p>
         </div>
       </main>
     </div>
   )
 }
+
 
 
 

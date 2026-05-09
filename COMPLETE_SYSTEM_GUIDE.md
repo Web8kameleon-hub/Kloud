@@ -1,4 +1,4 @@
-# CLISONIX CLOUD - COMPLETE SYSTEM DOCUMENTATION
+# KLOUD CLOUD - COMPLETE SYSTEM DOCUMENTATION
 
 ## 📋 Table of Contents
 - [Architecture Overview](#architecture-overview)
@@ -14,7 +14,7 @@
 
 ## Architecture Overview
 
-CLISONIX Cloud is a **fully integrated neural audio synthesis system** with distributed microservices:
+KLOUD Cloud is a **fully integrated neural audio synthesis system** with distributed microservices:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -117,8 +117,8 @@ CLISONIX Cloud is a **fully integrated neural audio synthesis system** with dist
 
 1. **Clone Repository**
 ```bash
-git clone https://github.com/LedjanAhmati/Clisonix-cloud.git
-cd Clisonix-cloud
+git clone https://github.com/LedjanAhmati/Kloud-cloud.git
+cd Kloud-cloud
 ```
 
 2. **Install Dependencies**
@@ -354,7 +354,7 @@ docker-compose down
 kubectl apply -f k8s/
 
 # Check status
-kubectl get pods -n clisonix
+kubectl get pods -n kloud
 ```
 
 ---
@@ -420,14 +420,14 @@ curl http://localhost:9999/registry
 3. **Verify networking:**
 ```bash
 docker network ls
-docker network inspect clisonix
+docker network inspect kloud
 ```
 
 ### Database Connection Issues
 
 ```bash
 # PostgreSQL
-psql -h localhost -U postgres -d clisonix
+psql -h localhost -U postgres -d kloud
 
 # Redis
 redis-cli -h localhost -p 6379 ping
@@ -464,7 +464,7 @@ Get-Process | Where-Object {$_.Name -like "*python*" -or $_.Name -like "*node*"}
 ### Logs
 ```bash
 # API logs
-tail -f logs/Clisonix_real.log
+tail -f logs/Kloud_real.log
 
 # Service logs (Docker)
 docker-compose logs -f alba
@@ -536,3 +536,4 @@ print("Audio saved to output.wav")
 **Version**: 2.0.0  
 **Last Updated**: January 2025  
 **Maintainer**: Ledjan Ahmati
+

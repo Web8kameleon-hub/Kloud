@@ -6,7 +6,7 @@ import sys
 
 async def test_agents():
     print("=" * 60)
-    print("CLISONIX AGENTS - TESTING CONSOLIDATED MODULE")
+    print("KLOUD AGENTS - TESTING CONSOLIDATED MODULE")
     print("=" * 60)
     
     # Test 1: Imports
@@ -149,3 +149,4 @@ async def test_agents():
 if __name__ == "__main__":
     result = asyncio.run(test_agents())
     sys.exit(0 if result else 1)
+

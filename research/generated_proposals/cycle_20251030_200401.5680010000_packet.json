@@ -18,7 +18,7 @@
       },
       "insight": {},
       "alba": {
-        "source_dir": "C:\\Clisonix-cloud\\data\\alba",
+        "source_dir": "C:\\Kloud-cloud\\data\\alba",
         "processed_files": [],
         "ingestion_sources": [],
         "frames_ingested": 0,
@@ -56,4 +56,5 @@
   },
   "attachments": {}
 }
+
 

@@ -1,14 +1,14 @@
 {
   "info": {
-    "name": "Clisonix Ultra Mega Collection",
+    "name": "Kloud Ultra Mega Collection",
     "_postman_id": "merged-20260111065910",
     "description": "Merged collection from 3 sources\nGenerated: 2026-01-11T06:59:10.802236",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "📁 UltraWebThinking - Clisonix Cloud API",
-      "description": "Imported from: clisonix-postman-collection.json",
+      "name": "📁 UltraWebThinking - Kloud Cloud API",
+      "description": "Imported from: kloud-postman-collection.json",
       "item": [
         {
           "name": "📋 Health & Status",
@@ -182,7 +182,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"question\": \"Çfarë është Clisonix?\",\n  \"context\": \"Platformë neuro-audio dhe EEG\",\n  \"include_details\": true\n}"
+                  "raw": "{\n  \"question\": \"Çfarë është Kloud?\",\n  \"context\": \"Platformë neuro-audio dhe EEG\",\n  \"include_details\": true\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/ask",
@@ -379,7 +379,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 1000,\n  \"currency\": \"eur\",\n  \"payment_method_types\": [\"sepa_debit\"],\n  \"description\": \"Clisonix subscription test\"\n}"
+                  "raw": "{\n  \"amount\": 1000,\n  \"currency\": \"eur\",\n  \"payment_method_types\": [\"sepa_debit\"],\n  \"description\": \"Kloud subscription test\"\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/billing/stripe/payment-intent",
@@ -412,7 +412,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"debtor_iban\": \"DE1234567890\",\n  \"creditor_iban\": \"DE0987654321\",\n  \"amount\": \"10.00\",\n  \"currency\": \"EUR\",\n  \"remittance_information\": \"Clisonix subscription\"\n}"
+                  "raw": "{\n  \"debtor_iban\": \"DE1234567890\",\n  \"creditor_iban\": \"DE0987654321\",\n  \"amount\": \"10.00\",\n  \"currency\": \"EUR\",\n  \"remittance_information\": \"Kloud subscription\"\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/billing/sepa/initiate",
@@ -1207,8 +1207,8 @@
       ]
     },
     {
-      "name": "📁 Clisonix Cloud API",
-      "description": "Imported from: Clisonix-Cloud-API.postman_collection.json",
+      "name": "📁 Kloud Cloud API",
+      "description": "Imported from: Kloud-Cloud-API.postman_collection.json",
       "item": [
         {
           "name": "System Status",
@@ -1466,8 +1466,8 @@
       ]
     },
     {
-      "name": "📁 Clisonix Cloud - Real Data APIs",
-      "description": "Imported from: Clisonix-Cloud-Real-APIs.postman_collection.json",
+      "name": "📁 Kloud Cloud - Real Data APIs",
+      "description": "Imported from: Kloud-Cloud-Real-APIs.postman_collection.json",
       "item": [
         {
           "name": "ASI Trinity - Real Prometheus Metrics",
@@ -2026,7 +2026,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "https://api.clisonix.com",
+      "value": "https://api.kloud.com",
       "type": "string"
     },
     {
@@ -2066,3 +2066,4 @@
     ]
   }
 }
+

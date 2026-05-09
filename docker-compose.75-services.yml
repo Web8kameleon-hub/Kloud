@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# CLISONIX CLOUD - 75 MICROSERVICES DOCKER COMPOSE
+# KLOUD CLOUD - 75 MICROSERVICES DOCKER COMPOSE
 # Enterprise Edition - Full Local Deployment
 # 
 # Created: 2026-01-30
@@ -15,7 +15,7 @@ x-python-service: &python-service
   environment:
     - PYTHONUNBUFFERED=1
     - REDIS_URL=redis://redis:6379/0
-    - DATABASE_URL=postgresql://clisonix:clisonix@postgres:5432/clisonixdb
+    - DATABASE_URL=postgresql://kloud:kloud@postgres:5432/klouddb
   restart: "no"
   deploy:
     resources:
@@ -23,7 +23,7 @@ x-python-service: &python-service
         memory: 256M
         cpus: '0.25'
   networks:
-    - clisonix-net
+    - kloud-net
 
 services:
 
@@ -34,28 +34,28 @@ services:
   # 1. PostgreSQL
   postgres:
     image: postgres:16-alpine
-    container_name: clisonix-postgres
+    container_name: kloud-postgres
     environment:
-      POSTGRES_USER: clisonix
-      POSTGRES_PASSWORD: clisonix
-      POSTGRES_DB: clisonixdb
+      POSTGRES_USER: kloud
+      POSTGRES_PASSWORD: kloud
+      POSTGRES_DB: klouddb
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U clisonix"]
+      test: ["CMD-SHELL", "pg_isready -U kloud"]
       interval: 10s
       timeout: 5s
       retries: 5
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 2. Redis
   redis:
     image: redis:7-alpine
-    container_name: clisonix-redis
+    container_name: kloud-redis
     ports:
       - "6379:6379"
     volumes:
@@ -67,14 +67,14 @@ services:
       retries: 5
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 3. Neo4j Graph Database
   neo4j:
     image: neo4j:5-community
-    container_name: clisonix-neo4j
+    container_name: kloud-neo4j
     environment:
-      NEO4J_AUTH: neo4j/clisonix123
+      NEO4J_AUTH: neo4j/kloud123
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -82,12 +82,12 @@ services:
       - neo4j-data:/data
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 4. VictoriaMetrics
   victoriametrics:
     image: victoriametrics/victoria-metrics:latest
-    container_name: clisonix-victoriametrics
+    container_name: kloud-victoriametrics
     ports:
       - "8428:8428"
     volumes:
@@ -95,15 +95,15 @@ services:
     command: -storageDataPath=/victoria-metrics-data -retentionPeriod=90d
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 5. MinIO (S3-compatible storage)
   minio:
     image: minio/minio:latest
-    container_name: clisonix-minio
+    container_name: kloud-minio
     environment:
-      MINIO_ROOT_USER: clisonix
-      MINIO_ROOT_PASSWORD: clisonix123
+      MINIO_ROOT_USER: kloud
+      MINIO_ROOT_PASSWORD: kloud123
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -112,7 +112,7 @@ services:
     command: server /data --console-address ":9001"
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # ═══════════════════════════════════════════════════════════════════════════
   # AI & OLLAMA (3 containers)
@@ -121,7 +121,7 @@ services:
   # 6. Ollama AI Server
   ollama:
     image: ollama/ollama:latest
-    container_name: clisonix-ollama
+    container_name: kloud-ollama
     ports:
       - "11434:11434"
     volumes:
@@ -136,12 +136,12 @@ services:
       start_period: 60s
     restart: unless-stopped
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 7. Ollama Multi-Model API
   ollama-multi-api:
     <<: *python-service
-    container_name: clisonix-ollama-multi
+    container_name: kloud-ollama-multi
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx &&
       cd ocean-core && python ollama_multi_api.py"
@@ -160,7 +160,7 @@ services:
   # 8. Ocean Core AI Engine
   ocean-core:
     <<: *python-service
-    container_name: clisonix-ocean-core
+    container_name: kloud-ocean-core
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx langdetect requests cbor2 msgpack numpy redis psutil googletrans==4.0.2 &&
       cd ocean-core && python ocean_api.py"
@@ -180,7 +180,7 @@ services:
   # 9. ALBA - Analytical Intelligence
   alba:
     <<: *python-service
-    container_name: clisonix-alba
+    container_name: kloud-alba
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx redis psutil prometheus_client opentelemetry-api opentelemetry-sdk opentelemetry-instrumentation-fastapi opentelemetry-exporter-otlp-proto-http 2>/dev/null;
       python alba_service_5555.py"
@@ -193,7 +193,7 @@ services:
   # 10. ALBI - Creative Intelligence
   albi:
     <<: *python-service
-    container_name: clisonix-albi
+    container_name: kloud-albi
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx redis psutil prometheus_client opentelemetry-api opentelemetry-sdk opentelemetry-instrumentation-fastapi opentelemetry-exporter-otlp-proto-http 2>/dev/null;
       python albi_service_6680.py"
@@ -206,7 +206,7 @@ services:
   # 11. JONA - Master Coordinator
   jona:
     <<: *python-service
-    container_name: clisonix-jona
+    container_name: kloud-jona
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx redis psutil prometheus_client &&
       python jona_service_7777.py"
@@ -222,7 +222,7 @@ services:
   # 12. ASI - Artificial Super Intelligence
   asi:
     <<: *python-service
-    container_name: clisonix-asi
+    container_name: kloud-asi
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx redis &&
       python asi_api_server.py"
@@ -238,7 +238,7 @@ services:
   # 13. Alphabet Layers
   alphabet-layers:
     <<: *python-service
-    container_name: clisonix-alphabet-layers
+    container_name: kloud-alphabet-layers
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic cbor2 msgpack numpy &&
       python docker-stubs/service_stub.py alphabet-layers 8061"
@@ -248,7 +248,7 @@ services:
   # 14. LIAM - Labor Intelligence Array Matrix
   liam:
     <<: *python-service
-    container_name: clisonix-liam
+    container_name: kloud-liam
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic numpy cbor2 &&
       python liam_server.py"
@@ -258,7 +258,7 @@ services:
   # 15. ALDA - Artificial Labor Determined Array
   alda:
     <<: *python-service
-    container_name: clisonix-alda
+    container_name: kloud-alda
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic numpy httpx &&
       python alda_server.py"
@@ -268,7 +268,7 @@ services:
   # 16. ALBA Idle Chat
   alba-idle:
     <<: *python-service
-    container_name: clisonix-alba-idle
+    container_name: kloud-alba-idle
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python docker-stubs/service_stub.py alba-idle 8031"
@@ -278,7 +278,7 @@ services:
   # 17. Blerina - Document Intelligence
   blerina:
     <<: *python-service
-    container_name: clisonix-blerina
+    container_name: kloud-blerina
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx python-multipart numpy &&
       python blerina_reformatter.py"
@@ -288,7 +288,7 @@ services:
   # 18. Cycle Engine
   cycle-engine:
     <<: *python-service
-    container_name: clisonix-cycle-engine
+    container_name: kloud-cycle-engine
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python cycle_engine.py"
@@ -298,7 +298,7 @@ services:
   # 19. SaaS Orchestrator
   saas-orchestrator:
     <<: *python-service
-    container_name: clisonix-saas-orchestrator
+    container_name: kloud-saas-orchestrator
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx &&
       python saas_services_orchestrator.py"
@@ -316,7 +316,7 @@ services:
   # 20. Personas API
   personas:
     <<: *python-service
-    container_name: clisonix-personas
+    container_name: kloud-personas
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python personas_api.py"
@@ -330,7 +330,7 @@ services:
   # 21. AGIEM - AGI Ecosystem Manager
   agiem:
     <<: *python-service
-    container_name: clisonix-agiem
+    container_name: kloud-agiem
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic aiohttp httpx &&
       python agiem_core.py"
@@ -340,7 +340,7 @@ services:
   # 22. DataSource Europe
   datasource-europe:
     <<: *python-service
-    container_name: clisonix-ds-europe
+    container_name: kloud-ds-europe
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Europe', description='EU, ECB, Eurostat data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'europe'}); sources_route = app.get('/sources')(lambda: {'eurostat': True, 'ecb': True, 'balkans': True}); uvicorn.run(app, host='0.0.0.0', port=9301)\""
@@ -350,7 +350,7 @@ services:
   # 23. DataSource Americas
   datasource-americas:
     <<: *python-service
-    container_name: clisonix-ds-americas
+    container_name: kloud-ds-americas
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Americas', description='US, Canada, LATAM data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'americas'}); sources_route = app.get('/sources')(lambda: {'us_fed': True, 'canada': True, 'latam': True}); uvicorn.run(app, host='0.0.0.0', port=9302)\""
@@ -360,7 +360,7 @@ services:
   # 24. DataSource Asia
   datasource-asia:
     <<: *python-service
-    container_name: clisonix-ds-asia
+    container_name: kloud-ds-asia
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Asia', description='China, Japan, Korea data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'asia'}); sources_route = app.get('/sources')(lambda: {'china': True, 'japan': True, 'korea': True}); uvicorn.run(app, host='0.0.0.0', port=9303)\""
@@ -370,7 +370,7 @@ services:
   # 25. DataSource India
   datasource-india:
     <<: *python-service
-    container_name: clisonix-ds-india
+    container_name: kloud-ds-india
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource India', description='India RBI, NSE data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'india'}); sources_route = app.get('/sources')(lambda: {'rbi': True, 'nse': True, 'sebi': True}); uvicorn.run(app, host='0.0.0.0', port=9304)\""
@@ -380,7 +380,7 @@ services:
   # 26. DataSource Africa
   datasource-africa:
     <<: *python-service
-    container_name: clisonix-ds-africa
+    container_name: kloud-ds-africa
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Africa', description='African Union data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'africa'}); sources_route = app.get('/sources')(lambda: {'au': True, 'sadc': True, 'ecowas': True}); uvicorn.run(app, host='0.0.0.0', port=9305)\""
@@ -390,7 +390,7 @@ services:
   # 27. DataSource Oceania
   datasource-oceania:
     <<: *python-service
-    container_name: clisonix-ds-oceania
+    container_name: kloud-ds-oceania
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Oceania', description='Australia, NZ data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'oceania'}); sources_route = app.get('/sources')(lambda: {'australia': True, 'new_zealand': True, 'pacific': True}); uvicorn.run(app, host='0.0.0.0', port=9306)\""
@@ -400,7 +400,7 @@ services:
   # 28. DataSource Central Asia
   datasource-central-asia:
     <<: *python-service
-    container_name: clisonix-ds-central-asia
+    container_name: kloud-ds-central-asia
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Central Asia', description='Kazakhstan, Uzbekistan data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'central_asia'}); sources_route = app.get('/sources')(lambda: {'kazakhstan': True, 'uzbekistan': True, 'turkmenistan': True}); uvicorn.run(app, host='0.0.0.0', port=9307)\""
@@ -410,7 +410,7 @@ services:
   # 29. DataSource Antarctica
   datasource-antarctica:
     <<: *python-service
-    container_name: clisonix-ds-antarctica
+    container_name: kloud-ds-antarctica
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='DataSource Antarctica', description='Research station data'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'region': 'antarctica'}); sources_route = app.get('/sources')(lambda: {'mcmurdo': True, 'amundsen': True, 'research': True}); uvicorn.run(app, host='0.0.0.0', port=9308)\""
@@ -421,7 +421,7 @@ services:
   # 30. Elbasan AI Lab
   lab-elbasan:
     <<: *python-service
-    container_name: clisonix-lab-elbasan
+    container_name: kloud-lab-elbasan
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Elbasan AI Lab', description='AI & ML Research'); health_route = app.get('/health')(lambda: {'lab': 'Elbasan', 'specialty': 'AI/ML', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9101)\""
@@ -431,7 +431,7 @@ services:
   # 31. Tirana Medical Lab
   lab-tirana:
     <<: *python-service
-    container_name: clisonix-lab-tirana
+    container_name: kloud-lab-tirana
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Tirana Medical Lab'); health_route = app.get('/health')(lambda: {'lab': 'Tirana', 'specialty': 'Medical', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9102)\""
@@ -441,7 +441,7 @@ services:
   # 32. Durrës IoT Lab
   lab-durres:
     <<: *python-service
-    container_name: clisonix-lab-durres
+    container_name: kloud-lab-durres
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Durres IoT Lab'); health_route = app.get('/health')(lambda: {'lab': 'Durres', 'specialty': 'IoT', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9103)\""
@@ -451,7 +451,7 @@ services:
   # 33. Vlorë Environmental Lab
   lab-vlore:
     <<: *python-service
-    container_name: clisonix-lab-vlore
+    container_name: kloud-lab-vlore
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Vlore Environmental Lab'); health_route = app.get('/health')(lambda: {'lab': 'Vlore', 'specialty': 'Environment', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9104)\""
@@ -461,7 +461,7 @@ services:
   # 34. Shkodër Marine Lab
   lab-shkoder:
     <<: *python-service
-    container_name: clisonix-lab-shkoder
+    container_name: kloud-lab-shkoder
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Shkoder Marine Lab'); health_route = app.get('/health')(lambda: {'lab': 'Shkoder', 'specialty': 'Marine', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9105)\""
@@ -471,7 +471,7 @@ services:
   # 35. Korçë Agricultural Lab
   lab-korce:
     <<: *python-service
-    container_name: clisonix-lab-korce
+    container_name: kloud-lab-korce
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Korce Agricultural Lab'); health_route = app.get('/health')(lambda: {'lab': 'Korce', 'specialty': 'Agriculture', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9106)\""
@@ -481,7 +481,7 @@ services:
   # 36. Sarandë Underwater Lab
   lab-saranda:
     <<: *python-service
-    container_name: clisonix-lab-saranda
+    container_name: kloud-lab-saranda
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Saranda Underwater Lab'); health_route = app.get('/health')(lambda: {'lab': 'Saranda', 'specialty': 'Underwater', 'country': 'Albania'}); uvicorn.run(app, host='0.0.0.0', port=9107)\""
@@ -491,7 +491,7 @@ services:
   # 37. Prishtina Security Lab
   lab-prishtina:
     <<: *python-service
-    container_name: clisonix-lab-prishtina
+    container_name: kloud-lab-prishtina
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Prishtina Security Lab'); health_route = app.get('/health')(lambda: {'lab': 'Prishtina', 'specialty': 'Cybersecurity', 'country': 'Kosovo'}); uvicorn.run(app, host='0.0.0.0', port=9108)\""
@@ -501,7 +501,7 @@ services:
   # 38. Kostur Energy Lab
   lab-kostur:
     <<: *python-service
-    container_name: clisonix-lab-kostur
+    container_name: kloud-lab-kostur
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Kostur Energy Lab'); health_route = app.get('/health')(lambda: {'lab': 'Kostur', 'specialty': 'Energy', 'country': 'North Macedonia'}); uvicorn.run(app, host='0.0.0.0', port=9109)\""
@@ -511,7 +511,7 @@ services:
   # 39. Athens Classical Lab
   lab-athens:
     <<: *python-service
-    container_name: clisonix-lab-athens
+    container_name: kloud-lab-athens
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Athens Classical Lab'); health_route = app.get('/health')(lambda: {'lab': 'Athens', 'specialty': 'Classical Studies', 'country': 'Greece'}); uvicorn.run(app, host='0.0.0.0', port=9110)\""
@@ -521,7 +521,7 @@ services:
   # 40. Rome Architecture Lab
   lab-rome:
     <<: *python-service
-    container_name: clisonix-lab-rome
+    container_name: kloud-lab-rome
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Rome Architecture Lab'); health_route = app.get('/health')(lambda: {'lab': 'Rome', 'specialty': 'Architecture', 'country': 'Italy'}); uvicorn.run(app, host='0.0.0.0', port=9111)\""
@@ -531,7 +531,7 @@ services:
   # 41. Zurich Finance Lab
   lab-zurich:
     <<: *python-service
-    container_name: clisonix-lab-zurich
+    container_name: kloud-lab-zurich
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Zurich Finance Lab'); health_route = app.get('/health')(lambda: {'lab': 'Zurich', 'specialty': 'Finance', 'country': 'Switzerland'}); uvicorn.run(app, host='0.0.0.0', port=9112)\""
@@ -541,7 +541,7 @@ services:
   # 42. Beograd Industrial Lab
   lab-beograd:
     <<: *python-service
-    container_name: clisonix-lab-beograd
+    container_name: kloud-lab-beograd
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Beograd Industrial Lab'); health_route = app.get('/health')(lambda: {'lab': 'Beograd', 'specialty': 'Industrial', 'country': 'Serbia'}); uvicorn.run(app, host='0.0.0.0', port=9113)\""
@@ -551,7 +551,7 @@ services:
   # 43. Sofia Chemistry Lab
   lab-sofia:
     <<: *python-service
-    container_name: clisonix-lab-sofia
+    container_name: kloud-lab-sofia
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Sofia Chemistry Lab'); health_route = app.get('/health')(lambda: {'lab': 'Sofia', 'specialty': 'Chemistry', 'country': 'Bulgaria'}); uvicorn.run(app, host='0.0.0.0', port=9114)\""
@@ -561,7 +561,7 @@ services:
   # 44. Zagreb Biotech Lab
   lab-zagreb:
     <<: *python-service
-    container_name: clisonix-lab-zagreb
+    container_name: kloud-lab-zagreb
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Zagreb Biotech Lab'); health_route = app.get('/health')(lambda: {'lab': 'Zagreb', 'specialty': 'Biotech', 'country': 'Croatia'}); uvicorn.run(app, host='0.0.0.0', port=9115)\""
@@ -571,7 +571,7 @@ services:
   # 45. Ljubljana Quantum Lab
   lab-ljubljana:
     <<: *python-service
-    container_name: clisonix-lab-ljubljana
+    container_name: kloud-lab-ljubljana
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Ljubljana Quantum Lab'); health_route = app.get('/health')(lambda: {'lab': 'Ljubljana', 'specialty': 'Quantum', 'country': 'Slovenia'}); uvicorn.run(app, host='0.0.0.0', port=9116)\""
@@ -581,7 +581,7 @@ services:
   # 46. Vienna Neuroscience Lab
   lab-vienna:
     <<: *python-service
-    container_name: clisonix-lab-vienna
+    container_name: kloud-lab-vienna
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Vienna Neuroscience Lab'); health_route = app.get('/health')(lambda: {'lab': 'Vienna', 'specialty': 'Neuroscience', 'country': 'Austria'}); uvicorn.run(app, host='0.0.0.0', port=9117)\""
@@ -591,7 +591,7 @@ services:
   # 47. Prague Robotics Lab
   lab-prague:
     <<: *python-service
-    container_name: clisonix-lab-prague
+    container_name: kloud-lab-prague
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Prague Robotics Lab'); health_route = app.get('/health')(lambda: {'lab': 'Prague', 'specialty': 'Robotics', 'country': 'Czech Republic'}); uvicorn.run(app, host='0.0.0.0', port=9118)\""
@@ -601,7 +601,7 @@ services:
   # 48. Budapest Data Lab
   lab-budapest:
     <<: *python-service
-    container_name: clisonix-lab-budapest
+    container_name: kloud-lab-budapest
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Budapest Data Lab'); health_route = app.get('/health')(lambda: {'lab': 'Budapest', 'specialty': 'Big Data', 'country': 'Hungary'}); uvicorn.run(app, host='0.0.0.0', port=9119)\""
@@ -611,7 +611,7 @@ services:
   # 49. Bucharest Nanotechnology Lab
   lab-bucharest:
     <<: *python-service
-    container_name: clisonix-lab-bucharest
+    container_name: kloud-lab-bucharest
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Bucharest Nanotechnology Lab'); health_route = app.get('/health')(lambda: {'lab': 'Bucharest', 'specialty': 'Nanotechnology', 'country': 'Romania'}); uvicorn.run(app, host='0.0.0.0', port=9120)\""
@@ -621,7 +621,7 @@ services:
   # 50. Istanbul Trade Lab
   lab-istanbul:
     <<: *python-service
-    container_name: clisonix-lab-istanbul
+    container_name: kloud-lab-istanbul
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Istanbul Trade Lab'); health_route = app.get('/health')(lambda: {'lab': 'Istanbul', 'specialty': 'Trade', 'country': 'Turkey'}); uvicorn.run(app, host='0.0.0.0', port=9121)\""
@@ -631,7 +631,7 @@ services:
   # 51. Cairo Archeology Lab
   lab-cairo:
     <<: *python-service
-    container_name: clisonix-lab-cairo
+    container_name: kloud-lab-cairo
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Cairo Archeology Lab'); health_route = app.get('/health')(lambda: {'lab': 'Cairo', 'specialty': 'Archeology', 'country': 'Egypt'}); uvicorn.run(app, host='0.0.0.0', port=9122)\""
@@ -641,7 +641,7 @@ services:
   # 52. Jerusalem Heritage Lab
   lab-jerusalem:
     <<: *python-service
-    container_name: clisonix-lab-jerusalem
+    container_name: kloud-lab-jerusalem
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Jerusalem Heritage Lab'); health_route = app.get('/health')(lambda: {'lab': 'Jerusalem', 'specialty': 'Heritage', 'country': 'Palestine'}); uvicorn.run(app, host='0.0.0.0', port=9123)\""
@@ -655,7 +655,7 @@ services:
   # 53. SaaS API
   saas-api:
     <<: *python-service
-    container_name: clisonix-saas-api
+    container_name: kloud-saas-api
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       python saas_api.py"
@@ -665,7 +665,7 @@ services:
   # 54. Marketplace API
   marketplace:
     <<: *python-service
-    container_name: clisonix-marketplace
+    container_name: kloud-marketplace
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx stripe &&
       cd services/marketplace && python main.py"
@@ -675,7 +675,7 @@ services:
   # 55. Economy Engine
   economy:
     <<: *python-service
-    container_name: clisonix-economy
+    container_name: kloud-economy
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python economy_api_server.py"
@@ -689,7 +689,7 @@ services:
   # 56. Reporting Service
   reporting:
     <<: *python-service
-    container_name: clisonix-reporting
+    container_name: kloud-reporting
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic openpyxl python-pptx httpx python-multipart 2>/dev/null;
       cd apps/api && python reporting_api.py"
@@ -699,7 +699,7 @@ services:
   # 57. Excel Service
   excel:
     <<: *python-service
-    container_name: clisonix-excel
+    container_name: kloud-excel
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic openpyxl pandas httpx python-multipart numpy 2>/dev/null;
       cd services/excel && python main.py"
@@ -709,7 +709,7 @@ services:
   # 58. Behavioral Science
   behavioral:
     <<: *python-service
-    container_name: clisonix-behavioral
+    container_name: kloud-behavioral
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python behavioral_science_api.py"
@@ -719,7 +719,7 @@ services:
   # 59. Advanced Analytics
   analytics:
     <<: *python-service
-    container_name: clisonix-analytics
+    container_name: kloud-analytics
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic numpy pandas python-multipart &&
       python advanced_analytics_api.py"
@@ -729,7 +729,7 @@ services:
   # 60. NeuroSonix
   neurosonix:
     <<: *python-service
-    container_name: clisonix-neurosonix
+    container_name: kloud-neurosonix
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic numpy scipy python-multipart &&
       python neurosonix_industrial_api.py"
@@ -739,7 +739,7 @@ services:
   # 61. Aviation Weather
   aviation:
     <<: *python-service
-    container_name: clisonix-aviation
+    container_name: kloud-aviation
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
       cd services/aviation-weather && python main.py"
@@ -749,7 +749,7 @@ services:
   # 62. Multi-Tenant Manager
   multi-tenant:
     <<: *python-service
-    container_name: clisonix-multi-tenant
+    container_name: kloud-multi-tenant
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python multi_tenant_manager.py"
@@ -759,7 +759,7 @@ services:
   # 63. Quantum Computing
   quantum:
     <<: *python-service
-    container_name: clisonix-quantum
+    container_name: kloud-quantum
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic numpy &&
       python quantum_computing_api.py"
@@ -773,7 +773,7 @@ services:
   # 64. Backend API
   api:
     <<: *python-service
-    container_name: clisonix-api
+    container_name: kloud-api
     command: >
       bash -c "pip install --no-cache-dir -q -r apps/api/requirements.txt &&
       cd apps/api && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
@@ -788,7 +788,7 @@ services:
   # 65. Web Frontend
   web:
     image: node:20-alpine
-    container_name: clisonix-web
+    container_name: kloud-web
     working_dir: /app/apps/web
     volumes:
       - ./:/app
@@ -801,12 +801,12 @@ services:
       - api
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 66. Traefik Reverse Proxy
   traefik:
     image: traefik:v3.0
-    container_name: clisonix-traefik
+    container_name: kloud-traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -818,7 +818,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # ═══════════════════════════════════════════════════════════════════════════
   # MONITORING & OBSERVABILITY (5 containers)
@@ -827,7 +827,7 @@ services:
   # 67. Prometheus
   prometheus:
     image: prom/prometheus:latest
-    container_name: clisonix-prometheus
+    container_name: kloud-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -838,38 +838,38 @@ services:
       - '--storage.tsdb.retention.time=30d'
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 68. Grafana
   grafana:
     image: grafana/grafana:latest
-    container_name: clisonix-grafana
+    container_name: kloud-grafana
     ports:
       - "3001:3000"
     volumes:
       - grafana-data:/var/lib/grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=clisonix
+      - GF_SECURITY_ADMIN_PASSWORD=kloud
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 69. Loki (Logs)
   loki:
     image: grafana/loki:latest
-    container_name: clisonix-loki
+    container_name: kloud-loki
     ports:
       - "3100:3100"
     volumes:
       - loki-data:/loki
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 70. Jaeger (Tracing)
   jaeger:
     image: jaegertracing/all-in-one:latest
-    container_name: clisonix-jaeger
+    container_name: kloud-jaeger
     ports:
       - "16686:16686"
       - "4317:4317"
@@ -878,12 +878,12 @@ services:
       - COLLECTOR_OTLP_ENABLED=true
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # 71. Tempo (Distributed Tracing)
   tempo:
     image: grafana/tempo:latest
-    container_name: clisonix-tempo
+    container_name: kloud-tempo
     user: root
     ports:
       - "3200:3200"
@@ -894,7 +894,7 @@ services:
     command: ["-config.file=/etc/tempo.yml"]
     restart: "no"
     networks:
-      - clisonix-net
+      - kloud-net
 
   # ═══════════════════════════════════════════════════════════════════════════
   # ADDITIONAL SERVICES (4 containers)
@@ -903,7 +903,7 @@ services:
   # 72. Agent Telemetry
   agent-telemetry:
     <<: *python-service
-    container_name: clisonix-agent-telemetry
+    container_name: kloud-agent-telemetry
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       python agent_telemetry.py"
@@ -913,7 +913,7 @@ services:
   # 73. Cognitive Signature Engine
   cognitive-engine:
     <<: *python-service
-    container_name: clisonix-cognitive
+    container_name: kloud-cognitive
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       cd ocean-core && python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Cognitive Signature Engine'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'engine': 'cognitive'}); uvicorn.run(app, host='0.0.0.0', port=8010)\""
@@ -923,7 +923,7 @@ services:
   # 74. Adaptive Persona Router
   adaptive-router:
     <<: *python-service
-    container_name: clisonix-adaptive-router
+    container_name: kloud-adaptive-router
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic &&
       cd ocean-core && python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Adaptive Persona Router'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'personas': 4}); uvicorn.run(app, host='0.0.0.0', port=8011)\""
@@ -933,10 +933,10 @@ services:
   # 75. Health Monitor
   health-monitor:
     <<: *python-service
-    container_name: clisonix-health-monitor
+    container_name: kloud-health-monitor
     command: >
       bash -c "pip install --no-cache-dir -q uvicorn fastapi pydantic httpx &&
-      python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Clisonix Health Monitor'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'monitored_services': 9}); uvicorn.run(app, host='0.0.0.0', port=8099)\""
+      python -c \"import uvicorn; from fastapi import FastAPI; app = FastAPI(title='Kloud Health Monitor'); health_route = app.get('/health')(lambda: {'status': 'healthy', 'monitored_services': 9}); uvicorn.run(app, host='0.0.0.0', port=8099)\""
     ports:
       - "8099:8099"
     depends_on:
@@ -949,7 +949,7 @@ services:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 networks:
-  clisonix-net:
+  kloud-net:
     driver: bridge
     ipam:
       config:
@@ -971,3 +971,4 @@ volumes:
   loki-data:
   tempo-data:
   pip-cache:
+

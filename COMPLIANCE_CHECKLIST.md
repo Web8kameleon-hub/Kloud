@@ -1,4 +1,4 @@
-# 📋 Compliance & Stage Checklist - Clisonix Cloud
+# 📋 Compliance & Stage Checklist - Kloud Cloud
 
 **Data:** 3 Shkurt 2026  
 **Status:** Në Progres ✅
@@ -238,12 +238,13 @@
 
 ## 10. Contact & Escalation
 
-- **GDPR Officer:** [privacy@clisonix.com](mailto:privacy@clisonix.com)
-- **Security Officer:** [security@clisonix.com](mailto:security@clisonix.com)
-- **Compliance Manager:** [compliance@clisonix.com](mailto:compliance@clisonix.com)
-- **Support:** [support@clisonix.com](mailto:support@clisonix.com)
+- **GDPR Officer:** [privacy@kloud.com](mailto:privacy@kloud.com)
+- **Security Officer:** [security@kloud.com](mailto:security@kloud.com)
+- **Compliance Manager:** [compliance@kloud.com](mailto:compliance@kloud.com)
+- **Support:** [support@kloud.com](mailto:support@kloud.com)
 
 ---
 
 **Përditësim i fundit:** 2026-02-03  
 **Përditësuesi:** Copilot Agent
+

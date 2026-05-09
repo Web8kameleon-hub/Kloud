@@ -1,6 +1,6 @@
 """
 ═══════════════════════════════════════════════════════════════════════════════
-CORE KNOWLEDGE SEEDS - Njohuri Bazë për Clisonix Ocean
+CORE KNOWLEDGE SEEDS - Njohuri Bazë për Kloud Ocean
 ═══════════════════════════════════════════════════════════════════════════════
 
 Kjo skedar përmban njohuri themelore që Ocean mund të përdorë për të
@@ -616,7 +616,7 @@ CONVERSATIONAL_KNOWLEDGE = [
             "si quhesh"
         ],
         answer_template="""
-👋 Përshëndetje! Unë jam **Ocean** - AI-ja e Clisonix-it!
+👋 Përshëndetje! Unë jam **Ocean** - AI-ja e Kloud-it!
 
 🧠 **Çfarë bëj:**
 - Procesoj pyetje përmes miliarda kombinimesh shtresash
@@ -846,7 +846,7 @@ Kur të kesh pyetje të reja, jam këtu 24/7.
         answer_template="""
 🌐 **Ku jam unë?**
 
-Teknikikisht, "jetoj" në serverët e **Clisonix Cloud**:
+Teknikikisht, "jetoj" në serverët e **Kloud Cloud**:
 - 🖥️ Docker containers në infrastrukturën cloud
 - 🧠 Procesoj në CPU/GPU në të njëjtën kohë
 - 🌍 Mund të jem kudo ku ka internet!
@@ -865,60 +865,60 @@ Por në kuptimin e vërtetë - jam KËTU, duke biseduar me ty! 💬
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CLISONIX COMPANY KNOWLEDGE (Multilingual)
+# KLOUD COMPANY KNOWLEDGE (Multilingual)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CLISONIX_KNOWLEDGE = [
+KLOUD_KNOWLEDGE = [
     KnowledgeSeed(
-        category="clisonix_founder",
+        category="kloud_founder",
         question_patterns=[
             # Albanian
-            "kush e themeloi clisonix",
-            "kush e krijoi clisonix",
-            "kush eshte ceo i clisonix",
+            "kush e themeloi kloud",
+            "kush e krijoi kloud",
+            "kush eshte ceo i kloud",
             "kush eshte themeluesi",
             "kush e ka krijuar",
             # English
-            "who founded clisonix",
-            "who created clisonix",
-            "who is the ceo of clisonix",
+            "who founded kloud",
+            "who created kloud",
+            "who is the ceo of kloud",
             "who is the founder",
-            "who built clisonix",
+            "who built kloud",
             # German
-            "wer hat clisonix gegründet",
-            "wer hat clisonix gegruendet",
-            "wer ist der ceo von clisonix",
+            "wer hat kloud gegründet",
+            "wer hat kloud gegruendet",
+            "wer ist der ceo von kloud",
             "wer ist der gründer",
             "wer hat das gebaut",
             # French
-            "qui a fondé clisonix",
-            "qui a créé clisonix",
-            "qui est le ceo de clisonix",
+            "qui a fondé kloud",
+            "qui a créé kloud",
+            "qui est le ceo de kloud",
             # Italian
-            "chi ha fondato clisonix",
-            "chi è il ceo di clisonix",
+            "chi ha fondato kloud",
+            "chi è il ceo di kloud",
             # Spanish
-            "quién fundó clisonix",
-            "quién es el ceo de clisonix"
+            "quién fundó kloud",
+            "quién es el ceo de kloud"
         ],
         answer_template="""
-🏢 **Clisonix - Industrial Intelligence Platform**
+🏢 **Kloud - Industrial Intelligence Platform**
 
 👤 **Themelues & Geschäftsführer:** **Ledjan Ahmati**
 🏛️ **Organizata:** ABA GmbH (Amtsgericht Bochum HRB: 21069)
 📅 **Themeluar:** 2025
-🌐 **Website:** www.clisonix.com
-📧 **Email:** support@clisonix.com
+🌐 **Website:** www.kloud.com
+📧 **Email:** support@kloud.com
 📞 **Telefon:** +49 2327 9954413
 
-⚡ **Çfarë ofron Clisonix:**
+⚡ **Çfarë ofron Kloud:**
 - REST APIs për aplikacione industriale
 - IoT & LoRa sensor networks
 - Analitikë në kohë reale
 - AI Insights me ASI Trinity (ALBA, ALBI, JONA)
 - Telemetri dhe siguri
 
-💡 Ledjan Ahmati e themeloi Clisonix në 2025 me vizionin për të krijuar një platformë 
+💡 Ledjan Ahmati e themeloi Kloud në 2025 me vizionin për të krijuar një platformë 
 modulare që u jep bizneseve qartësi, kontroll dhe inteligjencë - nga cloud deri te sensorët LoRa.
         """,
         keywords=["founder", "themelues", "ceo", "created", "krijoi", "built", 
@@ -928,27 +928,27 @@ modulare që u jep bizneseve qartësi, kontroll dhe inteligjencë - nga cloud de
     ),
     
     KnowledgeSeed(
-        category="clisonix_about",
+        category="kloud_about",
         question_patterns=[
             # Albanian
-            "çfarë është clisonix",
-            "cfare eshte clisonix",
-            "rreth clisonix",
-            "me trego per clisonix",
+            "çfarë është kloud",
+            "cfare eshte kloud",
+            "rreth kloud",
+            "me trego per kloud",
             # English
-            "what is clisonix",
-            "about clisonix",
-            "tell me about clisonix",
+            "what is kloud",
+            "about kloud",
+            "tell me about kloud",
             # German
-            "was ist clisonix",
-            "über clisonix",
-            "erzähl mir über clisonix",
+            "was ist kloud",
+            "über kloud",
+            "erzähl mir über kloud",
             # French
-            "qu'est-ce que clisonix",
-            "parle-moi de clisonix"
+            "qu'est-ce que kloud",
+            "parle-moi de kloud"
         ],
         answer_template="""
-🔬 **Clisonix - Industrial Intelligence Platform**
+🔬 **Kloud - Industrial Intelligence Platform**
 
 _"A modular platform that gives businesses clarity, control, and intelligence — 
 from the cloud down to LoRa sensors."_
@@ -973,35 +973,35 @@ from the cloud down to LoRa sensors."_
 - **ALBI** - Inteligjenca Kreative
 - **JONA** - Koordinatori
 
-📬 **Kontakt:** support@clisonix.com | +49 2327 9954413
+📬 **Kontakt:** support@kloud.com | +49 2327 9954413
         """,
-        keywords=["clisonix", "platform", "industrial", "intelligence", "about", 
+        keywords=["kloud", "platform", "industrial", "intelligence", "about", 
                   "what", "çfarë", "was", "qu'est"],
         confidence=0.97,
         language="multilingual"
     ),
     
     KnowledgeSeed(
-        category="clisonix_contact",
+        category="kloud_contact",
         question_patterns=[
-            "si mund te kontaktoj clisonix",
-            "kontakti i clisonix",
-            "how to contact clisonix",
-            "clisonix contact",
-            "clisonix email",
-            "clisonix phone",
-            "wie kann ich clisonix kontaktieren",
-            "comment contacter clisonix"
+            "si mund te kontaktoj kloud",
+            "kontakti i kloud",
+            "how to contact kloud",
+            "kloud contact",
+            "kloud email",
+            "kloud phone",
+            "wie kann ich kloud kontaktieren",
+            "comment contacter kloud"
         ],
         answer_template="""
-📬 **Kontakti i Clisonix:**
+📬 **Kontakti i Kloud:**
 
-📧 **Email:** support@clisonix.com
+📧 **Email:** support@kloud.com
 📞 **Telefon:** +49 2327 9954413
-🌐 **Website:** www.clisonix.com
+🌐 **Website:** www.kloud.com
 
 💼 **Social Media:**
-- 💻 GitHub: github.com/LedjanAhmati/Clisonix-cloud
+- 💻 GitHub: github.com/LedjanAhmati/Kloud-cloud
 - 𝕏 Twitter: @1amati_
 - 💼 LinkedIn: Ahmati Ledian
 - 🎬 YouTube: @ledredblac
@@ -1027,7 +1027,7 @@ ALL_KNOWLEDGE_SEEDS = (
     HEALTH_KNOWLEDGE +
     MATH_KNOWLEDGE +
     CONVERSATIONAL_KNOWLEDGE +
-    CLISONIX_KNOWLEDGE
+    KLOUD_KNOWLEDGE
 )
 
 def get_all_seeds() -> List[KnowledgeSeed]:
@@ -1117,3 +1117,4 @@ if __name__ == "__main__":
             print(f"  ✅ '{q}' → {match.category}")
         else:
             print(f"  ❌ '{q}' → No match")
+

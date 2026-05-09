@@ -1,5 +1,5 @@
 """
-Prometheus metrics module for Clisonix
+Prometheus metrics module for Kloud
 Provides FastAPI middleware for automatic metrics collection
 """
 
@@ -250,5 +250,6 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 def get_metrics() -> bytes:
     """Get all metrics in Prometheus text format"""
     return generate_latest(metrics_registry)
+
 
 

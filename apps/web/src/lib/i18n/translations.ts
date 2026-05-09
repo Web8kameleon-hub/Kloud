@@ -1,5 +1,5 @@
 /**
- * Clisonix Internationalization (i18n) System
+ * Kloud Internationalization (i18n) System
  * Supports: English (en), Albanian (sq), German (de)
  */
 
@@ -479,3 +479,4 @@ export const languageNames: Record<Language, { name: string; flag: string }> = {
   fr: { name: "Français", flag: "🇫🇷" },
   es: { name: "Español", flag: "🇪🇸" },
 };
+
