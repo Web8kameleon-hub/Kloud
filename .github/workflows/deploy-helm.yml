@@ -359,7 +359,7 @@ jobs:
 
       # Try SSH deployment first (for Docker Compose servers)
       - name: Setup SSH Key
-        if: env.HAS_SSH == 'true'
+        if: steps.deploy_prereq.outputs.has_ssh == 'true'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -367,7 +367,7 @@ jobs:
           ssh-keyscan -H ${{ env.HETZNER_IP }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Deploy via SSH (Docker Compose)
-        if: env.HAS_SSH == 'true'
+        if: steps.deploy_prereq.outputs.has_ssh == 'true'
         id: ssh_deploy
         continue-on-error: true
         run: |
