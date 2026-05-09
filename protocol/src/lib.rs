@@ -1,5 +1,6 @@
 use std::sync::Arc;
-use std::collections::HashSet;
+use std::collections::{HashSet, VecDeque};
+use std::time::{SystemTime, UNIX_EPOCH};
 use algebra::Op;
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -26,6 +27,7 @@ pub struct TransportMetrics {
     pub bandwidth_kbps: u64,
     pub active_connections: usize,
     pub latencies: Vec<u64>, // last 10
+    pub recent_sends: VecDeque<(u128, u64)>, // (timestamp_ms, bytes_sent)
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -111,6 +113,7 @@ impl TcpTransport {
                 bandwidth_kbps: 0,
                 active_connections: 0,
                 latencies: vec![],
+                recent_sends: VecDeque::new(),
             })),
             connections: Arc::new(Mutex::new(std::collections::HashMap::new())),
         };
@@ -170,6 +173,11 @@ impl TcpTransport {
             let bytes_sent = serialized.len() as u64;
             framed.send(serialized.into()).await?;
             let latency = start.elapsed().as_millis() as u64;
+            let now_ms = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_millis();
+            let cutoff_ms = now_ms.saturating_sub(30_000);
 
             let mut metrics = self.metrics.lock().await;
             metrics.total_bytes_sent += bytes_sent;
@@ -179,7 +187,23 @@ impl TcpTransport {
                 metrics.latencies.remove(0);
             }
             metrics.avg_latency_ms = metrics.latencies.iter().sum::<u64>() / metrics.latencies.len() as u64;
-            metrics.bandwidth_kbps = (metrics.total_bytes_sent * 8) / 1000;
+            metrics.recent_sends.push_back((now_ms, bytes_sent));
+            while let Some((ts, _)) = metrics.recent_sends.front() {
+                if *ts < cutoff_ms {
+                    metrics.recent_sends.pop_front();
+                } else {
+                    break;
+                }
+            }
+
+            // Rolling outbound bandwidth over the last 30s window.
+            if let Some((first_ts, _)) = metrics.recent_sends.front() {
+                let window_ms = now_ms.saturating_sub(*first_ts).max(1000);
+                let bytes_in_window: u64 = metrics.recent_sends.iter().map(|(_, b)| *b).sum();
+                metrics.bandwidth_kbps = ((bytes_in_window as f64 * 8.0) / window_ms as f64).round() as u64;
+            } else {
+                metrics.bandwidth_kbps = 0;
+            }
         }
         Ok(())
     }

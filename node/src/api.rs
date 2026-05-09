@@ -24,6 +24,19 @@ pub struct ApiState {
     pub external_tx: tokio::sync::mpsc::Sender<Message>,
     pub merge_sync: Arc<Mutex<super::merge_sync_engine::MergeSyncEngine>>,
     pub security_events: Arc<Mutex<Vec<SecurityEvent>>>,
+    pub peers_map: Arc<Mutex<HashMap<u64, PeerRecord>>>,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct PeerRecord {
+    pub id: u64,
+    pub api_addr: String,
+    pub gossip_addr: String,
+    pub state: String,
+    pub tide: String,
+    pub last_seen_ms: u128,
+    pub latency_ms: u64,
+    pub reachable: bool,
 }
 
 #[derive(Clone, Serialize)]
@@ -593,7 +606,9 @@ async fn get_peers(
     State(state): State<ApiState>,
 ) -> Json<serde_json::Value> {
     let metrics = *state.metrics.lock().await;
-    let peers: Vec<u64> = (1..=metrics.active_peers as u64).collect();
+    let peers_map = state.peers_map.lock().await;
+    let mut peers: Vec<PeerRecord> = peers_map.values().cloned().collect();
+    peers.sort_by_key(|p| p.id);
     Json(serde_json::json!({
         "active_peer_count": metrics.active_peers,
         "peers": peers

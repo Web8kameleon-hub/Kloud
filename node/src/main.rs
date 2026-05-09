@@ -327,17 +327,41 @@ async fn main() {
                 tide_update_counter += 1;
                 if tide_update_counter % 10 == 0 {
                     // Get real metrics from transport
-                    let tm = transport_metrics.lock().await;
+                    let tm = transport_metrics.lock().await.clone();
                     let mesh_active_peers = {
                         let current_metrics = metrics_arc.lock().await;
                         current_metrics.active_peers
                     };
+                    let mesh_avg_latency_ms = {
+                        let pm = peers_map.lock().await;
+                        let mut reachable = 0u64;
+                        let mut latency_sum = 0u64;
+                        for peer in pm.values() {
+                            if peer.reachable {
+                                reachable += 1;
+                                latency_sum += peer.latency_ms;
+                            }
+                        }
+                        if reachable > 0 {
+                            Some(latency_sum / reachable)
+                        } else {
+                            None
+                        }
+                    };
+
+                    let effective_latency_ms = if tm.avg_latency_ms > 0 {
+                        tm.avg_latency_ms
+                    } else {
+                        mesh_avg_latency_ms.unwrap_or(0)
+                    };
+
                     // Keep the larger signal between mesh reachability and gossip connections.
                     metrics.active_peers = std::cmp::max(mesh_active_peers, tm.active_connections);
-                    metrics.avg_latency_ms = tm.avg_latency_ms;
+                    metrics.avg_latency_ms = effective_latency_ms;
                     metrics.bandwidth_kbps = tm.bandwidth_kbps;
-                    metrics.load = (((tm.avg_latency_ms as f32) / 250.0).min(1.0)
-                        + ((tm.bandwidth_kbps as f32) / 10000.0).min(1.0)) / 2.0;
+                    let latency_component = ((effective_latency_ms as f32) / 250.0).min(1.0);
+                    let bandwidth_component = ((tm.bandwidth_kbps as f32) / 10000.0).min(1.0);
+                    metrics.load = (latency_component + bandwidth_component) / 2.0;
                     let new_tide = compute_tide(&metrics);
                     let mut engine = gossip_engine.lock().await;
                     engine.update_tide(new_tide);
