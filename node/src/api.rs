@@ -8,6 +8,7 @@ use base64::{engine::general_purpose::STANDARD as B64, Engine as _};
 use protocol::{Message, TideLevel};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use sha3::{Digest, Sha3_256};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::OnceLock;
@@ -310,6 +311,35 @@ fn compact_float(value: f32) -> f32 {
     (value * 1000.0).round() / 1000.0
 }
 
+fn now_ms_u64() -> u64 {
+    now_ms().min(u64::MAX as u128) as u64
+}
+
+fn build_message_signature(node_id: u64, clock: u64, ttl: u64, ops: &[u8], payload: &[u8]) -> Vec<u8> {
+    let mut hasher = Sha3_256::new();
+    hasher.update(node_id.to_le_bytes());
+    hasher.update(clock.to_le_bytes());
+    hasher.update(ttl.to_le_bytes());
+    hasher.update((ops.len() as u64).to_le_bytes());
+    hasher.update(ops);
+    hasher.update((payload.len() as u64).to_le_bytes());
+    hasher.update(payload);
+    hasher.finalize().to_vec()
+}
+
+fn derive_node_state(metrics: &Metrics, score: f32, threshold: f32) -> String {
+    if metrics.active_peers == 0 {
+        return "Offline".to_string();
+    }
+    if score > threshold || metrics.load >= 0.90 {
+        return "Degraded".to_string();
+    }
+    if metrics.active_peers < 2 {
+        return "Syncing".to_string();
+    }
+    "Active".to_string()
+}
+
 async fn append_security_event(
     state: &ApiState,
     endpoint: &str,
@@ -392,13 +422,17 @@ async fn submit_op(
         }
     };
 
+    let ttl = req.ttl.unwrap_or(10);
+    let clock = now_ms_u64();
+    let sig = build_message_signature(state.node_id, clock, ttl, &ops, &payload);
+
     let msg = Message {
         ops,
         payload,
-        ttl: req.ttl.unwrap_or(10),
-        clock: 0, // TODO: real clock
-        sig: vec![], // TODO: sign
-        node_id: 1, // TODO: real node_id
+        ttl,
+        clock,
+        sig,
+        node_id: state.node_id,
         flags: 0,
     };
 
@@ -455,7 +489,7 @@ async fn get_status(
     let delta = ndb_delta(score);
 
     let rich = StatusResponse {
-        state: "Active".to_string(), // TODO: real state
+        state: derive_node_state(&metrics, score, ndb_threshold()),
         tide: format!("{:?}", tide),
         metrics,
         ndb_score: compact_float(score),
@@ -1046,8 +1080,8 @@ async fn get_dashboard(
         tide_color,
         tide_color,
         if ndb_delta >= 0.0 { "#c2382e" } else { "#0a8f5b" },
-        tide_label,
         node_id,
+        tide_label,
         metrics.active_peers,
         ndb_score,
         ndb_delta,
