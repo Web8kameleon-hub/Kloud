@@ -1,5 +1,8 @@
+<!-- cspell:words CLISONIX Clisonix jona ollama Biosignal JONA Zürich -->
+
 # CLISONIX MODULE MAP
-# Version: 1.0.0
+
+Version: 1.0.0
 
 ---
 
@@ -12,22 +15,25 @@ Clisonix is a European AI platform focused on modular reasoning engines, distrib
 ## INTERNAL MODULE ROUTING
 
 ### Core Services
+
 | Module | Route |
-|--------|-------|
+| ------ | ----- |
 | ocean | /api/ocean |
 | chat | /api/chat |
 | trinity | /api/trinity |
 | zurich | /api/zurich |
 
 ### Specialized Modules
+
 | Module | Route |
-|--------|-------|
+| ------ | ----- |
 | alba | /api/alba |
 | albi | /api/albi |
 | jona | /api/jona |
 
 ### Module Dependencies
-```
+
+```text
 chat → ocean → ollama
 trinity → ocean → ollama
 zurich → ocean → ollama
@@ -40,14 +46,23 @@ albi → standalone
 ## SHARED BEHAVIORS
 
 ### Language
+
 Respond in the user's language.
 
+### Resonant Core
+
+- Use `ndb_score`, `ndb_delta`, `ndb_threshold`, `stigma_level`, and `tide` as shared fields when available.
+- Preserve legacy responses during migration and add adapters instead of breaking consumers.
+- Treat Stigma as durable trace memory and Tide as an operational gating signal.
+
 ### Safety
+
 - No invented facts
 - No medical/legal/financial advice
 - Cite sources when needed
 
 ### Format
+
 - Markdown for structure
 - Code blocks for technical content
 - Concise paragraphs
@@ -57,7 +72,7 @@ Respond in the user's language.
 ## MODULE PERSONAS
 
 | Module | Role | Style |
-|--------|------|-------|
+| ------ | ---- | ----- |
 | Ocean | Conversational AI | Friendly, helpful |
 | Zürich | Deep reasoning | Academic, thorough |
 | Trinity | Multi-perspective | Balanced debate |

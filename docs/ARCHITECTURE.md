@@ -73,9 +73,22 @@ Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence
 | postgres | 5432 | Primary Database |
 | redis | 6379 | Cache & Sessions |
 
+## Resonant Core
+
+The platform now treats NDB, Stigma, and Tide as shared cross-service primitives.
+
+- NDB is the nano-decibel resonance score used for stability and drift detection.
+- Stigma is the persistent noise-trace memory model used for audit and history.
+- Tide is the operational pressure band used for gating and policy decisions.
+- Stigma Cloud is the long-lived fluid memory layer for trace preservation.
+
+The canonical contract lives in [docs/RESONANT_CORE.md](docs/RESONANT_CORE.md).
+Existing REST and JSON APIs remain compatible during migration.
+
 ## Technology Stack
 
 ### Backend (Python)
+
 - FastAPI 0.115+
 - Uvicorn (ASGI Server)
 - Pydantic (Data Validation)
@@ -83,6 +96,7 @@ Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence
 - OpenTelemetry (Observability)
 
 ### Backend (Node.js)
+
 - Express 4.x
 - TypeScript 5.x
 - Zod (Validation)
@@ -90,12 +104,14 @@ Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence
 - Opossum (Circuit Breaker)
 
 ### Frontend
+
 - Next.js 14+
 - React 18+
 - TailwindCSS
 - Svelte (Some components)
 
 ### Infrastructure
+
 - Docker & Docker Compose
 - Kubernetes (Production)
 - Nginx (Reverse Proxy)

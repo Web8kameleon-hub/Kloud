@@ -157,15 +157,15 @@ impl TcpTransport {
         if let Some(addr) = self.peer_addresses.get(&peer_id) {
             let start = std::time::Instant::now();
             let mut connections = self.connections.lock().await;
-            let framed = if let Some(framed) = connections.get_mut(&peer_id) {
-                framed
-            } else {
+            if !connections.contains_key(&peer_id) {
                 let stream = TcpStream::connect(addr).await?;
                 let framed = Framed::new(stream, LengthDelimitedCodec::new());
                 connections.insert(peer_id, framed);
-                connections.get_mut(&peer_id).unwrap()
-            };
+            }
             let connection_count = connections.len();
+            let framed = connections
+                .get_mut(&peer_id)
+                .expect("peer connection must exist after insertion check");
             let serialized = serde_cbor::to_vec(data)?;
             let bytes_sent = serialized.len() as u64;
             framed.send(serialized.into()).await?;
