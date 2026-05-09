@@ -36,9 +36,12 @@ export const metadata: Metadata = {
     "automation", "smart manufacturing", "Industry 4.0", "digital transformation",
     "Clisonix", "AGI", "artificial general intelligence"
   ],
-  authors: [{ name: "Clisonix", url: "https://clisonix.com" }],
-  creator: "Clisonix",
-  publisher: "Clisonix Cloud",
+  authors: [
+    { name: "Ledjan Ahmati", url: "https://clisonix.com" },
+    { name: "ABA GmbH", url: "https://aba-gmbh.eu" }
+  ],
+  creator: "Ledjan Ahmati",
+  publisher: "ABA GmbH",
   robots: {
     index: true,
     follow: true,
@@ -77,9 +80,6 @@ export const metadata: Metadata = {
     canonical: 'https://clisonix.com',
   },
   category: 'Technology',
-  verification: {
-    google: 'YOUR_GOOGLE_VERIFICATION_CODE', // Add after Google Search Console setup
-  },
 };
 
 export default function RootLayout({
@@ -88,26 +88,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+              "@type": "SoftwareApplication",
       <head>
         {/* Schema.org Structured Data for Rich Snippets */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
+                "price": "0",
+                "priceCurrency": "EUR"
               "@type": "SoftwareApplication",
-              "name": "Clisonix Cloud",
-              "applicationCategory": "BusinessApplication",
-              "operatingSystem": "Web",
-              "offers": {
-                "@type": "Offer",
                 "price": "0",
                 "priceCurrency": "USD"
               },
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.9",
+                "@type": "Person",
+                "name": "Ledjan Ahmati",
+                "url": "https://clisonix.com"
                 "ratingCount": "150"
               },
               "description": "AI-powered industrial intelligence and behavioral science platform",
@@ -127,9 +122,18 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Clisonix",
+              "name": "Clisonix Cloud",
               "url": "https://clisonix.com",
               "logo": "https://clisonix.com/logo.png",
+              "legalName": "ABA GmbH",
+              "founder": {
+                "@type": "Person",
+                "name": "Ledjan Ahmati"
+              },
+              "owner": {
+                "@type": "Person",
+                "name": "Ledjan Ahmati"
+              },
               "sameAs": [
                 "https://github.com/LedjanAhmati/Clisonix-cloud",
                 "https://twitter.com/clisonix"
@@ -137,6 +141,7 @@ export default function RootLayout({
               "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "customer support",
+                "email": "support@clisonix.com",
                 "availableLanguage": ["English", "Albanian"]
               }
             })

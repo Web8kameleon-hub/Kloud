@@ -1,5 +1,5 @@
 # =============================================================================
-# CLISONIX CLOUD - DOCKER COMPOSE DEPLOYMENT (SSH)
+# KLOUD - DOCKER COMPOSE DEPLOYMENT (SSH)
 # =============================================================================
 # Deploys services to Hetzner via SSH + Docker Compose
 # Server: 46.224.203.89
@@ -51,7 +51,7 @@ concurrency:
 env:
   # Server
   HETZNER_IP: 46.224.203.89
-  DEPLOY_PATH: /root/Clisonix-cloud
+  DEPLOY_PATH: /opt/kloud
   SERVER_USER: root
   
   # Service Ports (for health checks)

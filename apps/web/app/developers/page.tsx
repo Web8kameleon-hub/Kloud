@@ -75,41 +75,56 @@ const apiCategories: { id: CategoryKey; icon: string; title: string; description
 
 const totalEndpoints = Object.values(liveEndpoints).reduce((s, arr) => s + arr.length, 0)
 
-/* ── Pricing (real tiers matching Stripe) ── */
+/* ── Pricing and usage billing model ── */
 const pricingPlans = [
   {
-    name: 'Free',
+    name: 'Starter',
     price: '€0',
     period: '',
-    requests: '50 / day',
+    requests: '250 events / month',
     support: 'Community',
-    features: ['Core & status endpoints', 'Ocean AI chat (10/day)', 'System metrics', 'Email support'],
+    features: ['Core status endpoints', 'Dashboard metrics', 'Email login', 'Developer docs'],
     cta: 'Start Free',
     ctaLink: '/sign-up',
     popular: false,
   },
   {
-    name: 'Pro',
-    price: '€29',
-    period: '/mo',
-    requests: '5,000 / day',
+    name: 'Usage-Based API',
+    price: '€0.002',
+    period: '/request',
+    requests: 'Metered monthly',
     support: 'Priority email',
-    features: ['All Free features', 'Unlimited Ocean AI', 'Vision & Audio APIs', 'Reporting & exports', 'Billing APIs'],
-    cta: 'Start Pro Trial',
-    ctaLink: '/sign-up?plan=pro',
+    features: ['API request metering', 'Ocean / vision / audio units', 'Usage metrics export', 'Stripe billing integration', 'Email + phone auth ready'],
+    cta: 'Enable Metered Billing',
+    ctaLink: '/modules/account',
     popular: true,
   },
   {
     name: 'Enterprise',
-    price: '€199',
-    period: '/mo',
-    requests: '50,000 / day',
+    price: 'Custom',
+    period: '',
+    requests: 'Dedicated limits',
     support: 'Dedicated',
-    features: ['All Pro features', 'Engine fleet full access', 'Custom integrations', 'SLA guarantee', 'On-premise option'],
+    features: ['Contract pricing', 'Custom meter definitions', 'Private infrastructure', 'SLA guarantee', 'Advanced auth and compliance'],
     cta: 'Contact Sales',
     ctaLink: 'mailto:enterprise@clisonix.com',
     popular: false,
   },
+]
+
+const usageMetrics = [
+  { label: 'api_request', unit: '1 HTTP request', price: '€0.002' },
+  { label: 'ocean_chat', unit: '1 generated response', price: '€0.01' },
+  { label: 'vision_job', unit: '1 image/document analysis', price: '€0.03' },
+  { label: 'audio_job', unit: '1 transcription minute', price: '€0.015' },
+  { label: 'export_job', unit: '1 reporting export', price: '€0.05' },
+]
+
+const authModes = [
+  'Email login via Clerk',
+  'Phone number + SMS login via Clerk',
+  'Session-based browser auth',
+  'Stripe-linked customer identity for billing flows',
 ]
 
 /* ─────────────────────────────── Component ── */
@@ -433,8 +448,8 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
       <section id="pricing" className="py-20 px-6 bg-slate-900/40">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Simple Pricing</h2>
-            <p className="text-slate-400">Start free, scale as you grow.</p>
+            <h2 className="text-3xl font-bold mb-4">Usage Pricing</h2>
+            <p className="text-slate-400">Meter requests and bill only for the units you actually consume.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -494,6 +509,61 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
               </div>
             ))}
           </div>
+
+          <div className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto mt-10">
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
+              <h3 className="text-xl font-bold mb-4">Billable Metrics</h3>
+              <div className="space-y-3">
+                {usageMetrics.map((metric) => (
+                  <div key={metric.label} className="flex items-center justify-between gap-4 border-b border-slate-800 pb-3 last:border-b-0 last:pb-0">
+                    <div>
+                      <div className="font-mono text-emerald-400 text-sm">{metric.label}</div>
+                      <div className="text-slate-400 text-sm">{metric.unit}</div>
+                    </div>
+                    <div className="text-white font-semibold">{metric.price}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
+              <h3 className="text-xl font-bold mb-4">Stripe Product Setup</h3>
+              <ol className="space-y-3 text-sm text-slate-300 list-decimal pl-5">
+                <li>Create one metered product in Stripe for each metric family you want to bill.</li>
+                <li>Use usage records or meter events named like <span className="font-mono text-emerald-400">api_request</span> and <span className="font-mono text-emerald-400">ocean_chat</span>.</li>
+                <li>Store product/price IDs in app env and connect checkout through <span className="font-mono text-emerald-400">/api/billing/checkout</span>.</li>
+                <li>Emit usage from your API gateway or worker layer, then reconcile invoices through Stripe billing webhooks.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-6">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
+            <h2 className="text-2xl font-bold mb-4">Authentication Modes</h2>
+            <p className="text-slate-400 mb-6">Login is wired through Clerk in the web app. Phone/SMS is a configuration step, not a fake UI promise.</p>
+            <ul className="space-y-3">
+              {authModes.map((mode) => (
+                <li key={mode} className="flex items-center gap-3 text-sm text-slate-300">
+                  <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  {mode}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
+            <h2 className="text-2xl font-bold mb-4">Company & Owner</h2>
+            <div className="space-y-3 text-sm text-slate-300">
+              <div><span className="text-slate-500">Brand:</span> Clisonix Cloud</div>
+              <div><span className="text-slate-500">Legal entity:</span> ABA GmbH</div>
+              <div><span className="text-slate-500">Owner:</span> Ledjan Ahmati</div>
+              <div><span className="text-slate-500">Support:</span> support@clisonix.com</div>
+              <div><span className="text-slate-500">Developers:</span> https://clisonix.com/developers</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -506,6 +576,8 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
               { q: 'How do I get started?', a: 'Sign up for a free account at clisonix.com/sign-up. You can start calling public endpoints immediately — no API key required for read-only status and health endpoints.' },
               { q: 'Do these APIs actually work?', a: 'Yes. Every endpoint listed on this page is live on production. Click "Try" next to any endpoint above to see the real response.' },
               { q: 'What AI models power Ocean?', a: 'Curiosity Ocean uses Llama 3.1 8B for text, LLaVA for vision, and Faster-Whisper for audio transcription. All models run on our infrastructure — no external API calls.' },
+              { q: 'Can I bill per usage instead of fixed tiers?', a: 'Yes. The platform supports metered billing. Track billable units such as api_request, ocean_chat, vision_job, audio_job, and export_job, then attach them to Stripe metered products.' },
+              { q: 'How do I enable phone and SMS login?', a: 'Use Clerk as the identity provider and enable phone number sign-in plus SMS verification in the Clerk dashboard. The app UI already supports Clerk-based auth surfaces.' },
               { q: 'Can I upgrade or downgrade anytime?', a: 'Yes. Upgrades take effect immediately. Downgrades apply at the next billing cycle. All payments are processed through Stripe.' },
               { q: 'Is there an SDK?', a: 'SDKs are in development. For now, all endpoints work with any HTTP client — cURL, fetch, requests, axios, etc. See the code examples above.' },
               { q: 'Do you offer enterprise solutions?', a: 'Yes — custom API limits, dedicated infrastructure, SLA guarantees, and on-premise deployment. Contact enterprise@clisonix.com.' },

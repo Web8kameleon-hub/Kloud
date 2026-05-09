@@ -41,20 +41,17 @@ jobs:
       - name: pip-audit (Vulnerability Scanner)
         run: |
           echo "🔍 Scanning Python dependencies for vulnerabilities..."
-          pip-audit -r requirements.txt --desc 2>/dev/null || echo "⚠️ Some vulnerabilities found (review recommended)"
-        continue-on-error: true
+          pip-audit -r requirements.txt --desc
 
       - name: Bandit (Security Linter)
         run: |
           echo "🔐 Running Bandit security linter..."
-          bandit -r . -x ./.venv,./node_modules,./apps --severity-level medium -f txt 2>/dev/null || echo "⚠️ Security issues found (review recommended)"
-        continue-on-error: true
+          bandit -r . -x ./.venv,./node_modules,./apps --severity-level medium -f txt
 
       - name: Safety Check
         run: |
           echo "🛡️ Running Safety vulnerability check..."
-          safety check -r requirements.txt 2>/dev/null || echo "⚠️ Vulnerabilities detected"
-        continue-on-error: true
+          safety check -r requirements.txt
 
   # ===========================================================
   # 📦 NODE.JS SECURITY
@@ -74,19 +71,16 @@ jobs:
 
       - name: Install dependencies
         run: npm ci 2>/dev/null || npm install
-        continue-on-error: true
 
       - name: npm audit (Vulnerability Scanner)
         run: |
           echo "🔍 Scanning Node.js dependencies..."
-          npm audit --audit-level=high 2>/dev/null || echo "⚠️ Vulnerabilities found (review recommended)"
-        continue-on-error: true
+          npm audit --audit-level=high
 
       - name: ESLint Security
         run: |
           echo "🔐 Running ESLint..."
-          npm run lint 2>/dev/null || echo "⚠️ Linting issues found"
-        continue-on-error: true
+          npm run lint
 
   # ===========================================================
   # 🔐 SECRET DETECTION
@@ -109,8 +103,7 @@ jobs:
       - name: Scan for secrets
         run: |
           echo "🔍 Scanning for hardcoded secrets..."
-          gitleaks detect --source . --verbose 2>/dev/null || echo "⚠️ Potential secrets found (review!)"
-        continue-on-error: true
+          gitleaks detect --source . --verbose
 
   # ===========================================================
   # 🐳 CONTAINER SECURITY (Trivy FS - Free)
@@ -130,16 +123,14 @@ jobs:
       - name: Trivy Filesystem Scan
         run: |
           echo "🔍 Scanning filesystem for vulnerabilities..."
-          trivy fs . --severity HIGH,CRITICAL --exit-code 0 2>/dev/null || echo "⚠️ Issues found"
-        continue-on-error: true
+          trivy fs . --severity HIGH,CRITICAL --exit-code 1
 
       - name: Dockerfile Security Check
         run: |
           echo "🐳 Checking Dockerfile best practices..."
           if [ -f Dockerfile ]; then
-            trivy config Dockerfile --exit-code 0 2>/dev/null || echo "⚠️ Dockerfile issues"
+            trivy config Dockerfile --exit-code 1
           fi
-        continue-on-error: true
 
   # ===========================================================
   # ✅ CODE QUALITY

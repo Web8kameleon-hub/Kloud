@@ -1,8 +1,8 @@
 # =============================================================================
-# CLISONIX CLOUD - DOCKER COMPOSE DEPLOYMENT VIA SSH
+# KLOUD - DOCKER COMPOSE DEPLOYMENT VIA SSH
 # =============================================================================
 # Deploys to Hetzner server using SSH and Docker Compose
-# Server: 46.225.14.83 (hetzner-new)
+# Server: 46.224.203.89 (kloud.aiagi.io)
 #
 # This workflow:
 # 1. SSHs to Hetzner and runs git pull
@@ -41,8 +41,8 @@ permissions:
   contents: read
 
 env:
-  HETZNER_IP: 46.225.14.83
-  DEPLOY_PATH: /root/Clisonix-cloud
+  HETZNER_IP: 46.224.203.89
+  DEPLOY_PATH: /opt/kloud
 
 jobs:
   deploy-ssh:
@@ -143,7 +143,7 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🌐 Access Points" >> $GITHUB_STEP_SUMMARY
-          echo "- **Website:** https://clisonix.com" >> $GITHUB_STEP_SUMMARY
-          echo "- **API:** https://clisonix.com/api" >> $GITHUB_STEP_SUMMARY
+          echo "- **Website:** https://kloud.aiagi.io" >> $GITHUB_STEP_SUMMARY
+          echo "- **API:** https://kloud.aiagi.io/api" >> $GITHUB_STEP_SUMMARY
           echo "- **Ocean:** Port 8030" >> $GITHUB_STEP_SUMMARY
 # Workflow test 2026-02-03 12:37

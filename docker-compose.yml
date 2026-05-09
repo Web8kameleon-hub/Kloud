@@ -7,7 +7,7 @@ services:
     container_name: clisonix-postgres
     environment:
       POSTGRES_USER: clisonix
-      POSTGRES_PASSWORD: clisonix
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your environment or .env}
       POSTGRES_DB: clisonixdb
     ports:
       - "5432:5432"
@@ -39,7 +39,7 @@ services:
     image: neo4j:5-community
     container_name: clisonix-neo4j
     environment:
-      NEO4J_AUTH: neo4j/clisonix123
+      NEO4J_AUTH: ${NEO4J_AUTH:?Set NEO4J_AUTH in your environment or .env}
       NEO4J_PLUGINS: '["apoc"]'
     ports:
       - "7474:7474"
@@ -61,7 +61,7 @@ services:
     container_name: clisonix-minio
     environment:
       MINIO_ROOT_USER: clisonix
-      MINIO_ROOT_PASSWORD: clisonix123
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in your environment or .env}
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"

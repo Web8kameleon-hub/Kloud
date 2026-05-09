@@ -86,15 +86,15 @@ Industrial Backend & Payment System
 
 ### Getting Started Securely
 
-1. **Never commit secrets** - Use `.secrets` file (see `.secrets.template`)
+1. **Never commit secrets** - Use `.env` file based on `.env.example`
 2. **Read SECURITY.md** - Comprehensive security guidelines
 3. **Use Docker Secrets** - For production deployments
 4. **Enable pre-commit hooks** - Prevent accidental secret exposure
 
 ```bash
 # Setup secrets (first time only)
-cp .secrets.template .secrets
-# Edit .secrets with your real values
+cp .env.example .env
+# Edit .env with your real values
 
 # Install security tools
 cp scripts/pre-commit.sh .git/hooks/pre-commit
@@ -119,17 +119,20 @@ python scripts/scan-secrets.py
 
 Clisonix-cloud/
 ├── app/
-│   ├── main.py              # Industrial FastAPI backend with live monitoring
+│   ├── routes/              # FastAPI route modules
 │   ├── settings.py          # Configuration with business integration
 │   ├── auth/                # JWT authentication system
 │   ├── billing/            # SEPA/PayPal/Stripe payment processing
 │   ├── middleware/         # Quota gate + security middleware
 │   └── ...
+├── apps/api/main.py         # Primary unified API app entrypoint
+├── node/src/main.rs         # Rust node runtime (mesh + gossip)
+├── node/src/api.rs          # Rust node HTTP API (status/submit/security)
 ├── worker/                 # Background job processing
 ├── scripts/               # Deployment and utility scripts
 ├── requirements.txt       # Industrial-grade dependencies
 ├── docker-compose.yml     # Multi-service orchestration
-└── start_server.py        # Backend launcher script
+└── deploy/                # Kubernetes/systemd deployment manifests
 
 ---
 
@@ -140,19 +143,16 @@ Clisonix-cloud/
 ```bash
 # Install core dependencies
 pip install -r requirements.txt
-
-# Or use the launcher (auto-installs)
-python start_server.py
 ```
 
 ### 2. Start Industrial Backend
 
 ```bash
-# Method 1: Use launcher script
-python start_server.py
+# Recommended: full stack
+docker compose up --build
 
-# Method 2: Direct uvicorn
-uvicorn app.master:app --host 0.0.0.0 --port 8000 --reload
+# API-only (development)
+uvicorn apps.api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 3. Access Industrial Backend
@@ -207,6 +207,14 @@ POST /auth/register        # User registration with plan assignment
 GET /auth/me              # Current user information
 ```
 
+### NDB / STIGMA / TIDE / Nanogrid
+
+- **WWWWMMM reference:** This repository uses the NDB/STIGMA/TIDE operational model in the node runtime and dashboard APIs.
+- **NDB score + delta:** Security pressure signal exposed in Rust node status APIs (`/status`, `/security/status`, `/resonant/status`).
+- **STIGMA levels:** Request response-shaping and event posture classification (`stigma_level` 1..3) in submit/status/auth flows.
+- **TIDE state:** Runtime network posture (`High/Normal/Low`) propagated by the node and exposed in status/dashboard endpoints.
+- **Nanogrid:** AI global CPU service is provided by `ai-global-9999` in Docker Compose for distributed inference workloads.
+
 ---
 
 ## 🔧 Configuration
@@ -220,7 +228,12 @@ DATABASE_URL=postgresql+asyncpg://user:pass@localhost/Clisonix
 # Redis Configuration  
 REDIS_URL=redis://localhost:6379
 
-# Payment Integration (Use .secrets file - see .secrets.template)
+# Compose-required credentials (set in shell or .env)
+POSTGRES_PASSWORD=change_me_strong
+NEO4J_AUTH=neo4j/change_me_strong
+MINIO_ROOT_PASSWORD=change_me_strong
+
+# Payment Integration
 STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
 STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
 
@@ -365,11 +378,11 @@ docker-compose logs -f api
 # Install development dependencies
 pip install -r requirements.txt
 
-# Start development server
-python start_server.py
+# Start full stack
+docker compose up --build
 
-# Run with auto-reload
-uvicorn app.master:app --reload --host 0.0.0.0 --port 8000
+# Or run API with auto-reload
+uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Testing
