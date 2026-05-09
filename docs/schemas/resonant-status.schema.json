@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clisonix.com/schemas/resonant-status.schema.json",
+  "title": "ResonantStatusResponse",
+  "type": "object",
+  "required": [
+    "meta",
+    "node_id",
+    "state",
+    "tide",
+    "ndb_score",
+    "ndb_delta",
+    "ndb_threshold",
+    "stigma_level_default",
+    "high_risk",
+    "event_count",
+    "trace_state",
+    "metrics"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["contract", "schema_version", "adapter", "source_endpoint", "generated_at_ms"],
+      "properties": {
+        "contract": { "type": "string", "const": "resonant-core" },
+        "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "adapter": { "type": "string" },
+        "source_endpoint": { "type": "string" },
+        "generated_at_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "node_id": { "type": "integer", "minimum": 0 },
+    "state": { "type": "string" },
+    "tide": { "type": "string", "enum": ["Low", "Normal", "High"] },
+    "ndb_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "ndb_delta": { "type": "number" },
+    "ndb_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+    "stigma_level_default": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "high_risk": { "type": "boolean" },
+    "event_count": { "type": "integer", "minimum": 0 },
+    "trace_state": { "type": "string", "enum": ["stable", "watch"] },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "active_peers",
+        "avg_latency_ms",
+        "bandwidth_kbps",
+        "load",
+        "latency_percent",
+        "bandwidth_percent",
+        "load_percent"
+      ],
+      "properties": {
+        "active_peers": { "type": "integer", "minimum": 0 },
+        "avg_latency_ms": { "type": "integer", "minimum": 0 },
+        "bandwidth_kbps": { "type": "integer", "minimum": 0 },
+        "load": { "type": "number", "minimum": 0, "maximum": 1 },
+        "latency_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "bandwidth_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "load_percent": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  }
+}

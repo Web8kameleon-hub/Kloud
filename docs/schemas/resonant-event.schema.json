@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clisonix.com/schemas/resonant-event.schema.json",
+  "title": "ResonantEvent",
+  "type": "object",
+  "required": [
+    "trace_id",
+    "timestamp_ms",
+    "node_id",
+    "endpoint",
+    "action",
+    "stigma_level",
+    "ndb_score",
+    "outcome"
+  ],
+  "properties": {
+    "trace_id": { "type": "string" },
+    "timestamp_ms": { "type": "integer", "minimum": 0 },
+    "node_id": { "type": "integer", "minimum": 0 },
+    "endpoint": { "type": "string" },
+    "action": { "type": "string" },
+    "stigma_level": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "ndb_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "outcome": { "type": "string" }
+  }
+}
