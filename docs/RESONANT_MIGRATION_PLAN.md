@@ -31,6 +31,7 @@ These are reused as adapter patterns instead of introducing a parallel architect
 ## Compatibility Adapters (Phase by Phase)
 
 ### Phase 1: Node API (Completed)
+
 - Keep legacy endpoints unchanged.
 - Add adapter endpoints:
   - `/resonant/status`
@@ -38,12 +39,14 @@ These are reused as adapter patterns instead of introducing a parallel architect
 - Return deterministic fields for compatibility and observability.
 
 ### Phase 2: Protocol and Security
+
 - Map protocol memory/event outputs into Resonant event schema.
 - Standardize trace identity and severity mapping.
 - Keep old internals available while adapters are active.
 - Concrete implementation checklist: `docs/PHASE2_PROTOCOL_SECURITY_CHECKLIST.md`
 
 ### Phase 3: Web and Dashboards
+
 - Consume `/resonant/status` and `/resonant/events` in dashboards.
 - Preserve legacy widgets with fallback reads from old endpoints.
 

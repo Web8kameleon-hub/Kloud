@@ -6,7 +6,7 @@ Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence
 
 ## System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                          CLISONIX CLOUD PLATFORM                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -63,15 +63,15 @@ Clisonix Cloud is an AI-powered Industrial IoT platform with Neural Intelligence
 
 ## Key Services
 
-| Service | Port | Description |
-|---------|------|-------------|
-| ocean-core | 8030 | Curiosity Ocean AI Engine |
-| alba | 5555 | Analytical Intelligence |
-| albi | 6680 | Creative Intelligence |
-| asi | 9094 | Artificial Superintelligence |
-| ollama | 11434 | LLM Model Server |
-| postgres | 5432 | Primary Database |
-| redis | 6379 | Cache & Sessions |
+| Service    | Port  | Description                 |
+| ---------- | ----- | ----------------------------|
+| ocean-core | 8030  | Curiosity Ocean AI Engine   |
+| alba       | 5555  | Analytical Intelligence     |
+| albi       | 6680  | Creative Intelligence       |
+| asi        | 9094  | Artificial Superintelligence|
+| ollama     | 11434 | LLM Model Server            |
+| postgres   | 5432  | Primary Database            |
+| redis      | 6379  | Cache & Sessions            |
 
 ## Resonant Core
 
@@ -136,4 +136,13 @@ Existing REST and JSON APIs remain compatible during migration.
 
 ---
 
-*Clisonix Cloud Platform © 2026 ABA GmbH - All Rights Reserved*
+Clisonix Cloud Platform © 2026 ABA GmbH - All Rights Reserved
+
+| Service          | Port | Purpose                                    |
+| ---------------- | ---- | ------------------------------------------ |
+| ALBI             | 8001 | EEG signal processing and feature extract  |
+| ALBA             | 8002 | Audio analysis and speech recognition      |
+| Ocean            | 8003 | Core data orchestration and routing        |
+| ASI              | 8004 | Artificial Superintelligence engine        |
+| Curiosity Ocean  | 8005 | Advanced learning and reasoning            |
+| Payment Service  | 8006 | Stripe, SEPA, PayPal webhook handling      |

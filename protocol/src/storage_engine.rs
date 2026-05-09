@@ -5,23 +5,31 @@ use std::collections::HashMap;
 use algebra::TideLevel;
 
 pub struct StorageEngine {
-    file: BufWriter<std::fs::File>,
-    index: HashMap<[u8; 32], u64>, // msg_id -> offset
+    writer: BufWriter<std::fs::File>,  // buffered writes
+    reader: std::fs::File,              // direct reads
+    index: HashMap<[u8; 32], u64>,      // msg_id -> offset
     tide_level: TideLevel,
-    buffer: Vec<u8>, // for batching in low tide
+    buffer: Vec<u8>,                    // for batching in low tide
 }
 
 impl StorageEngine {
     pub fn open(path: &str, tide_level: TideLevel) -> Self {
-        let file = OpenOptions::new()
-            .create(true)
-            .append(true)
+        let writer = BufWriter::new(
+            OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(path)
+                .unwrap()
+        );
+        
+        let reader = OpenOptions::new()
             .read(true)
             .open(path)
             .unwrap();
 
         let mut engine = StorageEngine {
-            file: BufWriter::new(file),
+            writer,
+            reader,
             index: HashMap::new(),
             tide_level,
             buffer: Vec::new(),
@@ -45,19 +53,19 @@ impl StorageEngine {
             return id; // idempotent
         }
 
-        let offset = self.file.get_mut().seek(SeekFrom::End(0)).unwrap();
+        let offset = self.writer.get_mut().seek(SeekFrom::End(0)).unwrap();
 
         match self.tide_level {
             TideLevel::High => {
                 // Immediate write
-                self.file.write_all(data).unwrap();
-                self.file.write_all(b"\n").unwrap();
-                self.file.flush().unwrap();
+                self.writer.write_all(data).unwrap();
+                self.writer.write_all(b"\n").unwrap();
+                self.writer.flush().unwrap();
             }
             TideLevel::Normal => {
                 // Buffered write
-                self.file.write_all(data).unwrap();
-                self.file.write_all(b"\n").unwrap();
+                self.writer.write_all(data).unwrap();
+                self.writer.write_all(b"\n").unwrap();
             }
             TideLevel::Low => {
                 // Batch in buffer
@@ -74,13 +82,16 @@ impl StorageEngine {
     }
 
     pub fn load(&mut self, id: &[u8; 32]) -> Option<Vec<u8>> {
+        // Flush pending writes before reading to ensure consistency
+        self.writer.flush().unwrap();
+
         if let Some(&offset) = self.index.get(id) {
-            self.file.get_mut().seek(SeekFrom::Start(offset)).unwrap();
+            self.reader.seek(SeekFrom::Start(offset)).unwrap();
             let mut buf = Vec::new();
             // Read until newline
             let mut byte = [0u8; 1];
             loop {
-                self.file.get_mut().read_exact(&mut byte).ok()?;
+                self.reader.read_exact(&mut byte).ok()?;
                 if byte[0] == b'\n' {
                     break;
                 }
@@ -94,10 +105,10 @@ impl StorageEngine {
 
     pub fn flush(&mut self) {
         if !self.buffer.is_empty() {
-            self.file.write_all(&self.buffer).unwrap();
+            self.writer.write_all(&self.buffer).unwrap();
             self.buffer.clear();
         }
-        self.file.flush().unwrap();
+        self.writer.flush().unwrap();
     }
 
     fn hash(data: &[u8]) -> [u8; 32] {

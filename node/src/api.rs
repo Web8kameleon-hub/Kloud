@@ -558,6 +558,17 @@ async fn get_dashboard(
         state_html.push_str("<li><span class=\"state-key\">empty</span><code class=\"state-val\">no local keys yet</code></li>");
     }
 
+    // Safety: escape HTML special characters before interpolating event fields into HTML.
+    // All string fields MUST be escaped here to prevent XSS if field values ever become
+    // user-controlled (e.g. endpoint paths, action names, outcome strings from request data).
+    fn html_escape(s: &str) -> String {
+        s.replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;")
+            .replace('"', "&quot;")
+            .replace('\'', "&#x27;")
+    }
+
     let mut events_rows = String::new();
     for e in &filtered_events {
         let severity_class = if e.outcome == "ok" || e.outcome == "accepted" {
@@ -571,11 +582,11 @@ async fn get_dashboard(
             "<tr class=\"{}\"><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{:.3}</td><td>{}</td></tr>",
             severity_class,
             e.timestamp_ms,
-            e.endpoint,
-            e.action,
+            html_escape(&e.endpoint),
+            html_escape(&e.action),
             e.stigma_level,
             e.ndb_score,
-            e.outcome
+            html_escape(&e.outcome)
         ));
     }
     if events_rows.is_empty() {

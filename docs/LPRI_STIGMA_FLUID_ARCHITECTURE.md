@@ -13,7 +13,7 @@ The architecture is designed for incremental adoption in Kloud without breaking 
 
 ## Layer 1: LPRI (Low-Power Resonant Intelligence)
 
-### Goal
+### LPRI Goal
 
 Run resonant workloads on lightweight nodes instead of requiring heavy compute.
 
@@ -40,7 +40,7 @@ Run resonant workloads on lightweight nodes instead of requiring heavy compute.
 
 ## Layer 2: Stigma Fluid Cloud
 
-### Goal
+### Stigma Goal
 
 Persist traces as long-lived resonant state while preserving replayability and continuity.
 
@@ -73,7 +73,7 @@ Persist traces as long-lived resonant state while preserving replayability and c
 
 ## Layer 3: Cross-Platform gyp-fluid Runtime
 
-### Goal
+### Runtime Goal
 
 Use one runtime concept for Windows 11 and Linux with Python 3.12, 3.13, and 3.14 lanes.
 
@@ -99,7 +99,7 @@ Use one runtime concept for Windows 11 and Linux with Python 3.12, 3.13, and 3.1
 
 ## Layer 4: Integrity Model (Anti-Corruption and Anti-Loss)
 
-### Goal
+### Integrity Goal
 
 Guarantee trace integrity despite node failures, medium errors, or network partitions.
 
