@@ -305,8 +305,12 @@ class StigmaPattern:
         return found
 
     def _generate_node_id(self, package_name: str, service_type: str) -> str:
-        """Generate unique node ID from package and service type"""
-        base = f"{package_name}:{service_type}:{datetime.utcnow().isoformat()}"
+        """Generate stable node ID from package, service type, and service name."""
+        base = (
+            f"{package_name.strip().lower()}:"
+            f"{service_type.strip().lower()}:"
+            f"{self.service_name.strip().lower()}"
+        )
         node_hash = hashlib.sha256(base.encode()).hexdigest()[:12]
         return f"node-{node_hash}"
 
@@ -356,17 +360,25 @@ class NodeDBCore:
             pattern = StigmaPattern(service_module, service_name)
             node_id = pattern.metadata.node_id
 
+            # Reuse existing node id by service name to avoid duplicate/stale rows.
+            for existing_id, existing_meta in self.nodes.items():
+                if existing_meta.service_name == service_name:
+                    node_id = existing_id
+                    pattern.metadata.node_id = existing_id
+                    break
+
             # Store metadata
             self.nodes[node_id] = pattern.metadata
             self.stigma_patterns[node_id] = pattern
 
-            # Initialize state
-            self.states[node_id] = NodeState(
-                node_id=node_id,
-                stigma_state=StigmaState.INITIALIZING,
-                ndb_quality=NDBQuality.FAIR,
-                timestamp=datetime.utcnow(),
-            )
+            # Initialize state only if missing; keep current state for existing nodes.
+            if node_id not in self.states:
+                self.states[node_id] = NodeState(
+                    node_id=node_id,
+                    stigma_state=StigmaState.INITIALIZING,
+                    ndb_quality=NDBQuality.FAIR,
+                    timestamp=datetime.utcnow(),
+                )
 
             logger.info(f"✅ Registered node: {node_id} ({service_name})")
 
@@ -377,6 +389,66 @@ class NodeDBCore:
             self._save_snapshot()
 
             return pattern.metadata
+
+    async def dedupe_nodes(self) -> Dict[str, int]:
+        """Remove duplicate node rows by service name and keep the best candidate."""
+        async with self.lock:
+            before = len(self.nodes)
+            if before <= 1:
+                return {"before": before, "after": before, "removed": 0}
+
+            state_rank = {
+                StigmaState.ACTIVE.value: 6,
+                StigmaState.READY.value: 5,
+                StigmaState.RECOVERING.value: 4,
+                StigmaState.DEGRADED.value: 3,
+                StigmaState.INITIALIZING.value: 2,
+                StigmaState.OFFLINE.value: 1,
+            }
+
+            by_service: Dict[str, List[str]] = {}
+            for node_id, meta in self.nodes.items():
+                by_service.setdefault(meta.service_name, []).append(node_id)
+
+            keep_ids = set()
+            for _service_name, ids in by_service.items():
+                if len(ids) == 1:
+                    keep_ids.add(ids[0])
+                    continue
+
+                def score(node_id: str) -> tuple[int, datetime]:
+                    st = self.states.get(node_id)
+                    if st is None:
+                        return (0, datetime.min)
+                    rank = state_rank.get(st.stigma_state.value, 0)
+                    return (rank, st.timestamp)
+
+                best = max(ids, key=score)
+                keep_ids.add(best)
+
+            self.nodes = {
+                node_id: meta
+                for node_id, meta in self.nodes.items()
+                if node_id in keep_ids
+            }
+            self.states = {
+                node_id: st
+                for node_id, st in self.states.items()
+                if node_id in keep_ids
+            }
+            self.stigma_patterns = {
+                node_id: p
+                for node_id, p in self.stigma_patterns.items()
+                if node_id in keep_ids
+            }
+
+            after = len(self.nodes)
+            removed = max(0, before - after)
+            if removed:
+                logger.info(f"🧹 NodeDB dedupe removed {removed} stale duplicate nodes")
+                self._save_snapshot()
+
+            return {"before": before, "after": after, "removed": removed}
 
     async def update_node_state(
         self,

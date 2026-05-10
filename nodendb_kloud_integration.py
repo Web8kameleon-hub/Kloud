@@ -698,6 +698,13 @@ async def initialize_kloud_nodedb_real():
     nodedb = await initialize_nodendb()
     logger.info("✅ NodeDB core initialized\n")
 
+    # Remove historical duplicates from previous timestamp-based node IDs.
+    dedupe_stats = await nodedb.dedupe_nodes()
+    if dedupe_stats.get("removed", 0) > 0:
+        logger.info(
+            f"🧹 NodeDB dedupe: {dedupe_stats['before']} -> {dedupe_stats['after']}"
+        )
+
     # ========================================================================
     # CHECK SERVICE AVAILABILITY FIRST
     # ========================================================================
