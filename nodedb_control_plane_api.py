@@ -12,6 +12,7 @@ Fluid, controlled transition control-plane for:
 from __future__ import annotations
 
 import asyncio
+import base64
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,7 +30,8 @@ from nodendb_kloud_integration import (
     evaluate_governance_proposal,
 )
 
-NANOGRID_BASE_URL = "http://localhost:9999"
+NANOGRID_BASE_URL = "http://127.0.0.1:9080"
+RUNTIME_SUBMIT_URL = "http://127.0.0.1:9080/submit"
 MEMBERSHIP_FILE = Path("output/nodedb/membership_registry.json")
 
 app = FastAPI(title="NodeDB Control Plane", version="1.0.0")
@@ -86,6 +88,14 @@ class GovernanceProposalRequest(BaseModel):
     payload: Dict[str, Any] = Field(default_factory=dict)
 
 
+class ResonantEventRequest(BaseModel):
+    event: str
+    value: Any = 1
+    source: str = "kloud-control-plane"
+    ttl: int = 10
+    stigma_level: int = 2
+
+
 class ControlPlaneState:
     def __init__(self) -> None:
         self.context: Optional[Dict[str, Any]] = None
@@ -139,6 +149,47 @@ async def health() -> Dict[str, Any]:
         "status": "ok",
         "service": "nodedb-control-plane",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@app.post("/api/v1/resonant/events")
+@app.post("/api/v1/resonant/events/adaptive")
+async def resonant_events(payload: ResonantEventRequest) -> Dict[str, Any]:
+    # Convert gateway-style event payload into runtime submit schema.
+    payload_blob = json.dumps(
+        {
+            "event": payload.event,
+            "value": payload.value,
+            "source": payload.source,
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        },
+        ensure_ascii=True,
+    ).encode("utf-8")
+    submit_body = {
+        "ops": ["S", "C"],
+        "payload": base64.b64encode(payload_blob).decode("ascii"),
+        "stigma_level": max(1, min(3, int(payload.stigma_level))),
+        "ttl": max(1, int(payload.ttl)),
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(RUNTIME_SUBMIT_URL, json=submit_body)
+            if response.status_code != 200:
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail=response.text or "runtime submit failed",
+                )
+            data = response.json()
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return {
+        "status": "ok",
+        "event": payload.event,
+        "runtime": data,
     }
 
 

@@ -1,5 +1,6 @@
 use crate::crdt_merge::MergeEngine;
 use protocol::{Message, TideLevel};
+use serde_json::Value;
 use sha3::{Digest, Sha3_256};
 use std::collections::HashMap;
 
@@ -23,13 +24,37 @@ impl MergeSyncEngine {
     pub fn apply_message(&mut self, msg: &Message) {
         // Apply ops to local state using CRDT merge
         for &op_id in &msg.ops {
-            if op_id == 1 { // S - Store
-                let key = "default".to_string(); // TODO: extract key from payload
+            if op_id == 1 {
+                // S - Store
+                let key = Self::extract_state_key(msg);
                 let value = msg.payload.clone();
                 self.local_state.insert(key, value);
             }
             // TODO: other ops
         }
+    }
+
+    fn extract_state_key(msg: &Message) -> String {
+        if let Ok(json) = serde_json::from_slice::<Value>(&msg.payload) {
+            if let Some(key) = json.get("key").and_then(Value::as_str) {
+                let cleaned = key.trim();
+                if !cleaned.is_empty() {
+                    return cleaned.to_string();
+                }
+            }
+
+            if let Some(event) = json.get("event").and_then(Value::as_str) {
+                let event_clean = event.trim();
+                if !event_clean.is_empty() {
+                    // Keep keys stable and filesystem-safe enough for diagnostics.
+                    let safe_event = event_clean.replace(':', "_").replace(' ', "_");
+                    return format!("event:{}:{}", safe_event, msg.clock);
+                }
+            }
+        }
+
+        // Fallback for binary payloads or unstructured JSON.
+        format!("msg:{}", msg.clock)
     }
 
     pub fn merge_remote_state(&mut self, remote_state: &HashMap<String, Vec<u8>>) {

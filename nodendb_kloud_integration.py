@@ -68,15 +68,27 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 SERVICE_ENDPOINTS = {
-    "api": {"host": "localhost", "port": 8000, "scheme": "http"},
-    "ocean-core": {"host": "localhost", "port": 8030, "scheme": "http"},
-    "alba": {"host": "localhost", "port": 5555, "scheme": "http"},
-    "albi": {"host": "localhost", "port": 6680, "scheme": "http"},
-    "jona": {"host": "localhost", "port": 7777, "scheme": "http"},
-    "clx-i": {"host": "localhost", "port": 4444, "scheme": "http"},
-    "ai-global-9999": {"host": "localhost", "port": 9999, "scheme": "http"},
-    "aviation": {"host": "localhost", "port": 8080, "scheme": "http"},
-    "neo4j": {"host": "localhost", "port": 7474, "scheme": "http"},
+    "api": {"host": "127.0.0.1", "port": 7161, "scheme": "http"},
+    "ocean-core": {"host": "127.0.0.1", "port": 7160, "scheme": "http"},
+    "alba": {"host": "127.0.0.1", "port": 7152, "scheme": "http"},
+    "albi": {"host": "127.0.0.1", "port": 7159, "scheme": "http"},
+    "jona": {"host": "127.0.0.1", "port": 7157, "scheme": "http"},
+    "clx-i": {"host": "127.0.0.1", "port": 7160, "scheme": "http"},
+    "ai-global-9999": {"host": "127.0.0.1", "port": 9080, "scheme": "http"},
+    "aviation": {"host": "127.0.0.1", "port": 8080, "scheme": "http"},
+    "neo4j": {"host": "127.0.0.1", "port": 7474, "scheme": "http"},
+}
+
+SERVICE_HEALTH_PATHS = {
+    "api": ["/health", "/status", "/api/v1/status", "/api/health"],
+    "ocean-core": ["/health", "/status", "/"],
+    "alba": ["/health", "/api/health", "/status"],
+    "albi": ["/health", "/api/health", "/status", "/"],
+    "jona": ["/health", "/status", "/"],
+    "clx-i": ["/health", "/status", "/"],
+    "ai-global-9999": ["/status", "/health", "/"],
+    "aviation": ["/health", "/status", "/"],
+    "neo4j": ["/health", "/"],
 }
 
 DATABASE_ENDPOINTS = {
@@ -252,25 +264,58 @@ async def check_sovereign_node_health(
             "ndb_score": 0.0,
         }
 
-    # ============================================================================
+
+async def _get_first_ok_json(
+    client: httpx.AsyncClient, endpoint: str, paths: list[str]
+) -> tuple[httpx.Response, Dict[str, Any], str]:
+    """Return first successful JSON response for the provided path candidates."""
+    last_error: Optional[Exception] = None
+    for path in paths:
+        try:
+            response = await client.get(f"{endpoint}{path}", timeout=10.0)
+            if response.status_code in [200, 201, 202, 204]:
+                try:
+                    payload = response.json()
+                except Exception:
+                    payload = {}
+                return response, payload, path
+        except Exception as exc:
+            last_error = exc
+
+    if last_error:
+        raise last_error
+    raise RuntimeError(f"No healthy paths responded for {endpoint}")
+
+
+async def check_api_health() -> Dict[str, Any]:
     """Real health check - HTTP call to actual API Backend"""
     endpoint = f"{SERVICE_ENDPOINTS['api']['scheme']}://{SERVICE_ENDPOINTS['api']['host']}:{SERVICE_ENDPOINTS['api']['port']}"
 
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            # Main health check
-            health_response = await client.get(f"{endpoint}/health")
-            health_response.raise_for_status()
-            health_data = health_response.json()
+            health_response, health_data, health_path = await _get_first_ok_json(
+                client,
+                endpoint,
+                SERVICE_HEALTH_PATHS.get(
+                    "api", ["/health", "/status", "/api/v1/status"]
+                ),
+            )
 
             # Query execution time metrics
-            status_response = await client.get(
-                f"{endpoint}/api/v1/status", timeout=10.0
-            )
-            if status_response.status_code == 200:
-                status_data = status_response.json()
-            else:
-                status_data = {}
+            status_data = {}
+            for status_path in ["/api/v1/status", "/status", "/api/health"]:
+                try:
+                    status_response = await client.get(
+                        f"{endpoint}{status_path}", timeout=10.0
+                    )
+                    if status_response.status_code == 200:
+                        try:
+                            status_data = status_response.json()
+                        except Exception:
+                            status_data = {}
+                        break
+                except Exception:
+                    continue
 
             # Calculate NDB quality from real response time
             response_time = health_response.elapsed.total_seconds() * 1000
@@ -279,12 +324,13 @@ async def check_sovereign_node_health(
             )
 
             logger.info(
-                f"✅ API Health: {health_data.get('status', 'unknown')} (response: {response_time:.1f}ms)"
+                f"✅ API Health: {health_data.get('status', 'unknown')} (path: {health_path}, response: {response_time:.1f}ms)"
             )
 
             return {
                 "status": "healthy",
                 "endpoint": endpoint,
+                "health_path": health_path,
                 "response_time_ms": response_time,
                 "health_data": health_data,
                 "status_data": status_data,
@@ -306,9 +352,11 @@ async def check_ocean_core_health() -> Dict[str, Any]:
 
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(f"{endpoint}/health")
-            response.raise_for_status()
-            health_data = response.json()
+            response, health_data, health_path = await _get_first_ok_json(
+                client,
+                endpoint,
+                SERVICE_HEALTH_PATHS.get("ocean-core", ["/health", "/status", "/"]),
+            )
 
             # Try to get model status
             try:
@@ -336,6 +384,7 @@ async def check_ocean_core_health() -> Dict[str, Any]:
             return {
                 "status": "healthy",
                 "endpoint": endpoint,
+                "health_path": health_path,
                 "response_time_ms": response_time,
                 "health_data": health_data,
                 "models_data": models_data,
@@ -367,15 +416,20 @@ async def check_trinity_health() -> Dict[str, Any]:
         for component_name, endpoint_config in trinity_components.items():
             endpoint = f"{endpoint_config['scheme']}://{endpoint_config['host']}:{endpoint_config['port']}"
             try:
-                response = await client.get(f"{endpoint}/health")
-                response.raise_for_status()
-                health_data = response.json()
+                response, health_data, health_path = await _get_first_ok_json(
+                    client,
+                    endpoint,
+                    SERVICE_HEALTH_PATHS.get(
+                        component_name, ["/health", "/api/health", "/status"]
+                    ),
+                )
                 response_time = response.elapsed.total_seconds() * 1000
                 response_times.append(response_time)
 
                 trinity_status[component_name] = {
                     "status": "healthy",
                     "data": health_data,
+                    "health_path": health_path,
                     "response_time_ms": response_time,
                 }
                 logger.info(
@@ -408,10 +462,30 @@ async def check_trinity_health() -> Dict[str, Any]:
 
 async def check_jona_sandbox_health() -> Dict[str, Any]:
     """Real health check for JONA sandbox and ethics surfaces."""
+    jona_endpoint = (
+        f"{SERVICE_ENDPOINTS['jona']['scheme']}://"
+        f"{SERVICE_ENDPOINTS['jona']['host']}:{SERVICE_ENDPOINTS['jona']['port']}"
+    )
+    api_endpoint = (
+        f"{SERVICE_ENDPOINTS['api']['scheme']}://"
+        f"{SERVICE_ENDPOINTS['api']['host']}:{SERVICE_ENDPOINTS['api']['port']}"
+    )
     endpoints = {
-        "jona_service": "http://localhost:7777/health",
-        "jona_api": "http://localhost:8000/api/jona/health",
-        "asi_health": "http://localhost:8000/api/asi/health",
+        "jona_service": [
+            f"{jona_endpoint}/health",
+            f"{jona_endpoint}/status",
+            f"{jona_endpoint}/",
+        ],
+        "jona_api": [
+            f"{api_endpoint}/api/jona/health",
+            f"{api_endpoint}/api/health",
+            f"{api_endpoint}/health",
+        ],
+        "asi_health": [
+            f"{api_endpoint}/api/asi/health",
+            f"{api_endpoint}/api/health",
+            f"{api_endpoint}/status",
+        ],
     }
 
     results: Dict[str, Any] = {}
@@ -419,10 +493,29 @@ async def check_jona_sandbox_health() -> Dict[str, Any]:
     violations = []
 
     async with httpx.AsyncClient(timeout=10.0) as client:
-        for name, url in endpoints.items():
+        for name, candidate_urls in endpoints.items():
             try:
-                response = await client.get(url, timeout=10.0)
-                payload = response.json() if response.status_code == 200 else {}
+                response = None
+                payload = {}
+                chosen_url = None
+
+                for url in candidate_urls:
+                    try:
+                        response = await client.get(url, timeout=10.0)
+                        if response.status_code == 200:
+                            chosen_url = url
+                            break
+                    except Exception:
+                        continue
+
+                if response is None:
+                    raise RuntimeError("No endpoint responded")
+
+                if response.status_code == 200:
+                    try:
+                        payload = response.json()
+                    except Exception:
+                        payload = {}
                 component_health = payload.get(
                     "health_score",
                     payload.get("overall_health", payload.get("health", 0.0)),
@@ -439,6 +532,7 @@ async def check_jona_sandbox_health() -> Dict[str, Any]:
                 results[name] = {
                     "status": "healthy" if response.status_code == 200 else "error",
                     "status_code": response.status_code,
+                    "endpoint": chosen_url,
                     "health_score": round(component_health, 3),
                     "data": payload,
                 }
@@ -615,10 +709,17 @@ async def initialize_kloud_nodedb_real():
         for service_name, endpoint_config in SERVICE_ENDPOINTS.items():
             endpoint = f"{endpoint_config['scheme']}://{endpoint_config['host']}:{endpoint_config['port']}"
             try:
-                response = await client.get(f"{endpoint}/health", timeout=5.0)
-                if response.status_code in [200, 204]:
+                paths = SERVICE_HEALTH_PATHS.get(
+                    service_name, ["/health", "/status", "/"]
+                )
+                response, _, health_path = await _get_first_ok_json(
+                    client, endpoint, paths
+                )
+                if response.status_code in [200, 201, 202, 204]:
                     available_services[service_name] = True
-                    logger.info(f"✓ {service_name}: Available at {endpoint}")
+                    logger.info(
+                        f"✓ {service_name}: Available at {endpoint}{health_path}"
+                    )
             except Exception as e:
                 logger.warning(f"✗ {service_name}: Not available ({type(e).__name__})")
 
@@ -729,20 +830,26 @@ async def initialize_kloud_nodedb_real():
                 __doc__ = "CLX.I Multi-Model Router - Real HTTP Service"
 
             async def check_clx_i_health():
-                endpoint = "http://localhost:4444"
+                endpoint = (
+                    f"{SERVICE_ENDPOINTS['clx-i']['scheme']}://"
+                    f"{SERVICE_ENDPOINTS['clx-i']['host']}:"
+                    f"{SERVICE_ENDPOINTS['clx-i']['port']}"
+                )
                 try:
                     async with httpx.AsyncClient(timeout=10.0) as client:
-                        response = await client.get(f"{endpoint}/health")
-                        health_data = (
-                            response.json() if response.status_code == 200 else {}
+                        response, health_data, health_path = await _get_first_ok_json(
+                            client,
+                            endpoint,
+                            SERVICE_HEALTH_PATHS.get("clx-i", ["/health", "/status"]),
                         )
                         return {
                             "status": "healthy"
-                            if response.status_code == 200
+                            if response.status_code in [200, 201, 202, 204]
                             else "error",
+                            "health_path": health_path,
                             "data": health_data,
                             "quality_score": 0.9
-                            if response.status_code == 200
+                            if response.status_code in [200, 201, 202, 204]
                             else 0.0,
                         }
                 except Exception as e:
