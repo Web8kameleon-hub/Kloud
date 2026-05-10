@@ -19,10 +19,10 @@ from .contract import (
     generate,
 )
 
-from .ollama_adapter import (
-    OllamaAdapter,
-    create_ollama_adapter,
-    test_ollama_connection,
+from .clx_adapter import (
+    ClxAdapter,
+    create_clx_adapter,
+    test_clx_connection,
 )
 
 __all__ = [
@@ -41,9 +41,8 @@ __all__ = [
     "get_engine",
     "list_engines",
     "generate",
-    # Ollama
-    "OllamaAdapter",
-    "create_ollama_adapter",
-    "test_ollama_connection",
+    # CLX
+    "ClxAdapter",
+    "create_clx_adapter",
+    "test_clx_connection",
 ]
-

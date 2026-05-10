@@ -8,8 +8,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Check if Clerk is configured
-const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+// Auth provider policy: internal auth is default, Clerk only when explicitly selected.
+const authProvider = process.env.AUTH_PROVIDER || "internal";
+const isClerkConfigured =
+  authProvider === "clerk" && !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 // Public routes that don't require authentication
 const publicRoutes = [

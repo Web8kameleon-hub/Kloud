@@ -83,7 +83,7 @@
 
 ### ✅ Stadia 1: Transparenca e AI
 
-- [x] Model Documentation (Ollama - llama3.1:8b)
+- [x] Model Documentation (CLX - llama3.1:8b)
 - [x] Data Source Disclosure
 - [ ] Algorithm Explainability
 - [ ] Bias Assessment

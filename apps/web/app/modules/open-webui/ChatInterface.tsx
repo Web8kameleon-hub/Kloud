@@ -355,7 +355,7 @@ export default function OpenWebUIChat() {
             <span className="w-2 h-2 bg-green-400 rounded-full" />
             Ocean Core Connected
           </div>
-          <div>🎤 Whisper • 📷 LLaVA • 📄 Ollama</div>
+          <div>🎤 Whisper • 📷 CLX.I • 📄 CLX</div>
         </div>
       </div>
 
@@ -458,7 +458,7 @@ export default function OpenWebUIChat() {
             <button
               onClick={toggleCamera}
               className={`p-3 rounded-xl transition-all shrink-0 ${showCamera ? 'bg-blue-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
-              title="Camera — real AI vision analysis via LLaVA"
+              title="Camera — real AI vision analysis via CLX.I"
             >
               📷
             </button>

@@ -147,15 +147,15 @@ services:
     restart: unless-stopped
 
   # ==========================
-  # OLLAMA (LLM Backend)
+  # CLX (LLM Backend)
   # ==========================
-  ollama:
+  clx:
     image: ollama/ollama:latest
-    container_name: kloud-ollama
+    container_name: kloud-clx
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
+      - clx_data:/root/.ollama
     environment:
       OLLAMA_HOST: "0.0.0.0"
     healthcheck:
@@ -167,21 +167,23 @@ services:
     restart: unless-stopped
 
   # ==========================
-  # OLLAMA MULTI-API (Multi-Model Router)
+  # CLX.I (Multi-Model Router)
   # ==========================
-  ollama-multi-api:
+  clx-i:
     build:
       context: .
-      dockerfile: Dockerfile.ollama-multi
-    container_name: kloud-ollama-multi-api
+      dockerfile: Dockerfile.clx-i
+    container_name: kloud-clx-i
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       PORT: "4444"
     ports:
       - "4444:4444"
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4444/health"]
@@ -202,7 +204,9 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       OCEAN_PORT: "8030"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       MODEL: "llama3.1:8b"
       REDIS_URL: "redis://redis:6379/0"
       API_KEYS_FILE: "/app/config/api_keys.json"
@@ -213,7 +217,7 @@ services:
     ports:
       - "8030:8030"
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
@@ -233,7 +237,9 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "9999"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       MODEL: "llama3.1:8b"
       API_KEYS_FILE: "/app/config/api_keys.json"
       KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
@@ -244,7 +250,7 @@ services:
     ports:
       - "9999:9999"
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9999/health"]
@@ -322,16 +328,16 @@ services:
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
       # Clerk Authentication
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
       NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/sign-in"
       NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/sign-up"
       NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: "/dashboard"
       NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: "/dashboard"
       # Stripe Payments
-      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
       # Kitchen API
       KITCHEN_JOBS_DIR: "/app/kitchen-jobs"
       KITCHEN_REPORTS_DIR: "/app/kitchen-reports"
@@ -551,7 +557,7 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       PORT: "8006"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       GITHUB_TOKEN: "${GITHUB_TOKEN}"
       BLOG_REPO_URL: "${BLOG_REPO_URL:-https://github.com/LedjanAhmati/kloud-blog.git}"
       # LinkedIn Integration
@@ -577,7 +583,7 @@ services:
     volumes:
       - ./data/linkedin:/app/data
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
@@ -735,7 +741,7 @@ services:
     container_name: kloud-blerina
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       PORT: "8035"
       YOUTUBE_CHANNEL_ID: "UCuCd7kgikh6CM2hAh5eAIMA"
       YOUTUBE_API_KEY: "${YOUTUBE_API_KEY:-}"
@@ -743,7 +749,7 @@ services:
     ports:
       - "8035:8035"
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
       video-generator:
         condition: service_healthy
@@ -766,7 +772,7 @@ services:
     container_name: kloud-dr-albana
     environment:
       PYTHONUNBUFFERED: "1"
-      OLLAMA_URL: "http://kloud-ollama:11434"
+      OLLAMA_URL: "http://kloud-clx:11434"
       MEDICAL_MODEL: "llama3.2:1b"
       DR_ALBANA_PORT: "8040"
     ports:
@@ -774,7 +780,7 @@ services:
     volumes:
       - ./generated_medical_pillars:/app/generated_medical_pillars
     depends_on:
-      ollama:
+      clx:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8040/health"]
@@ -1399,8 +1405,6 @@ services:
       PORT: "8019"
     ports:
       - "8019:8019"
-    depends_on:
-      - ocean-core
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8019/health"]
       interval: 30s
@@ -1880,7 +1884,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  ollama_data:
+  clx_data:
     driver: local
   kitchen_jobs:
     driver: local

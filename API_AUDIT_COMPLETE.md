@@ -35,8 +35,8 @@
 
 | Shërbimi | Port | Statusi | Qëllimi |
 |----------|------|--------|--------|
-| **Ollama** | 11434 | ✅ | LLM Backend (lokale) |
-| **Ollama Multi-API** | 4444 | ✅ | Multi-model Router |
+| **CLX** | 11434 | ✅ | LLM Backend (lokale) |
+| **CLX.I** | 4444 | ✅ | Multi-model Router |
 | **ALBA** | 5555 | ✅ | Analytical Intelligence (ASI Trinity) |
 | **ALBI** | 6680 | ✅ | Creative Intelligence (ASI Trinity) |
 | **JONA** | 7777 | ✅ | Emotional Intelligence (ASI Trinity) |
@@ -221,7 +221,7 @@ GET  /api/lagter/v1/process-map
 GET  /api/lagter/v1/export
 ```
 
-### **Ollama Multi-API** (ollama_multi_api.py)
+### **CLX.I** (clx_multi_api.py)
 
 ```
 ✅ 5+ Endpoints
@@ -308,7 +308,7 @@ GET  /airports/search
 - [x] Alphabet Layers (AI Processing)
 - [x] LIAM (Learning Intelligence)
 - [x] VictoriaMetrics (Metrics Storage)
-- [x] Ollama Multi-API (Multi-model router)
+- [x] CLX.I (Multi-model router)
 
 ---
 

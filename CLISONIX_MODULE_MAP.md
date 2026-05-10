@@ -1,4 +1,4 @@
-<!-- cspell:words KLOUD Kloud jona ollama Biosignal JONA Zürich -->
+<!-- cspell:words KLOUD Kloud jona clx Biosignal JONA Zürich -->
 
 # KLOUD MODULE MAP
 
@@ -34,9 +34,9 @@ Kloud is a European AI platform focused on modular reasoning engines, distribute
 ### Module Dependencies
 
 ```text
-chat → ocean → ollama
-trinity → ocean → ollama
-zurich → ocean → ollama
+chat → ocean → clx
+trinity → ocean → clx
+zurich → ocean → clx
 alba → standalone
 albi → standalone
 ```

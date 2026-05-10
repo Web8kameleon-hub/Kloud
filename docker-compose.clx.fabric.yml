@@ -1,0 +1,49 @@
+services:
+  web:
+    env_file:
+      - .env
+      - .env.fabric.local
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clx-web.rule=Host(`clx`) || Host(`clx.i`) || Host(`clisonix.ai`) || Host(`hello.ai`) || Host(`lite`)"
+      - "traefik.http.routers.clx-web.entrypoints=web"
+      - "traefik.http.routers.clx-web.service=clx-web"
+      - "traefik.http.services.clx-web.loadbalancer.server.port=3000"
+
+  api:
+    env_file:
+      - .env
+      - .env.fabric.local
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clx-api.rule=Host(`clx.api`) || Host(`clisonix.api`)"
+      - "traefik.http.routers.clx-api.entrypoints=web"
+      - "traefik.http.routers.clx-api.service=clx-api"
+      - "traefik.http.services.clx-api.loadbalancer.server.port=8000"
+
+  ai-global-9999:
+    env_file:
+      - .env
+      - .env.fabric.local
+    environment:
+      WWWMMM_ENABLED: "1"
+      NDB_ENABLED: "1"
+      STIGMA_ENABLED: "1"
+      NODESNDB_FLUID_ENABLED: "1"
+      REZONANCE_ENABLED: "1"
+      TIDE_ENABLED: "1"
+      CLX_STACK_MODE: "technology-first"
+      RESONANT_REQUIRED_STACK: "wwwmmm,ndb,stigma,nodesndb-fluid,rezonance,tide"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fabric-9999.rule=Host(`wwwmmm`) || Host(`ndb`) || Host(`rezonance`) || Host(`tide`) || Host(`stigma`) || Host(`nodedb-fluid`)"
+      - "traefik.http.routers.fabric-9999.entrypoints=web"
+      - "traefik.http.routers.fabric-9999.service=fabric-9999"
+      - "traefik.http.services.fabric-9999.loadbalancer.server.port=9999"
+
+  traefik:
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"

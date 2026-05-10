@@ -42,12 +42,15 @@ except ModuleNotFoundError:
 
 PORT = int(os.getenv("PORT", "9999"))
 MODEL = os.getenv("MODEL", "llama3.1:8b")
+VISION_TARGET_MODEL = os.getenv("VISION_TARGET_MODEL", "nanogrid-zeiss")
 REQUEST_TIMEOUT = float(os.getenv("REQUEST_TIMEOUT", "90"))
 
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
 OCEAN_CORE_URL = os.getenv("OCEAN_CORE_URL", "http://kloud-ocean-core:8030")
 VIDEO_GENERATOR_URL = os.getenv(
     "VIDEO_GENERATOR_URL", "http://kloud-video-generator:8029"
+)
+VISION_SERVICE_URL = os.getenv(
+    "VISION_SERVICE_URL", f"{OCEAN_CORE_URL}/api/v1/vision/analyze"
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -257,8 +260,32 @@ RESONANT_METRICS: Dict[str, int] = {
     "resonant_recovery_corrupt_lines_total": 0,
     "resonant_key_rotation_total": 0,
     "resonant_old_mode_fallback_total": 0,
+    "resonant_fake_concepts_quarantined_total": 0,
+    "resonant_rejected_non_real_total": 0,
+    "resonant_rollbacks_total": 0,
 }
 ADAPTIVE_MISMATCH_COUNTERS: Dict[str, int] = {}
+WWWMMM_GATE_ENABLED = os.getenv("WWWMMM_GATE_ENABLED", "true").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+FAKE_CONCEPT_FILTER_ENABLED = os.getenv(
+    "FAKE_CONCEPT_FILTER_ENABLED", "true"
+).lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+ROLLOUT_PERCENTAGE = int(os.getenv("RESONANT_ROLLOUT_PERCENTAGE", "25"))
+REAL_DATA_ONLY_MODE = os.getenv("REAL_DATA_ONLY_MODE", "true").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 
 
 def _utc_iso_now() -> str:
@@ -716,6 +743,39 @@ class ResonantAdaptiveWriteRequest(BaseModel):
     profile: Optional[str] = "adaptive"
 
 
+class ResonantRolloutRequest(BaseModel):
+    resonant_percentage: int = Field(ge=0, le=100)
+
+
+def _legacy_percentage() -> int:
+    return max(0, 100 - max(0, min(100, ROLLOUT_PERCENTAGE)))
+
+
+def _fake_concept_reason(payload: Dict[str, Any]) -> Optional[str]:
+    if not FAKE_CONCEPT_FILTER_ENABLED:
+        return None
+    if payload.get("fake_concept") is True or payload.get("is_fake") is True:
+        return "payload-flagged-fake"
+
+    text_blob = _safe_json_dumps(payload).lower()
+    suspicious_tokens = ["fake concept", "fake_concept", "fabricated", "hallucinated"]
+    for token in suspicious_tokens:
+        if token in text_blob:
+            return f"token:{token}"
+    return None
+
+
+def _non_real_writer_reason(writer_id: Optional[str]) -> Optional[str]:
+    writer = (writer_id or "").strip().lower()
+    if not writer:
+        return "missing-writer-id"
+    blocked_tokens = ("test", "demo", "fake", "mock", "sample", "synthetic")
+    for token in blocked_tokens:
+        if token in writer:
+            return f"writer-id-contains:{token}"
+    return None
+
+
 async def _post_json(
     url: str, payload: Dict[str, Any], timeout: float = REQUEST_TIMEOUT
 ) -> Dict[str, Any]:
@@ -724,6 +784,18 @@ async def _post_json(
     if response.status_code >= 400:
         raise HTTPException(status_code=response.status_code, detail=response.text)
     return response.json()
+
+
+async def _ocean_generate_text(prompt: str, max_tokens: int = 1024) -> str:
+    payload = {
+        "prompt": prompt,
+        "max_tokens": max_tokens,
+    }
+    data = await _post_json(
+        f"{OCEAN_CORE_URL}/api/v1/llm/generate", payload, timeout=120.0
+    )
+    text = str(data.get("text", "")).strip()
+    return text or "Model returned empty output."
 
 
 def _memory_score(query: str, text: str) -> int:
@@ -835,6 +907,17 @@ async def resonant_status():
             "primary_profile": PRIMARY_RESONANT_PROFILE,
             "fallback_old_mode": OLD_MODE_ON_MISMATCH,
         },
+        "rollout": {
+            "resonant_percentage": max(0, min(100, ROLLOUT_PERCENTAGE)),
+            "legacy_percentage": _legacy_percentage(),
+            "rollback_one_action": "POST /api/v1/resonant/rollback",
+        },
+        "quality_gates": {
+            "wwwmmm_gate_enabled": WWWMMM_GATE_ENABLED,
+            "fake_concept_filter_enabled": FAKE_CONCEPT_FILTER_ENABLED,
+            "real_data_only_mode": REAL_DATA_ONLY_MODE,
+            "wwwmmm_verdict": "pass" if WWWMMM_GATE_ENABLED else "bypassed",
+        },
         "timestamp_utc": _utc_iso_now(),
     }
 
@@ -851,6 +934,21 @@ async def resonant_events(limit: int = 100):
 
 @app.post("/api/v1/resonant/events")
 async def resonant_events_write(req: ResonantEventWriteRequest):
+    if REAL_DATA_ONLY_MODE:
+        writer_reason = _non_real_writer_reason(req.writer_id)
+        if writer_reason:
+            RESONANT_METRICS["resonant_rejected_non_real_total"] += 1
+            raise HTTPException(
+                status_code=422, detail=f"non-real input rejected: {writer_reason}"
+            )
+
+        fake_reason = _fake_concept_reason(req.payload)
+        if fake_reason:
+            RESONANT_METRICS["resonant_rejected_non_real_total"] += 1
+            raise HTTPException(
+                status_code=422, detail=f"non-real input rejected: {fake_reason}"
+            )
+
     now_ts = time.time()
     now_ms = int(now_ts * 1000)
     if abs(now_ms - req.client_ts_ms) > MAX_CLOCK_SKEW_MS:
@@ -922,6 +1020,29 @@ async def resonant_events_write_adaptive(req: ResonantAdaptiveWriteRequest):
     normalized_profile = requested_profile.strip().lower()
     tide_state = _tide_state()
     fallback_threshold = _fallback_threshold_for_tide(tide_state)
+
+    if REAL_DATA_ONLY_MODE:
+        writer_reason = _non_real_writer_reason(req.writer_id)
+        if writer_reason:
+            RESONANT_METRICS["resonant_rejected_non_real_total"] += 1
+            raise HTTPException(
+                status_code=422, detail=f"non-real input rejected: {writer_reason}"
+            )
+
+        if not (req.signature and req.nonce and req.client_ts_ms and req.writer_id):
+            RESONANT_METRICS["resonant_rejected_non_real_total"] += 1
+            raise HTTPException(
+                status_code=422,
+                detail="non-real input rejected: signed modern envelope required in REAL_DATA_ONLY_MODE",
+            )
+
+    fake_reason = _fake_concept_reason(req.payload)
+    if fake_reason:
+        RESONANT_METRICS["resonant_fake_concepts_quarantined_total"] += 1
+        RESONANT_METRICS["resonant_rejected_non_real_total"] += 1
+        raise HTTPException(
+            status_code=422, detail=f"non-real input rejected: {fake_reason}"
+        )
 
     new_first_payload = {
         "profile": normalized_profile,
@@ -1135,8 +1256,51 @@ async def resonant_metrics():
         "adaptive_compat_mode": ADAPTIVE_COMPAT_MODE,
         "primary_profile": PRIMARY_RESONANT_PROFILE,
         "old_mode_on_mismatch": OLD_MODE_ON_MISMATCH,
+        "wwwmmm_gate_enabled": WWWMMM_GATE_ENABLED,
+        "fake_concept_filter_enabled": FAKE_CONCEPT_FILTER_ENABLED,
+        "real_data_only_mode": REAL_DATA_ONLY_MODE,
+        "rollout_resonant_percentage": max(0, min(100, ROLLOUT_PERCENTAGE)),
+        "rollout_legacy_percentage": _legacy_percentage(),
         "tide_medium_pressure_ratio": TIDE_MEDIUM_PRESSURE_RATIO,
         "tide_high_pressure_ratio": TIDE_HIGH_PRESSURE_RATIO,
+        "timestamp_utc": _utc_iso_now(),
+    }
+
+
+@app.get("/api/v1/resonant/rollout")
+async def resonant_rollout_status():
+    return {
+        "resonant_percentage": max(0, min(100, ROLLOUT_PERCENTAGE)),
+        "legacy_percentage": _legacy_percentage(),
+        "rollback_one_action": "POST /api/v1/resonant/rollback",
+        "wwwmmm_gate_enabled": WWWMMM_GATE_ENABLED,
+        "fake_concept_filter_enabled": FAKE_CONCEPT_FILTER_ENABLED,
+        "timestamp_utc": _utc_iso_now(),
+    }
+
+
+@app.post("/api/v1/resonant/rollout")
+async def resonant_rollout_set(req: ResonantRolloutRequest):
+    global ROLLOUT_PERCENTAGE
+    ROLLOUT_PERCENTAGE = max(0, min(100, req.resonant_percentage))
+    return {
+        "status": "updated",
+        "resonant_percentage": ROLLOUT_PERCENTAGE,
+        "legacy_percentage": _legacy_percentage(),
+        "timestamp_utc": _utc_iso_now(),
+    }
+
+
+@app.post("/api/v1/resonant/rollback")
+async def resonant_rollback_one_action():
+    global ROLLOUT_PERCENTAGE
+    ROLLOUT_PERCENTAGE = 0
+    RESONANT_METRICS["resonant_rollbacks_total"] += 1
+    return {
+        "status": "rolled_back",
+        "resonant_percentage": 0,
+        "legacy_percentage": 100,
+        "action": "one-action-rollback",
         "timestamp_utc": _utc_iso_now(),
     }
 
@@ -1146,7 +1310,6 @@ async def tools_status() -> Dict[str, Any]:
     targets = {
         "ocean_core": f"{OCEAN_CORE_URL}/health",
         "video_generator": f"{VIDEO_GENERATOR_URL}/health",
-        "ollama": f"{OLLAMA_HOST}/api/tags",
     }
     checks: Dict[str, Any] = {}
     async with httpx.AsyncClient(timeout=httpx.Timeout(8.0)) as client:
@@ -1170,22 +1333,10 @@ async def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="message or query required")
 
     lang_hint = f"\nRespond in {req.language_hint}." if req.language_hint else ""
-    payload = {
-        "model": req.model or MODEL,
-        "messages": [
-            {"role": "system", "content": GLOBAL_SYSTEM_PROMPT + lang_hint},
-            {"role": "user", "content": prompt},
-        ],
-        "stream": False,
-        "options": {"temperature": 0.65, "num_ctx": 8192, "num_predict": 1024},
-    }
+    effective_prompt = f"{GLOBAL_SYSTEM_PROMPT}{lang_hint}\n\nUser request:\n{prompt}"
     start = time.time()
     try:
-        data = await _post_json(f"{OLLAMA_HOST}/api/chat", payload)
-        text = (
-            data.get("message", {}).get("content", "").strip()
-            or "Model returned empty output."
-        )
+        text = await _ocean_generate_text(effective_prompt, max_tokens=1024)
     except Exception:
         text = "Upstream model unavailable. Please retry in a few seconds."
 
@@ -1243,18 +1394,29 @@ async def voice_transcribe(req: AudioTranscribeRequest):
 @app.post("/api/v1/vision/analyze")
 async def vision_analyze(req: VisionAnalyzeRequest):
     payload = {
-        "model": "llava",
+        "image_base64": req.image_base64,
         "prompt": req.prompt,
-        "images": [req.image_base64],
-        "stream": False,
-        "options": {"temperature": 0.2, "num_predict": 512},
     }
     try:
-        data = await _post_json(f"{OLLAMA_HOST}/api/generate", payload)
-        return {"status": "success", "analysis": data.get("response", "")}
+        result = await _post_json(VISION_SERVICE_URL, payload, timeout=120.0)
+        if isinstance(result, dict):
+            result.setdefault("requested_model", VISION_TARGET_MODEL)
+        return result
+    except HTTPException as exc:
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=(
+                f"Vision upstream failed for model '{VISION_TARGET_MODEL}': "
+                f"{exc.detail}"
+            ),
+        ) from exc
     except Exception as exc:
         raise HTTPException(
-            status_code=500, detail=f"Vision analyze failed: {exc}"
+            status_code=503,
+            detail=(
+                f"Vision service unavailable for model '{VISION_TARGET_MODEL}'. "
+                f"Error: {exc}"
+            ),
         ) from exc
 
 
@@ -1287,23 +1449,12 @@ async def document_read(req: DocumentReadRequest):
 
     summary = None
     if req.summarize:
-        payload = {
-            "model": MODEL,
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "Summarize documents clearly and factually.",
-                },
-                {
-                    "role": "user",
-                    "content": f"Summarize this:\n\n{req.content[:20000]}",
-                },
-            ],
-            "stream": False,
-        }
+        summary_prompt = (
+            "Summarize documents clearly and factually.\n\n"
+            f"Summarize this:\n\n{req.content[:20000]}"
+        )
         try:
-            result = await _post_json(f"{OLLAMA_HOST}/api/chat", payload)
-            summary = result.get("message", {}).get("content", "")
+            summary = await _ocean_generate_text(summary_prompt, max_tokens=900)
         except Exception:
             summary = "Summary unavailable right now."
 
@@ -1321,19 +1472,11 @@ async def document_write(req: DocumentWriteRequest):
         f"Write a {req.doc_type} in {req.language}. "
         f"Length: {req.length}. Topic: {req.topic}."
     )
-    payload = {
-        "model": MODEL,
-        "messages": [
-            {"role": "system", "content": "Write structured, professional documents."},
-            {"role": "user", "content": prompt},
-        ],
-        "stream": False,
-        "options": {"num_predict": 1400},
-    }
-
     try:
-        result = await _post_json(f"{OLLAMA_HOST}/api/chat", payload)
-        text = result.get("message", {}).get("content", "")
+        text = await _ocean_generate_text(
+            f"Write structured, professional documents.\n\n{prompt}",
+            max_tokens=1400,
+        )
     except Exception:
         text = "Document generation temporarily unavailable."
 
@@ -1766,22 +1909,11 @@ async def tasks_run(task_id: str):
     task["updated_at"] = datetime.now(timezone.utc).isoformat()
 
     prompt = f"Task: {task['title']}\nObjective: {task['objective']}\nInput: {task['input_data']}"
-    payload = {
-        "model": MODEL,
-        "messages": [
-            {
-                "role": "system",
-                "content": GLOBAL_SYSTEM_PROMPT
-                + "\nExecute tasks with actionable outputs.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        "stream": False,
-        "options": {"temperature": 0.4, "num_ctx": 8192, "num_predict": 1200},
-    }
+    task_prompt = (
+        GLOBAL_SYSTEM_PROMPT + "\nExecute tasks with actionable outputs.\n\n" + prompt
+    )
     try:
-        data = await _post_json(f"{OLLAMA_HOST}/api/chat", payload, timeout=120.0)
-        output = data.get("message", {}).get("content", "").strip()
+        output = await _ocean_generate_text(task_prompt, max_tokens=1200)
         if not output:
             output = "Task finished with empty model output."
         task["result"] = output
@@ -1990,4 +2122,4 @@ async def publish_status():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=PORT)
+    uvicorn.run(app, host=os.getenv("HOST", "0.0.0.0"), port=PORT)

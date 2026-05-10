@@ -1,20 +1,18 @@
 /**
  * OCEAN STREAMING API - Real-time AI responses
  *
- * This endpoint streams responses from Ocean-Core,
- * so text appears immediately (2-3 seconds) instead of waiting 60+ seconds.
+ * This endpoint adapts the Curiosity Ocean /ask API to the frontend streaming UI.
  */
 
-// Detect environment for correct API URL
 const isDev = process.env.NODE_ENV !== "production";
-const OCEAN_CORE_URL =
-  process.env.OCEAN_CORE_URL ||
-  (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
+const CURIOSITY_URL =
+  process.env.CURIOSITY_URL ||
+  (isDev ? "http://localhost:8019" : "http://curiosity:8019");
 
 export async function POST(request: Request) {
   try {
-    // Parse body with error handling
     let message: string;
+    let language = "en";
     try {
       const text = await request.text();
       if (!text || text.trim() === "") {
@@ -22,6 +20,7 @@ export async function POST(request: Request) {
       }
       const body = JSON.parse(text);
       message = body.message || body.query || "";
+      language = body.language || "en";
     } catch {
       return new Response("Invalid JSON body", { status: 400 });
     }
@@ -31,34 +30,39 @@ export async function POST(request: Request) {
     }
 
     console.log(
-      `[Stream] Connecting to ${OCEAN_CORE_URL}/api/v1/chat/stream with message: ${message.substring(0, 50)}...`,
+      `[Stream] Connecting to ${CURIOSITY_URL}/ask with message: ${message.substring(0, 50)}...`,
     );
 
-    // Call Ocean-Core streaming endpoint
-    const response = await fetch(`${OCEAN_CORE_URL}/api/v1/chat/stream`, {
+    const response = await fetch(`${CURIOSITY_URL}/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ query: message, language }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error(
-        `[Stream] Ocean-Core error: ${response.status} - ${errorText}`,
+        `[Stream] Curiosity Ocean error: ${response.status} - ${errorText}`,
       );
-      return new Response(`Ocean-Core error: ${response.status}`, {
-        status: 500,
-      });
+      return new Response(`Curiosity Ocean error: ${response.status}`, { status: 500 });
     }
 
-    // Stream the response directly to the client
+    const data = (await response.json()) as { answer?: string };
+    const answer = data.answer?.trim() || "Curiosity Ocean returned an empty response.";
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(encoder.encode(answer));
+        controller.close();
+      },
+    });
+
     const headers = new Headers({
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache",
-      "Transfer-Encoding": "chunked",
     });
 
-    return new Response(response.body, { headers });
+    return new Response(stream, { headers });
   } catch (error) {
     console.error("Streaming error:", error);
     return new Response(

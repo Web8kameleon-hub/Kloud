@@ -73,7 +73,7 @@
 | ocean-core | ✅ healthy | 8030 |
 | postgres | ✅ healthy | 5432 |
 | redis | ✅ healthy | 6379 |
-| ollama | ✅ healthy | 11434 |
+| clx | ✅ healthy | 11434 |
 | content-factory | ⚠️ works | 8006 |
 | user-management | ⚠️ works | 8070 |
 | intelligence-lab | ⚠️ works | 8098 |

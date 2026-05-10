@@ -105,18 +105,18 @@ const config = convict({
   },
 
   ai: {
-    ollama: {
+    clx: {
       host: {
-        doc: "Ollama API host",
+        doc: "CLX API host",
         format: String,
         default: "http://localhost:11434",
-        env: "OLLAMA_HOST",
+        env: "CLX_HOST",
       },
       model: {
         doc: "Default AI model",
         format: String,
-        default: "llama3.1:8b",
-        env: "OLLAMA_MODEL",
+        default: "clx",
+        env: "CLX_MODEL",
       },
     },
   },

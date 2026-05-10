@@ -232,13 +232,13 @@ import { scanKloudAPI, KloudAPIScanner } from './kloud_api_scanner';
 
 // Skanim i shpejtë
 const result = await scanKloudAPI({
-    baseUrl: 'https://api.kloud.cloud',
+    baseUrl: 'https://kameleon.life',
     timeout: 30000
 });
 
 // Skaner i avancuar
 const scanner = new KloudAPIScanner({
-    baseUrl: 'https://api.kloud.cloud',
+    baseUrl: 'https://kameleon.life',
     includeAuth: true,
     authToken: 'your-jwt-token'
 });
@@ -401,8 +401,8 @@ Ky projekt është licencuar nën MIT License - shiko [LICENSE](LICENSE) për de
 
 ## 📞 Support
 
-- **Email**: support@kloud.cloud
-- **Documentation**: https://docs.kloud.cloud
+- **Email**: support@kameleon.life
+- **Documentation**: https://kameleon.life
 - **Issues**: https://github.com/kloud/kloud-cloud/issues
 - **Discussions**: https://github.com/kloud/kloud-cloud/discussions
 

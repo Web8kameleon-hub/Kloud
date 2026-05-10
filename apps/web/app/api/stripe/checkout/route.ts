@@ -8,8 +8,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import Stripe from "stripe";
+import { resolveBearerUser } from "@/lib/internal-auth";
 
 // Initialize Stripe lazily to avoid build-time errors
 const getStripe = () => {
@@ -41,13 +41,11 @@ const PRICE_IDS: Record<string, Record<string, string>> = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
+    const authUser = await resolveBearerUser(request.headers.get("authorization"));
+    if (!authUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await currentUser();
     const body = await request.json();
     const { plan, interval = "monthly" } = body;
 
@@ -67,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     // Check if user already has a Stripe customer
     const existingCustomers = await stripe.customers.list({
-      email: user?.emailAddresses[0]?.emailAddress,
+      email: authUser.email || undefined,
       limit: 1,
     });
 
@@ -75,10 +73,10 @@ export async function POST(request: NextRequest) {
       customerId = existingCustomers.data[0].id;
     } else {
       const customer = await stripe.customers.create({
-        email: user?.emailAddresses[0]?.emailAddress,
-        name: `${user?.firstName} ${user?.lastName}`,
+        email: authUser.email || undefined,
+        name: authUser.name,
         metadata: {
-          clerk_user_id: userId,
+          internal_user_id: authUser.id,
         },
       });
       customerId = customer.id;
@@ -98,13 +96,13 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://kloud.com"}/subscription?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://kloud.com"}/pricing?cancelled=true`,
       metadata: {
-        clerk_user_id: userId,
+        internal_user_id: authUser.id,
         plan: plan,
         interval: interval,
       },
       subscription_data: {
         metadata: {
-          clerk_user_id: userId,
+          internal_user_id: authUser.id,
           plan: plan,
         },
       },
@@ -167,4 +165,5 @@ export async function GET() {
     },
   });
 }
+
 

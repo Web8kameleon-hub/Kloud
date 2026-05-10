@@ -1,0 +1,32 @@
+{
+  "users": {
+    "fe4d12b60a3e19fb7e4e": {
+      "id": "fe4d12b60a3e19fb7e4e",
+      "name": "Test User",
+      "email": "test.internal@kloud.local",
+      "phone": null,
+      "passwordHash": "e86010d6382ad9bff98f8f3a365b9bb683860da311105eb5305480130ee471d1",
+      "passwordSalt": "8a50f488acb4402f6a5108fb4615afc5",
+      "emailVerified": true,
+      "phoneVerified": false,
+      "googleLinked": false,
+      "createdAt": "2026-05-10T07:43:49.237Z",
+      "updatedAt": "2026-05-10T07:43:58.232Z"
+    }
+  },
+  "otpChallenges": {
+    "2ba61e2027dcaf6462658600": {
+      "id": "2ba61e2027dcaf6462658600",
+      "userId": "fe4d12b60a3e19fb7e4e",
+      "channel": "email",
+      "target": "test.internal@kloud.local",
+      "codeHash": "f853299231b84c157d35ee4a3d16a9fbf9bf51a40f250cf4487fddc2f947a0fa",
+      "expiresAt": "2026-05-10T07:48:58.205Z",
+      "attempts": 1,
+      "purpose": "login",
+      "consumed": true,
+      "createdAt": "2026-05-10T07:43:58.205Z"
+    }
+  },
+  "googleStates": {}
+}

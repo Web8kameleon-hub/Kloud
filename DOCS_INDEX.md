@@ -25,6 +25,8 @@
 | [KLOUD_ARCHITECTURE_BASELINE_2025.md](KLOUD_ARCHITECTURE_BASELINE_2025.md) | Bazë e arkitekturës 2025 |
 | [COMPLETE_SYSTEM_GUIDE.md](COMPLETE_SYSTEM_GUIDE.md) | Udhëzues i plotë i sistemit |
 | [CYCLE_ARCHITECTURE_DIAGRAM.md](CYCLE_ARCHITECTURE_DIAGRAM.md) | Diagrami i Cycle Engine |
+| [docs/TECHNOLOGY_FIRST_RUNTIME_POLICY.md](docs/TECHNOLOGY_FIRST_RUNTIME_POLICY.md) | Policy: native technology first, fallback second |
+| [docs/HYBRID_OLD_MODUS_FALLBACK_RUNBOOK.md](docs/HYBRID_OLD_MODUS_FALLBACK_RUNBOOK.md) | Runbook për kalim të kontrolluar në old modus |
 | [docs/architecture/](docs/architecture/) | Folder me dokumente arkitekture |
 
 ---
@@ -230,4 +232,3 @@
 ---
 
 *Ky indeks u krijua automatikisht - Shkurt 2026*
-

@@ -11,7 +11,7 @@
     "strict": false,
     "noEmit": true,
     "incremental": true,
-    "module": "esnext",
+    "module": "Node16",
     "esModuleInterop": true,
     "moduleResolution": "node16",
     "resolveJsonModule": true,

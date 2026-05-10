@@ -127,7 +127,7 @@ Engine role in this architecture:
 
 Inference providers:
 
-- Ollama
+- CLX
 - vLLM
 - CLX-I
 

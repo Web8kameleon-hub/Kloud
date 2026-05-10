@@ -82,37 +82,56 @@ export const metadata: Metadata = {
   category: 'Technology',
 };
 
+const softwareApplicationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Kloud Cloud',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  offers: [
+    {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+    },
+    {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  ],
+  creator: {
+    '@type': 'Person',
+    name: 'Ledjan Ahmati',
+    url: 'https://kloud.com',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '150',
+  },
+  description: 'AI-powered industrial intelligence and behavioral science platform',
+  url: 'https://kloud.com',
+  author: {
+    '@type': 'Organization',
+    name: 'Kloud',
+    url: 'https://kloud.com',
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-              "@type": "SoftwareApplication",
+    <html lang="en">
       <head>
         {/* Schema.org Structured Data for Rich Snippets */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-                "price": "0",
-                "priceCurrency": "EUR"
-              "@type": "SoftwareApplication",
-                "price": "0",
-                "priceCurrency": "USD"
-              },
-                "@type": "Person",
-                "name": "Ledjan Ahmati",
-                "url": "https://kloud.com"
-                "ratingCount": "150"
-              },
-              "description": "AI-powered industrial intelligence and behavioral science platform",
-              "url": "https://kloud.com",
-              "author": {
-                "@type": "Organization",
-                "name": "Kloud",
-                "url": "https://kloud.com"
-              }
-            })
+            __html: JSON.stringify(softwareApplicationSchema),
           }}
         />
         {/* Organization Schema */}

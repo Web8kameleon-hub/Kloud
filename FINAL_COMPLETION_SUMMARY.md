@@ -61,8 +61,8 @@
 
 ```
 ✅ Traefik          API Gateway + Load Balancer — Operacionale
-✅ Ollama           LLM Backend — 4 models loaded
-✅ Ollama Multi-API Router + failover — Operacionale
+✅ CLX           LLM Backend — 4 models loaded
+✅ CLX.I Router + failover — Operacionale
 ✅ Docker Compose   Full orchestration — Configured
 ✅ Kubernetes Ready Infrastructure as Code — Available
 ```
@@ -81,7 +81,7 @@
 | Blerina | 5+ | ✅ |
 | Content Factory | 6+ | ✅ |
 | LAGTER v1 | 4+ | ✅ |
-| Ollama Multi-API | 5+ | ✅ |
+| CLX.I | 5+ | ✅ |
 | Marketplace | 8+ | ✅ |
 | Aviation Weather | 6+ | ✅ |
 | Core API | 10+ | ✅ |

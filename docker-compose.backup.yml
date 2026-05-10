@@ -89,7 +89,7 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       OCEAN_PORT: "8030"
-      OLLAMA_HOST: "http://kloud-ollama:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
       MODEL: "llama3.1:8b"
       REDIS_URL: "redis://redis:6379/0"
     ports:

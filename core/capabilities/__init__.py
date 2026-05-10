@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class CapabilityType(Enum):
     """Llojet e aftësive"""
+
     SUMMARIZATION = "summarization"
     TRANSLATION = "translation"
     CODE_GENERATION = "code_generation"
@@ -40,24 +41,25 @@ class CapabilityType(Enum):
 @dataclass
 class Capability:
     """Aftësi AI"""
+
     id: str
     name: str
     type: CapabilityType
     description: str = ""
-    
+
     # Resources
-    default_engine: str = "ollama:kloud-ocean:v2"
+    default_engine: str = "clx:clx"
     default_persona: Optional[str] = None
     default_pipeline: Optional[str] = None
-    
+
     # Input/Output schema
     input_schema: Dict[str, str] = field(default_factory=lambda: {"text": "string"})
     output_schema: Dict[str, str] = field(default_factory=lambda: {"result": "string"})
-    
+
     # Config
     config: Dict[str, Any] = field(default_factory=dict)
     active: bool = True
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
@@ -119,36 +121,38 @@ BUILT_IN_CAPABILITIES = [
 
 class CapabilityRegistry:
     """Regjistri i aftësive"""
-    
+
     _instance: Optional["CapabilityRegistry"] = None
     _capabilities: Dict[str, Capability]
     _initialized: bool
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._capabilities = {}
             cls._instance._initialized = False
         return cls._instance
-    
+
     def initialize(self) -> None:
         if self._initialized:
             return
-        
+
         for cap in BUILT_IN_CAPABILITIES:
             self.register(cap)
-        
+
         self._initialized = True
-        logger.info(f"✅ Capability Registry initialized with {len(self._capabilities)} capabilities")
-    
+        logger.info(
+            f"✅ Capability Registry initialized with {len(self._capabilities)} capabilities"
+        )
+
     def register(self, capability: Capability) -> None:
         self._capabilities[capability.id] = capability
-    
+
     def get(self, cap_id: str) -> Optional[Capability]:
         if not self._initialized:
             self.initialize()
         return self._capabilities.get(cap_id)
-    
+
     def list_capabilities(self) -> List[Dict[str, Any]]:
         if not self._initialized:
             self.initialize()
@@ -183,4 +187,3 @@ __all__ = [
     "get_capability",
     "list_capabilities",
 ]
-

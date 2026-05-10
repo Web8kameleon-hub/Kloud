@@ -17,13 +17,13 @@ ocean-multimodal:
     - "8031:8031"
   environment:
     PORT: 8031
-    OLLAMA_HOST: http://kloud-06-ollama:11434
-    VISION_MODEL: llava:latest
+    CLX_HOST: http://kloud-06-clx:11434
+    VISION_MODEL: clx.i:latest
     AUDIO_MODEL: whisper:latest
     REASONING_MODEL: llama3.1:8b
     PYTHONUNBUFFERED: 1
   depends_on:
-    - ollama
+    - clx
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost:8031/health"]
     interval: 30s
@@ -36,11 +36,11 @@ ocean-multimodal:
 ### 2. Pull Required Models
 
 ```bash
-# On the server with Ollama running
+# On the server with CLX running
 
-docker exec kloud-06-ollama ollama pull llava:latest
-docker exec kloud-06-ollama ollama pull whisper:latest
-docker exec kloud-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-clx clx pull clx.i:latest
+docker exec kloud-06-clx clx pull whisper:latest
+docker exec kloud-06-clx clx pull llama3.1:8b
 
 ```
 
@@ -205,8 +205,8 @@ Root directory:
 ocean-multimodal (port 8031)
 
     ↓
-kloud-06-ollama (port 11434)
-    ├── llava:latest          (Vision)
+kloud-06-clx (port 11434)
+    ├── clx.i:latest          (Vision)
     ├── whisper:latest        (Audio)
     └── llama3.1:8b           (Reasoning)
 
@@ -217,7 +217,7 @@ kloud-06-ollama (port 11434)
 ```text
 Request → Router (SensorMode)
 
-    ├→ VISION     → VisionPipeline   → llava model
+    ├→ VISION     → VisionPipeline   → clx.i model
     ├→ AUDIO      → AudioPipeline    → whisper model
     ├→ DOCUMENT   → DocumentPipeline → llama model
     ├→ REASON     → ReasoningEngine  → llama model
@@ -235,10 +235,10 @@ Response (AnalysisResult)
 # Service Configuration
 
 PORT=8031                           # Service port
-OLLAMA_HOST=http://localhost:11434  # Ollama endpoint
+CLX_HOST=http://localhost:11434  # CLX endpoint
 
 # Model Selection
-VISION_MODEL=llava:latest           # Image analysis
+VISION_MODEL=clx.i:latest           # Image analysis
 AUDIO_MODEL=whisper:latest          # Speech-to-text
 REASONING_MODEL=llama3.1:8b         # LLM inference
 
@@ -258,10 +258,10 @@ ocean-multimodal:
 
   # ...
   environment:
-    # Increase Ollama parallelism
-    OLLAMA_NUM_PARALLEL: 4
-    # Increase Ollama context size
-    OLLAMA_NUM_PREDICT: 1024
+    # Increase CLX parallelism
+    CLX_NUM_PARALLEL: 4
+    # Increase CLX context size
+    CLX_NUM_PREDICT: 1024
   # Increase container resources
   deploy:
     resources:
@@ -276,10 +276,10 @@ ocean-multimodal:
 
 ### For Low Latency
 
-- Use smaller models (e.g., `llava-7b` instead of `llava-13b`)
+- Use smaller models (e.g., `clx.i-7b` instead of `clx.i-13b`)
 - Enable GPU acceleration if available
 - Use caching layers for repeated queries
-- Set `OLLAMA_NUM_PARALLEL: 1` for consistency
+- Set `CLX_NUM_PARALLEL: 1` for consistency
 
 ---
 
@@ -335,10 +335,10 @@ docker inspect kloud-ocean-multimodal
 
 docker compose logs ocean-multimodal
 
-# Verify Ollama is running
-docker ps | grep ollama
+# Verify CLX is running
+docker ps | grep clx
 
-# Test Ollama connectivity
+# Test CLX connectivity
 curl http://localhost:11434/api/tags
 
 ```
@@ -361,23 +361,23 @@ docker restart kloud-ocean-multimodal
 ```bash
 # List available models
 
-docker exec kloud-06-ollama ollama list
+docker exec kloud-06-clx clx list
 
 # Pull missing model
-docker exec kloud-06-ollama ollama pull llava:latest
+docker exec kloud-06-clx clx pull clx.i:latest
 
 ```
 
 ### Slow Responses
 
 ```bash
-# Check Ollama load
+# Check CLX load
 
 curl http://localhost:11434/api/ps
 
 # Monitor system resources
 docker stats kloud-ocean-multimodal
-docker stats kloud-06-ollama
+docker stats kloud-06-clx
 
 # Increase parallelism if needed
 
@@ -518,7 +518,7 @@ ocean-multimodal:
 ## Version History
 
 - **v1.0.0** (Feb 4, 2026): Initial multimodal release
-  - Vision pipeline with llava
+  - Vision pipeline with clx.i
   - Audio transcription with whisper
   - Document reasoning with llama3.1
   - Multimodal fusion capability

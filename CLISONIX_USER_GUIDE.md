@@ -1,10 +1,11 @@
-# 📖 KLOUD - Udhëzues Përdorimi
+# 📖 KAMELEON LIFE - Udhëzues Përdorimi
+
 ## Platforma e Neuro-Teknologjisë Cloud
 
 **Version:** 2.1.0  
 **Data:** Janar 2026  
-**Website:** https://kloud.com  
-**Kompania:** WEB8euroweb GmbH  
+**Website:** <https://kameleon.life>  
+**Kompania:** ABA GmbH  
 **Themelues:** Ledjan Ahmati  
 
 ---
@@ -26,7 +27,8 @@
 
 **Kloud** është një platformë cloud e avancuar për përpunimin e të dhënave neurologjike dhe audio. Platforma kombinon inteligjencën artificiale me teknologjitë e neuroshkencës për të ofruar një gamë të gjerë shërbimesh.
 
-### Karakteristikat Kryesore:
+### Karakteristikat Kryesore
+
 - 🧠 Analizë EEG në kohë reale
 - 🎵 Sintezë audio neurale
 - 📊 Spektrum analizer multi-band
@@ -39,23 +41,27 @@
 ## 🚀 Fillimi i Shpejtë
 
 ### 1. Aksesimi i Platformës
+
 ```
-URL: https://kloud.com
+URL: <https://kameleon.life>
 ```
 
 ### 2. Navigimi Kryesor
+
 Nga **Quick Access Hub** mund të aksesoni:
+
 - 🧠 **All Modules** - Të gjitha modulet
 - 🎵 **Neural Synthesis** - Sinteza audio
 - 📊 **Grafana** - Dashboards (admin/kloud2025)
 - ⚙️ **Prometheus** - Metrikat
 
 ### 3. Kredencialet e Monitorimit
+
 | Shërbimi | URL | Username | Password |
 |----------|-----|----------|----------|
-| Grafana | /grafana/ | admin | kloud2025 |
-| Prometheus | /prometheus/ | - | - |
-| VictoriaMetrics | /victoria/ | - | - |
+| Grafana | [kameleon.life/grafana/](https://kameleon.life/grafana/) | admin | kloud2025 |
+| Prometheus | [kameleon.life/prometheus/](https://kameleon.life/prometheus/) | - | - |
+| VictoriaMetrics | [kameleon.life/victoria/](https://kameleon.life/victoria/) | - | - |
 
 ---
 
@@ -85,7 +91,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** ALBI - EEG Analysis  
 **Funksioni:** Përpunimi i frekuencave neurale
 
-### Bandat e Frekuencave:
+### Bandat e Frekuencave
 
 | Banda | Frekuenca | Gjendje Mendore |
 |-------|-----------|-----------------|
@@ -95,7 +101,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | **Beta** | 13-30 Hz | Vëmendje aktive, mendim |
 | **Gamma** | 30-100 Hz | Përpunim kognitiv i lartë |
 
-### Si të Përdoret:
+### Si të Përdoret
+
 1. Lidhni pajisjen EEG
 2. Zgjidhni bandën për analizë
 3. Filloni regjistrimin
@@ -109,7 +116,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** JONA - Neural Audio Synthesis  
 **Funksioni:** Konvertimi i të dhënave EEG në muzikë
 
-### Funksionet Kryesore:
+### Funksionet Kryesore
 
 | Funksion | Përshkrim |
 |----------|-----------|
@@ -117,7 +124,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | 🎵 EEG to Music | Konvertim i sinjaleve në audio |
 | 🧘 Biofeedback Training | Trajnim me reagim në kohë reale |
 
-### Si të Përdoret:
+### Si të Përdoret
+
 1. Ngarkoni të dhënat EEG
 2. Zgjidhni stilin muzikor
 3. Konfiguroni parametrat audio
@@ -131,7 +139,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** Neuroacoustic Converter  
 **Funksioni:** Konvertim EEG→Audio me opsione të avancuara
 
-### Formatet e Eksportit:
+### Formatet e Eksportit
 
 | Format | Përshkrim |
 |--------|-----------|
@@ -139,7 +147,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | MP3 | Audio i kompresuar, madhësi më e vogël |
 | MIDI | Të dhëna muzikore, e redaktueshme |
 
-### Karakteristika të Avancuara:
+### Karakteristika të Avancuara
+
 - 🎧 3D Spatial Audio - Audio hapësinor tredimensional
 - 🎛️ Multi-channel output - Dalje me shumë kanale
 - ⚡ Real-time processing - Përpunim në kohë reale
@@ -152,7 +161,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** Spectrum Analyzer - Multi-band EEG Frequency Analysis  
 **Sample Rate:** 250 Hz
 
-### Modalitetet e Analizës:
+### Modalitetet e Analizës
 
 | Mode | Ikona | Përshkrim |
 |------|-------|-----------|
@@ -160,11 +169,13 @@ Nga **Quick Access Hub** mund të aksesoni:
 | Comparative | 📈 | Krahasim i sesioneve të shumta |
 | Historical | 📚 | Analizë e regjistrimeve të kaluara |
 
-### Kontrollet:
+### Kontrollet
+
 - ▶️ **Start Analysis** - Fillo analizën
 - ⏹️ **Stop Analysis** - Ndalo analizën
 
-### Eksportet:
+### Eksportet
+
 | Format | Përshkrim |
 |--------|-----------|
 | 📄 PDF | Raport vizual i detajuar |
@@ -178,7 +189,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Ikona:** 🏭  
 **Emri i Plotë:** Industrial Dashboard - Real-time System Monitoring & Analytics
 
-### Panelet e Dashboard-it:
+### Panelet e Dashboard-it
 
 | Panel | Përmbajtja |
 |-------|------------|
@@ -187,7 +198,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | 🔧 Backend Health | Service, Version, Memory |
 | 📊 Raw System Data | JSON metrics |
 
-### Quick Module Access:
+### Quick Module Access
+
 - 🧠 EEG Analysis → ALBI
 - 🎵 Neural Synthesis → JONA
 - 📊 Spectrum Analyzer
@@ -201,7 +213,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** Phone Monitor v3.0 - Mobile Neural Interface  
 **Statusi:** ⚠️ Në zhvillim (Development Module)
 
-### Modalitetet sipas Profesionit:
+### Modalitetet sipas Profesionit
 
 | Mode | Përdoruesi |
 |------|------------|
@@ -210,7 +222,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | 🎓 Student | Studentët - mësimdhënie |
 | 👤 General | Përdorues i përgjithshëm |
 
-### Industrial Features:
+### Industrial Features
+
 | Feature | Funksioni |
 |---------|-----------|
 | 🤖 Auto Response | Përgjigje automatike |
@@ -226,7 +239,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Emri i Plotë:** Curiosity Ocean - Infinite Information Engine  
 **Powered by:** ASI Trinity (Alba + Albi + Jona)
 
-### Thinking Modes:
+### Thinking Modes
 
 | Mode | Ikona | Stili |
 |------|-------|-------|
@@ -235,7 +248,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | Chaos | 🎪 | Pyetje të rastësishme |
 | Genius | 🧠 | Pyetje të thella |
 
-### Si të Përdoret:
+### Si të Përdoret
+
 1. Zgjidhni **Thinking Mode**
 2. Shkruani pyetjen tuaj
 3. Klikoni **🚀 Dive Deep**
@@ -248,7 +262,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Ikona:** 🚀  
 **Funksioni:** Qendra e aksesit të shpejtë
 
-### Lidhjet e Shpejta:
+### Lidhjet e Shpejta
 
 | Butoni | Përshkrim | URL |
 |--------|-----------|-----|
@@ -264,7 +278,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Ikona:** 🌀  
 **Funksioni:** Trajnim biofeedback neural
 
-### Training Modes:
+### Training Modes
 
 | Mode | Banda | Funksioni |
 |------|-------|-----------|
@@ -272,7 +286,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | 🧠 Theta | 4-8 Hz | Meditim i thellë |
 | ⚡ Beta | 12-30 Hz | Fokus & përqendrim |
 
-### Si të Përdoret:
+### Si të Përdoret
+
 1. Zgjidhni modalitetin (Alpha/Theta/Beta)
 2. Lidhni pajisjen EEG
 3. Filloni sesionin
@@ -285,7 +300,7 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Ikona:** 🎯  
 **Funksioni:** Cinema-scale dashboard për executive war rooms
 
-### Console Links:
+### Console Links
 
 | Console | Përshkrim |
 |---------|-----------|
@@ -294,12 +309,14 @@ Nga **Quick Access Hub** mund të aksesoni:
 | VictoriaMetrics | Long-term storage |
 | Synthetic Datadog | Executive KPI stream |
 
-### Executive Metrics:
+### Executive Metrics
+
 - API Uptime, Error Rate, Latency
 - AI Agent Calls, Success Rate
 - Cache Hit Rate, CPU/Memory Usage
 
-### Eksportet:
+### Eksportet
+
 | Format | Përshkrim |
 |--------|-----------|
 | Excel | .xlsx raport |
@@ -314,7 +331,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 **Ikona:** 📡  
 **Funksioni:** Menaxhimi i të dhënave industriale
 
-### Control Tabs:
+### Control Tabs
+
 | Tab | Funksioni |
 |-----|-----------|
 | Monitor | Shiko në kohë reale |
@@ -322,7 +340,8 @@ Nga **Quick Access Hub** mund të aksesoni:
 | Configure | Konfiguro burimet |
 | Start Collection | Fillo mbledhjen |
 
-### Data Sources:
+### Data Sources
+
 | Burimi | Priority | Funksioni |
 |--------|----------|-----------|
 | EEG Neural Monitor | 🔴 critical | Lab Station A-1 |
@@ -342,7 +361,8 @@ ASI Trinity është sistemi qendror i platformës Kloud, i përbërë nga tre ko
 | **Albi** | 🧠 | Neural Processing & Creativity |
 | **Jona** | 🎯 | Coordination & Audio Synthesis |
 
-### Status Monitoring:
+### Status Monitoring
+
 - ✅ **Online** - Komponenti është aktiv
 - ❌ **Offline** - Komponenti është joaktiv
 - 🟡 **Degraded** - Performancë e reduktuar
@@ -351,15 +371,15 @@ ASI Trinity është sistemi qendror i platformës Kloud, i përbërë nga tre ko
 
 ## 📊 Monitorimi dhe Analytics
 
-### URL-të e Monitorimit:
+### URL-të e Monitorimit
 
 | Shërbimi | URL | Kredencialet |
 |----------|-----|--------------|
-| Grafana | https://kloud.com/grafana/ | admin / kloud2025 |
-| Prometheus | https://kloud.com/prometheus/ | - |
-| VictoriaMetrics | https://kloud.com/victoria/ | - |
+| Grafana | <https://kloud.com/grafana/> | admin / kloud2025 |
+| Prometheus | <https://kloud.com/prometheus/> | - |
+| VictoriaMetrics | <https://kloud.com/victoria/> | - |
 
-### Metrics Endpoints:
+### Metrics Endpoints
 
 | Endpoint | Përshkrim |
 |----------|-----------|
@@ -372,12 +392,13 @@ ASI Trinity është sistemi qendror i platformës Kloud, i përbërë nga tre ko
 
 ## 🔌 API dhe Integrime
 
-### Base URL:
+### Base URL
+
 ```
 https://kloud.com/backend/
 ```
 
-### Endpoints Kryesore:
+### Endpoints Kryesore
 
 | Method | Endpoint | Përshkrim |
 |--------|----------|-----------|
@@ -387,12 +408,14 @@ https://kloud.com/backend/
 | POST | /api/eeg/analyze | Analizë EEG |
 | POST | /api/audio/synthesize | Sintezë audio |
 
-### Shembull Request:
+### Shembull Request
+
 ```bash
 curl https://kloud.com/backend/api/health
 ```
 
-### Shembull Response:
+### Shembull Response
+
 ```json
 {
   "service": "Kloud Backend (REAL)",
@@ -405,7 +428,7 @@ curl https://kloud.com/backend/api/health
 
 ## ❓ Troubleshooting
 
-### Probleme të Zakonshme:
+### Probleme të Zakonshme
 
 | Problemi | Zgjidhja |
 |----------|----------|
@@ -414,7 +437,8 @@ curl https://kloud.com/backend/api/health
 | EEG nuk lidhet | Kontrolloni pajisjen dhe driverat |
 | Audio nuk eksportohet | Kontrolloni storage-in e disponueshëm |
 
-### Kontrolloni Statusin:
+### Kontrolloni Statusin
+
 1. Hapni **Industrial Dashboard**
 2. Shikoni **ASI Trinity Status**
 3. Kontrolloni **Backend Health**
@@ -423,16 +447,17 @@ curl https://kloud.com/backend/api/health
 
 ## 📞 Kontakt
 
-### Informacione Kompanie:
+### Informacione Kompanie
 
 | | |
 |---|---|
-| **Kompania** | Kloud Cloud |
-| **Website** | https://kloud.com |
+| **Kompania** | Kameleon Life |
+| **Website** | <https://kameleon.life> |
 | **GitHub** | github.com/kloud/Kloud-cloud |
 
-### Suport Teknik:
-- 🌐 Website: kloud.com
+### Suport Teknik
+
+- 🌐 Website: <https://kameleon.life>
 - 📖 Dokumentacioni: GitHub Wiki
 
 ---
@@ -440,6 +465,7 @@ curl https://kloud.com/backend/api/health
 ## 📝 Changelog
 
 ### Version 2.1.0 (Janar 2026)
+
 - ✅ ASI Trinity System i plotë
 - ✅ 11 module funksionale
 - ✅ Grafana/Prometheus/VictoriaMetrics integration
@@ -452,4 +478,3 @@ curl https://kloud.com/backend/api/health
 **© 2026 WEB8euroweb GmbH. Të gjitha të drejtat e rezervuara.**
 
 *Kloud - Neuro-Technology Cloud Platform*
-

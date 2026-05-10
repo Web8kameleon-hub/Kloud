@@ -69,7 +69,7 @@ Features:
   ✅ Copywriting
   
 Model Status:
-  ✅ Base model: llama3.1:8b (Ollama)
+  ✅ Base model: llama3.1:8b (CLX)
   ✅ Fine-tuned models: 5 available
   ✅ Generation quality: 95% user satisfaction
   
@@ -415,7 +415,7 @@ Usage:
 
 ---
 
-### **18. OLLAMA (LLM Backend)**
+### **18. CLX (LLM Backend)**
 **Port:** 11434  
 **Status:** ✅ **OPERATIONAL**
 ```
@@ -433,7 +433,7 @@ Performance:
 
 ---
 
-### **19. OLLAMA MULTI-API (Multi-Model Router)**
+### **19. CLX.I (Multi-Model Router)**
 **Port:** 4444  
 **Status:** ✅ **OPERATIONAL**
 ```

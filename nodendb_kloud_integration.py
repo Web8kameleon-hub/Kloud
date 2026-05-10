@@ -1,535 +1,1204 @@
 """
-NODENDB INTEGRATION EXAMPLE FOR KLOUD SERVICES
-===============================================
+NODENDB REAL SERVICE INTEGRATION FOR KLOUD
+============================================
 
-This module demonstrates how to integrate NodeDB Stigma Pattern with actual Kloud services.
-Shows registration, state tracking, and health monitoring for:
-- FastAPI Backend (API)
-- Ocean Core (ML Engine)
-- ASI Trinity (ALBA, ALBI, JONA, ASI)
-- Worker Services
-- Analytics Engines
+This module integrates NodeDB Stigma Pattern with ACTUAL running Kloud services.
+NO MOCKS. NO FAKES. Only real HTTP calls to real service endpoints.
+
+Real Services Connected To:
+- API Backend (localhost:8000)
+- Ocean Core ML Engine (localhost:8030)
+- ASI Trinity (ALBA: 5555, ALBI: 6680, JONA: 7777)
+- OLLAMA Multi API (localhost:4444)
+- AI Global Nanogrid (localhost:9999)
+- Aviation Weather (localhost:8080)
+- Redis (localhost:6379)
+- PostgreSQL (localhost:5432)
+- Neo4j (localhost:7474, 7687)
 """
 
 import asyncio
 import logging
-from typing import Optional, Dict, Any
+import sys
+from types import ModuleType
+from typing import Dict, Any, Optional
 from datetime import datetime
-import time
-import random
 
 from nodendb_stigma import (
+    NDBQuality,
+    StigmaState,
+    get_nodedb,
     initialize_nodendb,
     register_service_with_nodedb,
-    get_nodedb,
-    StigmaState,
-    NDBQuality,
-    NodeDBClient,
 )
+
+try:
+    import httpx
+except ImportError:
+    print("ERROR: httpx not installed. Install with: pip install httpx")
+    sys.exit(1)
+
+_redis_asyncio: ModuleType | None = None
+try:
+    import redis.asyncio as redis_asyncio_module
+except ImportError:
+    print("WARNING: redis.asyncio not available, some checks will be skipped")
+else:
+    _redis_asyncio = redis_asyncio_module
+
+redis: ModuleType | None = _redis_asyncio
+
+_psycopg2: ModuleType | None = None
+try:
+    import psycopg2 as psycopg2_module  # type: ignore[import-not-found]
+except ImportError:
+    print("WARNING: psycopg2 not available, some checks will be skipped")
+else:
+    _psycopg2 = psycopg2_module
+
+psycopg2: ModuleType | None = _psycopg2
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger(__name__)
 
+# ============================================================================
+# REAL SERVICE ENDPOINTS - NO MOCKS
+# ============================================================================
+
+SERVICE_ENDPOINTS = {
+    "api": {"host": "localhost", "port": 8000, "scheme": "http"},
+    "ocean-core": {"host": "localhost", "port": 8030, "scheme": "http"},
+    "alba": {"host": "localhost", "port": 5555, "scheme": "http"},
+    "albi": {"host": "localhost", "port": 6680, "scheme": "http"},
+    "jona": {"host": "localhost", "port": 7777, "scheme": "http"},
+    "clx-i": {"host": "localhost", "port": 4444, "scheme": "http"},
+    "ai-global-9999": {"host": "localhost", "port": 9999, "scheme": "http"},
+    "aviation": {"host": "localhost", "port": 8080, "scheme": "http"},
+    "neo4j": {"host": "localhost", "port": 7474, "scheme": "http"},
+}
+
+DATABASE_ENDPOINTS = {
+    "redis": {"host": "localhost", "port": 6379},
+    "postgres": {
+        "host": "localhost",
+        "port": 5432,
+        "user": "kloud",
+        "password": "kloud",
+        "db": "klouddb",
+    },
+    "neo4j": {
+        "host": "localhost",
+        "port": 7687,
+        "user": "neo4j",
+        "password": "kloud123",
+    },
+}
 
 # ============================================================================
-# MOCK SERVICES (Replace with actual imports in real deployment)
+# SOVEREIGN FABRIC NODES - SCALABLE CONFIGURATION
 # ============================================================================
+# Multi-node architecture with TIDE tracking, NDB scoring, and security posture
+# Supports unlimited nodes (1-N) with radius-aware clustering
 
-
-class MockAPIService:
-    """Mock FastAPI Backend Service"""
-
-    __name__ = "api"
-    __version__ = "2.3.1"
-
-    async def health(self) -> Dict:
-        return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
-
-    async def metrics(self) -> Dict:
-        return {
-            "requests_total": 150000,
-            "errors_total": 45,
-            "latency_p99_ms": 125,
-            "active_connections": 2500,
-        }
-
-
-class MockOceanCoreService:
-    """Mock Ocean Core ML Engine"""
-
-    __name__ = "ocean_core"
-    __version__ = "1.8.5"
-
-    async def health(self) -> Dict:
-        return {"status": "ok", "model_loaded": True}
-
-    async def metrics(self) -> Dict:
-        return {
-            "inference_p99_ms": 450,
-            "batch_size": 32,
-            "gpu_memory_mb": 2048,
-            "accuracy": 0.9847,
-        }
-
-
-class MockALBAService:
-    """Mock ALBA (ASI Trinity Component)"""
-
-    __name__ = "alba"
-    __version__ = "3.1.0"
-
-    async def health(self) -> Dict:
-        return {"status": "ok", "frames_processed": 45000}
-
-
-class MockALBIService:
-    """Mock ALBI (ASI Trinity Component)"""
-
-    __name__ = "albi"
-    __version__ = "3.1.0"
-
-    async def health(self) -> Dict:
-        return {"status": "ok", "cycles_tracked": 12000}
-
-
-class MockJONAService:
-    """Mock JONA (ASI Trinity Component)"""
-
-    __name__ = "jona"
-    __version__ = "3.1.0"
-
-    async def health(self) -> Dict:
-        return {"status": "ok", "inferences": 50000}
-
-
-class MockASIService:
-    """Mock ASI (ASI Trinity Master Orchestrator)"""
-
-    __name__ = "asi"
-    __version__ = "3.1.0"
-
-    async def health(self) -> Dict:
-        return {
-            "status": "ok",
-            "trinity_status": "coherent",
-            "resonance_strength": 0.94,
-        }
-
-
-class MockWorkerService:
-    """Mock Async Worker Service"""
-
-    __name__ = "worker"
-    __version__ = "1.2.0"
-
-    async def process_task(self):
-        pass
-
-
-class MockAnalyticsService:
-    """Mock Analytics Engine"""
-
-    __name__ = "analytics"
-    __version__ = "2.0.0"
-
-    async def generate_report(self):
-        pass
+SOVEREIGN_FABRIC_NODES = {
+    # Node #1 - Living Sovereign Fabric
+    1: {
+        "name": "Living Sovereign Fabric #1",
+        "port": 9001,
+        "host": "localhost",
+        "scheme": "http",
+        "region": "fsn1",
+        "radius_km": 50,
+        "description": "Primary sovereign fabric with full TIDE correlation",
+        "active": True,
+    },
+    # Node #2 - Resilience & Coherence
+    2: {
+        "name": "Resilience Node #2",
+        "port": 9002,
+        "host": "localhost",
+        "scheme": "http",
+        "region": "fsn1",
+        "radius_km": 75,
+        "description": "Secondary node with coherence tracking",
+        "active": True,
+    },
+    # Node #3 - Latency & Bandwidth Optimization
+    3: {
+        "name": "Optimization Node #3",
+        "port": 9003,
+        "host": "localhost",
+        "scheme": "http",
+        "region": "nbg1",
+        "radius_km": 100,
+        "description": "Tertiary node optimizing latency/bandwidth",
+        "active": True,
+    },
+    # Node #4 - Security & Compliance
+    4: {
+        "name": "Security Node #4",
+        "port": 9004,
+        "host": "localhost",
+        "scheme": "http",
+        "region": "nbg1",
+        "radius_km": 120,
+        "description": "Quaternary node monitoring security posture",
+        "active": True,
+    },
+    # Node #5+ can be added here following the same pattern
+}
 
 
 # ============================================================================
-# HEALTH CHECK FUNCTIONS
+# REAL HTTP-BASED HEALTH CHECKS - NO MOCKS
 # ============================================================================
 
 
-async def check_api_health() -> Dict[str, Any]:
-    """Custom health check for API"""
+async def check_sovereign_node_health(
+    node_id: int, node_config: Dict[str, Any]
+) -> Dict[str, Any]:
+    """
+    Real health check for sovereign fabric nodes with TIDE tracking.
+    Monitors: NDB Score, TIDE correlation, security posture, latency, bandwidth.
+    """
+    endpoint = f"{node_config['scheme']}://{node_config['host']}:{node_config['port']}"
+
     try:
-        # In real deployment, would make actual HTTP call
-        api_service = MockAPIService()
-        health = await api_service.health()
-        metrics = await api_service.metrics()
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # Main health/status endpoint
+            response = await client.get(f"{endpoint}/status")
+            response.raise_for_status()
+            status_data = response.json()
 
-        # Calculate NDB quality based on metrics
-        error_rate = metrics["errors_total"] / max(metrics["requests_total"], 1)
-        latency_degradation = metrics["latency_p99_ms"] / 200  # 200ms baseline
+            # Get telemetry with NDB scoring
+            try:
+                telemetry_response = await client.get(
+                    f"{endpoint}/telemetry", timeout=10.0
+                )
+                telemetry_data = (
+                    telemetry_response.json()
+                    if telemetry_response.status_code == 200
+                    else {}
+                )
+            except Exception:
+                telemetry_data = {}
 
-        # Quality scoring
-        quality_score = 1.0 - (error_rate * 0.5) - (latency_degradation * 0.3)
-        quality_score = max(0.0, min(1.0, quality_score))
+            # Calculate metrics from real response
+            response_time_ms = response.elapsed.total_seconds() * 1000
+            ndb_score = float(
+                telemetry_data.get("ndb_score", status_data.get("ndb_quality", 0.036))
+            )
+            tide = str(
+                telemetry_data.get("tide", status_data.get("tide", "normal"))
+            ).lower()
+            security_posture = str(
+                telemetry_data.get("security_posture", "stable")
+            ).lower()
+            events_tracked = int(
+                telemetry_data.get("events_tracked", status_data.get("events", 0))
+            )
+            bandwidth_kbps = float(telemetry_data.get("bandwidth_kbps", 0.0))
+            utilization_pct = float(telemetry_data.get("utilization_pct", 0.0))
+            crdt_cardinality = int(telemetry_data.get("crdt_cardinality", 0))
+            stigma_state = str(telemetry_data.get("stigma_state", "stable")).lower()
 
-        return {
-            "status": "healthy",
-            "response_time_ms": 5,
-            "error_rate": error_rate,
-            "quality_score": quality_score,
-            "metrics": metrics,
-        }
+            # Quality scoring based on NDB and TIDE
+            quality_score = ndb_score
+            if tide == "low":
+                quality_score *= 0.95
+            elif tide == "high":
+                quality_score *= 0.75
+            elif tide == "critical":
+                quality_score *= 0.5
+
+            logger.info(
+                f"✅ Sovereign Node #{node_id} ({node_config['name']}): "
+                f"TIDE={tide} | NDB={ndb_score:.3f} | {response_time_ms:.1f}ms"
+            )
+
+            return {
+                "status": "healthy",
+                "node_id": node_id,
+                "node_name": node_config.get("name"),
+                "endpoint": endpoint,
+                "region": node_config.get("region"),
+                "radius_km": node_config.get("radius_km"),
+                "response_time_ms": response_time_ms,
+                "tide": tide,
+                "ndb_score": ndb_score,
+                "security_posture": security_posture,
+                "events_tracked": events_tracked,
+                "bandwidth_kbps": bandwidth_kbps,
+                "utilization_pct": utilization_pct,
+                "crdt_cardinality": crdt_cardinality,
+                "stigma_state": stigma_state,
+                "quality_score": max(0.0, quality_score),
+                "status_data": status_data,
+                "telemetry_data": telemetry_data,
+            }
     except Exception as e:
-        logger.error(f"API health check failed: {e}")
-        return {"status": "error", "error": str(e)}
+        logger.error(f"❌ Sovereign Node #{node_id} health check failed: {e}")
+        return {
+            "status": "error",
+            "node_id": node_id,
+            "node_name": node_config.get("name"),
+            "endpoint": endpoint,
+            "region": node_config.get("region"),
+            "error": str(e),
+            "quality_score": 0.0,
+            "tide": "critical",
+            "ndb_score": 0.0,
+        }
 
+    # ============================================================================
+    """Real health check - HTTP call to actual API Backend"""
+    endpoint = f"{SERVICE_ENDPOINTS['api']['scheme']}://{SERVICE_ENDPOINTS['api']['host']}:{SERVICE_ENDPOINTS['api']['port']}"
 
-async def check_ocean_health() -> Dict[str, Any]:
-    """Custom health check for Ocean Core"""
     try:
-        ocean = MockOceanCoreService()
-        health = await ocean.health()
-        metrics = await ocean.metrics()
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # Main health check
+            health_response = await client.get(f"{endpoint}/health")
+            health_response.raise_for_status()
+            health_data = health_response.json()
 
-        # Quality based on model accuracy and inference latency
-        quality_score = (
-            metrics["accuracy"] * 0.7 + (1.0 - metrics["inference_p99_ms"] / 1000) * 0.3
-        )
-        quality_score = max(0.0, min(1.0, quality_score))
+            # Query execution time metrics
+            status_response = await client.get(
+                f"{endpoint}/api/v1/status", timeout=10.0
+            )
+            if status_response.status_code == 200:
+                status_data = status_response.json()
+            else:
+                status_data = {}
 
-        return {
-            "status": "healthy",
-            "model_accuracy": metrics["accuracy"],
-            "inference_p99_ms": metrics["inference_p99_ms"],
-            "quality_score": quality_score,
-        }
+            # Calculate NDB quality from real response time
+            response_time = health_response.elapsed.total_seconds() * 1000
+            quality_score = (
+                1.0 if response_time < 100 else (1.0 - min(response_time / 1000, 0.5))
+            )
+
+            logger.info(
+                f"✅ API Health: {health_data.get('status', 'unknown')} (response: {response_time:.1f}ms)"
+            )
+
+            return {
+                "status": "healthy",
+                "endpoint": endpoint,
+                "response_time_ms": response_time,
+                "health_data": health_data,
+                "status_data": status_data,
+                "quality_score": max(0.0, quality_score),
+            }
     except Exception as e:
-        logger.error(f"Ocean health check failed: {e}")
-        return {"status": "error", "error": str(e)}
+        logger.error(f"❌ API health check failed: {e}")
+        return {
+            "status": "error",
+            "endpoint": endpoint,
+            "error": str(e),
+            "quality_score": 0.0,
+        }
+
+
+async def check_ocean_core_health() -> Dict[str, Any]:
+    """Real health check - HTTP call to actual Ocean Core"""
+    endpoint = f"{SERVICE_ENDPOINTS['ocean-core']['scheme']}://{SERVICE_ENDPOINTS['ocean-core']['host']}:{SERVICE_ENDPOINTS['ocean-core']['port']}"
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(f"{endpoint}/health")
+            response.raise_for_status()
+            health_data = response.json()
+
+            # Try to get model status
+            try:
+                models_response = await client.get(f"{endpoint}/models", timeout=10.0)
+                models_data = (
+                    models_response.json() if models_response.status_code == 200 else {}
+                )
+            except Exception:
+                models_data = {}
+
+            response_time = response.elapsed.total_seconds() * 1000
+
+            # Quality based on model availability and response time
+            model_ready = (
+                health_data.get("model_ready", False)
+                or health_data.get("status") == "ok"
+            )
+            quality = 0.95 if model_ready else 0.5
+            quality = quality * max(0.0, 1.0 - response_time / 1000)
+
+            logger.info(
+                f"✅ Ocean Core Health: {health_data.get('status', 'unknown')} (response: {response_time:.1f}ms)"
+            )
+
+            return {
+                "status": "healthy",
+                "endpoint": endpoint,
+                "response_time_ms": response_time,
+                "health_data": health_data,
+                "models_data": models_data,
+                "quality_score": max(0.0, quality),
+            }
+    except Exception as e:
+        logger.error(f"❌ Ocean Core health check failed: {e}")
+        return {
+            "status": "error",
+            "endpoint": endpoint,
+            "error": str(e),
+            "quality_score": 0.0,
+        }
 
 
 async def check_trinity_health() -> Dict[str, Any]:
-    """Custom health check for ASI Trinity"""
+    """Real health check - HTTP calls to actual ASI Trinity (ALBA, ALBI, JONA)"""
+    trinity_components = {
+        "alba": SERVICE_ENDPOINTS["alba"],
+        "albi": SERVICE_ENDPOINTS["albi"],
+        "jona": SERVICE_ENDPOINTS["jona"],
+    }
+
+    trinity_status = {}
+    all_healthy = True
+    response_times = []
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        for component_name, endpoint_config in trinity_components.items():
+            endpoint = f"{endpoint_config['scheme']}://{endpoint_config['host']}:{endpoint_config['port']}"
+            try:
+                response = await client.get(f"{endpoint}/health")
+                response.raise_for_status()
+                health_data = response.json()
+                response_time = response.elapsed.total_seconds() * 1000
+                response_times.append(response_time)
+
+                trinity_status[component_name] = {
+                    "status": "healthy",
+                    "data": health_data,
+                    "response_time_ms": response_time,
+                }
+                logger.info(
+                    f"✅ {component_name.upper()} Health: {health_data.get('status', 'unknown')}"
+                )
+            except Exception as e:
+                all_healthy = False
+                logger.error(f"❌ {component_name.upper()} health check failed: {e}")
+                trinity_status[component_name] = {
+                    "status": "error",
+                    "error": str(e),
+                }
+
+    # Calculate coherence based on all components healthy
+    coherence = 1.0 if all_healthy else 0.5
+    avg_response_time = (
+        sum(response_times) / len(response_times) if response_times else 0
+    )
+    quality = coherence * max(0.0, 1.0 - avg_response_time / 1000)
+
+    return {
+        "status": "healthy" if all_healthy else "degraded",
+        "trinity_status": trinity_status,
+        "all_components_healthy": all_healthy,
+        "coherence": coherence,
+        "avg_response_time_ms": avg_response_time,
+        "quality_score": max(0.0, quality),
+    }
+
+
+async def check_jona_sandbox_health() -> Dict[str, Any]:
+    """Real health check for JONA sandbox and ethics surfaces."""
+    endpoints = {
+        "jona_service": "http://localhost:7777/health",
+        "jona_api": "http://localhost:8000/api/jona/health",
+        "asi_health": "http://localhost:8000/api/asi/health",
+    }
+
+    results: Dict[str, Any] = {}
+    health_scores = []
+    violations = []
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        for name, url in endpoints.items():
+            try:
+                response = await client.get(url, timeout=10.0)
+                payload = response.json() if response.status_code == 200 else {}
+                component_health = payload.get(
+                    "health_score",
+                    payload.get("overall_health", payload.get("health", 0.0)),
+                )
+                if isinstance(component_health, str):
+                    try:
+                        component_health = float(component_health)
+                    except ValueError:
+                        component_health = 0.0
+                if isinstance(component_health, bool):
+                    component_health = 1.0 if component_health else 0.0
+                component_health = float(component_health or 0.0)
+                health_scores.append(component_health)
+                results[name] = {
+                    "status": "healthy" if response.status_code == 200 else "error",
+                    "status_code": response.status_code,
+                    "health_score": round(component_health, 3),
+                    "data": payload,
+                }
+            except Exception as exc:
+                violations.append(f"{name}:{type(exc).__name__}")
+                results[name] = {
+                    "status": "error",
+                    "error": str(exc),
+                    "health_score": 0.0,
+                }
+
+    avg_health = sum(health_scores) / len(health_scores) if health_scores else 0.0
+    active = avg_health >= 0.5 and not violations
+    threat_level = (
+        "low" if avg_health >= 0.75 else "medium" if avg_health >= 0.45 else "high"
+    )
+
+    return {
+        "status": "healthy" if active else "degraded",
+        "active": active,
+        "threatLevel": threat_level,
+        "health_score": round(avg_health, 3),
+        "violations": violations,
+        "components": results,
+    }
+
+
+def evaluate_governance_proposal(
+    proposal: Dict[str, Any],
+    sandbox_health: Dict[str, Any],
+    node_state: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Evaluate a governance/self-writing proposal against JONA sandbox rules."""
+
+    requires_self_learning = bool(proposal.get("requires_self_learning", False))
+    requires_self_writing = bool(proposal.get("requires_self_writing", False))
+    risk_score = float(proposal.get("risk_score", 0.0) or 0.0)
+    tide = str(proposal.get("tide", "normal")).lower()
+    ndb_quality = str(proposal.get("ndb_quality", "fair")).lower()
+    sandbox_active = bool(sandbox_health.get("active", False))
+    sandbox_threat = str(sandbox_health.get("threatLevel", "high")).lower()
+    node_stigma = str((node_state or {}).get("stigma_state", "active")).lower()
+
+    requires_gate = requires_self_learning or requires_self_writing
+    forced_sandbox = (
+        requires_gate
+        or sandbox_threat != "low"
+        or node_stigma in {"degraded", "recovering"}
+    )
+
+    if risk_score >= 0.85:
+        decision = "rejected"
+        reason = "risk score too high"
+    elif forced_sandbox and (
+        not sandbox_active
+        or tide == "low"
+        or risk_score > 0.35
+        or ndb_quality not in {"good", "excellent"}
+    ):
+        decision = "sandbox_only"
+        reason = "JONA sandbox required before promotion"
+    else:
+        decision = "approved"
+        reason = "governance checks passed"
+
+    return {
+        "decision": decision,
+        "reason": reason,
+        "requires_self_learning": requires_self_learning,
+        "requires_self_writing": requires_self_writing,
+        "risk_score": risk_score,
+        "tide": tide,
+        "ndb_quality": ndb_quality,
+        "sandbox": sandbox_health,
+        "node_state": node_state or {},
+    }
+
+
+async def check_database_health() -> Dict[str, Any]:
+    """Real health checks for all databases"""
+    db_status = {}
+
+    # Redis health check
+    if redis:
+        try:
+            redis_client = await redis.from_url(
+                f"redis://{DATABASE_ENDPOINTS['redis']['host']}:{DATABASE_ENDPOINTS['redis']['port']}"
+            )
+            pong = await redis_client.ping()
+            info = await redis_client.info()
+            await redis_client.close()
+
+            db_status["redis"] = {
+                "status": "healthy" if pong else "error",
+                "info": {
+                    "used_memory_mb": info.get("used_memory", 0) / (1024 * 1024),
+                    "connected_clients": info.get("connected_clients", 0),
+                    "total_commands_processed": info.get("total_commands_processed", 0),
+                },
+            }
+            logger.info("✅ Redis Health: PONG")
+        except Exception as e:
+            logger.error(f"❌ Redis health check failed: {e}")
+            db_status["redis"] = {"status": "error", "error": str(e)}
+
+    # PostgreSQL health check
+    if psycopg2:
+        try:
+            conn = psycopg2.connect(
+                host=DATABASE_ENDPOINTS["postgres"]["host"],
+                user=DATABASE_ENDPOINTS["postgres"]["user"],
+                password=DATABASE_ENDPOINTS["postgres"]["password"],
+                database=DATABASE_ENDPOINTS["postgres"]["db"],
+                connect_timeout=5,
+            )
+            cursor = conn.cursor()
+            cursor.execute("SELECT version();")
+            version = cursor.fetchone()[0]
+            conn.close()
+
+            db_status["postgres"] = {
+                "status": "healthy",
+                "version": version.split(",")[0] if version else "unknown",
+            }
+            logger.info("✅ PostgreSQL Health: Connected")
+        except Exception as e:
+            logger.error(f"❌ PostgreSQL health check failed: {e}")
+            db_status["postgres"] = {"status": "error", "error": str(e)}
+
+    # Neo4j HTTP health check
     try:
-        asi = MockASIService()
-        health = await asi.health()
-
-        # Quality based on trinity coherence
-        trinity_coherent = health["trinity_status"] == "coherent"
-        resonance = health["resonance_strength"]
-
-        quality_score = resonance if trinity_coherent else resonance * 0.5
-
-        return {
-            "status": "healthy" if trinity_coherent else "degraded",
-            "trinity_status": health["trinity_status"],
-            "resonance_strength": resonance,
-            "quality_score": quality_score,
-        }
+        endpoint = f"http://{SERVICE_ENDPOINTS['neo4j']['host']}:{SERVICE_ENDPOINTS['neo4j']['port']}"
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(f"{endpoint}/health")
+            db_status["neo4j"] = {
+                "status": "healthy" if response.status_code == 200 else "error",
+                "response": response.text if response.status_code != 200 else "OK",
+            }
+            logger.info("✅ Neo4j Health: Responding")
     except Exception as e:
-        logger.error(f"Trinity health check failed: {e}")
-        return {"status": "error", "error": str(e)}
+        logger.error(f"❌ Neo4j health check failed: {e}")
+        db_status["neo4j"] = {"status": "error", "error": str(e)}
+
+    return db_status
 
 
 # ============================================================================
-# INTEGRATION SETUP
+# REAL SERVICE REGISTRATION - NO MOCKS
 # ============================================================================
 
 
-async def initialize_kloud_nodedb():
+async def initialize_kloud_nodedb_real():
     """
-    Initialize NodeDB and register all Kloud services.
-    This replaces hardcoded node handlers with adaptive pattern.
+    Initialize NodeDB with ONLY REAL services.
+    No mocks, no fakes - connects directly to running services.
     """
 
-    logger.info("=" * 70)
-    logger.info("🚀 INITIALIZING KLOUD NODEDB STIGMA PATTERN")
-    logger.info("=" * 70)
+    logger.info("=" * 80)
+    logger.info("🚀 INITIALIZING KLOUD NODEDB WITH REAL SERVICES")
+    logger.info("=" * 80)
 
     # Initialize NodeDB core
     nodedb = await initialize_nodendb()
-    logger.info("✅ NodeDB core initialized")
+    logger.info("✅ NodeDB core initialized\n")
 
-    # Register core services
-    logger.info("\n📝 Registering Kloud Services...")
+    # ========================================================================
+    # CHECK SERVICE AVAILABILITY FIRST
+    # ========================================================================
 
-    # 1. API Backend
-    api_metadata = await register_service_with_nodedb(
-        MockAPIService(), "FastAPI Backend", health_check_fn=check_api_health
+    logger.info("🔍 Scanning for available real services...\n")
+
+    available_services = {}
+    async with httpx.AsyncClient(timeout=5.0) as client:
+        for service_name, endpoint_config in SERVICE_ENDPOINTS.items():
+            endpoint = f"{endpoint_config['scheme']}://{endpoint_config['host']}:{endpoint_config['port']}"
+            try:
+                response = await client.get(f"{endpoint}/health", timeout=5.0)
+                if response.status_code in [200, 204]:
+                    available_services[service_name] = True
+                    logger.info(f"✓ {service_name}: Available at {endpoint}")
+            except Exception as e:
+                logger.warning(f"✗ {service_name}: Not available ({type(e).__name__})")
+
+    if not available_services:
+        logger.critical("❌ NO SERVICES AVAILABLE!")
+        logger.critical("   Please ensure docker-compose services are running:")
+        logger.critical("   docker-compose up -d")
+        return {"nodedb": nodedb, "services": {}, "available_count": 0}
+
+    logger.info(f"\n✅ Found {len(available_services)} available services\n")
+
+    # ========================================================================
+    # REGISTER REAL SERVICES
+    # ========================================================================
+
+    registered = {}
+
+    # 1. API Backend (REAL HTTP)
+    if "api" in available_services:
+        logger.info("📝 Registering API Backend (Real HTTP)...")
+        try:
+            # Create stub module for introspection
+            class APIService:
+                __name__ = "api"
+                __version__ = "2.3.1"
+                __doc__ = "FastAPI Backend Service - Real HTTP Service"
+
+            node_id = await register_service_with_nodedb(
+                APIService(), "API Backend", health_check_fn=check_api_health
+            )
+            registered["api"] = node_id
+            logger.info(f"  ✓ API registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ API registration failed: {e}\n")
+
+    # 2. Ocean Core (REAL HTTP)
+    if "ocean-core" in available_services:
+        logger.info("📝 Registering Ocean Core (Real HTTP)...")
+        try:
+
+            class OceanCoreService:
+                __name__ = "ocean_core"
+                __version__ = "1.8.5"
+                __doc__ = "Ocean Core ML Engine - Real HTTP Service"
+
+            node_id = await register_service_with_nodedb(
+                OceanCoreService(),
+                "Ocean Core ML Engine",
+                health_check_fn=check_ocean_core_health,
+            )
+            registered["ocean-core"] = node_id
+            logger.info(f"  ✓ Ocean Core registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ Ocean Core registration failed: {e}\n")
+
+    # 3. ASI Trinity (REAL HTTP)
+    if (
+        "alba" in available_services
+        or "albi" in available_services
+        or "jona" in available_services
+    ):
+        logger.info("📝 Registering ASI Trinity (Real HTTP - ALBA, ALBI, JONA)...")
+        try:
+
+            class ASITrinityService:
+                __name__ = "asi_trinity"
+                __version__ = "3.1.0"
+                __doc__ = "ASI Trinity Master Orchestrator - Real HTTP Service"
+
+            node_id = await register_service_with_nodedb(
+                ASITrinityService(),
+                "ASI Trinity (ALBA, ALBI, JONA)",
+                health_check_fn=check_trinity_health,
+            )
+            registered["asi-trinity"] = node_id
+            logger.info(f"  ✓ ASI Trinity registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ ASI Trinity registration failed: {e}\n")
+
+    # 3b. JONA Sandbox Governance (REAL HTTP)
+    if "jona" in available_services or "api" in available_services:
+        logger.info("📝 Registering JONA Sandbox Governance (Real HTTP)...")
+        try:
+
+            class JonaSandboxService:
+                __name__ = "jona_sandbox"
+                __version__ = "1.0.0"
+                __doc__ = "JONA sandbox governance and ethics guard - Real HTTP Service"
+
+            node_id = await register_service_with_nodedb(
+                JonaSandboxService(),
+                "JONA Sandbox Governance",
+                health_check_fn=check_jona_sandbox_health,
+            )
+            registered["jona-sandbox"] = node_id
+            logger.info(f"  ✓ JONA Sandbox registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ JONA Sandbox registration failed: {e}\n")
+
+    # 4. CLX.I Multi API (REAL HTTP)
+    if "clx-i" in available_services:
+        logger.info("📝 Registering CLX.I Multi API (Real HTTP)...")
+        try:
+
+            class CLXIMultiService:
+                __name__ = "clx_i"
+                __version__ = "1.0.0"
+                __doc__ = "CLX.I Multi-Model Router - Real HTTP Service"
+
+            async def check_clx_i_health():
+                endpoint = "http://localhost:4444"
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        response = await client.get(f"{endpoint}/health")
+                        health_data = (
+                            response.json() if response.status_code == 200 else {}
+                        )
+                        return {
+                            "status": "healthy"
+                            if response.status_code == 200
+                            else "error",
+                            "data": health_data,
+                            "quality_score": 0.9
+                            if response.status_code == 200
+                            else 0.0,
+                        }
+                except Exception as e:
+                    return {"status": "error", "error": str(e), "quality_score": 0.0}
+
+            node_id = await register_service_with_nodedb(
+                CLXIMultiService(),
+                "CLX.I Multi-Model Router",
+                health_check_fn=check_clx_i_health,
+            )
+            registered["clx-i"] = node_id
+            logger.info(f"  ✓ CLX.I registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ CLX.I registration failed: {e}\n")
+
+    # 5. AI Global Nanogrid (REAL HTTP)
+    if "ai-global-9999" in available_services:
+        logger.info("📝 Registering AI Global Nanogrid (Real HTTP)...")
+        try:
+
+            class AIGlobalService:
+                __name__ = "ai_global"
+                __version__ = "1.0.0"
+                __doc__ = "AI Global CPU Nanogrid - Real HTTP Service"
+
+            async def check_ai_global_health():
+                endpoint = "http://localhost:9999"
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        response = await client.get(f"{endpoint}/health")
+                        health_data = (
+                            response.json() if response.status_code == 200 else {}
+                        )
+                        return {
+                            "status": "healthy"
+                            if response.status_code == 200
+                            else "error",
+                            "data": health_data,
+                            "quality_score": 0.9
+                            if response.status_code == 200
+                            else 0.0,
+                        }
+                except Exception as e:
+                    return {"status": "error", "error": str(e), "quality_score": 0.0}
+
+            node_id = await register_service_with_nodedb(
+                AIGlobalService(),
+                "AI Global Nanogrid",
+                health_check_fn=check_ai_global_health,
+            )
+            registered["ai-global"] = node_id
+            logger.info(f"  ✓ AI Global registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ AI Global registration failed: {e}\n")
+
+    # 6. Aviation Weather (REAL HTTP)
+    if "aviation" in available_services:
+        logger.info("📝 Registering Aviation Weather Service (Real HTTP)...")
+        try:
+
+            class AviationService:
+                __name__ = "aviation"
+                __version__ = "1.0.0"
+                __doc__ = "Aviation Weather API - Real HTTP Service"
+
+            async def check_aviation_health():
+                endpoint = "http://localhost:8080"
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        response = await client.get(f"{endpoint}/health")
+                        health_data = (
+                            response.json() if response.status_code == 200 else {}
+                        )
+                        return {
+                            "status": "healthy"
+                            if response.status_code == 200
+                            else "error",
+                            "data": health_data,
+                            "quality_score": 0.9
+                            if response.status_code == 200
+                            else 0.0,
+                        }
+                except Exception as e:
+                    return {"status": "error", "error": str(e), "quality_score": 0.0}
+
+            node_id = await register_service_with_nodedb(
+                AviationService(),
+                "Aviation Weather Service",
+                health_check_fn=check_aviation_health,
+            )
+            registered["aviation"] = node_id
+            logger.info(f"  ✓ Aviation registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ Aviation registration failed: {e}\n")
+
+    # 7. SOVEREIGN FABRIC NODES - SCALABLE MULTI-NODE ARCHITECTURE
+    logger.info("=" * 80)
+    logger.info("📝 Registering Sovereign Fabric Nodes (Scalable Architecture)...")
+    logger.info("=" * 80 + "\n")
+
+    sovereign_fabric_nodes = {}
+    for node_id, node_config in SOVEREIGN_FABRIC_NODES.items():
+        if not node_config.get("active", True):
+            logger.info(f"  ⊘ Node #{node_id} ({node_config['name']}): INACTIVE\n")
+            continue
+
+        try:
+            logger.info(
+                f"  📌 Node #{node_id} ({node_config['name']}) @ {node_config['region']}..."
+            )
+
+            class SovereignFabricNode:
+                pass
+
+            node_instance = SovereignFabricNode()
+            node_instance.__name__ = f"sovereign_node_{node_id}"
+            node_instance.__version__ = "1.0.0"
+            node_instance.__doc__ = (
+                f"Sovereign Fabric Node #{node_id}: {node_config['description']}"
+            )
+
+            # Create health check closure for this specific node
+            async def make_sovereign_health_check(nid: int, nconfig: Dict[str, Any]):
+                async def _check():
+                    return await check_sovereign_node_health(nid, nconfig)
+
+                return _check
+
+            registered_node_id = await register_service_with_nodedb(
+                node_instance,
+                f"Sovereign Fabric Node #{node_id}",
+                health_check_fn=await make_sovereign_health_check(node_id, node_config),
+            )
+            sovereign_fabric_nodes[node_id] = registered_node_id
+            registered[f"sovereign-node-{node_id}"] = registered_node_id
+
+            logger.info(f"    ✓ Node #{node_id} registered: {registered_node_id}")
+            logger.info(
+                f"       Region: {node_config['region']} | "
+                f"Radius: {node_config['radius_km']}km\n"
+            )
+        except Exception as e:
+            logger.error(f"    ✗ Node #{node_id} registration failed: {e}\n")
+
+    logger.info("=" * 80)
+    logger.info(
+        f"✅ REAL SERVICE REGISTRATION COMPLETE: {len(registered)}/{len(SERVICE_ENDPOINTS)} services + {len(sovereign_fabric_nodes)} sovereign nodes"
     )
-    logger.info(f"  ✓ API: {api_metadata.node_id}")
-
-    # 2. Ocean Core ML Engine
-    ocean_metadata = await register_service_with_nodedb(
-        MockOceanCoreService(),
-        "Ocean Core ML Engine",
-        health_check_fn=check_ocean_health,
-    )
-    logger.info(f"  ✓ Ocean: {ocean_metadata.node_id}")
-
-    # 3. ASI Trinity Components
-    logger.info("\n📝 Registering ASI Trinity (4 components)...")
-
-    trinity_services = [
-        (MockALBAService(), "ALBA - Frame Generator"),
-        (MockALBIService(), "ALBI - Cycle Engine"),
-        (MockJONAService(), "JONA - Neural Synthesis"),
-        (MockASIService(), "ASI - Master Orchestrator", check_trinity_health),
-    ]
-
-    trinity_metadata = []
-    for service_tuple in trinity_services:
-        if len(service_tuple) == 3:
-            service, name, health_fn = service_tuple
-            metadata = await register_service_with_nodedb(service, name, health_fn)
-        else:
-            service, name = service_tuple
-            metadata = await register_service_with_nodedb(service, name)
-
-        trinity_metadata.append(metadata)
-        logger.info(f"  ✓ {name}: {metadata.node_id}")
-
-    # 4. Worker Services
-    logger.info("\n📝 Registering Worker Services...")
-
-    worker_metadata = await register_service_with_nodedb(
-        MockWorkerService(), "Async Task Worker"
-    )
-    logger.info(f"  ✓ Worker: {worker_metadata.node_id}")
-
-    # 5. Analytics Engine
-    analytics_metadata = await register_service_with_nodedb(
-        MockAnalyticsService(), "Analytics Engine"
-    )
-    logger.info(f"  ✓ Analytics: {analytics_metadata.node_id}")
+    logger.info("=" * 80 + "\n")
 
     return {
         "nodedb": nodedb,
-        "api": api_metadata,
-        "ocean": ocean_metadata,
-        "trinity": trinity_metadata,
-        "worker": worker_metadata,
-        "analytics": analytics_metadata,
+        "services": registered,
+        "sovereign_nodes": sovereign_fabric_nodes,
+        "available_count": len(registered),
     }
 
 
 # ============================================================================
-# STATE SIMULATION
+# REAL DATA MONITORING & REPORTING
 # ============================================================================
 
 
-async def simulate_service_states(nodedb):
-    """Simulate realistic service state changes"""
+async def monitor_real_services(context: Dict[str, Any]):
+    """Monitor all real services and report actual health data"""
 
-    logger.info("\n" + "=" * 70)
-    logger.info("🔄 SIMULATING SERVICE STATE CHANGES")
-    logger.info("=" * 70)
+    logger.info("\n" + "=" * 80)
+    logger.info("📊 REAL SERVICE HEALTH MONITORING")
+    logger.info("=" * 80 + "\n")
 
-    # Get node IDs
-    nodes = await nodedb.list_nodes()
-    node_ids = [n["metadata"]["node_id"] for n in nodes]
+    # Perform health checks
+    logger.info("🔍 Running health checks on all services...\n")
 
-    # Phase 1: All services ready
-    logger.info("\n📋 Phase 1: Services Ready")
-    for i, node_id in enumerate(node_ids):
-        node = next(n for n in nodes if n["metadata"]["node_id"] == node_id)
-        await nodedb.update_node_state(
-            node_id,
-            state=StigmaState.READY,
-            metrics={
-                "startup_time_ms": 100 + random.randint(0, 200),
-                "config_loaded": True,
-            },
-            ndb_quality=NDBQuality.GOOD,
-        )
-        logger.info(f"  ✓ {node['metadata']['service_name']}: READY")
+    api_health = await check_api_health()
+    ocean_health = await check_ocean_core_health()
+    trinity_health = await check_trinity_health()
+    jona_sandbox_health = await check_jona_sandbox_health()
+    database_health = await check_database_health()
 
-    await asyncio.sleep(1)
+    # Monitor sovereign fabric nodes
+    sovereign_nodes_health = {}
+    if context.get("sovereign_nodes"):
+        logger.info("🔍 Running health checks on sovereign fabric nodes...\n")
+        for node_id, node_config in SOVEREIGN_FABRIC_NODES.items():
+            if node_config.get("active", True):
+                try:
+                    node_health = await check_sovereign_node_health(
+                        node_id, node_config
+                    )
+                    sovereign_nodes_health[node_id] = node_health
+                except Exception as e:
+                    logger.error(f"Failed to check Sovereign Node #{node_id}: {e}")
+                    sovereign_nodes_health[node_id] = {
+                        "status": "error",
+                        "node_id": node_id,
+                        "error": str(e),
+                        "quality_score": 0.0,
+                    }
 
-    # Phase 2: All services active
-    logger.info("\n⚡ Phase 2: Services Active")
-    for node_id in node_ids:
-        node = next(n for n in nodes if n["metadata"]["node_id"] == node_id)
-        await nodedb.update_node_state(
-            node_id,
-            state=StigmaState.ACTIVE,
-            metrics={
-                "latency_p99_ms": 15 + random.randint(0, 100),
-                "throughput_rps": 500 + random.randint(0, 500),
-                "memory_mb": 256 + random.randint(0, 512),
-            },
-            ndb_quality=NDBQuality.EXCELLENT,
-        )
-        logger.info(f"  ✓ {node['metadata']['service_name']}: ACTIVE (NDB: EXCELLENT)")
-
-    await asyncio.sleep(2)
-
-    # Phase 3: Simulate Ocean Core degradation
-    logger.info("\n⚠️  Phase 3: Ocean Core Degradation Detected")
-    ocean_node = next(
-        (n for n in nodes if "Ocean" in n["metadata"]["service_name"]), None
+    # Sync the latest health outputs into NodeDB states.
+    await sync_health_to_nodedb(
+        context,
+        api_health,
+        ocean_health,
+        trinity_health,
+        jona_sandbox_health,
     )
-    if ocean_node:
-        await nodedb.update_node_state(
-            ocean_node["metadata"]["node_id"],
-            state=StigmaState.DEGRADED,
-            metrics={
-                "inference_p99_ms": 2500,
-                "gpu_memory_mb": 3072,
-                "error_rate": 0.12,
-            },
-            ndb_quality=NDBQuality.POOR,
-        )
-        logger.warning(f"  ⚠️  Ocean Core degraded (inference latency spike)")
 
-    await asyncio.sleep(1)
+    # Sync sovereign node health to NodeDB
+    if sovereign_nodes_health:
+        await sync_sovereign_nodes_to_nodedb(context, sovereign_nodes_health)
 
+    logger.info("\n" + "=" * 80)
+    logger.info("📈 HEALTH CHECK RESULTS")
+    logger.info("=" * 80)
 
-# ============================================================================
-# MONITORING DASHBOARD
-# ============================================================================
+    # API Status
+    logger.info("\n🔹 API Backend:")
+    if api_health["status"] == "healthy":
+        logger.info("   Status: ✅ HEALTHY")
+        logger.info(f"   Response Time: {api_health['response_time_ms']:.1f}ms")
+        logger.info(f"   Quality Score: {api_health['quality_score']:.2f}")
+    else:
+        logger.info(f"   Status: ❌ ERROR - {api_health.get('error', 'unknown')}")
 
+    # Ocean Core Status
+    logger.info("\n🔹 Ocean Core:")
+    if ocean_health["status"] == "healthy":
+        logger.info("   Status: ✅ HEALTHY")
+        logger.info(f"   Response Time: {ocean_health['response_time_ms']:.1f}ms")
+        logger.info(f"   Quality Score: {ocean_health['quality_score']:.2f}")
+    else:
+        logger.info(f"   Status: ❌ ERROR - {ocean_health.get('error', 'unknown')}")
 
-async def display_nodedb_dashboard(nodedb):
-    """Display live NodeDB monitoring dashboard"""
-
-    logger.info("\n" + "=" * 70)
-    logger.info("📊 NODEDB MONITORING DASHBOARD")
-    logger.info("=" * 70)
-
-    nodes = await nodedb.list_nodes()
-
-    logger.info(f"\n{'Service':<30} {'State':<12} {'NDB Quality':<12} {'Metrics'}")
-    logger.info("-" * 80)
-
-    for node in nodes:
-        metadata = node["metadata"]
-        state = node["state"]
-
-        service_name = metadata["service_name"][:28]
-        node_state = state["stigma_state"]
-        ndb_quality = state["ndb_quality"]
-
-        # Format metrics
-        metrics_list = []
-        for key, value in state["metrics"].items():
-            if isinstance(value, dict) and "value" in value:
-                metrics_list.append(f"{key}={value['value']:.1f}")
-            else:
-                metrics_list.append(f"{key}={value}")
-
-        metrics_str = ", ".join(metrics_list[:2])  # Show first 2 metrics
-
+    # Trinity Status
+    logger.info("\n🔹 ASI Trinity:")
+    logger.info(
+        f"   Overall: {'✅ HEALTHY' if trinity_health['all_components_healthy'] else '⚠️  DEGRADED'}"
+    )
+    logger.info(f"   Coherence: {trinity_health['coherence']:.2f}")
+    logger.info(f"   Quality Score: {trinity_health['quality_score']:.2f}")
+    for component, comp_status in trinity_health["trinity_status"].items():
+        status_icon = "✅" if comp_status["status"] == "healthy" else "❌"
         logger.info(
-            f"{service_name:<30} {node_state:<12} {ndb_quality:<12} {metrics_str}"
+            f"   {component.upper()}: {status_icon} {comp_status.get('status', 'unknown')}"
         )
 
-    logger.info("")
+    # Database Status
+    logger.info("\n🔹 Databases:")
+    for db_name, db_info in database_health.items():
+        status_icon = "✅" if db_info["status"] == "healthy" else "❌"
+        logger.info(f"   {db_name.upper()}: {status_icon} {db_info['status']}")
 
+    # Sovereign Fabric Nodes Status
+    if sovereign_nodes_health:
+        logger.info("\n🔹 Sovereign Fabric Nodes (Multi-Node Architecture):")
+        for node_id in sorted(sovereign_nodes_health.keys()):
+            node_health = sovereign_nodes_health[node_id]
+            if node_health.get("status") == "healthy":
+                status_icon = "✅"
+            elif node_health.get("status") == "degraded":
+                status_icon = "⚠️ "
+            elif node_health.get("status") == "error":
+                status_icon = "❌"
+            else:
+                status_icon = "❓"
 
-# ============================================================================
-# NODEDB CLIENT EXAMPLE
-# ============================================================================
+            tide = node_health.get("tide", "critical")
+            tide_icon = "🟢" if tide == "low" else "🟡" if tide == "normal" else "🔴"
+            ndb_score = node_health.get("ndb_score", 0.0)
+            security = node_health.get("security_posture", "unknown")
+            latency_ms = node_health.get("response_time_ms", 0)
+            bandwidth = node_health.get("bandwidth_kbps", 0.0)
+            region = node_health.get("region", "?")
+            node_name = node_health.get("node_name", f"Node #{node_id}")
 
-
-class KloudService:
-    """Example service using NodeDB Client for self-reporting"""
-
-    def __init__(self, node_id: str, service_name: str):
-        self.node_id = node_id
-        self.service_name = service_name
-        nodedb = get_nodedb()
-        self.nodedb_client = NodeDBClient(nodedb, node_id)
-        self.tasks_processed = 0
-        self.errors = 0
-
-    async def do_work(self):
-        """Simulate work and report metrics"""
-
-        try:
-            # Simulate work
-            start = time.time()
-            work_time = random.uniform(10, 100)  # ms
-            await asyncio.sleep(work_time / 1000)
-            latency = (time.time() - start) * 1000
-
-            self.tasks_processed += 1
-
-            # Report success
-            ndb_quality = (
-                NDBQuality.EXCELLENT
-                if latency < 50
-                else NDBQuality.GOOD
-                if latency < 100
-                else NDBQuality.FAIR
+            logger.info(f"\n   {status_icon} Node #{node_id} ({node_name})")
+            logger.info(f"       Region: {region} | TIDE: {tide_icon}{tide.upper()}")
+            logger.info(
+                f"       NDB Score: {ndb_score:.3f} | Security: {security.upper()}"
+            )
+            logger.info(
+                f"       Latency: {latency_ms:.1f}ms | Bandwidth: {bandwidth:.1f}kbps"
             )
 
-            await self.nodedb_client.set_state(
-                StigmaState.ACTIVE,
-                metrics={
-                    "last_task_ms": latency,
-                    "tasks_completed": self.tasks_processed,
-                    "error_rate": self.errors / max(self.tasks_processed, 1),
-                },
-                ndb_quality=ndb_quality,
-            )
-
-            logger.info(f"  {self.service_name}: task completed in {latency:.1f}ms")
-
-        except Exception as e:
-            logger.error(f"  {self.service_name}: work failed: {e}")
-            self.errors += 1
-            await self.nodedb_client.request_recovery()
+    logger.info("\n" + "=" * 80)
+    logger.info(f"⏰ Health check completed at {datetime.utcnow().isoformat()}Z")
+    logger.info("=" * 80)
 
 
-async def demo_nodedb_client():
-    """Demonstrate NodeDB Client for self-reporting services"""
+def _quality_from_score(score: float) -> NDBQuality:
+    if score >= 0.90:
+        return NDBQuality.EXCELLENT
+    if score >= 0.75:
+        return NDBQuality.GOOD
+    if score >= 0.50:
+        return NDBQuality.FAIR
+    if score >= 0.20:
+        return NDBQuality.POOR
+    return NDBQuality.CRITICAL
 
-    logger.info("\n" + "=" * 70)
-    logger.info("🔗 NODEDB CLIENT DEMO (Self-Reporting)")
-    logger.info("=" * 70)
+
+def _state_from_health(health_status: str) -> StigmaState:
+    status = str(health_status).lower()
+    if status == "healthy":
+        return StigmaState.ACTIVE
+    if status == "degraded":
+        return StigmaState.DEGRADED
+    if status == "initializing":
+        return StigmaState.INITIALIZING
+    return StigmaState.RECOVERING
+
+
+async def sync_health_to_nodedb(
+    context: Dict[str, Any],
+    api_health: Dict[str, Any],
+    ocean_health: Dict[str, Any],
+    trinity_health: Dict[str, Any],
+    jona_sandbox_health: Dict[str, Any],
+) -> None:
+    """Synchronize real service health output into NodeDB in near real-time."""
 
     nodedb = get_nodedb()
+    services = context.get("services", {})
 
-    # Get first node and create service instance
-    nodes = await nodedb.list_nodes()
-    if nodes:
-        node_id = nodes[0]["metadata"]["node_id"]
-        service_name = nodes[0]["metadata"]["service_name"]
+    sync_plan = [
+        ("api", api_health),
+        ("ocean-core", ocean_health),
+        ("asi-trinity", trinity_health),
+        ("jona-sandbox", jona_sandbox_health),
+    ]
 
-        service = KloudService(node_id, service_name)
+    for service_key, health in sync_plan:
+        node_id = services.get(service_key)
+        if not node_id:
+            continue
 
-        logger.info(f"\n📤 Service self-reporting to NodeDB...")
-        logger.info(f"   Service: {service_name}")
-        logger.info(f"   Node ID: {node_id}\n")
+        quality_score = float(health.get("quality_score", 0.0))
+        stigma_state = _state_from_health(health.get("status", "error"))
+        ndb_quality = _quality_from_score(quality_score)
 
-        # Simulate work
-        for i in range(3):
-            await service.do_work()
+        metrics = {
+            "status": health.get("status", "unknown"),
+            "quality_score": quality_score,
+            "response_time_ms": health.get(
+                "response_time_ms", health.get("avg_response_time_ms", 0)
+            ),
+            "synced_at": datetime.utcnow().isoformat() + "Z",
+        }
+
+        await nodedb.update_node_state(
+            node_id=node_id,
+            state=stigma_state,
+            metrics=metrics,
+            ndb_quality=ndb_quality,
+        )
+
+
+async def sync_sovereign_nodes_to_nodedb(
+    context: Dict[str, Any], sovereign_nodes_health: Dict[int, Dict[str, Any]]
+) -> None:
+    """
+    Synchronize sovereign fabric node health into NodeDB.
+    Tracks: TIDE, NDB Score, Security Posture, Latency, Bandwidth, CRDT state.
+    """
+    nodedb = get_nodedb()
+    sovereign_nodes = context.get("sovereign_nodes", {})
+
+    for node_id, health in sovereign_nodes_health.items():
+        node_registered_id = sovereign_nodes.get(node_id)
+        if not node_registered_id:
+            continue
+
+        quality_score = float(health.get("quality_score", 0.0))
+        stigma_state = _state_from_health(health.get("status", "error"))
+        ndb_quality = _quality_from_score(quality_score)
+
+        metrics = {
+            "node_id": node_id,
+            "status": health.get("status", "unknown"),
+            "quality_score": quality_score,
+            "ndb_score": health.get("ndb_score", 0.0),
+            "tide": health.get("tide", "critical"),
+            "security_posture": health.get("security_posture", "unknown"),
+            "response_time_ms": health.get("response_time_ms", 0),
+            "bandwidth_kbps": health.get("bandwidth_kbps", 0.0),
+            "utilization_pct": health.get("utilization_pct", 0.0),
+            "crdt_cardinality": health.get("crdt_cardinality", 0),
+            "events_tracked": health.get("events_tracked", 0),
+            "stigma_state": health.get("stigma_state", "unknown"),
+            "region": health.get("region", "unknown"),
+            "radius_km": health.get("radius_km", 0),
+            "synced_at": datetime.utcnow().isoformat() + "Z",
+        }
+
+        await nodedb.update_node_state(
+            node_id=node_registered_id,
+            state=stigma_state,
+            metrics=metrics,
+            ndb_quality=ndb_quality,
+        )
+
+        logger.debug(
+            f"✓ Sovereign Node #{node_id} synced: "
+            f"TIDE={health.get('tide')} | NDB={health.get('ndb_score', 0.0):.3f}"
+        )
+
+
+async def run_health_sync_loop(
+    context: Dict[str, Any], interval_seconds: int = 5
+) -> None:
+    """Continuous control loop for fluid, non-aggressive state synchronization."""
+
+    logger.info(
+        f"🔁 Starting health-to-NodeDB sync loop ({interval_seconds}s interval)"
+    )
+    while True:
+        try:
+            await monitor_real_services(context)
+        except Exception as exc:
+            logger.error(f"❌ Health sync loop error: {exc}")
+        await asyncio.sleep(max(1, interval_seconds))
 
 
 # ============================================================================
-# MAIN DEMO
+# MAIN EXECUTION - REAL DATA ONLY
 # ============================================================================
 
 
 async def main():
-    """Run complete NodeDB Stigma Pattern demo"""
+    """Real service integration entry point"""
 
-    try:
-        # Initialize NodeDB with all services
-        services = await initialize_kloud_nodedb()
-        nodedb = services["nodedb"]
+    logger.info("\n" + "=" * 80)
+    logger.info("🌐 KLOUD NODEDB REAL SERVICE INTEGRATION")
+    logger.info("=" * 80)
+    logger.info("\nThis integration uses ONLY real services - no mocks, no fakes.")
+    logger.info("All data comes from actual running Kloud services.\n")
 
-        # Simulate state changes
-        await simulate_service_states(nodedb)
+    # Initialize with real services
+    context = await initialize_kloud_nodedb_real()
 
-        # Display dashboard
-        await display_nodedb_dashboard(nodedb)
+    if context["available_count"] == 0:
+        logger.critical("Cannot proceed: no services available")
+        return
 
-        # Demo NodeDB Client
-        await demo_nodedb_client()
+    # Monitor and synchronize real services once by default.
+    await monitor_real_services(context)
 
-        # Final dashboard
-        logger.info("\n")
-        await display_nodedb_dashboard(nodedb)
-
-        # Summary
-        logger.info("\n" + "=" * 70)
-        logger.info("✅ NODEDB STIGMA PATTERN DEMO COMPLETE")
-        logger.info("=" * 70)
-        logger.info(f"Total nodes registered: {len(await nodedb.list_nodes())}")
-        logger.info("All services tracked by single adaptive pattern ✨")
-
-    except Exception as e:
-        logger.error(f"Demo failed: {e}", exc_info=True)
+    logger.info("\n✅ Real service integration complete.")
+    logger.info(f"   Registered {context['available_count']} real services")
+    sovereign_count = len(context.get("sovereign_nodes", {}))
+    if sovereign_count > 0:
+        logger.info(
+            f"   Registered {sovereign_count} sovereign fabric nodes (scalable)"
+        )
+    logger.info("   All data is from actual running services\n")
 
 
 if __name__ == "__main__":

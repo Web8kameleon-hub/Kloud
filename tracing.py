@@ -19,6 +19,8 @@ Usage:
 """
 
 import os
+import socket
+from urllib.parse import urlparse
 from typing import Optional
 
 from opentelemetry import trace
@@ -59,29 +61,57 @@ def setup_tracing(
 
     Returns:
         OpenTelemetry Tracer instance for the service
-    
+
     Note:
         Tempo tracing is optional. If Tempo endpoint is not available,
         tracing will still work with a no-op exporter.
     """
     if tempo_endpoint is None:
-        tempo_endpoint = os.getenv(
-            "TEMPO_ENDPOINT", "http://tempo:4318/v1/traces"
-        )
+        # Respect standard OTEL variables first, then project-specific fallback.
+        traces_endpoint = os.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT")
+        otlp_base = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+        if traces_endpoint:
+            tempo_endpoint = traces_endpoint
+        elif otlp_base:
+            tempo_endpoint = otlp_base.rstrip("/") + "/v1/traces"
+        else:
+            tempo_endpoint = os.getenv("TEMPO_ENDPOINT", "http://tempo:4318/v1/traces")
+
+    def _endpoint_resolvable(endpoint: str) -> bool:
+        try:
+            parsed = urlparse(endpoint)
+            host = parsed.hostname
+            if not host:
+                return False
+            socket.getaddrinfo(host, parsed.port or 80)
+            return True
+        except Exception:
+            return False
 
     # Create Resource with service identification
-    resource = Resource.create({
-        "service.name": service_name,
-        "service.version": "1.2.3",
-        "environment": environment,
-        "host.name": os.getenv("HOSTNAME", "unknown"),
-    })
+    resource = Resource.create(
+        {
+            "service.name": service_name,
+            "service.version": "1.2.3",
+            "environment": environment,
+            "host.name": os.getenv("HOSTNAME", "unknown"),
+        }
+    )
 
     # Create TracerProvider with Resource
     tracer_provider = TracerProvider(resource=resource)
 
     # Try to connect to Tempo, but don't fail if unavailable
     try:
+        # On local Windows runs, "tempo" is typically a Docker-internal DNS name.
+        if not _endpoint_resolvable(tempo_endpoint):
+            print(
+                f"⚠️  Tracing exporter disabled for {service_name} "
+                f"(unresolvable OTLP endpoint: {tempo_endpoint})"
+            )
+            trace.set_tracer_provider(tracer_provider)
+            return trace.get_tracer(service_name)
+
         otlp_exporter = OTLPSpanExporter(
             endpoint=tempo_endpoint,
             timeout=10,
@@ -95,10 +125,7 @@ def setup_tracing(
         tracer_provider.add_span_processor(batch_processor)
         print(f"✓ Tracing enabled for {service_name} → {tempo_endpoint}")
     except Exception as e:
-        print(
-            f"⚠️  Tracing disabled for {service_name} "
-            f"(Tempo unavailable: {e})"
-        )
+        print(f"⚠️  Tracing disabled for {service_name} (Tempo unavailable: {e})")
         # Tracing will still work with no-op exporter
 
     # Set global tracer provider
@@ -163,6 +190,7 @@ def create_span_with_error_handling(
             # span automatically created and errors tracked
             do_processing()
     """
+
     class SpanContextManager:
         def __init__(self, tracer, name, attrs):
             self.tracer = tracer
@@ -213,5 +241,3 @@ __all__ = [
     "create_span_with_error_handling",
     "get_trace_context_headers",
 ]
-
-

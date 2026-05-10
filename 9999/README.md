@@ -6,7 +6,7 @@ Dedicated `9999/app.py` service connected to core app functions.
 
 - Multilingual chat orchestration
 - Discussion/debate proxy to ocean-core
-- Vision analyze (LLaVA via Ollama)
+- Vision analyze (CLX.I via CLX)
 - Vision create (image generation file output)
 - Document reader + summarizer
 - Document writer

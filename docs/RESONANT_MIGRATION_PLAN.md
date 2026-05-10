@@ -7,7 +7,7 @@ Adopt Resonant Core (NDB, Stigma, Tide, Stigma Cloud) across Kloud/Kloud with cl
 ## Existing Adapter Foundations
 
 - Python engine adapter contract: `core/engines/contract.py`
-- Ollama implementation adapter: `core/engines/ollama_adapter.py`
+- CLX implementation adapter: `core/engines/clx_adapter.py`
 - Ocean adapter layer: `ocean_core_adapter.ts`
 - Existing pipeline framework: `ai_agi_pipeline.py`
 
@@ -37,6 +37,10 @@ These are reused as adapter patterns instead of introducing a parallel architect
   - `/resonant/status`
   - `/resonant/events`
 - Return deterministic fields for compatibility and observability.
+- Run the first pilot at 5% on one low-risk service path before widening rollout.
+- Test checklist: `docs/RESONANT_PHASE1_5PERCENT_CHECKLIST.md`
+- Promote to 25% only when WWWMMM checks are active and fake-concept filtering is enforced.
+- 25% checklist: `docs/RESONANT_PHASE1_25PERCENT_CHECKLIST.md`
 
 ### Phase 2: Protocol and Security
 
@@ -65,4 +69,3 @@ These are reused as adapter patterns instead of introducing a parallel architect
 - All critical services expose or consume Resonant schemas.
 - Compatibility layer remains stable for one release cycle.
 - Legacy endpoints can then be marked deprecated (not removed immediately).
-

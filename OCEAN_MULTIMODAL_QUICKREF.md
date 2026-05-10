@@ -16,8 +16,8 @@ Reasoning (🧠)  → LLM inference over any input
 | Service | Port | Status | Models |
 | --------- | ------ | --------- | --------- |
 | Ocean Core | 8030 | ✅ Running | llama3.1 |
-| **Ocean Multimodal** | **8031** | **NEW** | llava, whisper, llama3.1 |
-| Ollama | 11434 | ✅ Running | All models |
+| **Ocean Multimodal** | **8031** | **NEW** | clx.i, whisper, llama3.1 |
+| CLX | 11434 | ✅ Running | All models |
 
 ## Deploy in 3 Steps
 
@@ -31,15 +31,15 @@ ocean-multimodal:
   ports:
     - "8031:8031"
   depends_on:
-    - ollama
+    - clx
 ```
 
 ### Step 2: Pull Models
 
 ```bash
-docker exec kloud-06-ollama ollama pull llava:latest
-docker exec kloud-06-ollama ollama pull whisper:latest
-docker exec kloud-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-clx clx pull clx.i:latest
+docker exec kloud-06-clx clx pull whisper:latest
+docker exec kloud-06-clx clx pull llama3.1:8b
 ```
 
 ### Step 3: Deploy

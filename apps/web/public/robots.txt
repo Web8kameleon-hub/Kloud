@@ -1,11 +1,11 @@
-# Kloud Cloud - Robots.txt
+# Kameleon Life - Robots.txt
 # Maximum crawlability for search engines
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://kloud.cloud/sitemap.xml
+Sitemap: https://kameleon.life/sitemap.xml
 
 # Specific bot allowances
 User-agent: Googlebot
@@ -37,5 +37,5 @@ User-agent: SemrushBot
 Disallow: /
 
 # Host
-Host: https://kloud.cloud
+Host: https://kameleon.life
 

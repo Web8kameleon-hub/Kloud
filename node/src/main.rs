@@ -77,15 +77,21 @@ enum NodeState {
 
 #[tokio::main]
 async fn main() {
-    let node_id: u64 = std::env::var("NODE_ID").unwrap_or("1".to_string()).parse().unwrap();
-    let listen_port: u16 = std::env::var("LISTEN_PORT").unwrap_or("8080".to_string()).parse().unwrap();
+    let node_id: u64 = std::env::var("NODE_ID")
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
+        .unwrap_or(1);
+    let listen_port: u16 = std::env::var("LISTEN_PORT")
+        .ok()
+        .and_then(|v| v.trim().parse::<u16>().ok())
+        .unwrap_or(8080);
     let mesh_healthcheck_interval_ms: u64 = std::env::var("MESH_HEALTHCHECK_INTERVAL_MS")
-        .unwrap_or("600000".to_string())
-        .parse()
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
         .unwrap_or(600000);
     let mesh_healthcheck_timeout_ms: u64 = std::env::var("MESH_HEALTHCHECK_TIMEOUT_MS")
-        .unwrap_or("1200".to_string())
-        .parse()
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
         .unwrap_or(1200);
     let peers_str = std::env::var("PEERS").unwrap_or("".to_string());
 

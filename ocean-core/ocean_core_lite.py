@@ -27,7 +27,7 @@ from pydantic import BaseModel
 # ═══════════════════════════════════════════════════════════════════
 # CONFIG
 # ═══════════════════════════════════════════════════════════════════
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-clx:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 PORT = int(os.getenv("PORT", "8030"))
 TRANSLATION_NODE = os.getenv("TRANSLATION_NODE", "http://localhost:8036")
@@ -52,12 +52,22 @@ SERVICES = {
 }
 
 INTENTS = {
-    "eeg": "eeg-analysis", "brain": "eeg-analysis", "neural": "neural-biofeedback",
-    "document": "document-tools", "excel": "document-tools", "pdf": "document-tools",
-    "fitness": "fitness-dashboard", "workout": "fitness-dashboard",
-    "weather": "weather-dashboard", "metar": "aviation-weather", "aviation": "aviation-weather",
-    "crypto": "crypto-dashboard", "bitcoin": "crypto-dashboard",
-    "analytics": "ocean-analytics", "iot": "iot-network", "sensor": "iot-network",
+    "eeg": "eeg-analysis",
+    "brain": "eeg-analysis",
+    "neural": "neural-biofeedback",
+    "document": "document-tools",
+    "excel": "document-tools",
+    "pdf": "document-tools",
+    "fitness": "fitness-dashboard",
+    "workout": "fitness-dashboard",
+    "weather": "weather-dashboard",
+    "metar": "aviation-weather",
+    "aviation": "aviation-weather",
+    "crypto": "crypto-dashboard",
+    "bitcoin": "crypto-dashboard",
+    "analytics": "ocean-analytics",
+    "iot": "iot-network",
+    "sensor": "iot-network",
 }
 
 
@@ -91,11 +101,7 @@ Weather, Crypto, Analytics, IoT Network."""
 # FASTAPI
 # ═══════════════════════════════════════════════════════════════════
 app = FastAPI(title="Ocean Core Lite", version="2.0.0")
-app.add_middleware(
-    CORSMiddleware, allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"], allow_headers=["*"]
-)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
 class ChatRequest(BaseModel):
@@ -115,6 +121,7 @@ class ChatResponse(BaseModel):
 # ═══════════════════════════════════════════════════════════════════
 # LANGUAGE DETECTION - Fast (1s timeout)
 # ═══════════════════════════════════════════════════════════════════
+
 
 async def detect_language(text: str) -> tuple:
     try:
@@ -136,12 +143,13 @@ async def detect_language(text: str) -> tuple:
 # STREAMING - fillon nga sekonda 2
 # ═══════════════════════════════════════════════════════════════════
 
+
 async def stream_ollama(prompt: str, lang_code: str) -> AsyncGenerator[str, None]:
     """Stream tokens nga Ollama - first token brenda 2 sekondave"""
-    
+
     lang_hint = "\nRespond in Albanian (shqip)." if lang_code == "sq" else ""
     system = SYSTEM_PROMPT + lang_hint
-    
+
     try:
         timeout = httpx.Timeout(300.0, connect=10.0)
         async with httpx.AsyncClient(timeout=timeout) as client:
@@ -150,10 +158,7 @@ async def stream_ollama(prompt: str, lang_code: str) -> AsyncGenerator[str, None
                 f"{OLLAMA_HOST}/api/chat",
                 json={
                     "model": MODEL,
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {"role": "user", "content": prompt}
-                    ],
+                    "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
                     "stream": True,
                     "keep_alive": -1,
                     "options": {
@@ -164,9 +169,9 @@ async def stream_ollama(prompt: str, lang_code: str) -> AsyncGenerator[str, None
                         "num_keep": 0,
                         "mirostat": 0,
                         "repeat_last_n": 64,
-                        "stop": []
-                    }
-                }
+                        "stop": [],
+                    },
+                },
             ) as response:
                 async for line in response.aiter_lines():
                     if line:
@@ -188,6 +193,7 @@ async def stream_ollama(prompt: str, lang_code: str) -> AsyncGenerator[str, None
 # ═══════════════════════════════════════════════════════════════════
 # MAIN CHAT - Direct Ollama call (non-streaming)
 # ═══════════════════════════════════════════════════════════════════
+
 
 async def process_chat(req: ChatRequest) -> ChatResponse:
     start = time.time()
@@ -214,10 +220,7 @@ async def process_chat(req: ChatRequest) -> ChatResponse:
                 f"{OLLAMA_HOST}/api/chat",
                 json={
                     "model": req.model or MODEL,
-                    "messages": [
-                        {"role": "system", "content": system},
-                        {"role": "user", "content": prompt}
-                    ],
+                    "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
                     "stream": False,
                     "options": {
                         "temperature": 0.7,
@@ -227,9 +230,9 @@ async def process_chat(req: ChatRequest) -> ChatResponse:
                         "num_keep": 0,
                         "mirostat": 0,
                         "repeat_last_n": 64,
-                        "stop": []
-                    }
-                }
+                        "stop": [],
+                    },
+                },
             )
             if resp.status_code != 200:
                 raise HTTPException(resp.status_code, "Ollama error")
@@ -248,13 +251,14 @@ async def process_chat(req: ChatRequest) -> ChatResponse:
         model=req.model or MODEL,
         processing_time=round(elapsed, 2),
         language_detected=lang_code,
-        routed_service=routed
+        routed_service=routed,
     )
 
 
 # ═══════════════════════════════════════════════════════════════════
 # ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════
+
 
 @app.get("/")
 async def root():
@@ -282,14 +286,11 @@ async def chat_stream(req: ChatRequest):
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(400, "message required")
-    
+
     lang_code, _ = await detect_language(prompt)
     logger.info(f"🌊 Stream [{lang_code}]: {prompt[:50]}...")
-    
-    return StreamingResponse(
-        stream_ollama(prompt, lang_code),
-        media_type="text/plain"
-    )
+
+    return StreamingResponse(stream_ollama(prompt, lang_code), media_type="text/plain")
 
 
 @app.post("/api/v1/query", response_model=ChatResponse)
@@ -301,11 +302,12 @@ async def query(req: ChatRequest):
 async def list_services():
     return {"services": SERVICES}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     logger.info(f"🌊 Ocean Core Lite v2.0 on port {PORT}")
     logger.info(f"🤖 Model: {MODEL}")
     logger.info(f"📡 Ollama: {OLLAMA_HOST}")
     logger.info("✨ Streaming: enabled, 50K tokens")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-

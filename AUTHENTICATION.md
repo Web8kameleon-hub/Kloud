@@ -1,8 +1,8 @@
-# Kloud Cloud API – Authentication Guide
+# Kameleon Life API – Authentication Guide
 
 ## Overview
 
-Kloud Cloud now features a complete enterprise-grade authentication system with JWT tokens, refresh tokens, and API key management. All authentication flows are implemented across the OpenAPI specification, Python SDK, TypeScript SDK, and Postman collection.
+Kameleon Life now features a complete enterprise-grade authentication system with JWT tokens, refresh tokens, and API key management. All authentication flows are implemented across the OpenAPI specification, Python SDK, TypeScript SDK, and Postman collection.
 
 ---
 
@@ -281,6 +281,7 @@ Import the Postman collection from `postman_collection_auth.json`. It includes p
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
+
 | `base_url` | API endpoint | `https://api.kloud.com` |
 | `auth_token` | JWT Bearer token | (auto-populated) |
 | `refresh_token` | Refresh token | (auto-populated) |
@@ -466,4 +467,3 @@ All authentication schemas and endpoints are defined in `openapi.yaml`:
 ---
 
 **Kloud Cloud API** • Part of UltraWebThinking / Euroweb
-

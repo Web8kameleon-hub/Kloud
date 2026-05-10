@@ -4,7 +4,7 @@ KLOUD CORE - AI/ML Library Architecture A-Z
 ═══════════════════════════════════════════════════════════════════════════════
 
 Arkitektura e plotë:
-├── engines/      - Engine Adapters (Ollama, Llama.cpp, vLLM)
+├── engines/      - Engine Adapters (CLX, Llama.cpp, vLLM)
 ├── personas/     - Persona System (Tutor, Architect, Code Companion)
 ├── pipelines/    - Pipeline Framework (RAG, Chains)
 ├── knowledge/    - Knowledge Base (Vector, Keyword, Hybrid Search)
@@ -22,7 +22,7 @@ from core.engines import (
     EngineResponse,
     BaseEngineAdapter,
     EngineRegistry,
-    OllamaAdapter,
+    ClxAdapter,
     get_registry as get_engine_registry,
     get_engine,
     list_engines,
@@ -111,7 +111,7 @@ __all__ = [
     "EngineResponse",
     "BaseEngineAdapter",
     "EngineRegistry",
-    "OllamaAdapter",
+    "ClxAdapter",
     "get_engine_registry",
     "get_engine",
     "list_engines",
@@ -175,26 +175,27 @@ def init_core(scan_services: bool = True) -> None:
     """
     Inicializon të gjitha regjistrat e core.
     Thirret automatikisht ose manualisht.
-    
+
     Args:
         scan_services: Nëse True, skanon automatikisht shërbimet
     """
     import logging
+
     logger = logging.getLogger(__name__)
-    
+
     logger.info("🚀 Initializing Kloud Core...")
-    
+
     # Init all registries
     get_engine_registry()
     get_persona_registry()
     get_pipeline_registry()
     get_capability_registry()
-    
+
     # Skano shërbimet nëse kërkohet
     if scan_services:
         logger.info("🔍 Scanning services...")
         discover_all()
-    
+
     logger.info("✅ Kloud Core initialized successfully!")
 
 
@@ -203,7 +204,7 @@ def core_status() -> dict:
     # Ensure registry is discovered
     if not registry._discovered:
         discover_all()
-    
+
     return {
         "version": __version__,
         "engines": len(get_engine_registry().list_engines()),
@@ -215,4 +216,3 @@ def core_status() -> dict:
         "endpoints": len(registry.endpoints),
         "status": "ready",
     }
-

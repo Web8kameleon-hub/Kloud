@@ -1,105 +1,177 @@
-/**
- * Kloud Cloud - Sign Up Page
- * 
- * @author Ledjan Ahmati
- * @copyright 2026 Kloud Cloud
- */
+"use client";
 
-import { SignUp } from "@clerk/nextjs";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+type RegisterResult = {
+  success: boolean;
+  challengeId?: string;
+  devOtpCode?: string;
+  error?: string;
+};
+
+type VerifyResult = {
+  success: boolean;
+  token?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+  };
+  error?: string;
+};
 
 export default function SignUpPage() {
-  if (!isClerkConfigured) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Kloud Cloud</h1>
-          <p className="text-gray-400 text-lg">Sign up is currently unavailable. Please contact support.</p>
-        </div>
-      </div>
-    );
-  }
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [channel, setChannel] = useState<"sms" | "email">("sms");
+  const [challengeId, setChallengeId] = useState<string | null>(null);
+  const [otpCode, setOtpCode] = useState("");
+  const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const persistSession = (token: string, user: VerifyResult["user"]) => {
+    localStorage.setItem("kloud_auth_token", token);
+    if (user?.id) localStorage.setItem("kloud_user_id", user.id);
+    if (user?.name) localStorage.setItem("kloud_user_name", user.name);
+    if (user?.email) localStorage.setItem("kloud_user_email", user.email);
+    if (user?.phone) localStorage.setItem("kloud_user_phone", user.phone);
+  };
+
+  const handleRegister = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/internal-auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email: email || undefined,
+          phone: phone || undefined,
+          password,
+          channel,
+        }),
+      });
+      const data = (await res.json()) as RegisterResult;
+      if (!res.ok || !data.success || !data.challengeId) {
+        throw new Error(data.error || "Registration failed");
+      }
+      setChallengeId(data.challengeId);
+      setDevOtpCode(data.devOtpCode || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerify = async () => {
+    if (!challengeId) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/internal-auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challengeId, code: otpCode }),
+      });
+      const data = (await res.json()) as VerifyResult;
+      if (!res.ok || !data.success || !data.token) {
+        throw new Error(data.error || "OTP verification failed");
+      }
+      persistSession(data.token, data.user);
+      router.push("/modules/account");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "OTP verification failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10" />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-900 p-4 text-white">
+      <div className="mx-auto mt-14 max-w-md rounded-2xl border border-cyan-700/50 bg-slate-900/80 p-6 shadow-2xl">
+        <h1 className="text-3xl font-bold">Create Account</h1>
+        <p className="mt-1 text-sm text-cyan-100/80">Internal auth with OTP confirmation</p>
 
-      <div className="relative z-10 w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">C</span>
-            </div>
-            <span className="text-2xl font-bold text-white">Kloud Cloud</span>
+        {!challengeId ? (
+          <div className="mt-6 space-y-3">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full name"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            />
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            />
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone (optional if email set)"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password (min 8 chars)"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            />
+            <select
+              value={channel}
+              onChange={(e) => setChannel(e.target.value as "sms" | "email")}
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            >
+              <option value="sms">Verify with SMS OTP</option>
+              <option value="email">Verify with Email OTP</option>
+            </select>
+            <button
+              disabled={loading}
+              onClick={handleRegister}
+              className="w-full rounded-lg bg-cyan-600 px-4 py-2 font-semibold hover:bg-cyan-500 disabled:opacity-60"
+            >
+              {loading ? "Creating account..." : "Register"}
+            </button>
           </div>
-          <p className="text-gray-400">Create your account to get started.</p>
-        </div>
+        ) : (
+          <div className="mt-6 space-y-3">
+            <input
+              value={otpCode}
+              onChange={(e) => setOtpCode(e.target.value)}
+              placeholder="Enter OTP code"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2"
+            />
+            <button
+              disabled={loading}
+              onClick={handleVerify}
+              className="w-full rounded-lg bg-cyan-600 px-4 py-2 font-semibold hover:bg-cyan-500 disabled:opacity-60"
+            >
+              {loading ? "Verifying..." : "Verify and Continue"}
+            </button>
+            {devOtpCode && (
+              <p className="rounded-md border border-amber-500/50 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+                Dev OTP: {devOtpCode}
+              </p>
+            )}
+          </div>
+        )}
 
-        {/* Features Preview */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="text-center">
-            <div className="w-10 h-10 mx-auto bg-purple-500/20 rounded-lg flex items-center justify-center mb-2">
-              <span className="text-purple-400">🧠</span>
-            </div>
-            <span className="text-xs text-gray-400">AI Analytics</span>
-          </div>
-          <div className="text-center">
-            <div className="w-10 h-10 mx-auto bg-blue-500/20 rounded-lg flex items-center justify-center mb-2">
-              <span className="text-blue-400">📊</span>
-            </div>
-            <span className="text-xs text-gray-400">Real-time Data</span>
-          </div>
-          <div className="text-center">
-            <div className="w-10 h-10 mx-auto bg-green-500/20 rounded-lg flex items-center justify-center mb-2">
-              <span className="text-green-400">🔒</span>
-            </div>
-            <span className="text-xs text-gray-400">Enterprise Security</span>
-          </div>
-        </div>
+        {error && <p className="mt-4 text-sm text-rose-300">{error}</p>}
 
-        {/* Clerk Sign Up */}
-        <SignUp 
-          appearance={{
-            elements: {
-              rootBox: "mx-auto",
-              card: "bg-slate-800/50 backdrop-blur-xl border border-slate-700 shadow-2xl",
-              headerTitle: "text-white",
-              headerSubtitle: "text-gray-400",
-              socialButtonsBlockButton: "bg-slate-700 border-slate-600 text-white hover:bg-slate-600",
-              socialButtonsBlockButtonText: "text-white",
-              dividerLine: "bg-slate-600",
-              dividerText: "text-gray-400",
-              formFieldLabel: "text-gray-300",
-              formFieldInput: "bg-slate-700 border-slate-600 text-white placeholder-gray-400",
-              formButtonPrimary: "bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700",
-              footerActionLink: "text-green-400 hover:text-green-300",
-              identityPreviewText: "text-white",
-              identityPreviewEditButton: "text-green-400",
-            },
-          }}
-        />
-
-        {/* Plan Info */}
-        <div className="text-center mt-8 p-4 bg-slate-800/30 rounded-xl border border-slate-700">
-          <p className="text-gray-300 text-sm font-medium mb-2">
-            🎁 Start with Free Plan
-          </p>
-          <ul className="text-gray-400 text-xs space-y-1">
-            <li>✓ 50 API calls/day</li>
-            <li>✓ Basic analytics</li>
-            <li>✓ Community support</li>
-          </ul>
-          <p className="text-purple-400 text-xs mt-3">
-            Upgrade anytime for more features →
-          </p>
-        </div>
+        <p className="mt-6 text-sm text-slate-300">
+          Already have an account? <Link href="/sign-in" className="text-cyan-300 hover:text-cyan-200">Sign in</Link>
+        </p>
       </div>
     </div>
   );

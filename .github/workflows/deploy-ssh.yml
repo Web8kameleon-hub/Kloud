@@ -2,7 +2,7 @@
 # KLOUD - DOCKER COMPOSE DEPLOYMENT VIA SSH
 # =============================================================================
 # Deploys to Hetzner server using SSH and Docker Compose
-# Server: 46.224.203.89 (kloud.aiagi.io)
+# Server: 46.224.203.89 (kameleon.life)
 #
 # This workflow:
 # 1. SSHs to Hetzner and runs git pull
@@ -170,6 +170,7 @@ jobs:
           echo ""
           echo "🌐 Testing endpoints..."
           curl -s http://localhost:8000/health | head -c 100 && echo ""
+          curl -s http://localhost:8000/status | head -c 100 && echo ""
           curl -s http://localhost:8030/health | head -c 100 && echo ""
           curl -s -o /dev/null -w "Website: HTTP %{http_code}\n" http://localhost:80/
           ENDSSH
@@ -180,17 +181,15 @@ jobs:
           set +e
           ENDPOINTS=(
             "https://clisonix.ai/health"
-            "https://clisonix.ai/api/v1/status"
+            "https://clisonix.ai/status"
             "https://clx.clisonix.ai/health"
-            "https://clx.clisonix.ai/api/v1/status"
+            "https://clx.clisonix.ai/status"
             "https://cxl.i/health"
-            "https://cxl.i/api/v1/status"
+            "https://cxl.i/status"
             "https://lite.clisonix.ai/health"
-            "https://lite.clisonix.ai/api/v1/status"
-            "https://kloud.cloud/health"
-            "https://kloud.cloud/api/v1/status"
-            "https://kloud.aiagi.io/health"
-            "https://kloud.aiagi.io/api/v1/status"
+            "https://lite.clisonix.ai/status"
+            "https://kameleon.life/health"
+            "https://kameleon.life/status"
           )
 
           OK=false
@@ -219,7 +218,7 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🌐 Access Points" >> $GITHUB_STEP_SUMMARY
-          echo "- **Website:** https://kloud.aiagi.io" >> $GITHUB_STEP_SUMMARY
-          echo "- **API:** https://kloud.aiagi.io/api" >> $GITHUB_STEP_SUMMARY
+          echo "- **Website:** https://kameleon.life" >> $GITHUB_STEP_SUMMARY
+          echo "- **API:** https://kameleon.life/api" >> $GITHUB_STEP_SUMMARY
           echo "- **Ocean:** Port 8030" >> $GITHUB_STEP_SUMMARY
 # Workflow test 2026-02-03 12:37

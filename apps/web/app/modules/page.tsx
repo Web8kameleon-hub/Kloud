@@ -182,6 +182,15 @@ const publicModules = [
     accent: 'slate'
   },
   {
+    id: 'nodedb-control-surface',
+    name: 'NodeDB Control Surface',
+    description: 'Live bootstrap, sync loop, and STIGMA runtime state for hybrid fabric',
+    icon: Command,
+    category: 'Admin',
+    href: '/modules/nodedb-control-surface',
+    accent: 'slate'
+  },
+  {
     id: 'developer-docs',
     name: 'Developer Documentation',
     description: 'API Reference, SDKs, Quick Start Guide',

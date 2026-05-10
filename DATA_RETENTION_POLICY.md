@@ -183,7 +183,7 @@ CREATE TABLE user_consents (
 | :--- | :--- | :--- | :--- | :--- |
 | Stripe | Payments | Processor | ✅ | ✅ US/EU |
 | AWS S3 | File Storage | Processor | ✅ | ✅ US/EU |
-| Ollama | AI Processing | Internal | N/A | N/A |
+| CLX | AI Processing | Internal | N/A | N/A |
 | Clerk | Authentication | Processor | ✅ | ✅ US/EU |
 | Grafana Cloud | Monitoring | Processor | ✅ | ✅ US/EU |
 

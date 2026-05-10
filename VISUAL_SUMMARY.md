@@ -35,7 +35,7 @@
 │  ✅ Monitoring Stack (Prometheus, Grafana, Loki, Jaeger, Tempo)    │
 │  ✅ Frontend (Next.js)                                              │
 │  ✅ API Gateway (Traefik)                                           │
-│  ✅ LLM Backend (Ollama)                                            │
+│  ✅ LLM Backend (CLX)                                            │
 │                                                                      │
 └──────────────────────────────────────────────────────────────────────┘
 

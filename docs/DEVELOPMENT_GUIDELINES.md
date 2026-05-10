@@ -203,8 +203,8 @@ JWT_SECRET=your-super-secret-key
 JWT_EXPIRES_IN=24h
 
 # AI
-OLLAMA_HOST=http://localhost:11434
-OLLAMA_MODEL=llama3.1:8b
+CLX_HOST=http://localhost:11434
+CLX_MODEL=llama3.1:8b
 ```
 
 ## Deployment

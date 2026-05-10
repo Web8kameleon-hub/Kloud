@@ -165,9 +165,13 @@ export default function AccountPage() {
   const handleUpgrade = async (priceId: string, planName: string) => {
     setIsCheckoutLoading(true)
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('kloud_auth_token') : null
       const response = await fetch('/api/billing/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           priceId,
           planName,

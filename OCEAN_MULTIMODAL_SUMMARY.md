@@ -19,7 +19,7 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
 - Object detection and classification
 - OCR (Optical Character Recognition)
 - Scene understanding
-- **Model**: `llava:latest` (Ollama)
+- **Model**: `clx.i:latest` (CLX)
 
 ### 2. **Audio Pipeline** (🎙️)
 
@@ -27,7 +27,7 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
 - Audio feature extraction
 - Multilingual support
 - Timestamp-based word alignment
-- **Model**: `whisper:latest` (Ollama)
+- **Model**: `whisper:latest` (CLX)
 
 ### 3. **Document Pipeline** (📄)
 
@@ -36,7 +36,7 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
 - Document summarization
 - Content reasoning and analysis
 - **Supports**: Plain text, Markdown, PDF, DOCX
-- **Model**: `llama3.1:8b` (Ollama)
+- **Model**: `llama3.1:8b` (CLX)
 
 ### 4. **Reasoning Pipeline** (🧠)
 
@@ -44,7 +44,7 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
 - Context-aware processing
 - Multi-turn conversation
 - Knowledge synthesis
-- **Model**: `llama3.1:8b` (Ollama)
+- **Model**: `llama3.1:8b` (CLX)
 
 ### 5. **Multimodal Fusion** (🔄)
 
@@ -97,14 +97,14 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
           └──────────────┼──────────────┼──────────────┘
                          │
                     ┌────▼────┐
-                    │  OLLAMA  │
+                    │  CLX  │
                     │ (Port    │
                     │  11434)  │
                     └────┬─────┘
          ┌──────────────┬┼──────────────┬──────┐
          │              │               │      │
     ┌────▼─────┐  ┌─────▼──────┐  ┌───▼─────┐
-    │ llava    │  │  whisper   │  │ llama   │
+    │ clx.i    │  │  whisper   │  │ llama   │
     │ (Vision) │  │  (Audio)   │  │ (LLM)   │
     └──────────┘  └────────────┘  └─────────┘
 ```
@@ -113,7 +113,7 @@ A **unified multimodal AI engine** with 4 sensory perception pipelines:
 
 - **Ocean Core**: 8030 (existing rate-limited chat service)
 - **Ocean Multimodal**: 8031 (new multimodal engine)
-- **Ollama**: 11434 (all AI models)
+- **CLX**: 11434 (all AI models)
 
 ---
 
@@ -178,13 +178,13 @@ python ocean-core/test_multimodal.py
 ### Prerequisites
 
 ```bash
-# Ensure Ollama service is running
-docker ps | grep ollama
+# Ensure CLX service is running
+docker ps | grep clx
 
 # Pull required models
-docker exec kloud-06-ollama ollama pull llava:latest
-docker exec kloud-06-ollama ollama pull whisper:latest
-docker exec kloud-06-ollama ollama pull llama3.1:8b
+docker exec kloud-06-clx clx pull clx.i:latest
+docker exec kloud-06-clx clx pull whisper:latest
+docker exec kloud-06-clx clx pull llama3.1:8b
 ```
 
 ### Deploy
@@ -352,7 +352,7 @@ ocean-core/test_multimodal.py         └→ TESTS
 
 | Task | Status | Details |
 | ---- | ------ | ------- |
-| Vision pipeline | ✅ Done | llava model integration |
+| Vision pipeline | ✅ Done | clx.i model integration |
 | Audio pipeline | ✅ Done | Whisper transcription support |
 | Document pipeline | ✅ Done | Text extraction & reasoning |
 | Reasoning pipeline | ✅ Done | Direct LLM inference |
@@ -437,7 +437,7 @@ curl http://localhost:8031/health
 ## 📋 Deliverables Checklist
 
 - ✅ Core multimodal engine (Python)
-- ✅ Vision pipeline (llava integration)
+- ✅ Vision pipeline (clx.i integration)
 - ✅ Audio pipeline (whisper integration)
 - ✅ Document pipeline (text processing)
 - ✅ Reasoning pipeline (llama integration)
@@ -462,7 +462,7 @@ The multimodal engine demonstrates:
 
 - **Async Python** with FastAPI & httpx
 - **Microservice Architecture** with Docker
-- **LLM Integration** via Ollama API
+- **LLM Integration** via CLX API
 - **Rate Limiting Strategies** for APIs
 - **Error Handling** in production systems
 - **Test-Driven Development** practices

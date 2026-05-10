@@ -7,7 +7,7 @@ Aktivizon TË GJITHA sistemet e avancuara:
 
 1. ResponseOrchestratorV5 - Production Brain
 2. MegaLayerEngine - 14 MILIARD kombinime
-3. OllamaMultiEngine - 5 modele
+3. ClxIEngine - 5 modele
 4. RealAnswerEngine - Deep Knowledge
 5. Translation Node - 72 gjuhë
 6. Knowledge Layer - Platform Intelligence
@@ -35,16 +35,13 @@ _warmup_task: Optional[asyncio.Task] = None
 # ═══════════════════════════════════════════════════════════════════
 # LOGGING
 # ═══════════════════════════════════════════════════════════════════
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(asctime)s] %(name)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(name)s - %(message)s")
 logger = logging.getLogger("OceanCoreFull")
 
 # ═══════════════════════════════════════════════════════════════════
 # CONFIG
 # ═══════════════════════════════════════════════════════════════════
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_HOST = os.getenv("CLX_HOST", os.getenv("OLLAMA_HOST", "http://localhost:11434"))
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 ALBANIAN_DICT_MODE = os.getenv("ALBANIAN_DICT_MODE", "off").lower()
 PORT = int(os.getenv("PORT", "8030"))
@@ -63,6 +60,7 @@ try:
         TOTAL_COMBINATIONS,
         get_mega_layer_engine,
     )
+
     MEGA_LAYERS_AVAILABLE = True
     logger.info(f"✅ MegaLayerEngine loaded - {TOTAL_COMBINATIONS:,} kombinime!")
 except ImportError as e:
@@ -72,6 +70,7 @@ except ImportError as e:
 # 2. Real Answer Engine - Deep Knowledge
 try:
     from real_answer_engine import RealAnswerEngine
+
     REAL_ANSWER_AVAILABLE = True
     logger.info("✅ RealAnswerEngine loaded")
 except ImportError as e:
@@ -81,6 +80,7 @@ except ImportError as e:
 # 3. Service Registry - 31 modules
 try:
     from service_registry import get_service_registry
+
     SERVICE_REGISTRY_AVAILABLE = True
     logger.info("✅ ServiceRegistry loaded")
 except ImportError as e:
@@ -93,6 +93,7 @@ try:
         ALL_ALBANIAN_WORDS,
         get_albanian_response,
     )
+
     ALBANIAN_DICT_AVAILABLE = True
     logger.info(f"✅ Albanian Dictionary loaded - {len(ALL_ALBANIAN_WORDS)} words")
 except ImportError as e:
@@ -102,6 +103,7 @@ except ImportError as e:
 # 5. Knowledge Seeds
 try:
     from knowledge_seeds.core_knowledge import find_matching_seed
+
     KNOWLEDGE_SEEDS_AVAILABLE = True
     logger.info("✅ Knowledge Seeds loaded")
 except ImportError as e:
@@ -114,6 +116,7 @@ try:
         SERVICES,
         route_intent,
     )
+
     KNOWLEDGE_LAYER_AVAILABLE = True
     logger.info(f"✅ Knowledge Layer loaded - {len(SERVICES)} services")
 except ImportError as e:
@@ -124,6 +127,7 @@ except ImportError as e:
 # 7. Enterprise Guard - Security & Behavior Layer
 try:
     from enterprise import get_enterprise_guard
+
     ENTERPRISE_GUARD_AVAILABLE = True
     enterprise_guard = get_enterprise_guard()
     logger.info("✅ Enterprise Guard loaded - 10 security modules")
@@ -136,14 +140,16 @@ except ImportError as e:
 # SYSTEM PROMPT - FULL VERSION with all capabilities
 # ═══════════════════════════════════════════════════════════════════
 
+
 def generate_full_system_prompt() -> str:
     """Generate comprehensive system prompt with all platform knowledge"""
-    
-    services_list = "\n".join([
-        f"- **{svc['name']}**: {svc.get('url', '/modules/' + key)}"
-        for key, svc in SERVICES.items()
-    ]) if SERVICES else "No services loaded"
-    
+
+    services_list = (
+        "\n".join([f"- **{svc['name']}**: {svc.get('url', '/modules/' + key)}" for key, svc in SERVICES.items()])
+        if SERVICES
+        else "No services loaded"
+    )
+
     capabilities = []
     if MEGA_LAYERS_AVAILABLE:
         capabilities.append(f"🧠 MegaLayerEngine: {TOTAL_COMBINATIONS:,} unique layer combinations")
@@ -157,9 +163,9 @@ def generate_full_system_prompt() -> str:
         capabilities.append("🌱 Knowledge Seeds: Core platform knowledge")
     if ENTERPRISE_GUARD_AVAILABLE:
         capabilities.append("🛡️ Enterprise Guard: 10 security & behavior modules")
-    
+
     capabilities_str = "\n".join(capabilities) if capabilities else "Basic mode"
-    
+
     return f"""You are **Curiosity Ocean** 🌊 - The Advanced AI Brain of Kloud Cloud.
 
 ## IDENTITY
@@ -218,6 +224,7 @@ def generate_full_system_prompt() -> str:
 
 You are the most advanced AI assistant on Kloud Cloud - a GLOBAL enterprise platform! 🌊"""
 
+
 SYSTEM_PROMPT = generate_full_system_prompt()
 
 # FAST system prompt for streaming - minimal tokens for quick TTFT
@@ -228,11 +235,7 @@ Respond in the user's language. Start immediately, no preamble."""
 # FASTAPI APP
 # ═══════════════════════════════════════════════════════════════════
 
-app = FastAPI(
-    title="Ocean Core Full API",
-    description="Complete Production Brain with all engines",
-    version="5.0.0"
-)
+app = FastAPI(title="Ocean Core Full API", description="Complete Production Brain with all engines", version="5.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -246,6 +249,7 @@ app.add_middleware(
 # REQUEST/RESPONSE MODELS
 # ═══════════════════════════════════════════════════════════════════
 
+
 class ChatRequest(BaseModel):
     message: str = None
     query: str = None
@@ -255,6 +259,7 @@ class ChatRequest(BaseModel):
     strict_mode: bool = False  # Detyron ndjekjen e rregullave pa devijim
     use_albanian_dictionary: bool = False
 
+
 class ChatResponse(BaseModel):
     response: str
     model: str
@@ -262,6 +267,7 @@ class ChatResponse(BaseModel):
     engines_used: List[str]
     language_detected: str = "en"
     layer_activations: Optional[Dict[str, Any]] = None
+
 
 # ═══════════════════════════════════════════════════════════════════
 # ENGINE INSTANCES (initialized once)
@@ -271,24 +277,25 @@ mega_engine = None
 answer_engine = None
 service_registry = None
 
+
 def initialize_engines():
     """Initialize all engines on startup"""
     global mega_engine, answer_engine, service_registry
-    
+
     if MEGA_LAYERS_AVAILABLE:
         try:
             mega_engine = get_mega_layer_engine()
             logger.info("🚀 MegaLayerEngine initialized")
         except Exception as e:
             logger.error(f"❌ MegaLayerEngine init failed: {e}")
-    
+
     if REAL_ANSWER_AVAILABLE:
         try:
             answer_engine = RealAnswerEngine()
             logger.info("🚀 RealAnswerEngine initialized")
         except Exception as e:
             logger.error(f"❌ RealAnswerEngine init failed: {e}")
-    
+
     if SERVICE_REGISTRY_AVAILABLE:
         try:
             service_registry = get_service_registry()
@@ -296,80 +303,77 @@ def initialize_engines():
         except Exception as e:
             logger.error(f"❌ ServiceRegistry init failed: {e}")
 
+
 # ═══════════════════════════════════════════════════════════════════
 # LANGUAGE DETECTION via Translation Node
 # ═══════════════════════════════════════════════════════════════════
+
 
 async def detect_language(text: str) -> tuple:
     """Detect language using Translation Node (72 languages) - Fast timeout"""
     try:
         async with httpx.AsyncClient(timeout=2.0) as client:  # Fast 2s timeout
-            resp = await client.post(
-                f"{TRANSLATION_NODE}/api/v1/detect",
-                json={"text": text}
-            )
+            resp = await client.post(f"{TRANSLATION_NODE}/api/v1/detect", json={"text": text})
             if resp.status_code == 200:
                 data = resp.json()
-                return (
-                    data.get("detected_language", "en"),
-                    data.get("language_name", "English"),
-                    data.get("confidence", 0.5)
-                )
+                return (data.get("detected_language", "en"), data.get("language_name", "English"), data.get("confidence", 0.5))
     except Exception as e:
         logger.debug(f"Language detection skipped: {e}")  # Debug not warning
     return ("en", "English", 0.5)
+
 
 # ═══════════════════════════════════════════════════════════════════
 # MEGA LAYER PROCESSING
 # ═══════════════════════════════════════════════════════════════════
 
+
 def process_with_mega_layers(query: str) -> Dict[str, Any]:
     """Process query through MegaLayerEngine - uses process_query method"""
     if not MEGA_LAYERS_AVAILABLE or not mega_engine:
         return {"active": False}
-    
+
     try:
         # Correct method: process_query returns (LayerActivation, results_dict)
         activation, results = mega_engine.process_query(query)
         return {
             "active": True,
-            "meta_level": activation.meta_level.value if hasattr(activation.meta_level, 'value') else 0,
-            "consciousness_depth": activation.consciousness_depth if hasattr(activation, 'consciousness_depth') else 0,
-            "emotional_resonance": len(activation.emotional_dimensions) if hasattr(activation, 'emotional_dimensions') else 0,
-            "fractal_depth": activation.fractal_depth if hasattr(activation, 'fractal_depth') else 0,
-            "signature": activation.unique_signature[:16] if hasattr(activation, 'unique_signature') else ""
+            "meta_level": activation.meta_level.value if hasattr(activation.meta_level, "value") else 0,
+            "consciousness_depth": activation.consciousness_depth if hasattr(activation, "consciousness_depth") else 0,
+            "emotional_resonance": len(activation.emotional_dimensions) if hasattr(activation, "emotional_dimensions") else 0,
+            "fractal_depth": activation.fractal_depth if hasattr(activation, "fractal_depth") else 0,
+            "signature": activation.unique_signature[:16] if hasattr(activation, "unique_signature") else "",
         }
     except Exception as e:
         logger.debug(f"MegaLayer skipped: {e}")  # Debug not error
         return {"active": False}
 
+
 # ═══════════════════════════════════════════════════════════════════
 # KNOWLEDGE SEEDS LOOKUP
 # ═══════════════════════════════════════════════════════════════════
+
 
 def find_knowledge_seed(query: str) -> Optional[str]:
     """Find matching knowledge seed for query"""
     if not KNOWLEDGE_SEEDS_AVAILABLE or not find_matching_seed:
         return None
-    
+
     try:
         seed = find_matching_seed(query)
         if seed:
-            return seed.content if hasattr(seed, 'content') else str(seed)
+            return seed.content if hasattr(seed, "content") else str(seed)
     except Exception as e:
         logger.error(f"Knowledge seed error: {e}")
     return None
+
 
 # ═══════════════════════════════════════════════════════════════════
 # STREAMING RESPONSE GENERATOR
 # ═══════════════════════════════════════════════════════════════════
 
+
 async def stream_ollama_response(
-    model: str,
-    messages: list,
-    options: dict,
-    engines_used: list,
-    lang_code: str
+    model: str, messages: list, options: dict, engines_used: list, lang_code: str
 ) -> AsyncGenerator[str, None]:
     """
     Stream response from Ollama word by word.
@@ -384,8 +388,8 @@ async def stream_ollama_response(
                     "model": model,
                     "messages": messages,
                     "stream": True,  # STREAMING ENABLED!
-                    "options": options
-                }
+                    "options": options,
+                },
             ) as response:
                 async for line in response.aiter_lines():
                     if line:
@@ -409,6 +413,7 @@ async def stream_ollama_response(
 # MAIN PROCESSING PIPELINE
 # ═══════════════════════════════════════════════════════════════════
 
+
 async def process_query_full(req: ChatRequest) -> ChatResponse:
     """
     Full processing pipeline using all available engines:
@@ -420,11 +425,11 @@ async def process_query_full(req: ChatRequest) -> ChatResponse:
     """
     start_time = time.time()
     engines_used = []
-    
+
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(status_code=400, detail="message or query required")
-    
+
     # 0. Enterprise Guard - Security & Input Validation
     if ENTERPRISE_GUARD_AVAILABLE and enterprise_guard:
         input_check = enterprise_guard.check_input(prompt)
@@ -437,24 +442,24 @@ async def process_query_full(req: ChatRequest) -> ChatResponse:
                 processing_time=round(time.time() - start_time, 2),
                 tokens_used=0,
                 engines=["EnterpriseGuard:Blocked"],
-                metadata={"security": "blocked", "reason": input_check.get("warnings", [])}
+                metadata={"security": "blocked", "reason": input_check.get("warnings", [])},
             )
         engines_used.append("EnterpriseGuard")
-    
+
     # 1. Detect Language
     lang_code, lang_name, confidence = await detect_language(prompt)
     engines_used.append(f"TranslationNode({lang_code})")
-    
+
     lang_instruction = ""
     if lang_code != "en":
         lang_instruction = f"\n\nIMPORTANT: The user is writing in {lang_name}. You MUST respond in {lang_name}."
-    
+
     # 2. Service Routing
     if KNOWLEDGE_LAYER_AVAILABLE:
         routed_service = route_intent(prompt)
         if routed_service and routed_service in SERVICES:
             engines_used.append(f"ServiceRouter({routed_service})")
-    
+
     # 3. Knowledge Seeds
     seed_context = ""
     if req.use_knowledge_seeds:
@@ -462,7 +467,7 @@ async def process_query_full(req: ChatRequest) -> ChatResponse:
         if seed:
             seed_context = f"\n\nRELEVANT KNOWLEDGE:\n{seed}"
             engines_used.append("KnowledgeSeeds")
-    
+
     # 4. Mega Layer Processing
     layer_activations = None
     mega_context = ""
@@ -471,7 +476,7 @@ async def process_query_full(req: ChatRequest) -> ChatResponse:
         if layer_activations.get("active"):
             mega_context = f"\n\n[Layer Depth: {layer_activations.get('consciousness_depth', 0)}, Emotional: {layer_activations.get('emotional_resonance', 0):.2f}]"
             engines_used.append("MegaLayerEngine")
-    
+
     # 4.5. STRICT MODE - Detyron ndjekjen e rregullave
     strict_instruction = ""
     if req.strict_mode:
@@ -491,7 +496,7 @@ You MUST follow these rules EXACTLY. No exceptions.
 
 VIOLATION OF THESE RULES IS NOT ALLOWED."""
         engines_used.append("StrictMode")
-    
+
     # 4.6. ALBANIAN DICTIONARY - Direct response for Albanian definition queries
     if ALBANIAN_DICT_AVAILABLE and (req.use_albanian_dictionary or ALBANIAN_DICT_MODE in {"on", "auto"}):
         # Check if we have a direct Albanian answer (for definitions, greetings, etc.)
@@ -506,12 +511,12 @@ VIOLATION OF THESE RULES IS NOT ALLOWED."""
                 processing_time=round(elapsed, 2),
                 engines_used=engines_used,
                 language_detected="sq",
-                layer_activations=None
+                layer_activations=None,
             )
-    
+
     # 5. Build enhanced system prompt
     enhanced_prompt = SYSTEM_PROMPT + lang_instruction + seed_context + mega_context + strict_instruction
-    
+
     # 6. Call Ollama - 60s timeout, optimized for speed
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
@@ -519,10 +524,7 @@ VIOLATION OF THESE RULES IS NOT ALLOWED."""
                 f"{OLLAMA_HOST}/api/chat",
                 json={
                     "model": req.model or MODEL,
-                    "messages": [
-                        {"role": "system", "content": enhanced_prompt},
-                        {"role": "user", "content": prompt}
-                    ],
+                    "messages": [{"role": "system", "content": enhanced_prompt}, {"role": "user", "content": prompt}],
                     "stream": False,
                     "options": {
                         "temperature": 0.7,
@@ -533,40 +535,42 @@ VIOLATION OF THESE RULES IS NOT ALLOWED."""
                         "num_keep": 0,
                         "mirostat": 0,
                         "repeat_last_n": 64,
-                        "stop": []
-                    }
-                }
+                        "stop": [],
+                    },
+                },
             )
-            
+
             if resp.status_code != 200:
                 raise HTTPException(status_code=resp.status_code, detail="Ollama error")
-            
+
             data = resp.json()
             response_text = data.get("message", {}).get("content", "No response")
             engines_used.append(f"Ollama({req.model or MODEL})")
-            
+
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="Ollama timeout")
     except Exception as e:
         logger.error(f"Ollama error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
     elapsed = time.time() - start_time
-    
+
     logger.info(f"✅ [{lang_code}] {elapsed:.1f}s - Engines: {', '.join(engines_used)}")
-    
+
     return ChatResponse(
         response=response_text,
         model=req.model or MODEL,
         processing_time=round(elapsed, 2),
         engines_used=engines_used,
         language_detected=lang_code,
-        layer_activations=layer_activations
+        layer_activations=layer_activations,
     )
+
 
 # ═══════════════════════════════════════════════════════════════════
 # API ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -578,6 +582,7 @@ async def startup_event():
     logger.info(f"🤖 Model: {MODEL}")
     logger.info(f"🌍 Translation Node: {TRANSLATION_NODE}")
 
+
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on shutdown"""
@@ -585,6 +590,7 @@ async def shutdown_event():
     if _warmup_task:
         _warmup_task.cancel()
         logger.info("🛑 Warmup task stopped")
+
 
 @app.get("/")
 async def root():
@@ -599,17 +605,15 @@ async def root():
             "service_registry": SERVICE_REGISTRY_AVAILABLE,
             "albanian_dict": ALBANIAN_DICT_AVAILABLE,
             "knowledge_seeds": KNOWLEDGE_SEEDS_AVAILABLE,
-            "knowledge_layer": KNOWLEDGE_LAYER_AVAILABLE
-        }
+            "knowledge_layer": KNOWLEDGE_LAYER_AVAILABLE,
+        },
     }
+
 
 @app.get("/health")
 async def health():
-    return {
-        "status": "healthy",
-        "ollama": OLLAMA_HOST,
-        "translation_node": TRANSLATION_NODE
-    }
+    return {"status": "healthy", "ollama": OLLAMA_HOST, "translation_node": TRANSLATION_NODE}
+
 
 @app.get("/api/v1/status")
 async def status():
@@ -618,39 +622,39 @@ async def status():
         "service": "Ocean Core Full",
         "version": "5.0.0",
         "model": MODEL,
-        "engines_active": sum([
-            MEGA_LAYERS_AVAILABLE,
-            REAL_ANSWER_AVAILABLE,
-            SERVICE_REGISTRY_AVAILABLE,
-            ALBANIAN_DICT_AVAILABLE,
-            KNOWLEDGE_SEEDS_AVAILABLE,
-            KNOWLEDGE_LAYER_AVAILABLE,
-            ENTERPRISE_GUARD_AVAILABLE
-        ]),
+        "engines_active": sum(
+            [
+                MEGA_LAYERS_AVAILABLE,
+                REAL_ANSWER_AVAILABLE,
+                SERVICE_REGISTRY_AVAILABLE,
+                ALBANIAN_DICT_AVAILABLE,
+                KNOWLEDGE_SEEDS_AVAILABLE,
+                KNOWLEDGE_LAYER_AVAILABLE,
+                ENTERPRISE_GUARD_AVAILABLE,
+            ]
+        ),
         "total_layer_combinations": TOTAL_COMBINATIONS if MEGA_LAYERS_AVAILABLE else 0,
-        "enterprise_guard": enterprise_guard.get_status() if ENTERPRISE_GUARD_AVAILABLE and enterprise_guard else None
+        "enterprise_guard": enterprise_guard.get_status() if ENTERPRISE_GUARD_AVAILABLE and enterprise_guard else None,
     }
+
 
 @app.get("/api/v1/enterprise/status")
 async def enterprise_status():
     """Enterprise Guard status and diagnostics"""
     if not ENTERPRISE_GUARD_AVAILABLE or not enterprise_guard:
         return {"status": "not_available", "message": "Enterprise Guard not loaded"}
-    
-    return {
-        "status": "active",
-        **enterprise_guard.get_status()
-    }
+
+    return {"status": "active", **enterprise_guard.get_status()}
+
 
 @app.get("/api/v1/enterprise/contract")
 async def enterprise_contract():
     """Get the behavior contract text"""
     if not ENTERPRISE_GUARD_AVAILABLE or not enterprise_guard:
         return {"error": "Enterprise Guard not loaded"}
-    
-    return {
-        "contract": enterprise_guard.contract.get_contract_text()
-    }
+
+    return {"contract": enterprise_guard.contract.get_contract_text()}
+
 
 @app.post("/api/v1/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
@@ -667,51 +671,47 @@ async def chat_stream(req: ChatRequest):
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(status_code=400, detail="message or query required")
-    
+
     # Quick language detection inline (no async overhead)
     lang_hint = ""
     if any(word in prompt.lower() for word in ["çfarë", "si", "pse", "ku", "kur", "përse", "një", "është"]):
         lang_hint = " Përgjigju në shqip."
     elif any(word in prompt.lower() for word in ["was", "wie", "warum", "wo", "wann"]):
         lang_hint = " Antworte auf Deutsch."
-    
+
     # Albanian Dictionary - Direct response (fastest path)
     if ALBANIAN_DICT_AVAILABLE:
         albanian_response = get_albanian_response(prompt)
         if albanian_response:
             logger.info(f"🇦🇱 Albanian Dict direct: {prompt[:40]}...")
+
             async def albanian_stream():
                 yield albanian_response
+
             return StreamingResponse(albanian_stream(), media_type="text/plain")
-    
+
     # Build FAST prompt (minimal processing!)
-    messages = [
-        {"role": "system", "content": FAST_SYSTEM_PROMPT + lang_hint},
-        {"role": "user", "content": prompt}
-    ]
-    
+    messages = [{"role": "system", "content": FAST_SYSTEM_PROMPT + lang_hint}, {"role": "user", "content": prompt}]
+
     # FAST options - optimized for quick TTFT!
     fast_options = {
         "temperature": 0.7,
-        "num_ctx": 2048,       # Reduced from 8192!
-        "num_predict": 1024,   # Limit response length
-        "top_k": 40,           # Faster sampling
+        "num_ctx": 2048,  # Reduced from 8192!
+        "num_predict": 1024,  # Limit response length
+        "top_k": 40,  # Faster sampling
         "top_p": 0.9,
         "repeat_penalty": 1.1,
     }
-    
+
     logger.info(f"🚀 FAST streaming: {prompt[:40]}...")
-    
+
     return StreamingResponse(
         stream_ollama_response(
-            model=req.model or MODEL,
-            messages=messages,
-            options=fast_options,
-            engines_used=["FastStream"],
-            lang_code="auto"
+            model=req.model or MODEL, messages=messages, options=fast_options, engines_used=["FastStream"], lang_code="auto"
         ),
-        media_type="text/plain"
+        media_type="text/plain",
     )
+
 
 @app.post("/api/v1/query", response_model=ChatResponse)
 async def query(req: ChatRequest):
@@ -728,7 +728,7 @@ EXPERT_DOMAINS = {
     "cybersecurity": "You are a cybersecurity expert specializing in encryption, vulnerabilities, and security protocols.",
     "bioinformatics": "You are a bioinformatics expert specializing in genetics, DNA analysis, and protein structures.",
     "datascience": "You are a data science expert specializing in statistics, analytics, and visualization.",
-    "marine": "You are a marine biologist specializing in ocean ecosystems and marine life."
+    "marine": "You are a marine biologist specializing in ocean ecosystems and marine life.",
 }
 
 
@@ -740,20 +740,20 @@ async def chat_specialized(req: ChatRequest):
     """
     start_time = time.time()
     engines_used = []
-    
+
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(status_code=400, detail="message or query required")
-    
+
     # Detect language
     lang_code, lang_name, confidence = await detect_language(prompt)
     engines_used.append(f"TranslationNode({lang_code})")
-    
+
     # Determine expertise domain from request or auto-detect
-    domain = getattr(req, 'domain', None) or 'ai'  # Default to AI
-    expert_persona = EXPERT_DOMAINS.get(domain, EXPERT_DOMAINS['ai'])
+    domain = getattr(req, "domain", None) or "ai"  # Default to AI
+    expert_persona = EXPERT_DOMAINS.get(domain, EXPERT_DOMAINS["ai"])
     engines_used.append(f"ExpertDomain({domain})")
-    
+
     # Albanian Dictionary check first
     if ALBANIAN_DICT_AVAILABLE:
         albanian_response = get_albanian_response(prompt)
@@ -766,19 +766,19 @@ async def chat_specialized(req: ChatRequest):
                 processing_time=round(elapsed, 2),
                 engines_used=engines_used,
                 language_detected="sq",
-                layer_activations=None
+                layer_activations=None,
             )
-    
+
     # Build expert system prompt
     lang_instruction = ""
     if lang_code != "en":
         lang_instruction = f"\n\nIMPORTANT: Respond in {lang_name}."
-    
+
     expert_prompt = f"""{expert_persona}
 
 You provide expert-level, research-backed answers. Be precise, technical, and comprehensive.
 {lang_instruction}"""
-    
+
     # Call Ollama with expert context
     try:
         async with httpx.AsyncClient(timeout=90.0) as client:
@@ -786,86 +786,67 @@ You provide expert-level, research-backed answers. Be precise, technical, and co
                 f"{OLLAMA_HOST}/api/chat",
                 json={
                     "model": req.model or MODEL,
-                    "messages": [
-                        {"role": "system", "content": expert_prompt},
-                        {"role": "user", "content": prompt}
-                    ],
+                    "messages": [{"role": "system", "content": expert_prompt}, {"role": "user", "content": prompt}],
                     "stream": False,
                     "options": {
                         "temperature": 0.5,  # Lower for more factual
                         "num_ctx": 8192,
                         "repeat_penalty": 1.1,
                         "top_p": 0.85,
-                        "num_predict": 1024  # Limit response length
-                    }
-                }
+                        "num_predict": 1024,  # Limit response length
+                    },
+                },
             )
-            
+
             if resp.status_code != 200:
                 raise HTTPException(status_code=resp.status_code, detail="Ollama error")
-            
+
             data = resp.json()
             response_text = data.get("message", {}).get("content", "No response")
             engines_used.append(f"Ollama({req.model or MODEL})")
-            
+
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="Expert analysis timeout - question too complex")
     except Exception as e:
         logger.error(f"Specialized chat error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
     elapsed = time.time() - start_time
     logger.info(f"🎓 [{domain}] [{lang_code}] {elapsed:.1f}s - Engines: {', '.join(engines_used)}")
-    
+
     return ChatResponse(
         response=response_text,
         model=req.model or MODEL,
         processing_time=round(elapsed, 2),
         engines_used=engines_used,
         language_detected=lang_code,
-        layer_activations=None
+        layer_activations=None,
     )
 
 
 @app.get("/api/v1/services")
 async def list_services():
     """List all available services"""
-    return {
-        "total": len(SERVICES),
-        "services": SERVICES
-    }
+    return {"total": len(SERVICES), "services": SERVICES}
+
 
 @app.get("/api/v1/engines")
 async def list_engines():
     """List all available engines and their status"""
     return {
-        "mega_layer_engine": {
-            "available": MEGA_LAYERS_AVAILABLE,
-            "combinations": TOTAL_COMBINATIONS if MEGA_LAYERS_AVAILABLE else 0
-        },
-        "real_answer_engine": {
-            "available": REAL_ANSWER_AVAILABLE
-        },
-        "service_registry": {
-            "available": SERVICE_REGISTRY_AVAILABLE
-        },
-        "albanian_dictionary": {
-            "available": ALBANIAN_DICT_AVAILABLE,
-            "words": len(ALL_ALBANIAN_WORDS) if ALBANIAN_DICT_AVAILABLE else 0
-        },
-        "knowledge_seeds": {
-            "available": KNOWLEDGE_SEEDS_AVAILABLE
-        },
-        "knowledge_layer": {
-            "available": KNOWLEDGE_LAYER_AVAILABLE,
-            "services": len(SERVICES)
-        }
+        "mega_layer_engine": {"available": MEGA_LAYERS_AVAILABLE, "combinations": TOTAL_COMBINATIONS if MEGA_LAYERS_AVAILABLE else 0},
+        "real_answer_engine": {"available": REAL_ANSWER_AVAILABLE},
+        "service_registry": {"available": SERVICE_REGISTRY_AVAILABLE},
+        "albanian_dictionary": {"available": ALBANIAN_DICT_AVAILABLE, "words": len(ALL_ALBANIAN_WORDS) if ALBANIAN_DICT_AVAILABLE else 0},
+        "knowledge_seeds": {"available": KNOWLEDGE_SEEDS_AVAILABLE},
+        "knowledge_layer": {"available": KNOWLEDGE_LAYER_AVAILABLE, "services": len(SERVICES)},
     }
 
 
 # ═══════════════════════════════════════════════════════════════════
 # RESEARCH & ARCHIVE ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════
+
 
 @app.get("/api/v1/arxiv/{query}")
 async def search_arxiv(query: str, max_results: int = 10):
@@ -875,60 +856,59 @@ async def search_arxiv(query: str, max_results: int = 10):
     """
     try:
         import urllib.parse
+
         encoded_query = urllib.parse.quote(query)
         arxiv_url = f"https://export.arxiv.org/api/query?search_query=all:{encoded_query}&start=0&max_results={max_results}"
-        
+
         headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
             response = await client.get(arxiv_url, headers=headers)
-            
+
         if response.status_code != 200:
             return {"error": "ArXiv API error", "status": response.status_code}
-        
+
         # Parse XML response
         import xml.etree.ElementTree as ET
+
         root = ET.fromstring(response.text)
-        
+
         # ArXiv uses Atom namespace
-        ns = {'atom': 'http://www.w3.org/2005/Atom'}
-        
+        ns = {"atom": "http://www.w3.org/2005/Atom"}
+
         papers = []
-        for entry in root.findall('atom:entry', ns):
-            title_el = entry.find('atom:title', ns)
-            summary_el = entry.find('atom:summary', ns)
-            published_el = entry.find('atom:published', ns)
-            id_el = entry.find('atom:id', ns)
-            
+        for entry in root.findall("atom:entry", ns):
+            title_el = entry.find("atom:title", ns)
+            summary_el = entry.find("atom:summary", ns)
+            published_el = entry.find("atom:published", ns)
+            id_el = entry.find("atom:id", ns)
+
             # Get authors
             authors = []
-            for author in entry.findall('atom:author', ns):
-                name_el = author.find('atom:name', ns)
+            for author in entry.findall("atom:author", ns):
+                name_el = author.find("atom:name", ns)
                 if name_el is not None:
                     authors.append(name_el.text)
-            
+
             # Get categories
             categories = []
-            for cat in entry.findall('atom:category', ns):
-                term = cat.get('term')
+            for cat in entry.findall("atom:category", ns):
+                term = cat.get("term")
                 if term:
                     categories.append(term)
-            
-            papers.append({
-                "title": title_el.text.strip() if title_el is not None else "",
-                "summary": summary_el.text.strip()[:500] if summary_el is not None else "",
-                "authors": authors[:5],  # First 5 authors
-                "published": published_el.text if published_el is not None else "",
-                "url": id_el.text if id_el is not None else "",
-                "categories": categories[:3]
-            })
-        
-        return {
-            "query": query,
-            "total_results": len(papers),
-            "papers": papers,
-            "source": "arxiv.org"
-        }
-        
+
+            papers.append(
+                {
+                    "title": title_el.text.strip() if title_el is not None else "",
+                    "summary": summary_el.text.strip()[:500] if summary_el is not None else "",
+                    "authors": authors[:5],  # First 5 authors
+                    "published": published_el.text if published_el is not None else "",
+                    "url": id_el.text if id_el is not None else "",
+                    "categories": categories[:3],
+                }
+            )
+
+        return {"query": query, "total_results": len(papers), "papers": papers, "source": "arxiv.org"}
+
     except Exception as e:
         logger.error(f"ArXiv search error: {e}")
         return {"error": str(e), "query": query}
@@ -942,42 +922,40 @@ async def search_wikipedia(query: str, limit: int = 10):
     """
     try:
         import urllib.parse
+
         encoded_query = urllib.parse.quote(query)
-        
+
         # Wikipedia API for search
         wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={encoded_query}&srlimit={limit}&format=json"
-        
+
         headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
             response = await client.get(wiki_url, headers=headers)
-        
+
         if response.status_code != 200:
             return {"error": "Wikipedia API error", "status": response.status_code}
-        
+
         data = response.json()
         search_results = data.get("query", {}).get("search", [])
-        
+
         results = []
         for item in search_results:
             # Clean snippet from HTML
             snippet = item.get("snippet", "")
-            snippet = snippet.replace("<span class=\"searchmatch\">", "").replace("</span>", "")
-            
-            results.append({
-                "title": item.get("title", ""),
-                "snippet": snippet,
-                "pageid": item.get("pageid"),
-                "wordcount": item.get("wordcount", 0),
-                "url": f"https://en.wikipedia.org/wiki/{urllib.parse.quote(item.get('title', '').replace(' ', '_'))}"
-            })
-        
-        return {
-            "query": query,
-            "total_results": len(results),
-            "results": results,
-            "source": "wikipedia.org"
-        }
-        
+            snippet = snippet.replace('<span class="searchmatch">', "").replace("</span>", "")
+
+            results.append(
+                {
+                    "title": item.get("title", ""),
+                    "snippet": snippet,
+                    "pageid": item.get("pageid"),
+                    "wordcount": item.get("wordcount", 0),
+                    "url": f"https://en.wikipedia.org/wiki/{urllib.parse.quote(item.get('title', '').replace(' ', '_'))}",
+                }
+            )
+
+        return {"query": query, "total_results": len(results), "results": results, "source": "wikipedia.org"}
+
     except Exception as e:
         logger.error(f"Wikipedia search error: {e}")
         return {"error": str(e), "query": query}
@@ -991,60 +969,60 @@ async def search_pubmed(query: str, max_results: int = 10):
     """
     try:
         import urllib.parse
+
         encoded_query = urllib.parse.quote(query)
-        
+
         # Step 1: Search for IDs
-        search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={encoded_query}&retmax={max_results}&retmode=json"
-        
+        search_url = (
+            f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={encoded_query}&retmax={max_results}&retmode=json"
+        )
+
         headers = {"User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)"}
         async with httpx.AsyncClient(timeout=20.0, follow_redirects=True) as client:
             search_response = await client.get(search_url, headers=headers)
-        
+
         if search_response.status_code != 200:
             return {"error": "PubMed search error", "status": search_response.status_code}
-        
+
         search_data = search_response.json()
         id_list = search_data.get("esearchresult", {}).get("idlist", [])
-        
+
         if not id_list:
             return {"query": query, "total_results": 0, "articles": [], "source": "pubmed.ncbi.nlm.nih.gov"}
-        
+
         # Step 2: Fetch article details
         ids_str = ",".join(id_list)
         fetch_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id={ids_str}&retmode=json"
-        
+
         async with httpx.AsyncClient(timeout=20.0, follow_redirects=True) as client:
             fetch_response = await client.get(fetch_url, headers=headers)
-        
+
         if fetch_response.status_code != 200:
             return {"error": "PubMed fetch error", "status": fetch_response.status_code}
-        
+
         fetch_data = fetch_response.json()
         result_data = fetch_data.get("result", {})
-        
+
         articles = []
         for pmid in id_list:
             article = result_data.get(pmid, {})
             if isinstance(article, dict):
                 authors = article.get("authors", [])
                 author_names = [a.get("name", "") for a in authors[:5]] if isinstance(authors, list) else []
-                
-                articles.append({
-                    "pmid": pmid,
-                    "title": article.get("title", ""),
-                    "authors": author_names,
-                    "source": article.get("source", ""),
-                    "pubdate": article.get("pubdate", ""),
-                    "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
-                })
-        
-        return {
-            "query": query,
-            "total_results": len(articles),
-            "articles": articles,
-            "source": "pubmed.ncbi.nlm.nih.gov"
-        }
-        
+
+                articles.append(
+                    {
+                        "pmid": pmid,
+                        "title": article.get("title", ""),
+                        "authors": author_names,
+                        "source": article.get("source", ""),
+                        "pubdate": article.get("pubdate", ""),
+                        "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
+                    }
+                )
+
+        return {"query": query, "total_results": len(articles), "articles": articles, "source": "pubmed.ncbi.nlm.nih.gov"}
+
     except Exception as e:
         logger.error(f"PubMed search error: {e}")
         return {"error": str(e), "query": query}
@@ -1071,8 +1049,8 @@ async def list_data_sources():
                     {"name": "PLOS ONE", "url": "https://plosone.org", "type": "open-access"},
                     {"name": "bioRxiv", "url": "https://biorxiv.org", "type": "biology-preprints"},
                     {"name": "medRxiv", "url": "https://medrxiv.org", "type": "medical-preprints"},
-                    {"name": "SSRN", "url": "https://ssrn.com", "type": "social-sciences"}
-                ]
+                    {"name": "SSRN", "url": "https://ssrn.com", "type": "social-sciences"},
+                ],
             },
             "encyclopedias": {
                 "count": 156,
@@ -1080,8 +1058,8 @@ async def list_data_sources():
                     {"name": "Wikipedia", "url": "https://wikipedia.org", "languages": 300, "articles": "60M+"},
                     {"name": "Britannica", "url": "https://britannica.com", "type": "curated"},
                     {"name": "Stanford Encyclopedia of Philosophy", "url": "https://plato.stanford.edu", "type": "philosophy"},
-                    {"name": "Scholarpedia", "url": "https://scholarpedia.org", "type": "peer-reviewed"}
-                ]
+                    {"name": "Scholarpedia", "url": "https://scholarpedia.org", "type": "peer-reviewed"},
+                ],
             },
             "government_data": {
                 "count": 1523,
@@ -1093,8 +1071,8 @@ async def list_data_sources():
                     {"name": "UN Data", "url": "https://data.un.org"},
                     {"name": "OECD Data", "url": "https://data.oecd.org"},
                     {"name": "Eurostat", "url": "https://ec.europa.eu/eurostat"},
-                    {"name": "INSTAT Albania", "url": "https://instat.gov.al", "country": "Albania"}
-                ]
+                    {"name": "INSTAT Albania", "url": "https://instat.gov.al", "country": "Albania"},
+                ],
             },
             "code_repositories": {
                 "count": 892,
@@ -1106,8 +1084,8 @@ async def list_data_sources():
                     {"name": "npm", "url": "https://npmjs.com", "packages": "2M+"},
                     {"name": "PyPI", "url": "https://pypi.org", "packages": "450K+"},
                     {"name": "crates.io", "url": "https://crates.io", "type": "rust"},
-                    {"name": "Maven Central", "url": "https://search.maven.org", "type": "java"}
-                ]
+                    {"name": "Maven Central", "url": "https://search.maven.org", "type": "java"},
+                ],
             },
             "news_media": {
                 "count": 1247,
@@ -1118,8 +1096,8 @@ async def list_data_sources():
                     {"name": "The Guardian", "url": "https://theguardian.com"},
                     {"name": "New York Times", "url": "https://nytimes.com"},
                     {"name": "Der Spiegel", "url": "https://spiegel.de", "language": "German"},
-                    {"name": "Le Monde", "url": "https://lemonde.fr", "language": "French"}
-                ]
+                    {"name": "Le Monde", "url": "https://lemonde.fr", "language": "French"},
+                ],
             },
             "ai_ml_datasets": {
                 "count": 582,
@@ -1129,22 +1107,19 @@ async def list_data_sources():
                     {"name": "UCI ML Repository", "url": "https://archive.ics.uci.edu"},
                     {"name": "Google Dataset Search", "url": "https://datasetsearch.research.google.com"},
                     {"name": "Papers With Code", "url": "https://paperswithcode.com"},
-                    {"name": "OpenML", "url": "https://openml.org"}
-                ]
-            }
+                    {"name": "OpenML", "url": "https://openml.org"},
+                ],
+            },
         },
-        "api_endpoints": {
-            "arxiv": "/api/v1/arxiv/{query}",
-            "wikipedia": "/api/v1/wiki/{query}",
-            "pubmed": "/api/v1/pubmed/{query}"
-        },
-        "powered_by": "Curiosity Ocean v5.0.0"
+        "api_endpoints": {"arxiv": "/api/v1/arxiv/{query}", "wikipedia": "/api/v1/wiki/{query}", "pubmed": "/api/v1/pubmed/{query}"},
+        "powered_by": "Curiosity Ocean v5.0.0",
     }
 
 
 # ═══════════════════════════════════════════════════════════════════
 # WEB BROWSING & SEARCH ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════
+
 
 @app.get("/api/v1/browse")
 async def browse_webpage(url: str, max_chars: int = 8000):
@@ -1153,56 +1128,50 @@ async def browse_webpage(url: str, max_chars: int = 8000):
     Returns clean text for AI processing.
     """
     try:
-        if not url.startswith(('http://', 'https://')):
-            url = 'https://' + url
-        
+        if not url.startswith(("http://", "https://")):
+            url = "https://" + url
+
         headers = {
             "User-Agent": "Kloud-Ocean/5.0 (research@kloud.com)",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9"
+            "Accept-Language": "en-US,en;q=0.9",
         }
-        
+
         # verify=False for Docker SSL issues, follow_redirects for 30x
         async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=False) as client:
             response = await client.get(url, headers=headers)
-        
+
         if response.status_code != 200:
             return {"error": f"Failed to fetch URL: {response.status_code}", "url": url}
-        
+
         html = response.text
-        
+
         # Simple HTML to text extraction
         import re
+
         # Remove script and style
-        html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        html = re.sub(r'<nav[^>]*>.*?</nav>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        html = re.sub(r'<footer[^>]*>.*?</footer>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        
+        html = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL | re.IGNORECASE)
+        html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL | re.IGNORECASE)
+        html = re.sub(r"<nav[^>]*>.*?</nav>", "", html, flags=re.DOTALL | re.IGNORECASE)
+        html = re.sub(r"<footer[^>]*>.*?</footer>", "", html, flags=re.DOTALL | re.IGNORECASE)
+
         # Extract title
-        title_match = re.search(r'<title[^>]*>(.*?)</title>', html, re.IGNORECASE | re.DOTALL)
+        title_match = re.search(r"<title[^>]*>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
         title = title_match.group(1).strip() if title_match else url
-        
+
         # Extract meta description
         desc_match = re.search(r'<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']+)["\']', html, re.IGNORECASE)
         description = desc_match.group(1) if desc_match else ""
-        
+
         # Remove all HTML tags
-        text = re.sub(r'<[^>]+>', ' ', html)
+        text = re.sub(r"<[^>]+>", " ", html)
         # Normalize whitespace
-        text = re.sub(r'\s+', ' ', text).strip()
+        text = re.sub(r"\s+", " ", text).strip()
         # Truncate
         text = text[:max_chars]
-        
-        return {
-            "url": url,
-            "title": title,
-            "description": description,
-            "content": text,
-            "char_count": len(text),
-            "status": "success"
-        }
-        
+
+        return {"url": url, "title": title, "description": description, "content": text, "char_count": len(text), "status": "success"}
+
     except Exception as e:
         logger.error(f"Browse error: {e}")
         return {"error": str(e), "url": url}
@@ -1216,67 +1185,60 @@ async def web_search(q: str, num: int = 5):
     """
     try:
         import urllib.parse
+
         encoded_query = urllib.parse.quote(q)
-        
+
         # DuckDuckGo HTML search
         search_url = f"https://html.duckduckgo.com/html/?q={encoded_query}"
-        
+
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml",
-            "Accept-Language": "en-US,en;q=0.9"
+            "Accept-Language": "en-US,en;q=0.9",
         }
-        
+
         # verify=False for Docker SSL issues
         async with httpx.AsyncClient(timeout=15.0, follow_redirects=True, verify=False) as client:
             response = await client.get(search_url, headers=headers)
-        
+
         if response.status_code != 200:
             return {"error": "Search failed", "status": response.status_code}
-        
+
         html = response.text
-        
+
         # Parse DuckDuckGo results
         import re
+
         results = []
-        
+
         # Find result blocks
         result_pattern = r'<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>(.*?)</a>.*?<a[^>]*class="result__snippet"[^>]*>(.*?)</a>'
         matches = re.findall(result_pattern, html, re.DOTALL | re.IGNORECASE)
-        
+
         for match in matches[:num]:
             url = match[0]
             # DuckDuckGo wraps URLs - extract actual URL
-            if 'uddg=' in url:
-                url_match = re.search(r'uddg=([^&]+)', url)
+            if "uddg=" in url:
+                url_match = re.search(r"uddg=([^&]+)", url)
                 if url_match:
                     url = urllib.parse.unquote(url_match.group(1))
-            
-            title = re.sub(r'<[^>]+>', '', match[1]).strip()
-            snippet = re.sub(r'<[^>]+>', '', match[2]).strip()
-            
+
+            title = re.sub(r"<[^>]+>", "", match[1]).strip()
+            snippet = re.sub(r"<[^>]+>", "", match[2]).strip()
+
             if url and title:
-                results.append({
-                    "title": title,
-                    "url": url,
-                    "snippet": snippet
-                })
-        
+                results.append({"title": title, "url": url, "snippet": snippet})
+
         # If no results from pattern, try simpler extraction
         if not results:
             simple_pattern = r'<a[^>]*href="(https?://[^"]+)"[^>]*>([^<]+)</a>'
             for match in re.findall(simple_pattern, html)[:num]:
                 url, title = match
-                if 'duckduckgo' not in url.lower() and len(title) > 5:
+                if "duckduckgo" not in url.lower() and len(title) > 5:
                     results.append({"title": title, "url": url, "snippet": ""})
-        
-        return {
-            "query": q,
-            "total_results": len(results),
-            "results": results,
-            "source": "duckduckgo"
-        }
-        
+
+        return {"query": q, "total_results": len(results), "results": results, "source": "duckduckgo"}
+
     except Exception as e:
         logger.error(f"Search error: {e}")
         return {"error": str(e), "query": q}
@@ -1313,11 +1275,11 @@ If the content doesn't contain the answer, say so honestly."""
                 "stream": False,
                 "options": {
                     "num_predict": 4000,  # Longer responses for web content
-                    "temperature": 0.7
-                }
-            }
+                    "temperature": 0.7,
+                },
+            },
         )
-        
+
     if response.status_code == 200:
         data = response.json()
         return data.get("response", "I couldn't generate a response.")
@@ -1334,52 +1296,50 @@ async def chat_with_webpage(request: WebChatRequest):
     try:
         # First, browse the page
         browse_result = await browse_webpage(request.url, max_chars=10000)
-        
+
         if "error" in browse_result:
             return {"error": browse_result["error"], "url": request.url}
-        
+
         page_content = browse_result.get("content", "")
         page_title = browse_result.get("title", request.url)
-        
+
         if not page_content:
             return {"error": "Could not extract content from page", "url": request.url}
-        
+
         # ELASTIC: 3 retry attempts with increasing timeouts
         timeouts = [120.0, 240.0, 360.0]
         answer = None
         attempt = 0
-        
+
         for timeout in timeouts:
             attempt += 1
             try:
                 logger.info(f"[Web Chat] Attempt {attempt}/3 with {timeout}s timeout for {request.url}")
-                answer = await get_web_chat_response(
-                    request.url, request.message, page_content, page_title, timeout
-                )
+                answer = await get_web_chat_response(request.url, request.message, page_content, page_title, timeout)
                 logger.info(f"[Web Chat] Success on attempt {attempt}")
                 break
             except Exception as e:
                 logger.warning(f"[Web Chat] Attempt {attempt} failed: {e}")
                 if attempt < len(timeouts):
                     await asyncio.sleep(1)  # Brief pause before retry
-        
+
         # If all attempts failed, return partial response with page summary
         if answer is None:
             logger.error(f"[Web Chat] All 3 attempts failed for {request.url}")
             answer = f"⚠️ LLM response timed out after 3 attempts.\n\n**Page Summary:**\n{page_title}\n\n{page_content[:1000]}..."
-        
+
         return {
             "url": request.url,
             "title": page_title,
             "question": request.message,
             "answer": answer,
             "response": answer,  # Also provide as 'response' for frontend compatibility
-            "message": answer,   # Also provide as 'message' for frontend compatibility
+            "message": answer,  # Also provide as 'message' for frontend compatibility
             "content_length": len(page_content),
             "status": "success" if "timed out" not in answer else "partial",
-            "attempts": attempt
+            "attempts": attempt,
         }
-        
+
     except Exception as e:
         logger.error(f"Chat browse error: {e}")
         return {"error": str(e), "url": request.url}
@@ -1390,24 +1350,25 @@ async def chat_with_webpage_stream(request: WebChatRequest):
     """
     SSE Streaming chat about a webpage - real-time token delivery.
     """
+
     async def generate():
         try:
             # First, browse the page
             browse_result = await browse_webpage(request.url, max_chars=10000)
-            
+
             if "error" in browse_result:
                 yield f"data: {json.dumps({'error': browse_result['error']})}\n\n"
                 return
-            
+
             page_content = browse_result.get("content", "")
             page_title = browse_result.get("title", request.url)
-            
+
             yield f"data: {json.dumps({'status': 'browsing', 'title': page_title, 'chars': len(page_content)})}\n\n"
-            
+
             if not page_content:
                 yield f"data: {json.dumps({'error': 'Could not extract content from page'})}\n\n"
                 return
-            
+
             system_prompt = f"""You are a helpful assistant analyzing a webpage.
 
 Page Title: {page_title}
@@ -1419,7 +1380,7 @@ Page Content:
 Answer the user's question based on this webpage content. Be concise, accurate, and helpful."""
 
             yield f"data: {json.dumps({'status': 'thinking'})}\n\n"
-            
+
             # Stream from Ollama
             async with httpx.AsyncClient(timeout=300.0) as client:
                 async with client.stream(
@@ -1430,8 +1391,8 @@ Answer the user's question based on this webpage content. Be concise, accurate, 
                         "prompt": request.message,
                         "system": system_prompt,
                         "stream": True,
-                        "options": {"num_predict": 4000, "temperature": 0.7}
-                    }
+                        "options": {"num_predict": 4000, "temperature": 0.7},
+                    },
                 ) as response:
                     full_response = ""
                     async for line in response.aiter_lines():
@@ -1446,17 +1407,18 @@ Answer the user's question based on this webpage content. Be concise, accurate, 
                                     yield f"data: {json.dumps({'status': 'complete', 'total_chars': len(full_response)})}\n\n"
                             except json.JSONDecodeError:
                                 pass
-                                
+
         except Exception as e:
             logger.error(f"Stream chat browse error: {e}")
             yield f"data: {json.dumps({'error': str(e), 'status': 'error'})}\n\n"
-    
+
     return StreamingResponse(generate(), media_type="text/event-stream")
 
 
 # ═══════════════════════════════════════════════════════════════════
 # ZÜRICH ENGINE - 9-Stage Deterministic Reasoning
 # ═══════════════════════════════════════════════════════════════════
+
 
 class ZurichRequest(BaseModel):
     prompt: str
@@ -1469,12 +1431,12 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
     Based on Harmonic Trinity's Zürich Engine.
     """
     start_time = time.time()
-    
+
     # Stage 1: INTAKE - Parse input type
     words = input_text.split()
     word_count = len(words)
     char_count = len(input_text)
-    
+
     if input_text.endswith("?"):
         input_type = "question"
     elif input_text.endswith("!"):
@@ -1483,26 +1445,15 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
         input_type = "command"
     else:
         input_type = "statement"
-    
-    intake = {
-        "stage": 1,
-        "name": "intake",
-        "type": input_type,
-        "word_count": word_count,
-        "char_count": char_count
-    }
-    
+
+    intake = {"stage": 1, "name": "intake", "type": input_type, "word_count": word_count, "char_count": char_count}
+
     # Stage 2: PREPROCESS - Normalize text
     normalized = input_text.strip().lower()
     keywords = [w for w in words if len(w) > 3]
-    
-    preprocess = {
-        "stage": 2,
-        "name": "preprocess",
-        "normalized": normalized[:100],
-        "keywords": keywords[:10]
-    }
-    
+
+    preprocess = {"stage": 2, "name": "preprocess", "normalized": normalized[:100], "keywords": keywords[:10]}
+
     # Stage 3: TAGGER - Classify content & intent
     domains = []
     if any(w in normalized for w in ["code", "program", "python", "javascript", "function"]):
@@ -1517,29 +1468,24 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
         domains.append("health")
     if not domains:
         domains.append("general")
-    
-    tagger = {
-        "stage": 3,
-        "name": "tagger",
-        "domains": domains,
-        "primary_domain": domains[0]
-    }
-    
+
+    tagger = {"stage": 3, "name": "tagger", "domains": domains, "primary_domain": domains[0]}
+
     # Stage 4: INTERPRET - Extract meanings
     has_comparison = any(w in normalized for w in ["vs", "versus", "compare", "difference"])
     has_definition = any(w in normalized for w in ["what is", "define", "meaning", "explain"])
     has_howto = any(w in normalized for w in ["how to", "how do", "steps", "process"])
     has_why = "why" in normalized
-    
+
     interpret = {
         "stage": 4,
         "name": "interpret",
         "seeking_comparison": has_comparison,
         "seeking_definition": has_definition,
         "seeking_howto": has_howto,
-        "seeking_reason": has_why
+        "seeking_reason": has_why,
     }
-    
+
     # Stage 5: REASON - Build reasoning steps
     reasoning_steps = []
     if has_definition:
@@ -1555,14 +1501,9 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
         reasoning_steps.append("Provide evidence")
     if not reasoning_steps:
         reasoning_steps.append("Provide comprehensive response")
-    
-    reason = {
-        "stage": 5,
-        "name": "reason",
-        "steps": reasoning_steps,
-        "step_count": len(reasoning_steps)
-    }
-    
+
+    reason = {"stage": 5, "name": "reason", "steps": reasoning_steps, "step_count": len(reasoning_steps)}
+
     # Stage 6: STRATEGY - Select response mode
     if word_count < 5:
         strategy = "concise"
@@ -1574,17 +1515,17 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
         strategy = "explanatory"
     else:
         strategy = "comprehensive"
-    
+
     strategy_output = {
         "stage": 6,
         "name": "strategy",
         "mode": strategy,
-        "expected_length": "short" if word_count < 5 else "medium" if word_count < 20 else "long"
+        "expected_length": "short" if word_count < 5 else "medium" if word_count < 20 else "long",
     }
-    
+
     # Stage 7: DRAFT - Generate response structure
     header = f"📋 Analysis of: {input_text[:50]}..."
-    
+
     if strategy == "step-by-step":
         structure = ["Introduction", "Step 1", "Step 2", "Step 3", "Conclusion"]
     elif strategy == "comparative":
@@ -1593,55 +1534,39 @@ def zurich_cycle(input_text: str) -> Dict[str, Any]:
         structure = ["Definition", "Context", "Examples", "Summary"]
     else:
         structure = ["Main Point", "Supporting Details", "Conclusion"]
-    
-    draft = {
-        "stage": 7,
-        "name": "draft",
-        "header": header,
-        "structure": structure
-    }
-    
+
+    draft = {"stage": 7, "name": "draft", "header": header, "structure": structure}
+
     # Stage 8: FINAL - Format output
     confidence = min(0.95, 0.7 + (len(domains) * 0.05) + (len(reasoning_steps) * 0.03))
-    
+
     final_output = f"""**{header}**
 
-**Domain:** {', '.join(domains)}
+**Domain:** {", ".join(domains)}
 **Strategy:** {strategy}
 **Confidence:** {confidence:.0%}
 
 **Analysis:**
 Input type: {input_type}
-Keywords identified: {', '.join(keywords[:5]) if keywords else 'None specific'}
+Keywords identified: {", ".join(keywords[:5]) if keywords else "None specific"}
 
 **Response Structure:**
-{chr(10).join(f'• {s}' for s in structure)}
+{chr(10).join(f"• {s}" for s in structure)}
 
 **Reasoning Applied:**
-{chr(10).join(f'{i+1}. {step}' for i, step in enumerate(reasoning_steps))}
+{chr(10).join(f"{i + 1}. {step}" for i, step in enumerate(reasoning_steps))}
 
 ---
 *Processed by Zürich Engine v1.0 - 9-stage deterministic cycle*
 *Processing time: {(time.time() - start_time) * 1000:.2f}ms*"""
 
-    final = {
-        "stage": 8,
-        "name": "final",
-        "output": final_output,
-        "confidence": confidence
-    }
-    
+    final = {"stage": 8, "name": "final", "output": final_output, "confidence": confidence}
+
     # Stage 9: CYCLE - Complete orchestration
     processing_time = time.time() - start_time
-    
-    cycle = {
-        "stage": 9,
-        "name": "cycle",
-        "completed": True,
-        "total_stages": 9,
-        "processing_time_ms": processing_time * 1000
-    }
-    
+
+    cycle = {"stage": 9, "name": "cycle", "completed": True, "total_stages": 9, "processing_time_ms": processing_time * 1000}
+
     return {
         "input": input_text,
         "output": final_output,
@@ -1657,8 +1582,8 @@ Keywords identified: {', '.join(keywords[:5]) if keywords else 'None specific'}
             "strategy": strategy_output,
             "draft": draft,
             "final": final,
-            "cycle": cycle
-        }
+            "cycle": cycle,
+        },
     }
 
 
@@ -1666,7 +1591,7 @@ Keywords identified: {', '.join(keywords[:5]) if keywords else 'None specific'}
 async def zurich_reasoning(request: ZurichRequest):
     """
     Zürich Deterministic Reasoning Engine.
-    
+
     9-stage processing cycle:
     1. Intake - Parse input type
     2. Preprocess - Normalize text
@@ -1677,14 +1602,14 @@ async def zurich_reasoning(request: ZurichRequest):
     7. Draft - Generate response structure
     8. Final - Format output
     9. Cycle - Complete orchestration
-    
+
     100% deterministic - same input always produces same output.
     """
     if not request.prompt:
         raise HTTPException(status_code=400, detail="prompt is required")
-    
+
     result = zurich_cycle(request.prompt)
-    
+
     response = {
         "ok": True,
         "input": request.prompt,
@@ -1693,12 +1618,12 @@ async def zurich_reasoning(request: ZurichRequest):
         "strategy": result["strategy"],
         "domains": result["domains"],
         "processing_time_ms": result["stages"]["cycle"]["processing_time_ms"],
-        "engine": "Zürich Deterministic Engine v1.0"
+        "engine": "Zürich Deterministic Engine v1.0",
     }
-    
+
     if request.include_debug:
         response["stages"] = result["stages"]
-    
+
     return response
 
 
@@ -1719,22 +1644,23 @@ async def zurich_info():
             {"step": 6, "name": "strategy", "description": "Select response mode"},
             {"step": 7, "name": "draft", "description": "Generate response structure"},
             {"step": 8, "name": "final", "description": "Format output"},
-            {"step": 9, "name": "cycle", "description": "Complete orchestration"}
+            {"step": 9, "name": "cycle", "description": "Complete orchestration"},
         ],
         "features": [
             "Deterministic processing",
             "No external API calls",
             "Local computation only",
             "Pattern-based reasoning",
-            "Structured output"
+            "Structured output",
         ],
-        "response_time": "1-50ms per input"
+        "response_time": "1-50ms per input",
     }
 
 
 # ═══════════════════════════════════════════════════════════════════
 # TRINITY PERSONAS - Multi-Persona AI Debate
 # ═══════════════════════════════════════════════════════════════════
+
 
 class DebateRequest(BaseModel):
     topic: str
@@ -1750,15 +1676,15 @@ TRINITY_PERSONAS = {
         "role": "The Optimist",
         "description": "Sees opportunity in every challenge, focuses on positive outcomes",
         "style": "Hopeful, encouraging, solution-oriented",
-        "prompt_prefix": "As Alba the Optimist, I see the positive side:"
+        "prompt_prefix": "As Alba the Optimist, I see the positive side:",
     },
     "albi": {
-        "name": "Albi", 
+        "name": "Albi",
         "emoji": "🔧",
         "role": "The Pragmatist",
         "description": "Practical, results-focused, concerned with implementation",
         "style": "Direct, practical, actionable",
-        "prompt_prefix": "As Albi the Pragmatist, here's the practical view:"
+        "prompt_prefix": "As Albi the Pragmatist, here's the practical view:",
     },
     "jona": {
         "name": "Jona",
@@ -1766,7 +1692,7 @@ TRINITY_PERSONAS = {
         "role": "The Skeptic",
         "description": "Questions assumptions, identifies risks and weaknesses",
         "style": "Critical, analytical, cautious",
-        "prompt_prefix": "As Jona the Skeptic, I must point out:"
+        "prompt_prefix": "As Jona the Skeptic, I must point out:",
     },
     "blerina": {
         "name": "Blerina",
@@ -1774,7 +1700,7 @@ TRINITY_PERSONAS = {
         "role": "The Analyst",
         "description": "Data-driven, systematic, considers all angles",
         "style": "Methodical, thorough, evidence-based",
-        "prompt_prefix": "As Blerina the Analyst, looking at the data:"
+        "prompt_prefix": "As Blerina the Analyst, looking at the data:",
     },
     "asi": {
         "name": "ASI",
@@ -1782,8 +1708,8 @@ TRINITY_PERSONAS = {
         "role": "The Meta-Thinker",
         "description": "Synthesizes all perspectives, finds higher-level patterns",
         "style": "Philosophical, integrative, holistic",
-        "prompt_prefix": "As ASI, synthesizing all perspectives:"
-    }
+        "prompt_prefix": "As ASI, synthesizing all perspectives:",
+    },
 }
 
 
@@ -1796,29 +1722,29 @@ async def get_persona_response(persona_id: str, topic: str, max_tokens: int = 25
     persona = TRINITY_PERSONAS.get(persona_id)
     if not persona:
         return {"error": f"Unknown persona: {persona_id}"}
-    
-    system_prompt = f"""You are {persona['name']}, {persona['role']} in the Trinity AI system.
 
-Your personality: {persona['description']}
-Your style: {persona['style']}
+    system_prompt = f"""You are {persona["name"]}, {persona["role"]} in the Trinity AI system.
+
+Your personality: {persona["description"]}
+Your style: {persona["style"]}
 
 Respond to the topic from your unique perspective. Be thorough and insightful.
 You can write a detailed, comprehensive response."""
 
     user_prompt = f"{persona['prompt_prefix']}\n\nTopic: {topic}"
-    
+
     # ELASTIC: Retry up to 3 times with increasing timeouts
     max_retries = 3
     base_timeout = 120.0  # 2 minutes base
-    
+
     for attempt in range(max_retries):
         try:
             timeout = base_timeout * (attempt + 1)  # 120s, 240s, 360s
-            
+
             # Use streaming for elastic token handling
             async with httpx.AsyncClient(timeout=httpx.Timeout(timeout, connect=30.0)) as client:
                 response_text = ""
-                
+
                 async with client.stream(
                     "POST",
                     f"{OLLAMA_HOST}/api/generate",
@@ -1827,8 +1753,8 @@ You can write a detailed, comprehensive response."""
                         "prompt": user_prompt,
                         "system": system_prompt,
                         "stream": True,
-                        "options": {"num_predict": max_tokens}
-                    }
+                        "options": {"num_predict": max_tokens},
+                    },
                 ) as stream:
                     async for line in stream.aiter_lines():
                         if line:
@@ -1840,7 +1766,7 @@ You can write a detailed, comprehensive response."""
                                     break
                             except json.JSONDecodeError:
                                 continue
-                
+
                 if response_text:
                     return {
                         "persona": persona_id,
@@ -1849,9 +1775,9 @@ You can write a detailed, comprehensive response."""
                         "role": persona["role"],
                         "response": response_text,
                         "status": "success",
-                        "tokens": len(response_text.split())
+                        "tokens": len(response_text.split()),
                     }
-                    
+
         except httpx.TimeoutException:
             logger.warning(f"Persona {persona_id} timeout on attempt {attempt + 1}/{max_retries}")
             if attempt < max_retries - 1:
@@ -1862,7 +1788,7 @@ You can write a detailed, comprehensive response."""
             if attempt < max_retries - 1:
                 await asyncio.sleep(1)
                 continue
-    
+
     # All retries exhausted - return partial or error gracefully (no fail)
     try:
         # Fallback: Try one more time with non-streaming
@@ -1874,10 +1800,10 @@ You can write a detailed, comprehensive response."""
                     "prompt": user_prompt,
                     "system": system_prompt,
                     "stream": False,
-                    "options": {"num_predict": 500}  # Shorter fallback
-                }
+                    "options": {"num_predict": 500},  # Shorter fallback
+                },
             )
-        
+
         if response.status_code == 200:
             data = response.json()
             return {
@@ -1886,7 +1812,7 @@ You can write a detailed, comprehensive response."""
                 "emoji": persona["emoji"],
                 "role": persona["role"],
                 "response": data.get("response", "No response generated"),
-                "status": "success"
+                "status": "success",
             }
         else:
             return {
@@ -1895,9 +1821,9 @@ You can write a detailed, comprehensive response."""
                 "emoji": persona["emoji"],
                 "role": persona["role"],
                 "response": f"Error: {response.status_code}",
-                "status": "error"
+                "status": "error",
             }
-            
+
     except Exception as e:
         logger.error(f"Persona {persona_id} fallback error: {e}")
         # ELASTIC: Never fail completely - return graceful message
@@ -1907,7 +1833,7 @@ You can write a detailed, comprehensive response."""
             "emoji": persona["emoji"],
             "role": persona["role"],
             "response": f"[{persona['name']} is thinking deeply about this topic... Please retry for full response]",
-            "status": "partial"
+            "status": "partial",
         }
 
 
@@ -1919,36 +1845,36 @@ async def trinity_debate_stream(request: DebateRequest):
     NO TIMEOUT - Elastic streaming for unlimited generation.
     """
     from starlette.responses import StreamingResponse
-    
+
     if not request.topic:
         raise HTTPException(status_code=400, detail="topic is required")
-    
+
     persona_ids = request.personas if request.personas else list(TRINITY_PERSONAS.keys())
     valid_personas = [p for p in persona_ids if p in TRINITY_PERSONAS]
-    
+
     async def generate():
         # Start immediately
         yield f"data: {json.dumps({'type': 'start', 'topic': request.topic, 'personas': len(valid_personas)})}\n\n"
-        
+
         for persona_id in valid_personas:
             persona = TRINITY_PERSONAS.get(persona_id)
             if not persona:
                 continue
-            
+
             # Signal persona starting - INSTANT feedback
             yield f"data: {json.dumps({'type': 'thinking', 'persona': persona_id, 'name': persona['name'], 'emoji': persona['emoji']})}\n\n"
-            
+
             # Build prompts
-            system_prompt = f"""You are {persona['name']}, {persona['role']} in the Trinity AI system.
-Your personality: {persona['description']}
-Your style: {persona['style']}
+            system_prompt = f"""You are {persona["name"]}, {persona["role"]} in the Trinity AI system.
+Your personality: {persona["description"]}
+Your style: {persona["style"]}
 Respond to the topic from your unique perspective. Be thorough and insightful."""
-            
+
             user_prompt = f"{persona['prompt_prefix']}\n\nTopic: {request.topic}"
-            
+
             response_text = ""
             token_count = 0
-            
+
             try:
                 # NO TIMEOUT - Elastic streaming
                 async with httpx.AsyncClient(timeout=None) as client:
@@ -1960,8 +1886,8 @@ Respond to the topic from your unique perspective. Be thorough and insightful.""
                             "prompt": user_prompt,
                             "system": system_prompt,
                             "stream": True,
-                            "options": {"num_predict": request.max_tokens or 25000}
-                        }
+                            "options": {"num_predict": request.max_tokens or 25000},
+                        },
                     ) as stream:
                         async for line in stream.aiter_lines():
                             if line:
@@ -1977,25 +1903,21 @@ Respond to the topic from your unique perspective. Be thorough and insightful.""
                                         break
                                 except json.JSONDecodeError:
                                     continue
-                
+
                 # Send completion for this persona
                 yield f"data: {json.dumps({'type': 'response', 'data': {'persona': persona_id, 'name': persona['name'], 'emoji': persona['emoji'], 'role': persona['role'], 'response': response_text, 'status': 'success', 'tokens': token_count}})}\n\n"
-                
+
             except Exception as e:
                 logger.error(f"Debate stream error for {persona_id}: {e}")
                 error_msg = f"[{persona['name']} encountered an issue: {str(e)[:100]}]"
                 yield f"data: {json.dumps({'type': 'response', 'data': {'persona': persona_id, 'name': persona['name'], 'emoji': persona['emoji'], 'role': persona['role'], 'response': error_msg, 'status': 'error'}})}\n\n"
-        
+
         yield f"data: {json.dumps({'type': 'done'})}\n\n"
-    
+
     return StreamingResponse(
         generate(),
         media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "X-Accel-Buffering": "no"
-        }
+        headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "X-Accel-Buffering": "no"},
     )
 
 
@@ -2003,38 +1925,38 @@ Respond to the topic from your unique perspective. Be thorough and insightful.""
 async def trinity_debate(request: DebateRequest):
     """
     Trinity Multi-Persona Debate.
-    
+
     5 AI personas debate a topic from different perspectives:
     - Alba (🌅) - The Optimist
     - Albi (🔧) - The Pragmatist
     - Jona (🔍) - The Skeptic
     - Blerina (🌐) - The Analyst
     - ASI (🧠) - The Meta-Thinker
-    
+
     Returns all perspectives for a balanced view.
     """
     if not request.topic:
         raise HTTPException(status_code=400, detail="topic is required")
-    
+
     start_time = time.time()
-    
+
     # Determine which personas to use
     persona_ids = request.personas if request.personas else list(TRINITY_PERSONAS.keys())
-    
+
     # Validate personas
     valid_personas = [p for p in persona_ids if p in TRINITY_PERSONAS]
     if not valid_personas:
         raise HTTPException(status_code=400, detail=f"No valid personas. Available: {list(TRINITY_PERSONAS.keys())}")
-    
+
     # Get responses from all personas in parallel
     tasks = [get_persona_response(p, request.topic, request.max_tokens) for p in valid_personas]
     responses = await asyncio.gather(*tasks)
-    
+
     processing_time = time.time() - start_time
-    
+
     # Count successes
     success_count = sum(1 for r in responses if r.get("status") == "success")
-    
+
     return {
         "ok": True,
         "topic": request.topic,
@@ -2043,9 +1965,9 @@ async def trinity_debate(request: DebateRequest):
             "total_personas": len(valid_personas),
             "successful": success_count,
             "failed": len(valid_personas) - success_count,
-            "processing_time_ms": processing_time * 1000
+            "processing_time_ms": processing_time * 1000,
         },
-        "engine": "Trinity Debate Engine v1.0"
+        "engine": "Trinity Debate Engine v1.0",
     }
 
 
@@ -2054,17 +1976,10 @@ async def list_personas():
     """List all available Trinity personas."""
     return {
         "personas": [
-            {
-                "id": pid,
-                "name": p["name"],
-                "emoji": p["emoji"],
-                "role": p["role"],
-                "description": p["description"],
-                "style": p["style"]
-            }
+            {"id": pid, "name": p["name"], "emoji": p["emoji"], "role": p["role"], "description": p["description"], "style": p["style"]}
             for pid, p in TRINITY_PERSONAS.items()
         ],
-        "total": len(TRINITY_PERSONAS)
+        "total": len(TRINITY_PERSONAS),
     }
 
 
@@ -2074,34 +1989,36 @@ async def list_personas():
 
 # TTS Voice Configuration - Microsoft Edge Neural Voices (Free, High Quality)
 TTS_VOICES = {
-    "en": "en-US-AriaNeural",        # English - Female, natural
-    "en-male": "en-US-GuyNeural",    # English - Male
-    "sq": "en-GB-SoniaNeural",       # Albanian fallback - British English sounds natural
-    "de": "de-DE-KatjaNeural",       # German
-    "fr": "fr-FR-DeniseNeural",      # French
-    "es": "es-ES-ElviraNeural",      # Spanish
-    "it": "it-IT-ElsaNeural",        # Italian
-    "pt": "pt-BR-FranciscaNeural",   # Portuguese
-    "ru": "ru-RU-SvetlanaNeural",    # Russian
-    "zh": "zh-CN-XiaoxiaoNeural",    # Chinese
-    "ja": "ja-JP-NanamiNeural",      # Japanese
-    "ko": "ko-KR-SunHiNeural",       # Korean
-    "ar": "ar-EG-SalmaNeural",       # Arabic
-    "tr": "tr-TR-EmelNeural",        # Turkish
-    "hi": "hi-IN-SwaraNeural",       # Hindi
-    "nl": "nl-NL-ColetteNeural",     # Dutch
-    "pl": "pl-PL-ZofiaNeural",       # Polish
-    "uk": "uk-UA-PolinaNeural",      # Ukrainian
-    "el": "el-GR-AthinaNeural",      # Greek
-    "ro": "ro-RO-AlinaNeural",       # Romanian
-    "sr": "sr-RS-SophieNeural",      # Serbian
-    "hr": "hr-HR-GabrijelaNeural",   # Croatian
-    "bg": "bg-BG-KalinaNeural",      # Bulgarian
-    "mk": "mk-MK-MarijaNeural",      # Macedonian
+    "en": "en-US-AriaNeural",  # English - Female, natural
+    "en-male": "en-US-GuyNeural",  # English - Male
+    "sq": "en-GB-SoniaNeural",  # Albanian fallback - British English sounds natural
+    "de": "de-DE-KatjaNeural",  # German
+    "fr": "fr-FR-DeniseNeural",  # French
+    "es": "es-ES-ElviraNeural",  # Spanish
+    "it": "it-IT-ElsaNeural",  # Italian
+    "pt": "pt-BR-FranciscaNeural",  # Portuguese
+    "ru": "ru-RU-SvetlanaNeural",  # Russian
+    "zh": "zh-CN-XiaoxiaoNeural",  # Chinese
+    "ja": "ja-JP-NanamiNeural",  # Japanese
+    "ko": "ko-KR-SunHiNeural",  # Korean
+    "ar": "ar-EG-SalmaNeural",  # Arabic
+    "tr": "tr-TR-EmelNeural",  # Turkish
+    "hi": "hi-IN-SwaraNeural",  # Hindi
+    "nl": "nl-NL-ColetteNeural",  # Dutch
+    "pl": "pl-PL-ZofiaNeural",  # Polish
+    "uk": "uk-UA-PolinaNeural",  # Ukrainian
+    "el": "el-GR-AthinaNeural",  # Greek
+    "ro": "ro-RO-AlinaNeural",  # Romanian
+    "sr": "sr-RS-SophieNeural",  # Serbian
+    "hr": "hr-HR-GabrijelaNeural",  # Croatian
+    "bg": "bg-BG-KalinaNeural",  # Bulgarian
+    "mk": "mk-MK-MarijaNeural",  # Macedonian
 }
+
 
 class TTSRequest(BaseModel):
     """Text-to-Speech request model"""
+
     text: str
     language: str = "en"
     voice: Optional[str] = None  # Override default voice
@@ -2111,6 +2028,7 @@ class TTSRequest(BaseModel):
 
 class VoiceConversationRequest(BaseModel):
     """Full voice conversation request: Audio In → STT → LLM → TTS → Audio Out"""
+
     audio_base64: str
     language: str = "en"
     voice: Optional[str] = None
@@ -2122,57 +2040,52 @@ class VoiceConversationRequest(BaseModel):
 async def text_to_speech(req: TTSRequest):
     """
     🔊 TEXT-TO-SPEECH - Convert text to natural speech audio
-    
+
     Returns MP3 audio file with natural neural voice.
     Supports 24+ languages with high-quality Microsoft Edge voices.
-    
+
     Example:
         POST /api/v1/tts
         {"text": "Hello, how are you?", "language": "en"}
-        
+
         Returns: audio/mpeg stream
     """
     start_time = time.time()
-    
+
     try:
         import edge_tts
         import tempfile
         import os as os_mod
-        
+
         # Input validation
         if not req.text or not req.text.strip():
             raise HTTPException(400, "Text cannot be empty")
-        
+
         if len(req.text) > 5000:
             raise HTTPException(400, "Text too long. Maximum 5000 characters.")
-        
+
         # Get voice for language
         voice = req.voice or TTS_VOICES.get(req.language, TTS_VOICES.get("en"))
-        
+
         # Create TTS communicate object
-        communicate = edge_tts.Communicate(
-            text=req.text.strip(),
-            voice=voice,
-            rate=req.rate,
-            pitch=req.pitch
-        )
-        
+        communicate = edge_tts.Communicate(text=req.text.strip(), voice=voice, rate=req.rate, pitch=req.pitch)
+
         # Generate audio to temp file
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
             tmp_path = tmp.name
-        
+
         await communicate.save(tmp_path)
-        
+
         # Read audio data
         with open(tmp_path, "rb") as f:
             audio_data = f.read()
-        
+
         # Cleanup
         os_mod.unlink(tmp_path)
-        
+
         processing_time = time.time() - start_time
         logger.info(f"🔊 TTS: {len(req.text)} chars → {len(audio_data)} bytes in {processing_time:.2f}s | voice={voice}")
-        
+
         # Return audio as streaming response
         return StreamingResponse(
             iter([audio_data]),
@@ -2181,10 +2094,10 @@ async def text_to_speech(req: TTSRequest):
                 "Content-Disposition": "inline; filename=speech.mp3",
                 "X-Processing-Time": f"{processing_time:.3f}s",
                 "X-Voice-Used": voice,
-                "X-Text-Length": str(len(req.text))
-            }
+                "X-Text-Length": str(len(req.text)),
+            },
         )
-        
+
     except ImportError:
         raise HTTPException(500, "TTS engine not available. Install: pip install edge-tts")
     except Exception as e:
@@ -2200,7 +2113,7 @@ async def list_tts_voices():
         "total": len(TTS_VOICES),
         "engine": "Microsoft Edge Neural TTS (Free)",
         "quality": "High - Neural Network Generated",
-        "note": "Albanian (sq) uses British English voice as fallback"
+        "note": "Albanian (sq) uses British English voice as fallback",
     }
 
 
@@ -2208,12 +2121,12 @@ async def list_tts_voices():
 async def voice_conversation(req: VoiceConversationRequest, request: Request):
     """
     🎙️ FULL VOICE CONVERSATION PIPELINE
-    
+
     Audio In → STT (Whisper) → LLM (Ollama) → TTS (Edge) → Audio Out
-    
+
     Complete voice-to-voice conversation in one request.
     Send audio, get audio response back.
-    
+
     Flow:
     1. Decode audio from base64
     2. Transcribe with Whisper (Speech-to-Text)
@@ -2223,73 +2136,68 @@ async def voice_conversation(req: VoiceConversationRequest, request: Request):
     """
     start_time = time.time()
     # user_id available via: req.user_id or request.headers.get("X-User-ID")
-    
+
     try:
         import edge_tts
         import tempfile
         import base64 as b64mod
         import os as os_mod
-        
+
         # ═══════════════════════════════════════════════════════════════
         # STEP 1: Decode Audio
         # ═══════════════════════════════════════════════════════════════
         audio_bytes = b64mod.b64decode(req.audio_base64)
         if len(audio_bytes) < 100:
             raise HTTPException(400, "Audio data too small")
-        
+
         # Save to temp file
         with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmp:
             tmp.write(audio_bytes)
             audio_path = tmp.name
-        
+
         # ═══════════════════════════════════════════════════════════════
         # STEP 2: Speech-to-Text (Whisper)
         # ═══════════════════════════════════════════════════════════════
         try:
             from faster_whisper import WhisperModel
-            
+
             global _whisper_model_conv
-            if '_whisper_model_conv' not in globals() or _whisper_model_conv is None:
+            if "_whisper_model_conv" not in globals() or _whisper_model_conv is None:
                 _whisper_model_conv = WhisperModel("base", device="cpu", compute_type="int8")
-            
+
             segments, info = _whisper_model_conv.transcribe(
-                audio_path,
-                language=req.language if req.language not in ['auto', 'sq'] else None,
-                beam_size=5
+                audio_path, language=req.language if req.language not in ["auto", "sq"] else None, beam_size=5
             )
-            
+
             transcript = " ".join([seg.text for seg in segments]).strip()
             detected_language = info.language or req.language
-            
+
         except ImportError:
             # Fallback: Use Ollama's whisper if available
             async with httpx.AsyncClient(timeout=30) as client:
                 with open(audio_path, "rb") as f:
                     audio_b64 = b64mod.b64encode(f.read()).decode()
-                resp = await client.post(
-                    f"{OLLAMA_HOST}/api/generate",
-                    json={"model": "whisper", "prompt": audio_b64}
-                )
+                resp = await client.post(f"{OLLAMA_HOST}/api/generate", json={"model": "whisper", "prompt": audio_b64})
                 transcript = resp.json().get("response", "")
                 detected_language = req.language
-        
+
         finally:
             os_mod.unlink(audio_path)
-        
+
         if not transcript:
             raise HTTPException(400, "Could not transcribe audio. Please speak clearly.")
-        
+
         stt_time = time.time() - start_time
         logger.info(f"🎤 STT: '{transcript[:50]}...' in {stt_time:.2f}s")
-        
+
         # ═══════════════════════════════════════════════════════════════
         # STEP 3: Generate LLM Response (Ollama)
         # ═══════════════════════════════════════════════════════════════
         llm_start = time.time()
-        
+
         system_prompt = """You are a friendly voice assistant. Keep responses concise and natural for speech.
 Respond in the same language as the user's message. Be helpful and conversational."""
-        
+
         async with httpx.AsyncClient(timeout=60) as client:
             resp = await client.post(
                 f"{OLLAMA_HOST}/api/generate",
@@ -2298,37 +2206,37 @@ Respond in the same language as the user's message. Be helpful and conversationa
                     "prompt": transcript,
                     "system": system_prompt,
                     "stream": False,
-                    "options": {"temperature": 0.7, "num_predict": 200}
-                }
+                    "options": {"temperature": 0.7, "num_predict": 200},
+                },
             )
             llm_response = resp.json().get("response", "I couldn't process that. Please try again.")
-        
+
         llm_time = time.time() - llm_start
         logger.info(f"🧠 LLM: '{llm_response[:50]}...' in {llm_time:.2f}s")
-        
+
         # ═══════════════════════════════════════════════════════════════
         # STEP 4: Text-to-Speech (Edge TTS)
         # ═══════════════════════════════════════════════════════════════
         tts_start = time.time()
-        
+
         voice = req.voice or TTS_VOICES.get(detected_language, TTS_VOICES.get("en"))
         communicate = edge_tts.Communicate(text=llm_response, voice=voice)
-        
+
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
             tts_path = tmp.name
-        
+
         await communicate.save(tts_path)
-        
+
         with open(tts_path, "rb") as f:
             audio_response = f.read()
-        
+
         os_mod.unlink(tts_path)
-        
+
         tts_time = time.time() - tts_start
         total_time = time.time() - start_time
-        
+
         logger.info(f"🔊 Voice Conversation: STT={stt_time:.1f}s LLM={llm_time:.1f}s TTS={tts_time:.1f}s Total={total_time:.1f}s")
-        
+
         # ═══════════════════════════════════════════════════════════════
         # STEP 5: Return Audio Response
         # ═══════════════════════════════════════════════════════════════
@@ -2344,10 +2252,10 @@ Respond in the same language as the user's message. Be helpful and conversationa
                 "X-LLM-Time": f"{llm_time:.3f}s",
                 "X-TTS-Time": f"{tts_time:.3f}s",
                 "X-Voice-Used": voice,
-                "X-Detected-Language": detected_language
-            }
+                "X-Detected-Language": detected_language,
+            },
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -2365,8 +2273,8 @@ _whisper_model_conv = None
 
 if __name__ == "__main__":
     import uvicorn
+
     logger.info(f"🌊 Ocean Core Full v5.0.0 starting on port {PORT}")
     logger.info("⚙️ Zürich Engine v1.0 - 9-stage deterministic reasoning")
     logger.info("🧠 Trinity Debate v1.0 - 5-persona AI debate")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-

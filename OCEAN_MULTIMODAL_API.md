@@ -440,7 +440,7 @@ async function transcribeAudio(audioPath) {
 - `422`: Validation error (missing required fields)
 - `429`: Rate limit exceeded
 - `500`: Internal processing error
-- `503`: Service unavailable (Ollama offline)
+- `503`: Service unavailable (CLX offline)
 
 ---
 
@@ -488,12 +488,12 @@ ocean-multimodal:
   ports:
     - "8031:8031"
   environment:
-    OLLAMA_HOST: http://kloud-06-ollama:11434
-    VISION_MODEL: llava:latest
+    CLX_HOST: http://kloud-06-clx:11434
+    VISION_MODEL: clx.i:latest
     AUDIO_MODEL: whisper:latest
     REASONING_MODEL: llama3.1:8b
   depends_on:
-    - ollama
+    - clx
   restart: always
 
 ```
@@ -516,18 +516,18 @@ curl http://localhost:8031/health
 
 ## Troubleshooting
 
-### Ollama Connection Error
+### CLX Connection Error
 
 ```
 
-Error: Connection refused (Ollama offline)
+Error: Connection refused (CLX offline)
 
 ```
 
-**Solution**: Ensure Ollama is running on the configured host
+**Solution**: Ensure CLX is running on the configured host
 
 ```bash
-docker ps | grep ollama
+docker ps | grep clx
 
 ```
 
@@ -535,16 +535,16 @@ docker ps | grep ollama
 
 ```
 
-Error: Model 'llava:latest' not found
+Error: Model 'clx.i:latest' not found
 
 ```
 
 **Solution**: Pull the model first
 
 ```bash
-ollama pull llava
-ollama pull whisper
-ollama pull llama3.1:8b
+clx pull clx.i
+clx pull whisper
+clx pull llama3.1:8b
 
 ```
 

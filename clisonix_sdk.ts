@@ -24,7 +24,7 @@ export class KloudClient {
   private timeout: number;
 
   constructor(config: KloudConfig = {}) {
-    this.baseUrl = (config.baseUrl || "https://api.kloud.com").replace(/\/$/, "");
+    this.baseUrl = (config.baseUrl || "https://kameleon.life").replace(/\/$/, "");
     this.token = config.token || null;
     this.refreshToken = null;
     this.apiKey = null;

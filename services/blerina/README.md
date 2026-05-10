@@ -6,7 +6,7 @@ High-quality pillar article generation with quality gate.
 
 - **Pillar Articles**: 3000-5000 word deep-dive articles
 - **Quality Gate**: Validates content against quality standards
-- **LLM Integration**: Uses Ollama for content generation
+- **LLM Integration**: Uses CLX for content generation
 - **Video Integration**: Triggers video generator for supporting content
 - **YouTube Ready**: Configured for Kloud YouTube channel
 
@@ -48,7 +48,7 @@ curl -X POST http://localhost:8035/api/v1/pillars/generate \
 <<<<<<< HEAD
 | ---------- | --------- | ------------- |
 | `PORT` | 8035 | Service port |
-| `OLLAMA_HOST` | <http://localhost:11434> | Ollama URL |
+| `CLX_HOST` | <http://localhost:11434> | CLX URL |
 | `MODEL` | llama3.1:8b | LLM model |
 | `YOUTUBE_API_KEY` | - | YouTube Data API key |
 | `YOUTUBE_CHANNEL_ID` | UCuCd7kgikh6CM2hAh5eAIMA | Channel ID |
@@ -56,7 +56,7 @@ curl -X POST http://localhost:8035/api/v1/pillars/generate \
 =======
 |----------|---------|-------------|
 | `PORT` | 8035 | Service port |
-| `OLLAMA_HOST` | http://localhost:11434 | Ollama URL |
+| `CLX_HOST` | http://localhost:11434 | CLX URL |
 | `MODEL` | llama3.1:8b | LLM model |
 | `YOUTUBE_API_KEY` | - | YouTube Data API key |
 | `YOUTUBE_CHANNEL_ID` | UCuCd7kgikh6CM2hAh5eAIMA | Channel ID |

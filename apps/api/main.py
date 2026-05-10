@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+# ruff: noqa: F401, F841
 # --- CONSOLIDATED IMPORTS (MUST COME FIRST) ---
 import asyncio
+import io
 import json
 import logging
 import os
@@ -17,30 +19,51 @@ from datetime import datetime, timezone
 from glob import glob
 from itertools import islice
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 # FastAPI / ASGI
 from fastapi import APIRouter, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
-from cors_policy import apply_standard_cors
+
+try:
+    from cors_policy import apply_standard_cors
+except ImportError:
+    # Keep API bootable in container contexts where shared root modules are not mounted.
+    def apply_standard_cors(app: FastAPI) -> None:
+        from fastapi.middleware.cors import CORSMiddleware
+
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
 
 # Pydantic
 from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
+import httpx
+import requests  # type: ignore[import-untyped]
 
 # Try importing BaseSettings from the correct location (Pydantic v2)
 try:
-    from pydantic_settings import BaseSettings
+    from pydantic_settings import BaseSettings as _BaseSettingsType
 except ImportError:
     # Fallback for older Pydantic versions
     try:
-        from pydantic import BaseSettings
+        from pydantic import BaseSettings as _BaseSettingsType
     except ImportError:
         # If still not available, create a minimal base class
-        class BaseSettings:
+        class _FallbackBaseSettings2:
             class Config:
                 case_sensitive = True
+
+        _BaseSettingsType = _FallbackBaseSettings2  # type: ignore[assignment]
+
+BaseSettings = _BaseSettingsType
 
 
 # System metrics
@@ -50,10 +73,6 @@ try:
     _PSUTIL = True
 except Exception:
     _PSUTIL = False
-
-# HTTP
-import httpx
-import requests  # type: ignore[import-untyped]
 
 # --- Brain Router Initialization (must come after imports) ---
 brain_router = APIRouter(prefix="/brain", tags=["brain"])
@@ -196,9 +215,6 @@ async def generate_moodboard(
 
 
 # --- Personal Brain-Sync Music Endpoint ---
-from fastapi.responses import StreamingResponse
-
-
 @brain_router.post("/music/brainsync")
 async def generate_brainsync_music(mode: str, file: UploadFile = File(...)):
     """
@@ -478,12 +494,6 @@ async def restart_brain():
 
 
 # ------------- Kloud Cloud API (EEG to Audio) -------------
-import io
-
-import numpy as np
-from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
-
 neural_router = APIRouter()
 
 
@@ -531,100 +541,88 @@ Notes:
     - If a dependency is not configured or reachable, endpoints return 5xx (do NOT fabricate values).
 """
 
-import asyncio
-import json
-import logging
-import os
-import socket
-import statistics
-import sys
-import time
-import traceback
-import uuid
-from collections import defaultdict
-from datetime import datetime, timezone
-from glob import glob
-from itertools import islice
-from pathlib import Path
-from typing import Any, Dict, List, Optional
-
-# FastAPI / ASGI
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
-
-BaseSettings = None
 # Config (env)
 try:
-    from pydantic import BaseSettings
+    from pydantic import BaseSettings as _BaseSettingsType
 
     _PYD = True
 except ImportError:
     try:
-        from pydantic_settings import BaseSettings
+        from pydantic_settings import BaseSettings as _BaseSettingsType
 
         _PYD = True
     except ImportError:
         _PYD = False
 
-        class BaseSettings(object):
+        class _FallbackBaseSettings(object):
             pass
 
+        _BaseSettingsType = _FallbackBaseSettings
 
-from pydantic import BaseModel, Field
+BaseSettings = _BaseSettingsType
 
 # System metrics
+psutil: Any = None
 try:
-    import psutil
+    import psutil as _psutil
 
+    psutil = _psutil
     _PSUTIL = True
 except Exception:
     _PSUTIL = False
 
 # Redis (async)
+aioredis: Any = None
 try:
-    import redis.asyncio as aioredis
+    import redis.asyncio as _aioredis
 
+    aioredis = _aioredis
     _REDIS = True
 except Exception:
     _REDIS = False
-    aioredis = None
 
 # PostgreSQL (async)
+asyncpg: Any = None
 try:
-    import asyncpg
+    import asyncpg as _asyncpg
 
+    asyncpg = _asyncpg
     _PG = True
 except Exception:
     _PG = False
-    asyncpg = None
 
 # EEG (mne/numpy/scipy)
+mne: Any = None
+np: Any = None
+welch: Any = None
 try:
-    import mne
-    import numpy as np
-    from scipy.signal import welch
+    import mne as _mne
+    import numpy as _np
+    from scipy.signal import welch as _welch
 
+    mne = _mne
+    np = _np
+    welch = _welch
     _EEG = True
 except Exception:
     _EEG = False
 
 # Audio (librosa/soundfile)
+librosa: Any = None
+sf: Any = None
 try:
-    import librosa
-    import soundfile as sf
+    import librosa as _librosa
+    import soundfile as _soundfile
 
+    librosa = _librosa
+    sf = _soundfile
     _AUDIO = True
 except Exception:
     _AUDIO = False
 
-# HTTP
-import requests
-
 
 # ------------- Settings -------------
-class Settings(BaseSettings):
+class Settings(BaseModel):
     api_title: str = "Kloud Industrial Backend (REAL)"
     api_version: str = "1.0.0"
     environment: str = os.getenv("ENVIRONMENT", "production")
@@ -658,18 +656,6 @@ class Settings(BaseSettings):
     stripe_publishable_key: Optional[str] = os.getenv("STRIPE_PUBLISHABLE_KEY")
     stripe_webhook_secret: Optional[str] = os.getenv("STRIPE_WEBHOOK_SECRET")
     stripe_base: str = "https://api.stripe.com/v1"
-
-    # Public access policy: Stripe public, PayPal/SEPA internal-only by default.
-    billing_public_stripe: bool = (
-        os.getenv("BILLING_PUBLIC_STRIPE", "true").lower() == "true"
-    )
-    billing_public_paypal: bool = (
-        os.getenv("BILLING_PUBLIC_PAYPAL", "false").lower() == "true"
-    )
-    billing_public_sepa: bool = (
-        os.getenv("BILLING_PUBLIC_SEPA", "false").lower() == "true"
-    )
-    internal_api_key: Optional[str] = os.getenv("INTERNAL_API_KEY")
 
     class Config:
         case_sensitive = True
@@ -754,7 +740,7 @@ def setup_logging():
             sys.stderr = io.TextIOWrapper(
                 sys.stderr.buffer, encoding="utf-8", errors="replace"
             )
-        except:
+        except Exception:
             pass  # If reconfiguration fails, continue anyway
 
     logging.basicConfig(
@@ -1393,10 +1379,10 @@ def collect_service_processes(ports: List[int]) -> List[Dict[str, Any]]:
 
     results: List[Dict[str, Any]] = []
     for proc in psutil.process_iter(
-        ["pid", "name", "cmdline", "connections", "cpu_percent", "memory_info"]
+        ["pid", "name", "cmdline", "cpu_percent", "memory_info"]
     ):
         try:
-            connections = proc.info.get("connections") or []
+            connections = proc.connections(kind="inet")
             listening = [
                 conn
                 for conn in connections
@@ -1423,7 +1409,7 @@ def collect_service_processes(ports: List[int]) -> List[Dict[str, Any]]:
                     ).isoformat(),
                 }
             )
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     return results
 
@@ -1911,8 +1897,10 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
         else (detail.get("message") if isinstance(detail, dict) else str(exc))
     )
     details = detail.get("details") if isinstance(detail, dict) else None
-    if isinstance(detail, dict) and detail.get("code"):
-        error_code = str(detail["code"])
+    if isinstance(detail, dict):
+        raw_code = detail.get("code")
+        if raw_code is not None:
+            error_code = str(raw_code)
     return error_response(
         request, exc.status_code, error_code, message, details=details
     )
@@ -1937,29 +1925,31 @@ async def generic_exception_handler(request: Request, exc: Exception):
 # @app.on_event("startup")
 async def on_startup():
     global redis_client, pg_pool
+    redis_mod = aioredis
+    pg_mod = asyncpg
     # storage
     Path(settings.storage_dir).mkdir(parents=True, exist_ok=True)
     logger.info("✓ Storage directory ready")
 
     # Redis
-    if _REDIS and settings.redis_url:
+    if _REDIS and settings.redis_url and redis_mod is not None:
         try:
-            redis_client = aioredis.from_url(
+            redis_client = redis_mod.from_url(
                 settings.redis_url, encoding="utf-8", decode_responses=True
             )
-            await asyncio.wait_for(redis_client.ping(), timeout=5)
+            await asyncio.wait_for(redis_client.ping(), timeout=5)  # type: ignore[union-attr]
             logger.info("✓ Redis connected.")
         except Exception as e:
             logger.error(f"⚠️  Redis unavailable: {e}")
             redis_client = None
 
     # Postgres
-    if _PG and settings.database_url:
+    if _PG and settings.database_url and pg_mod is not None:
         try:
-            pg_pool = await asyncpg.create_pool(
+            pg_pool = await pg_mod.create_pool(
                 settings.database_url, min_size=1, max_size=10, command_timeout=10
             )
-            async with pg_pool.acquire() as conn:
+            async with pg_pool.acquire() as conn:  # type: ignore[union-attr]
                 await conn.execute("SELECT 1;")
             logger.info("✓ PostgreSQL pool ready.")
         except Exception as e:
@@ -2104,19 +2094,19 @@ async def get_db_status() -> Dict[str, Any]:
 
 
 # =============================================================================
-# API ROOT ENDPOINT - Kloud Cloud API Information
+# API ROOT ENDPOINT - Kameleon Life API Information
 # =============================================================================
 @app.get("/api")
 async def api_root():
     """
-    Kloud Cloud API Root
+    Kameleon Life API Root
     Returns available endpoints and API information
     """
     return {
-        "name": "Kloud Cloud API",
+        "name": "Kameleon Life API",
         "version": "2.0.0",
         "status": "operational",
-        "documentation": "https://kloud.com/docs",
+        "documentation": "https://kameleon.life",
         "endpoints": {
             "health": "/health",
             "status": "/status",
@@ -2136,7 +2126,7 @@ async def api_root():
             "spectrum": {"live": "/api/spectrum/live", "bands": "/api/spectrum/bands"},
             "monitoring": "/api/monitoring/dashboards",
         },
-        "support": "support@kloud.com",
+        "support": "support@kameleon.life",
     }
 
 
@@ -2223,9 +2213,12 @@ async def api_status():
 
 
 # ------------- EEG Processing (REAL) -------------
-def _eeg_band_powers(
-    raw: "mne.io.BaseRaw", fmin: float, fmax: float
-) -> Dict[str, float]:
+def _eeg_band_powers(raw: Any, fmin: float, fmax: float) -> Dict[str, float]:
+    np_mod = np
+    welch_fn = welch
+    if np_mod is None or welch_fn is None:
+        raise HTTPException(status_code=501, detail="EEG libs unavailable")
+
     data = raw.get_data(return_times=False)
     sfreq = raw.info["sfreq"]
     # Ensure data is a numpy array (not a tuple)
@@ -2234,18 +2227,18 @@ def _eeg_band_powers(
     # Welch PSD per channel
     psd_vals = []
     for ch in range(data.shape[0]):
-        f, pxx = welch(data[ch], fs=sfreq, nperseg=min(len(data[ch]), 4096))
+        f, pxx = welch_fn(data[ch], fs=sfreq, nperseg=min(len(data[ch]), 4096))
         band = pxx[(f >= fmin) & (f <= fmax)]
         if band.size:
-            psd_vals.append(float(np.mean(band)))
+            psd_vals.append(float(np_mod.mean(band)))
     if not psd_vals:
         return {"mean": 0.0, "max": 0.0}
-    return {"mean": float(np.mean(psd_vals)), "max": float(np.max(psd_vals))}
+    return {"mean": float(np_mod.mean(psd_vals)), "max": float(np_mod.max(psd_vals))}
 
 
 def analyze_eeg_file(file_path: Path) -> Dict[str, Any]:
     require(
-        _EEG,
+        bool(_EEG and mne is not None and np is not None and welch is not None),
         "EEG analysis libs (mne, numpy, scipy) not installed",
         501,
         error_code="EEG_LIBS_UNAVAILABLE",
@@ -2285,10 +2278,11 @@ def analyze_eeg_file(file_path: Path) -> Dict[str, Any]:
 
 @app.post("/api/uploads/eeg/process")
 async def process_eeg(file: UploadFile = File(...)):
-    require(file.filename, "Missing filename", 400, error_code="MISSING_FILENAME")
+    require(bool(file.filename), "Missing filename", 400, error_code="MISSING_FILENAME")
+    safe_filename = Path(cast(str, file.filename)).name
     dest = (
         Path(settings.storage_dir)
-        / f"eeg_{int(time.time())}_{uuid.uuid4().hex[:6]}_{Path(file.filename).name}"
+        / f"eeg_{int(time.time())}_{uuid.uuid4().hex[:6]}_{safe_filename}"
     )
     try:
         with dest.open("wb") as f:
@@ -2314,31 +2308,39 @@ async def process_eeg(file: UploadFile = File(...)):
 # ------------- Audio Processing (REAL) -------------
 def analyze_audio_file(file_path: Path) -> Dict[str, Any]:
     require(
-        _AUDIO,
+        bool(_AUDIO and librosa is not None and np is not None),
         "Audio analysis libs (librosa, soundfile) not installed",
         501,
         error_code="AUDIO_LIBS_UNAVAILABLE",
     )
+
+    librosa_mod = librosa
+    np_mod = np
+    if librosa_mod is None or np_mod is None:
+        raise HTTPException(status_code=501, detail="Audio libs unavailable")
+
     # librosa loads actual samples
-    y, sr = librosa.load(str(file_path), sr=None, mono=True)
+    y, sr = librosa_mod.load(str(file_path), sr=None, mono=True)
     require(y.size > 0 and sr > 0, "Empty audio data", 400, error_code="EMPTY_AUDIO")
 
     duration = float(len(y) / sr)
     # Real metrics
-    zcr = float(np.mean(librosa.feature.zero_crossing_rate(y)[0]))
-    centroid = float(np.mean(librosa.feature.spectral_centroid(y=y, sr=sr)))
-    rolloff = float(np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr)))
-    rms = float(np.mean(librosa.feature.rms(y=y)))
+    zcr = float(np_mod.mean(librosa_mod.feature.zero_crossing_rate(y)[0]))
+    centroid = float(np_mod.mean(librosa_mod.feature.spectral_centroid(y=y, sr=sr)))
+    rolloff = float(np_mod.mean(librosa_mod.feature.spectral_rolloff(y=y, sr=sr)))
+    rms = float(np_mod.mean(librosa_mod.feature.rms(y=y)))
 
     # Fundamental frequency via pYIN (if possible), otherwise 0 (no fabrication)
     f0_mean = 0.0
     try:
-        f0, voiced_flag, _ = librosa.pyin(
-            y, fmin=librosa.note_to_hz("C2"), fmax=librosa.note_to_hz("C7")
+        f0, voiced_flag, _ = librosa_mod.pyin(
+            y,
+            fmin=float(librosa_mod.note_to_hz("C2")),
+            fmax=float(librosa_mod.note_to_hz("C7")),
         )
-        valid = f0[~np.isnan(f0)]
+        valid = f0[~np_mod.isnan(f0)]
         if valid.size:
-            f0_mean = float(np.mean(valid))
+            f0_mean = float(np_mod.mean(valid))
     except Exception:
         pass
 
@@ -2356,10 +2358,11 @@ def analyze_audio_file(file_path: Path) -> Dict[str, Any]:
 
 @app.post("/api/uploads/audio/process")
 async def process_audio(file: UploadFile = File(...)):
-    require(file.filename, "Missing filename", 400, error_code="MISSING_FILENAME")
+    require(bool(file.filename), "Missing filename", 400, error_code="MISSING_FILENAME")
+    safe_filename = Path(cast(str, file.filename)).name
     dest = (
         Path(settings.storage_dir)
-        / f"audio_{int(time.time())}_{uuid.uuid4().hex[:6]}_{Path(file.filename).name}"
+        / f"audio_{int(time.time())}_{uuid.uuid4().hex[:6]}_{safe_filename}"
     )
     try:
         with dest.open("wb") as f:
@@ -2384,21 +2387,10 @@ async def process_audio(file: UploadFile = File(...)):
 # ------------- Payments (REAL) -------------
 def require_paypal():
     require(
-        settings.paypal_client_id and settings.paypal_secret,
+        bool(settings.paypal_client_id and settings.paypal_secret),
         "PayPal not configured",
         501,
         error_code="PAYPAL_NOT_CONFIGURED",
-    )
-
-
-def _require_internal_access(request: Request):
-    expected = (settings.internal_api_key or "").strip()
-    provided = (request.headers.get("X-Kloud-Internal-Key") or "").strip()
-    require(
-        bool(expected) and provided == expected,
-        "Internal access only",
-        403,
-        error_code="INTERNAL_ONLY",
     )
 
 
@@ -2430,7 +2422,20 @@ def paypal_token() -> str:
         )
 
 
-def _paypal_create_order_impl(payload: PayPalCreateOrderRequest) -> JSONResponse:
+@app.post(
+    "/billing/paypal/order",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def paypal_create_order(payload: PayPalCreateOrderRequest):
+    """
+    Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).
+    Payload example:
+    {
+      "intent": "CAPTURE",
+      "purchase_units": [{"amount": {"currency_code":"EUR","value":"10.00"}}]
+    }
+    """
     token = paypal_token()
     try:
         payload_dict = payload.dict(exclude_none=True)
@@ -2454,7 +2459,12 @@ def _paypal_create_order_impl(payload: PayPalCreateOrderRequest) -> JSONResponse
         )
 
 
-def _paypal_capture_order_impl(order_id: str) -> JSONResponse:
+@app.post(
+    "/billing/paypal/capture/{order_id}",
+    response_model=Dict[str, Any],
+    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
+)
+def paypal_capture_order(order_id: str):
     token = paypal_token()
     try:
         r = requests.post(
@@ -2471,108 +2481,6 @@ def _paypal_capture_order_impl(order_id: str) -> JSONResponse:
                 "message": f"PayPal capture error: {e}",
             },
         )
-
-
-def _stripe_payment_intent_impl(payload: StripePaymentIntentRequest) -> JSONResponse:
-    require_stripe()
-    try:
-        data = payload.dict(exclude_none=True)
-        form_data: Dict[str, Any] = {
-            "amount": str(data["amount"]),
-            "currency": data["currency"],
-        }
-        if data.get("description"):
-            form_data["description"] = data["description"]
-        if data.get("customer"):
-            form_data["customer"] = data["customer"]
-        if data.get("payment_method_types"):
-            for idx, meth in enumerate(data["payment_method_types"]):
-                form_data[f"payment_method_types[{idx}]"] = meth
-        if data.get("metadata"):
-            for key, value in data["metadata"].items():
-                form_data[f"metadata[{key}]"] = str(value)
-
-        r = requests.post(
-            f"{settings.stripe_base}/payment_intents",
-            headers={"Authorization": f"Bearer {settings.stripe_api_key}"},
-            data=form_data,
-            timeout=15,
-        )
-        return JSONResponse(status_code=r.status_code, content=r.json())
-    except requests.RequestException as e:
-        raise HTTPException(
-            status_code=502,
-            detail={"code": "STRIPE_ERROR", "message": f"Stripe error: {e}"},
-        )
-
-
-def _sepa_initiate_impl(payload: SepaInitiateRequest):
-    raise HTTPException(
-        status_code=501,
-        detail={
-            "code": "SEPA_NOT_CONFIGURED",
-            "message": "SEPA bank API not configured; integrate a real provider.",
-            "details": {"currency": payload.currency},
-        },
-    )
-
-
-@app.post(
-    "/billing/paypal/order",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def paypal_create_order(payload: PayPalCreateOrderRequest):
-    """
-    Create PayPal order (REAL sandbox/live depending on PAYPAL_BASE).
-    Payload example:
-    {
-      "intent": "CAPTURE",
-      "purchase_units": [{"amount": {"currency_code":"EUR","value":"10.00"}}]
-    }
-    """
-    require(
-        settings.billing_public_paypal,
-        "Public PayPal billing disabled",
-        403,
-        error_code="BILLING_PUBLIC_DISABLED",
-    )
-    return _paypal_create_order_impl(payload)
-
-
-@app.post(
-    "/billing/internal/paypal/order",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def internal_paypal_create_order(request: Request, payload: PayPalCreateOrderRequest):
-    _require_internal_access(request)
-    return _paypal_create_order_impl(payload)
-
-
-@app.post(
-    "/billing/paypal/capture/{order_id}",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def paypal_capture_order(order_id: str):
-    require(
-        settings.billing_public_paypal,
-        "Public PayPal billing disabled",
-        403,
-        error_code="BILLING_PUBLIC_DISABLED",
-    )
-    return _paypal_capture_order_impl(order_id)
-
-
-@app.post(
-    "/billing/internal/paypal/capture/{order_id}",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def internal_paypal_capture_order(request: Request, order_id: str):
-    _require_internal_access(request)
-    return _paypal_capture_order_impl(order_id)
 
 
 def require_stripe():
@@ -2595,25 +2503,36 @@ def stripe_payment_intent(payload: StripePaymentIntentRequest):
     Payload example:
     { "amount": 1000, "currency": "eur", "payment_method_types[]": "sepa_debit" }
     """
-    require(
-        settings.billing_public_stripe,
-        "Public Stripe billing disabled",
-        403,
-        error_code="BILLING_PUBLIC_DISABLED",
-    )
-    return _stripe_payment_intent_impl(payload)
+    require_stripe()
+    try:
+        data = payload.dict(exclude_none=True)
+        form_data: Dict[str, Any] = {
+            "amount": str(data["amount"]),
+            "currency": data["currency"],
+        }
+        if data.get("description"):
+            form_data["description"] = data["description"]
+        if data.get("customer"):
+            form_data["customer"] = data["customer"]
+        if data.get("payment_method_types"):
+            for idx, meth in enumerate(data["payment_method_types"]):
+                form_data[f"payment_method_types[{idx}]"] = meth
+        if data.get("metadata"):
+            for key, value in data["metadata"].items():
+                form_data[f"metadata[{key}]"] = str(value)
 
-
-@app.post(
-    "/billing/internal/stripe/payment-intent",
-    response_model=Dict[str, Any],
-    responses={501: {"model": ErrorEnvelope}, 502: {"model": ErrorEnvelope}},
-)
-def internal_stripe_payment_intent(
-    request: Request, payload: StripePaymentIntentRequest
-):
-    _require_internal_access(request)
-    return _stripe_payment_intent_impl(payload)
+        r = requests.post(
+            f"{settings.stripe_base}/payment_intents",
+            headers={"Authorization": f"Bearer {settings.stripe_api_key}"},
+            data=form_data,  # Stripe uses form-encoded
+            timeout=15,
+        )
+        return JSONResponse(status_code=r.status_code, content=r.json())
+    except requests.RequestException as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"code": "STRIPE_ERROR", "message": f"Stripe error: {e}"},
+        )
 
 
 # SEPA note: Requires bank API integration; not invented here.
@@ -2626,22 +2545,14 @@ def sepa_initiate(payload: SepaInitiateRequest):
     Placeholder endpoint to forward SEPA to a real bank API.
     Returns 501 until a concrete bank API is configured.
     """
-    require(
-        settings.billing_public_sepa,
-        "Public SEPA billing disabled",
-        403,
-        error_code="BILLING_PUBLIC_DISABLED",
+    raise HTTPException(
+        status_code=501,
+        detail={
+            "code": "SEPA_NOT_CONFIGURED",
+            "message": "SEPA bank API not configured; integrate a real provider.",
+            "details": {"currency": payload.currency},
+        },
     )
-    return _sepa_initiate_impl(payload)
-
-
-@app.post(
-    "/billing/internal/sepa/initiate",
-    responses={501: {"model": ErrorEnvelope}, 403: {"model": ErrorEnvelope}},
-)
-def internal_sepa_initiate(request: Request, payload: SepaInitiateRequest):
-    _require_internal_access(request)
-    return _sepa_initiate_impl(payload)
 
 
 # ------------- DB Utility Endpoints (REAL) -------------
@@ -2689,11 +2600,6 @@ async def redis_ping():
 
 
 # ------------- Brain Router (Cognitive Endpoints) -------------
-import asyncio
-
-from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
-
 # Assume 'cog' is the cognitive engine instance, must be available in the context
 try:
     from brain_engine import cog  # If you have a brain_engine.py with a cog instance
@@ -2744,7 +2650,8 @@ async def stream_live_brain():
     SSE stream with real-time cognitive engine metrics.
     Updates every 0.5 seconds.
     """
-    if not cog:
+    cog_engine = cog
+    if cog_engine is None:
 
         def error_stream():
             yield "data: {'error': 'cognitive_engine_unavailable'}\n\n"
@@ -2754,8 +2661,8 @@ async def stream_live_brain():
     async def event_stream():
         while True:
             try:
-                health = await cog.get_health_metrics()
-                load = await cog.get_neural_load()
+                health = await cog_engine.get_health_metrics()
+                load = await cog_engine.get_neural_load()
                 msg = {"health": health, "neural_load": load, "timestamp": time.time()}
                 import json
 
@@ -2796,9 +2703,6 @@ except Exception as e:
 
 # Import and include Alba monitoring routes
 try:
-    import os
-    import sys
-
     sys.path.append(
         os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     )
@@ -2856,7 +2760,7 @@ async def is_prometheus_available() -> bool:
     try:
         response = requests.get(f"{PROMETHEUS_URL}/-/ready", timeout=1)
         _prometheus_available = response.status_code == 200
-    except:
+    except Exception:
         _prometheus_available = False
     _prometheus_check_time = now
     return _prometheus_available
@@ -3196,9 +3100,9 @@ async def asi_status():
 async def asi_health():
     """ASI system health check - REAL data from Prometheus"""
     try:
-        alba = await alba_metrics()
-        albi = await albi_metrics()
-        jona = await jona_metrics()
+        alba = cast(Dict[str, Any], await alba_metrics())
+        albi = cast(Dict[str, Any], await albi_metrics())
+        jona = cast(Dict[str, Any], await jona_metrics())
 
         alba_health = alba.get("alba_network", {}).get("health", 0.92)
         albi_health = albi.get("albi_neural", {}).get("health", 0.88)
@@ -3237,8 +3141,8 @@ async def asi_health():
 async def albi_eeg_analysis():
     """Real-time EEG signal analysis from ALBI neural processor"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
 
         # Generate EEG analysis data based on real ALBI metrics
         neural_health = albi_neural.get("health", 0.85)
@@ -3318,8 +3222,8 @@ async def albi_eeg_analysis():
 async def albi_eeg_waves():
     """Brain wave frequency bands analysis"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
         neural_health = albi_neural.get("health", 0.85)
 
         # Calculate wave powers based on neural health
@@ -3383,8 +3287,8 @@ async def albi_eeg_waves():
 async def albi_eeg_quality():
     """Signal quality metrics for EEG channels"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
         neural_health = albi_neural.get("health", 0.85)
 
         quality_score = round(neural_health * 100, 1)
@@ -3423,8 +3327,8 @@ async def albi_eeg_quality():
 async def albi_health():
     """ALBI service health status"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
 
         return {
             "status": "healthy"
@@ -3458,8 +3362,8 @@ async def albi_health():
 async def jona_status():
     """JONA neural synthesis service status"""
     try:
-        jona_data = await jona_metrics()
-        jona_coord = jona_data.get("jona_coordination", {})
+        jona_data = cast(Dict[str, Any], await jona_metrics())
+        jona_coord = cast(Dict[str, Any], jona_data.get("jona_coordination", {}))
 
         return {
             "status": "operational"
@@ -3487,8 +3391,8 @@ async def jona_status():
 async def jona_health():
     """JONA service health check"""
     try:
-        jona_data = await jona_metrics()
-        jona_coord = jona_data.get("jona_coordination", {})
+        jona_data = cast(Dict[str, Any], await jona_metrics())
+        jona_coord = cast(Dict[str, Any], jona_data.get("jona_coordination", {}))
 
         return {
             "healthy": jona_coord.get("operational", False),
@@ -3513,8 +3417,8 @@ async def jona_health():
 async def jona_audio_list():
     """List generated audio files from neural synthesis"""
     try:
-        jona_data = await jona_metrics()
-        jona_coord = jona_data.get("jona_coordination", {})
+        jona_data = cast(Dict[str, Any], await jona_metrics())
+        jona_coord = cast(Dict[str, Any], jona_data.get("jona_coordination", {}))
 
         # Generate sample audio file list
         base_time = time.time()
@@ -3559,8 +3463,8 @@ async def jona_audio_list():
 async def jona_session():
     """Current active neural synthesis session"""
     try:
-        jona_data = await jona_metrics()
-        jona_coord = jona_data.get("jona_coordination", {})
+        jona_data = cast(Dict[str, Any], await jona_metrics())
+        jona_coord = cast(Dict[str, Any], jona_data.get("jona_coordination", {}))
         health = jona_coord.get("health", 0.5)
 
         return {
@@ -3613,8 +3517,8 @@ async def jona_synthesis_stop():
 async def spectrum_live():
     """Real-time FFT spectrum analysis"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
         health = albi_neural.get("health", 0.85)
 
         return {
@@ -3674,8 +3578,8 @@ async def spectrum_live():
 async def spectrum_bands():
     """Detailed frequency band breakdown"""
     try:
-        albi_data = await albi_metrics()
-        albi_neural = albi_data.get("albi_neural", {})
+        albi_data = cast(Dict[str, Any], await albi_metrics())
+        albi_neural = cast(Dict[str, Any], albi_data.get("albi_neural", {}))
         health = albi_neural.get("health", 0.85)
 
         return {
@@ -4250,6 +4154,22 @@ async def get_realdata_dashboard():
 # ============================================================================
 
 # Import local AI engine
+local_ai_health: Any = None
+analyze_eeg: Any = None
+kloud_ai: Any = None
+ocean_chat: Any = None
+local_trinity: Any = None
+
+
+def interpret_query(query: Any) -> Any:
+    return {
+        "interpretation": "Local AI engine unavailable",
+        "detected_patterns": [],
+        "confidence": 0.0,
+        "suggestions": [],
+    }
+
+
 try:
     from kloud_ai_engine import ai_health as local_ai_health
     from kloud_ai_engine import analyze_eeg, kloud_ai, interpret_query, ocean_chat
@@ -4393,8 +4313,6 @@ def init_crewai_agents():
         return _crewai_agents
 
     try:
-        import os
-
         from crewai import Agent
         from dotenv import load_dotenv
 
@@ -4444,14 +4362,22 @@ def init_langchain_chains():
         return _langchain_chains
 
     try:
-        import os
+        import importlib
 
         from dotenv import load_dotenv
-        from langchain.chains import ConversationChain
-        from langchain.llms import OpenAI
-        from langchain.memory import ConversationBufferMemory
 
         load_dotenv()
+
+        chains_mod = importlib.import_module("langchain.chains")
+        llms_mod = importlib.import_module("langchain.llms")
+        memory_mod = importlib.import_module("langchain.memory")
+
+        ConversationChain = getattr(chains_mod, "ConversationChain", None)
+        OpenAI = getattr(llms_mod, "OpenAI", None)
+        ConversationBufferMemory = getattr(memory_mod, "ConversationBufferMemory", None)
+
+        if not (ConversationChain and OpenAI and ConversationBufferMemory):
+            raise ImportError("LangChain legacy APIs unavailable in installed version")
 
         # Initialize conversation memory
         memory = ConversationBufferMemory()
@@ -4531,10 +4457,10 @@ async def call_groq_api(
     try:
         import httpx
 
-        # Kloud Project Context - AI knows about itself
+        # Kameleon Life Project Context - AI knows about itself
         kloud_context = """
-🏢 ABOUT KLOUD (Your Home Platform):
-Kloud (kloud.com) is YOUR platform - the very system you are running on.
+    🏢 ABOUT KAMELEON LIFE (Your Home Platform):
+    Kameleon Life (kameleon.life) is YOUR platform - the very system you are running on.
 It's an ASI-powered neurotechnology platform built in Albania.
 
 🧠 Core Technology:
@@ -4556,10 +4482,10 @@ It's an ASI-powered neurotechnology platform built in Albania.
 - Phone Monitor: Live ASI Trinity telemetry
 - Billing: Stripe integration for premium features
 
-🌐 Website: https://kloud.com
-Built by the Kloud team with ❤️ from Albania
+🌐 Website: https://kameleon.life
+Built by the Kameleon Life team with ❤️ from Albania
 
-When users ask about Kloud, kloud.com, or this platform - tell them proudly that this is YOUR home, the system you power!
+When users ask about Kameleon Life, kameleon.life, or this platform - tell them proudly that this is YOUR home, the system you power!
 """
 
         if ultra_thinking:
@@ -4686,9 +4612,12 @@ async def get_asi_trinity_metrics() -> Dict[str, Any]:
         albi = await albi_metrics()
         jona = await jona_metrics()
 
-        alba_health = alba.get("alba_network", {}).get("health", 0.7)
-        albi_health = albi.get("albi_neural", {}).get("health", 0.7)
-        jona_health = jona.get("jona_coordination", {}).get("health", 0.95)
+        alba_d = cast(Dict[str, Any], alba)
+        albi_d = cast(Dict[str, Any], albi)
+        jona_d = cast(Dict[str, Any], jona)
+        alba_health = alba_d.get("alba_network", {}).get("health", 0.7)
+        albi_health = albi_d.get("albi_neural", {}).get("health", 0.7)
+        jona_health = jona_d.get("jona_coordination", {}).get("health", 0.95)
 
         return {
             "alba": {
@@ -4851,7 +4780,7 @@ async def generate_intelligent_response(
             "🔍 Key Insights:\n",
             f"• Query complexity: {len(query.split())} tokens\n",
             f"• Expected depth: {curiosity_level} level exploration\n",
-            f"• Local synthesis: Using 65 main API endpoints\n",
+            "• Local synthesis: Using 65 main API endpoints\n",
             "• Data sources: Internal knowledge base (ASI, ALBI, JONA, Analytics)\n",
             "\n💡 Response Framework:\n",
             "The system is synthesizing a response using local endpoints since Ocean-Core is temporarily unavailable. "
@@ -5142,11 +5071,16 @@ except Exception as e:
 kitchen_router = APIRouter(prefix="/api/kitchen", tags=["protocol-kitchen"])
 
 # Import pipeline if available
+_HybridProtocolPipeline: Any = None
+_PipelineStatus: Any = None
 try:
     import sys as _sys
 
     _sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-    from hybrid_protocol_pipeline import HybridProtocolPipeline, PipelineStatus
+    from hybrid_protocol_pipeline import (
+        HybridProtocolPipeline as _HybridProtocolPipeline,
+        PipelineStatus as _PipelineStatus,
+    )  # noqa: F811
 
     _PIPELINE_AVAILABLE = True
     logger.info("[OK] Protocol Kitchen pipeline loaded")
@@ -5154,9 +5088,11 @@ except ImportError as e:
     _PIPELINE_AVAILABLE = False
     logger.warning(f"Protocol Kitchen pipeline not available: {e}")
 
-    class PipelineStatus:
+    class PipelineStatus:  # type: ignore[no-redef]
         RAW = "raw"
         COMPLETE = "complete"
+
+    _PipelineStatus = PipelineStatus
 
 
 @kitchen_router.get("/status")
@@ -5246,7 +5182,7 @@ async def kitchen_intake(request: Request):
         if not isinstance(data, list):
             data = [data]
 
-        pipeline = HybridProtocolPipeline()
+        pipeline = _HybridProtocolPipeline()
         pipeline.intake(data)
         results = pipeline.run()
 
@@ -5500,7 +5436,7 @@ async def excel_dashboard_info(name: str):
 async def excel_download(filename: str):
     """Download an Excel file"""
     file_path = EXCEL_DIR / filename
-    if not file_path.exists() or not file_path.suffix in [".xlsx", ".xls"]:
+    if (not file_path.exists()) or (file_path.suffix not in [".xlsx", ".xls"]):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(
         path=str(file_path),
@@ -6003,8 +5939,9 @@ async def mymirror_live_metrics():
     containers_total = 0
     containers_running = 0
     try:
-        import docker
+        import importlib
 
+        docker = importlib.import_module("docker")
         client = docker.from_env()
         all_containers = client.containers.list(all=True)
         containers_total = len(all_containers)
@@ -6045,19 +5982,25 @@ async def mymirror_docker_containers():
     containers = []
 
     try:
-        import docker
+        import importlib
 
+        docker = importlib.import_module("docker")
         client = docker.from_env()
 
         for c in client.containers.list():
             try:
                 # Get basic info
+                image_obj = c.image
+                image_tags = getattr(image_obj, "tags", []) if image_obj else []
+                image_short_id = (
+                    getattr(image_obj, "short_id", "unknown")
+                    if image_obj
+                    else "unknown"
+                )
                 container_info = {
                     "id": c.short_id,
                     "name": c.name,
-                    "image": c.image.tags[0]
-                    if c.image.tags
-                    else str(c.image.short_id)[:20],
+                    "image": image_tags[0] if image_tags else str(image_short_id)[:20],
                     "status": c.status,
                     "cpu": 0.0,
                     "memory": 0.0,
@@ -6077,7 +6020,7 @@ async def mymirror_docker_containers():
 
                 # Try to get stats (may be slow)
                 try:
-                    stats = c.stats(stream=False)
+                    stats = cast(Dict[str, Any], c.stats(stream=False))
                     cpu_delta = (
                         stats["cpu_stats"]["cpu_usage"]["total_usage"]
                         - stats["precpu_stats"]["cpu_usage"]["total_usage"]
@@ -6232,6 +6175,10 @@ async def mymirror_export(request: Request):
 
             wb = Workbook()
             ws = wb.active
+            if ws is None:
+                raise HTTPException(
+                    status_code=500, detail="Worksheet initialization failed"
+                )
             ws.title = "MyMirror Export"
 
             # Header

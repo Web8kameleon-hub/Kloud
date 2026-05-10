@@ -14,9 +14,9 @@ class KloudClient:
 
     def __init__(
         self,
-        base_url: str = "https://api.kloud.com",
+        base_url: str = "https://kameleon.life",
         token: Optional[str] = None,
-        timeout: int = 30
+        timeout: int = 30,
     ):
         self.base_url = base_url.rstrip("/")
         self.token = token
@@ -26,9 +26,7 @@ class KloudClient:
         self.session = requests.Session()
 
     def _headers(self, json_content: bool = True) -> Dict[str, str]:
-        headers = {
-            "User-Agent": "Kloud-Python-SDK/1.0"
-        }
+        headers = {"User-Agent": "Kloud-Python-SDK/1.0"}
         if json_content:
             headers["Accept"] = "application/json"
             headers["Content-Type"] = "application/json"
@@ -55,34 +53,34 @@ class KloudClient:
             f"{self.base_url}/auth/login",
             json=payload,
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         data = r.json()
-        
+
         # Store tokens
         self.token = data.get("token")
         self.refresh_token = data.get("refresh_token")
         if api_key := data.get("api_key"):
             self.api_key = api_key
-        
+
         return data
 
     def refresh(self) -> Dict[str, Any]:
         """POST /auth/refresh – Refresh the JWT token"""
         if not self.refresh_token:
             raise RuntimeError("No refresh_token stored. Call login() first.")
-        
+
         payload = {"refresh_token": self.refresh_token}
         r = self.session.post(
             f"{self.base_url}/auth/refresh",
             json=payload,
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         data = r.json()
-        
+
         # Update token
         self.token = data.get("token")
         return data
@@ -91,21 +89,21 @@ class KloudClient:
         """POST /auth/api-key – Create a new API key"""
         if not self.token:
             raise RuntimeError("Authentication required. Call login() first.")
-        
+
         payload = {"label": label}
         r = self.session.post(
             f"{self.base_url}/auth/api-key",
             json=payload,
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         data = r.json()
-        
+
         # Store the API key
         if api_key := data.get("api_key"):
             self.api_key = api_key
-        
+
         return data
 
     # ==================== Health & Status ====================
@@ -113,9 +111,7 @@ class KloudClient:
     def health(self) -> Dict[str, Any]:
         """GET /health – System health check"""
         r = self.session.get(
-            f"{self.base_url}/health",
-            headers=self._headers(),
-            timeout=self.timeout
+            f"{self.base_url}/health", headers=self._headers(), timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -123,9 +119,7 @@ class KloudClient:
     def status(self) -> Dict[str, Any]:
         """GET /status – Full system status"""
         r = self.session.get(
-            f"{self.base_url}/status",
-            headers=self._headers(),
-            timeout=self.timeout
+            f"{self.base_url}/status", headers=self._headers(), timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -135,7 +129,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/api/system-status",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -143,9 +137,7 @@ class KloudClient:
     def db_ping(self) -> Dict[str, Any]:
         """GET /db/ping – Database connectivity test"""
         r = self.session.get(
-            f"{self.base_url}/db/ping",
-            headers=self._headers(),
-            timeout=self.timeout
+            f"{self.base_url}/db/ping", headers=self._headers(), timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -153,9 +145,7 @@ class KloudClient:
     def redis_ping(self) -> Dict[str, Any]:
         """GET /redis/ping – Redis connectivity test"""
         r = self.session.get(
-            f"{self.base_url}/redis/ping",
-            headers=self._headers(),
-            timeout=self.timeout
+            f"{self.base_url}/redis/ping", headers=self._headers(), timeout=self.timeout
         )
         r.raise_for_status()
         return r.json()
@@ -163,22 +153,19 @@ class KloudClient:
     # ==================== Ask & Neural Symphony ====================
 
     def ask(
-        self,
-        question: str,
-        context: Optional[str] = None,
-        include_details: bool = True
+        self, question: str, context: Optional[str] = None, include_details: bool = True
     ) -> Dict[str, Any]:
         """POST /api/ask – Query the AI assistant"""
         payload = {
             "question": question,
             "context": context,
-            "include_details": include_details
+            "include_details": include_details,
         }
         r = self.session.post(
             f"{self.base_url}/api/ask",
             json=payload,
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -188,15 +175,13 @@ class KloudClient:
         headers = self._headers(json_content=False)
         headers["Accept"] = "audio/wav"
         r = self.session.get(
-            f"{self.base_url}/neural-symphony",
-            headers=headers,
-            timeout=self.timeout
+            f"{self.base_url}/neural-symphony", headers=headers, timeout=self.timeout
         )
         r.raise_for_status()
-        
+
         if save_to:
             Path(save_to).write_bytes(r.content)
-        
+
         return r.content
 
     # ==================== Uploads & Processing ====================
@@ -208,8 +193,12 @@ class KloudClient:
             r = self.session.post(
                 f"{self.base_url}/api/uploads/eeg/process",
                 files=files,
-                headers={k: v for k, v in self._headers(json_content=False).items() if k != "Content-Type"},
-                timeout=self.timeout
+                headers={
+                    k: v
+                    for k, v in self._headers(json_content=False).items()
+                    if k != "Content-Type"
+                },
+                timeout=self.timeout,
             )
         r.raise_for_status()
         return r.json()
@@ -221,8 +210,12 @@ class KloudClient:
             r = self.session.post(
                 f"{self.base_url}/api/uploads/audio/process",
                 files=files,
-                headers={k: v for k, v in self._headers(json_content=False).items() if k != "Content-Type"},
-                timeout=self.timeout
+                headers={
+                    k: v
+                    for k, v in self._headers(json_content=False).items()
+                    if k != "Content-Type"
+                },
+                timeout=self.timeout,
             )
         r.raise_for_status()
         return r.json()
@@ -235,7 +228,7 @@ class KloudClient:
             f"{self.base_url}/brain/youtube/insight",
             params={"video_id": video_id},
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -247,8 +240,12 @@ class KloudClient:
             r = self.session.post(
                 f"{self.base_url}/brain/energy/check",
                 files=files,
-                headers={k: v for k, v in self._headers(json_content=False).items() if k != "Content-Type"},
-                timeout=self.timeout
+                headers={
+                    k: v
+                    for k, v in self._headers(json_content=False).items()
+                    if k != "Content-Type"
+                },
+                timeout=self.timeout,
             )
         r.raise_for_status()
         return r.json()
@@ -260,8 +257,12 @@ class KloudClient:
             r = self.session.post(
                 f"{self.base_url}/brain/harmony",
                 files=files,
-                headers={k: v for k, v in self._headers(json_content=False).items() if k != "Content-Type"},
-                timeout=self.timeout
+                headers={
+                    k: v
+                    for k, v in self._headers(json_content=False).items()
+                    if k != "Content-Type"
+                },
+                timeout=self.timeout,
             )
         r.raise_for_status()
         return r.json()
@@ -271,7 +272,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/brain/cortex-map",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -281,7 +282,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/brain/temperature",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -291,7 +292,7 @@ class KloudClient:
         r = self.session.post(
             f"{self.base_url}/brain/restart",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -303,7 +304,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/api/alba/status",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -314,7 +315,7 @@ class KloudClient:
         sampling_rate_hz: int = 256,
         channels: Optional[list] = None,
         description: Optional[str] = None,
-        metadata: Optional[dict] = None
+        metadata: Optional[dict] = None,
     ) -> Dict[str, Any]:
         """POST /api/alba/streams/start – Start data stream"""
         payload = {
@@ -322,13 +323,13 @@ class KloudClient:
             "sampling_rate_hz": sampling_rate_hz,
             "channels": channels or ["C3", "C4"],
             "description": description,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
         r = self.session.post(
             f"{self.base_url}/api/alba/streams/start",
             json=payload,
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -338,7 +339,7 @@ class KloudClient:
         r = self.session.post(
             f"{self.base_url}/api/alba/streams/{stream_id}/stop",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -348,7 +349,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/api/alba/streams",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -359,7 +360,7 @@ class KloudClient:
             f"{self.base_url}/api/alba/streams/{stream_id}/data",
             params={"limit": limit},
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -369,7 +370,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/api/alba/metrics",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -379,7 +380,7 @@ class KloudClient:
         r = self.session.get(
             f"{self.base_url}/api/alba/health",
             headers=self._headers(),
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         r.raise_for_status()
         return r.json()
@@ -426,5 +427,3 @@ if __name__ == "__main__":
         print(f"✗ Error: {e}")
     finally:
         client.close()
-
-

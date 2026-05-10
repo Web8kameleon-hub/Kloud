@@ -186,8 +186,8 @@ jobs:
             "https://cxl.i/api/v1/status"
             "https://lite.clisonix.ai/health"
             "https://lite.clisonix.ai/api/v1/status"
-            "https://kloud.cloud/health"
-            "https://kloud.cloud/api/v1/status"
+            "https://kameleon.life/health"
+            "https://kameleon.life/api/v1/status"
           )
 
           OK=false
@@ -307,8 +307,8 @@ jobs:
             "https://cxl.i/api/v1/status"
             "https://lite.clisonix.ai/health"
             "https://lite.clisonix.ai/api/v1/status"
-            "https://kloud.cloud/health"
-            "https://kloud.cloud/api/v1/status"
+            "https://kameleon.life/health"
+            "https://kameleon.life/api/v1/status"
           )
 
           OK=false

@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { resolveBearerUser } from "@/lib/internal-auth";
 
 // Plan pricing configuration (in cents)
 const PLAN_PRICING = {
@@ -42,6 +43,14 @@ const PLAN_PRICING = {
 
 export async function POST(request: Request) {
   try {
+    const authUser = await resolveBearerUser(request.headers.get("authorization"));
+    if (!authUser) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
     const { priceId, planName, successUrl, cancelUrl } = await request.json();
 
     // Check if Stripe is configured
@@ -76,7 +85,7 @@ export async function POST(request: Request) {
 
     // Create or get a customer (required for Stripe Accounts V2 in test mode)
     // In production, you'd fetch the customer from your database
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
+    const customerEmail = authUser.email || process.env.USER_EMAIL || "customer@kloud.com";
 
     // Search for existing customer
     const existingCustomers = await stripe.customers.list({
@@ -91,9 +100,10 @@ export async function POST(request: Request) {
       // Create new customer
       const customer = await stripe.customers.create({
         email: customerEmail,
-        name: process.env.USER_NAME || "Kloud User",
+        name: authUser.name || process.env.USER_NAME || "Kloud User",
         metadata: {
           company: process.env.USER_COMPANY || "",
+          internal_user_id: authUser.id,
         },
       });
       customerId = customer.id;
@@ -129,6 +139,8 @@ export async function POST(request: Request) {
       metadata: {
         planName: planName || pricing.name,
         priceId,
+        internal_user_id: authUser.id,
+        internal_user_email: authUser.email || "",
       },
       billing_address_collection: "required",
       allow_promotion_codes: true,
@@ -151,5 +163,6 @@ export async function POST(request: Request) {
     );
   }
 }
+
 
 

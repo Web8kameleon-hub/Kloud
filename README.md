@@ -47,7 +47,7 @@ Industrial Backend & Payment System
 
 ### 🚀 LLM Inference Engines
 
-- **Ollama:** Local LLM inference (llama3.1:8b) - CPU optimized
+- **CLX:** Local inference endpoint for `clx` / `clx.i` - CPU optimized
 - **vLLM:** High-throughput GPU inference engine ([vllm.ai](https://vllm.ai)) - Requires NVIDIA GPU
 - **Curiosity Ocean:** Hybrid multilingual AI assistant v8.0
 

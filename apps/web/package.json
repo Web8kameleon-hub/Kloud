@@ -4,9 +4,10 @@
   "type": "module",
   "description": "Kloud Industrial Frontend - Next.js Dashboard",
   "private": true,
+  "packageManager": "yarn@4.10.3",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
@@ -71,4 +72,3 @@
     "glob": "^11.0.0"
   }
 }
-

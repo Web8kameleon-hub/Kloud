@@ -69,7 +69,7 @@ Kloud Cloud is an AI-powered Industrial IoT platform with Neural Intelligence ca
 | alba       | 5555  | Analytical Intelligence     |
 | albi       | 6680  | Creative Intelligence       |
 | asi        | 9094  | Artificial Superintelligence|
-| ollama     | 11434 | LLM Model Server            |
+| clx     | 11434 | LLM Model Server            |
 | postgres   | 5432  | Primary Database            |
 | redis      | 6379  | Cache & Sessions            |
 

@@ -1109,7 +1109,7 @@ jobs:
         if: steps.ssh_deploy.outcome != 'success' && steps.deploy_prereq.outputs.has_kubeconfig == 'true'
         run: |
           NAMESPACE="${{ env.NAMESPACE_PREFIX }}-${{ inputs.environment || 'production' }}"
-          DOMAIN="${{ inputs.environment == 'staging' && 'staging.kloud.cloud' || 'kloud.cloud' }}"
+          DOMAIN="${{ inputs.environment == 'staging' && 'staging.kameleon.life' || 'kameleon.life' }}"
           
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace $NAMESPACE \
@@ -1207,8 +1207,8 @@ jobs:
           echo "**Image Tag:** ${{ needs.build-images.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🌐 Access Points" >> $GITHUB_STEP_SUMMARY
-          echo "- **Frontend:** https://kloud.cloud" >> $GITHUB_STEP_SUMMARY
-          echo "- **API:** https://kloud.cloud/api" >> $GITHUB_STEP_SUMMARY
-          echo "- **Ocean:** https://kloud.cloud/ocean" >> $GITHUB_STEP_SUMMARY
-          echo "- **ASI:** https://kloud.cloud/asi" >> $GITHUB_STEP_SUMMARY
+          echo "- **Frontend:** https://kameleon.life" >> $GITHUB_STEP_SUMMARY
+          echo "- **API:** https://kameleon.life/api" >> $GITHUB_STEP_SUMMARY
+          echo "- **Ocean:** https://kameleon.life/ocean" >> $GITHUB_STEP_SUMMARY
+          echo "- **ASI:** https://kameleon.life/asi" >> $GITHUB_STEP_SUMMARY
 

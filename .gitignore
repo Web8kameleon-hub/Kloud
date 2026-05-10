@@ -8,6 +8,7 @@ research/generated_cycles_v12/grafana-ml-ecosystem/
 # Environment Variables (SENSITIVE DATA)
 .env
 .env.*
+.env.fabric.local
 .env.local
 .env.production
 .env.staging
@@ -39,6 +40,13 @@ yarn-debug.log*
 yarn-error.log*
 # package-lock.json  # ENABLED for Dependency Review in CI
 # yarn.lock          # ENABLED for Dependency Review in CI
+.npm-cache/
+.yarn/
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/sdks/
+!.yarn/versions/
 
 # Python
 __pycache__/
@@ -73,6 +81,12 @@ env/
 ENV/
 .venv/
 .env/
+.pip-cache/
+.uv-cache/
+.pytest_cache/
+
+# Rust / Cargo local homes
+.cargo-home/
 
 # Redis
 redis.conf
@@ -186,6 +200,7 @@ apps/web/.next/
 apps/web/kitchen-jobs/
 *.pack.gz
 *.pack.gz.old
+.pnp.*
 
 # Claude temporary directories
 tmpclaude-*

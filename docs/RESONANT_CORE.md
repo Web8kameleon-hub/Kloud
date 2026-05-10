@@ -68,6 +68,12 @@ The first repositories and services to adopt this model should be:
 
 Define the contract and keep the current endpoints compatible.
 
+Test the first slice at 5% on one low-risk service path, with old and new fields returned together.
+
+Expand to 25% only after the 5% slice is stable and WWWMMM validation is enforced on the adapter path.
+
+Treat unresolved or non-verifiable "fake concepts" as quarantine candidates and keep them out of promoted 25% traffic.
+
 ### Phase 2
 
 Move service internals to consume the shared contract.
@@ -102,4 +108,3 @@ This file is the starting point for the shared architecture model.
 ## LPRI and Fluid Architecture
 
 - `docs/LPRI_STIGMA_FLUID_ARCHITECTURE.md`
-

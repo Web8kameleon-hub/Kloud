@@ -1,7 +1,7 @@
 # Kloud Microservices Manifest - 76+ Services
 
 ## Core Infrastructure
-- **Ollama LLM** (Port 11434) - Local language model engine
+- **CLX LLM** (Port 11434) - Local language model engine
 - **PostgreSQL** (Port 5432) - Primary relational database
 - **Redis** (Port 6379) - Cache and session store
 - **Neo4j** (Port 7474/7687) - Graph database for relationships
@@ -127,10 +127,10 @@
 - **8030**: Ocean Core
 - **9000**: MinIO
 - **9999**: AI Global
-- **11434**: Ollama
+- **11434**: CLX
 
 ### Startup Sequence (Priority Order)
-1. Infrastructure (Ollama, PostgreSQL, Redis, Neo4j, MinIO)
+1. Infrastructure (CLX, PostgreSQL, Redis, Neo4j, MinIO)
 2. Ocean Core (8030) - Foundation
 3. AI Global 9999 - Main engine
 4. API Backend (8000) - Gateway
@@ -148,7 +148,7 @@
 - All services log to: stdout (captured by orchestrator)
 
 ### Environment Variables (Global)
-- `OLLAMA_HOST`: http://127.0.0.1:11434
+- `CLX_HOST`: http://127.0.0.1:11434
 - `OCEAN_CORE_URL`: http://127.0.0.1:8030
 - `API_BACKEND_URL`: http://127.0.0.1:8000
 - `REDIS_URL`: redis://127.0.0.1:6379
@@ -160,7 +160,7 @@ curl http://localhost:9999/health       # AI Global
 curl http://localhost:8030/health       # Ocean Core
 curl http://localhost:8000/health       # API Backend
 curl http://localhost:3001              # Frontend
-curl http://localhost:11434/api/health  # Ollama
+curl http://localhost:11434/api/health  # CLX
 ```
 
 ### Status: Ready to Deploy

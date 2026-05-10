@@ -18,6 +18,8 @@ mod execution_pipeline;
 mod routing_engine;
 mod storage_engine;
 mod replication_engine;
+pub mod governance_contracts;
+pub mod self_writing_protocol;
 
 #[derive(Clone)]
 pub struct TransportMetrics {

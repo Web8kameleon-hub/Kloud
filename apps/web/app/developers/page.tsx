@@ -16,7 +16,7 @@ const liveEndpoints = {
   ocean: [
     { method: 'POST', path: '/api/ocean',            desc: 'Chat with Curiosity Ocean AI' },
     { method: 'POST', path: '/api/ocean/stream',     desc: 'Streaming AI chat' },
-    { method: 'POST', path: '/api/ocean/vision',     desc: 'Image analysis (LLaVA)' },
+    { method: 'POST', path: '/api/ocean/vision',     desc: 'Image analysis (CLX.I)' },
     { method: 'POST', path: '/api/ocean/audio',      desc: 'Audio transcription (Whisper)' },
     { method: 'POST', path: '/api/ocean/document',   desc: 'Document analysis' },
     { method: 'GET',  path: '/api/ocean/web-reader', desc: 'Web content reader' },
@@ -575,7 +575,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
             {[
               { q: 'How do I get started?', a: 'Sign up for a free account at kloud.com/sign-up. You can start calling public endpoints immediately — no API key required for read-only status and health endpoints.' },
               { q: 'Do these APIs actually work?', a: 'Yes. Every endpoint listed on this page is live on production. Click "Try" next to any endpoint above to see the real response.' },
-              { q: 'What AI models power Ocean?', a: 'Curiosity Ocean uses Llama 3.1 8B for text, LLaVA for vision, and Faster-Whisper for audio transcription. All models run on our infrastructure — no external API calls.' },
+              { q: 'What AI models power Ocean?', a: 'Curiosity Ocean uses CLX for text, CLX.I for vision, and Faster-Whisper for audio transcription. All models run on our infrastructure — no external API calls.' },
               { q: 'Can I bill per usage instead of fixed tiers?', a: 'Yes. The platform supports metered billing. Track billable units such as api_request, ocean_chat, vision_job, audio_job, and export_job, then attach them to Stripe metered products.' },
               { q: 'How do I enable phone and SMS login?', a: 'Use Clerk as the identity provider and enable phone number sign-in plus SMS verification in the Clerk dashboard. The app UI already supports Clerk-based auth surfaces.' },
               { q: 'Can I upgrade or downgrade anytime?', a: 'Yes. Upgrades take effect immediately. Downgrades apply at the next billing cycle. All payments are processed through Stripe.' },

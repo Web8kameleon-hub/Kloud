@@ -29,7 +29,7 @@
 - [ ] Validator + Prompt integrated
 - [ ] RAG flow diagram reviewed
 - [ ] Weaviate schema created
-- [ ] Ollama embedding tested
+- [ ] CLX embedding tested
 
 **Checklist Commands:**
 
@@ -261,7 +261,7 @@ curl -s http://localhost:8030/health
 {
   "status": "healthy",
   "services": {
-    "ollama": "✅ OK",
+    "clx": "✅ OK",
     "weaviate": "✅ OK",
     "validator": "✅ OK"
   }

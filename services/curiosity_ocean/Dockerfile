@@ -14,6 +14,7 @@ COPY explore.py .
 COPY search.py .
 COPY __init__.py .
 
-EXPOSE 8011
+ENV PORT=8019
+EXPOSE 8019
 
-CMD ["python", "-m", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8011"]
+CMD ["sh", "-c", "python -m uvicorn api:app --host 0.0.0.0 --port ${PORT:-8019}"]

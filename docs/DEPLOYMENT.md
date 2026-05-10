@@ -79,7 +79,7 @@ docker compose logs -f --tail=100
 | Redis | 6379 | TCP |
 | Prometheus | 9090 | HTTP |
 | Grafana | 3000 | HTTP |
-| Ollama | 11434 | HTTP |
+| CLX | 11434 | HTTP |
 
 ---
 
@@ -116,9 +116,9 @@ services:
     ports:
       - "8030:8030"
     environment:
-      - OLLAMA_HOST=http://ollama:11434
+      - CLX_HOST=http://clx:11434
     depends_on:
-      - ollama
+      - clx
 ```
 
 ### Database Services
@@ -143,10 +143,10 @@ services:
 ### AI Services
 
 ```yaml
-  ollama:
-    image: ollama/ollama:latest
+  clx:
+    image: clx/clx:latest
     volumes:
-      - ollama_data:/root/.ollama
+      - clx_data:/root/.clx
     deploy:
       resources:
         reservations:

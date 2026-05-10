@@ -27,7 +27,7 @@ Ofron analiza EEG, audio binaural, ML pipelines, dhe AI agents për industri dhe
 
 - Backend: FastAPI microservices (Python)
 - Frontend: Next.js (apps/web)
-- AI/ML: Ollama (local LLM), PyTorch, HuggingFace, vLLM
+- AI/ML: CLX (local LLM), PyTorch, HuggingFace, vLLM
 - Infrastructure: Docker Compose, GitHub Actions CI/CD, Hetzner Cloud
 - Data: Redis, PostgreSQL, real-time streaming
 

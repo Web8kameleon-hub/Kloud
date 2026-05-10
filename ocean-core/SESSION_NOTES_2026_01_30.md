@@ -6,10 +6,10 @@
 
 ## 🎯 OBJEKTIVAT E SESIONIT
 
-### 1. Multi-Model Ollama Engine
+### 1. Multi-Model CLX Engine
 
-- ✅ Krijuar `ollama_multi_engine.py` - 5 modele enterprise
-- ✅ Krijuar `ollama_multi_api.py` - API microservice (Port: 4444)
+- ✅ Krijuar `clx_multi_engine.py` - 5 modele enterprise
+- ✅ Krijuar `clx_multi_api.py` - API microservice (Port: 4444)
 - ✅ Integruar në `response_orchestrator_v5.py`
 - ✅ Shtuar në `service_registry.py` (76 microservices total)
 
@@ -148,7 +148,7 @@ steps:
   - final_output
 ```
 
-### Ollama Multi-Model API (Port 4444)
+### CLX Multi-Model API (Port 4444)
 
 ```json
 {
@@ -231,8 +231,8 @@ steps:
 
 ## 📌 FILES TË KRIJUARA SOT
 
-1. `ollama_multi_engine.py` - Multi-Model Engine (570+ rreshta)
-2. `ollama_multi_api.py` - FastAPI Microservice (280+ rreshta)
+1. `clx_multi_engine.py` - Multi-Model Engine (570+ rreshta)
+2. `clx_multi_api.py` - FastAPI Microservice (280+ rreshta)
 3. `service_registry.py` - Updated (76 services)
 4. `response_orchestrator_v5.py` - Updated me multi-model support
 
@@ -242,7 +242,7 @@ steps:
 
 | Endpoint | Port | Status |
 | -------- | ---- | ------ |
-| Ollama Multi API | 4444 | ✅ Running |
+| CLX.I | 4444 | ✅ Running |
 | Health Check | /health | ✅ OK |
 | Models List | /models | ✅ 5 models |
 | Generate | /api/v1/generate | ✅ Working |
@@ -283,7 +283,7 @@ steps:
 ✅ curiosity_level="genius" - ekziston në curiosity_ocean_bridge.py
 ✅ "genius" mode - ekziston në apps/api/main.py (lines 3927-3928)
 ✅ GENIUS_MODE templates - ekziston në curiosity_core_engine.py
-✅ QueryComplexityAnalyzer - ekziston në ollama_multi_engine.py
+✅ QueryComplexityAnalyzer - ekziston në clx_multi_engine.py
 ...
 
 ### ÇFARË MUNGON (duhet krijuar)
@@ -380,12 +380,12 @@ PERSONA_MODEL_MAPPING = {
 4. **GENIUS mode ekziston por nuk aktivizohet**
    - `CuriosityLevel.GENIUS` ekziston në kod
    - Por nuk ka routing nga `QueryComplexityAnalyzer` → `CuriosityLevel`
-   - Moduli `curiosity_core_engine.py` dhe `ollama_multi_engine.py` nuk janë të lidhur
+   - Moduli `curiosity_core_engine.py` dhe `clx_multi_engine.py` nuk janë të lidhur
 
 ### VENDIM I ARDHSHËM
 
 ...
-[✅] Zgjerimi i DEEP_KEYWORDS në ollama_multi_engine.py - DONE! 130+ keywords
+[✅] Zgjerimi i DEEP_KEYWORDS në clx_multi_engine.py - DONE! 130+ keywords
 [✅] Krijimi i CognitiveSignatureEngine.py që lidh:
     QueryComplexityAnalyzer → CuriosityLevel → Model Strategy - DONE!
 [✅] Krijimi i AdaptivePersonaRouter.py me 4 personas - DONE!
@@ -418,7 +418,7 @@ PERSONA_MODEL_MAPPING = {
 
 ### Skedarë të Modifikuar
 
-1. **ollama_multi_engine.py**
+1. **clx_multi_engine.py**
    - DEEP_KEYWORDS zgjeruar nga ~25 → 130+ keywords
    - Kategori të reja: Fizikë Teorike, Neuroshkencë, Matematikë, Filozofi, AI/ML
    - Logjikë e përmirësuar: 1+ deep keyword me pyetje shkurt → DEEP tier
@@ -439,7 +439,7 @@ PERSONA_MODEL_MAPPING = {
 Query → CognitiveSignatureEngine.analyze() → CognitiveSignature
   → AdaptivePersonaRouter.route() → RoutingDecision
     → Strategy (FAST/BALANCED/AUTO/DEEP)
-      → OllamaMultiEngine.generate(strategy=...)
+      → CLXMultiEngine.generate(strategy=...)
         → Model Selection (phi3/v2/llama/gpt-oss:120b)
 
 ---

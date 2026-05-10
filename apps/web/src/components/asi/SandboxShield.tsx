@@ -80,6 +80,15 @@ export function SandboxShield({ className }: SandboxShieldProps) {
   const store = useASIStore();
   const jona = store.jona ?? { ethics: 'moderate', violations: [] };
   const sandbox = store.sandbox ?? { threatLevel: 'low', isActive: false };
+  const sandboxState = sandbox as {
+    active?: boolean;
+    isActive?: boolean;
+    threatLevel?: string;
+    violations?: unknown[];
+  };
+  const sandboxIsActive = Boolean(sandboxState.isActive ?? sandboxState.active);
+  const sandboxThreatLevel = sandboxState.threatLevel ?? 'low';
+  const sandboxViolations = Array.isArray(sandboxState.violations) ? sandboxState.violations : [];
 
   const getThreatLevelColor = (level: string) => {
     switch (level) {
@@ -128,30 +137,30 @@ export function SandboxShield({ className }: SandboxShieldProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-300">Status:</span>
           <div className={statusBadge({ 
-            status: sandbox?.active ? 'active' : 'inactive',
+            status: sandboxIsActive ? 'active' : 'inactive',
             size: 'default'
           })}>
-            {sandbox?.active ? 'AKTIV' : 'JOAKTIV'}
+            {sandboxIsActive ? 'AKTIV' : 'JOAKTIV'}
           </div>
         </div>
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-300">Threat Level:</span>
           <div className={statusBadge({ 
-            status: getThreatLevelColor(sandbox?.threatLevel ?? 'low'),
+            status: getThreatLevelColor(sandboxThreatLevel),
             size: 'default'
           })}>
-            {(sandbox?.threatLevel ?? 'low').toUpperCase()}
+            {sandboxThreatLevel.toUpperCase()}
           </div>
         </div>
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-300">Violations:</span>
           <span className={`text-sm font-mono ${
-            (sandbox?.violations?.length ?? 0) === 0 ? 'text-green-400' :
-              (sandbox?.violations?.length ?? 0) < 5 ? 'text-yellow-400' : 'text-red-400'
+            sandboxViolations.length === 0 ? 'text-green-400' :
+              sandboxViolations.length < 5 ? 'text-yellow-400' : 'text-red-400'
           }`}>
-            {sandbox?.violations?.length ?? 0}
+            {sandboxViolations.length}
           </span>
         </div>
 
@@ -240,11 +249,11 @@ export function SandboxShield({ className }: SandboxShieldProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={asiButton({ 
-              variant: sandbox.active ? 'destructive' : 'default', 
+              variant: sandboxIsActive ? 'destructive' : 'default', 
               size: 'sm'
             })}
           >
-            {sandbox.active ? 'Deactivate' : 'Activate'}
+            {sandboxIsActive ? 'Deactivate' : 'Activate'}
           </motion.button>
 
           <motion.button
@@ -280,14 +289,14 @@ export function SandboxShield({ className }: SandboxShieldProps) {
         </div>
         
         <div className="text-xs text-gray-500 space-y-1">
-          {sandbox.active && (
+          {sandboxIsActive && (
             <>
               <div>✅ Commands being monitored</div>
               <div>🔍 Patterns being analyzed</div>
               <div>🛡️ Protection is active</div>
             </>
           )}
-          {!sandbox.active && (
+          {!sandboxIsActive && (
             <div className="text-red-400">
               ⚠️ Sandbox is deactivated
             </div>

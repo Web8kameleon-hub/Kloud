@@ -74,7 +74,7 @@ env:
   PORT_OCEAN: 8030
   PORT_ALBA: 5555
   PORT_ASI: 9094
-  PORT_OLLAMA: 11434
+  PORT_CLX: 11434
 
 jobs:
   # =========================================================================
@@ -233,18 +233,24 @@ jobs:
               ${{ env.PORT_ALBA }}) SERVICE_NAME="Alba" ;;
               ${{ env.PORT_ASI }}) SERVICE_NAME="ASI" ;;
             esac
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:\$port/health 2>/dev/null | grep -q "200\|404"; then
-              echo "✅ \$SERVICE_NAME (:\$port) - responding"
+            if [ "\$SERVICE_NAME" = "API" ]; then
+              if curl -s -o /dev/null -w "%{http_code}" http://localhost:\$port/status 2>/dev/null | grep -q "200\|404"; then
+                echo "✅ \$SERVICE_NAME (:\$port) - status responding"
+              else
+                echo "⚠️ \$SERVICE_NAME (:\$port) - status not responding"
+              fi
+            elif curl -s -o /dev/null -w "%{http_code}" http://localhost:\$port/health 2>/dev/null | grep -q "200\|404"; then
+              echo "✅ \$SERVICE_NAME (:\$port) - health responding"
             else
               echo "⚠️ \$SERVICE_NAME (:\$port) - not responding"
             fi
           done
           
-          # Check Ollama
-          if curl -s http://localhost:${{ env.PORT_OLLAMA }}/api/version | grep -q "version"; then
-            echo "✅ Ollama (:${{ env.PORT_OLLAMA }}) - running"
+          # Check CLX
+          if curl -s http://localhost:${{ env.PORT_CLX }}/api/version | grep -q "version"; then
+            echo "✅ CLX (:${{ env.PORT_CLX }}) - running"
           else
-            echo "⚠️ Ollama (:${{ env.PORT_OLLAMA }}) - not responding"
+            echo "⚠️ CLX (:${{ env.PORT_CLX }}) - not responding"
           fi
           
           echo ""
@@ -257,17 +263,15 @@ jobs:
           set +e
           ENDPOINTS=(
             "https://clisonix.ai/health"
-            "https://clisonix.ai/api/v1/status"
+            "https://clisonix.ai/status"
             "https://clx.clisonix.ai/health"
-            "https://clx.clisonix.ai/api/v1/status"
+            "https://clx.clisonix.ai/status"
             "https://cxl.i/health"
-            "https://cxl.i/api/v1/status"
+            "https://cxl.i/status"
             "https://lite.clisonix.ai/health"
-            "https://lite.clisonix.ai/api/v1/status"
-            "https://kloud.cloud/health"
-            "https://kloud.cloud/api/v1/status"
-            "https://kloud.aiagi.io/health"
-            "https://kloud.aiagi.io/api/v1/status"
+            "https://lite.clisonix.ai/status"
+            "https://kameleon.life/health"
+            "https://kameleon.life/status"
           )
 
           OK=false
@@ -312,4 +316,4 @@ jobs:
           echo "- **API:** http://${{ env.HETZNER_IP }}:${{ env.PORT_API }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Ocean:** http://${{ env.HETZNER_IP }}:${{ env.PORT_OCEAN }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Alba:** http://${{ env.HETZNER_IP }}:${{ env.PORT_ALBA }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Ollama:** http://${{ env.HETZNER_IP }}:${{ env.PORT_OLLAMA }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **CLX:** http://${{ env.HETZNER_IP }}:${{ env.PORT_CLX }}" >> $GITHUB_STEP_SUMMARY

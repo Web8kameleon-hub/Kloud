@@ -9,14 +9,16 @@ discovers and adapts to every service's actual structure.
 """
 
 import inspect
-import json
 import asyncio
-from typing import Any, Dict, List, Optional, Type, Callable
-from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Callable
+from datetime import datetime
 from dataclasses import dataclass, asdict, field
 from enum import Enum
 import hashlib
 import logging
+import json
+import os
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -61,6 +63,20 @@ class NodeMetadata:
     def to_dict(self) -> Dict:
         return asdict(self)
 
+    @staticmethod
+    def from_dict(data: Dict[str, Any]) -> "NodeMetadata":
+        return NodeMetadata(
+            node_id=str(data.get("node_id", "")),
+            service_name=str(data.get("service_name", "")),
+            service_type=str(data.get("service_type", "Generic")),
+            package_name=str(data.get("package_name", "unknown")),
+            version=str(data.get("version", "0.0.0")),
+            capabilities=list(data.get("capabilities", [])),
+            interfaces=dict(data.get("interfaces", {})),
+            requirements=dict(data.get("requirements", {})),
+            health_checks=list(data.get("health_checks", [])),
+        )
+
 
 @dataclass
 class NodeState:
@@ -88,6 +104,48 @@ class NodeState:
             "ndb_quality": self.ndb_quality.value,
         }
 
+    @staticmethod
+    def from_dict(data: Dict[str, Any]) -> "NodeState":
+        timestamp_raw = data.get("timestamp")
+        last_hb_raw = data.get("last_heartbeat")
+
+        timestamp = (
+            datetime.fromisoformat(timestamp_raw)
+            if isinstance(timestamp_raw, str) and timestamp_raw
+            else datetime.utcnow()
+        )
+        last_heartbeat = (
+            datetime.fromisoformat(last_hb_raw)
+            if isinstance(last_hb_raw, str) and last_hb_raw
+            else None
+        )
+
+        stigma_value = str(data.get("stigma_state", StigmaState.INITIALIZING.value))
+        quality_value = str(data.get("ndb_quality", NDBQuality.FAIR.value))
+
+        try:
+            stigma_state = StigmaState(stigma_value)
+        except ValueError:
+            stigma_state = StigmaState.INITIALIZING
+
+        try:
+            ndb_quality = NDBQuality(quality_value)
+        except ValueError:
+            ndb_quality = NDBQuality.FAIR
+
+        return NodeState(
+            node_id=str(data.get("node_id", "")),
+            stigma_state=stigma_state,
+            ndb_quality=ndb_quality,
+            timestamp=timestamp,
+            metrics=dict(data.get("metrics", {})),
+            ndb_delta=float(data.get("ndb_delta", 0.0)),
+            tide_pressure=float(data.get("tide_pressure", 0.5)),
+            last_heartbeat=last_heartbeat,
+            consecutive_failures=int(data.get("consecutive_failures", 0)),
+            recovery_attempts=int(data.get("recovery_attempts", 0)),
+        )
+
 
 class StigmaPattern:
     """
@@ -105,6 +163,7 @@ class StigmaPattern:
         """
         self.service_module = service_module
         self.service_name = service_name
+        self.health_check_fn: Optional[Callable[[], Any]] = None
         self.metadata = self._introspect_package()
 
     def _introspect_package(self) -> NodeMetadata:
@@ -258,13 +317,22 @@ class NodeDBCore:
     Replaces rigid per-service node definitions with fluid, adaptive tracking.
     """
 
-    def __init__(self):
+    def __init__(self, snapshot_path: Optional[str] = None):
         self.nodes: Dict[str, NodeMetadata] = {}
         self.states: Dict[str, NodeState] = {}
         self.stigma_patterns: Dict[str, StigmaPattern] = {}
         self.ndb_quality_baseline = 0.95
         self.tide_pressure = 0.5
         self.lock = asyncio.Lock()
+        base_path: str = (
+            snapshot_path
+            if snapshot_path is not None
+            else os.getenv(
+                "NODENDB_SNAPSHOT_PATH", "output/nodedb/nodedb_snapshot.json"
+            )
+        )
+        self.snapshot_path = Path(base_path)
+        self.snapshot_path.parent.mkdir(parents=True, exist_ok=True)
 
     async def register_service(
         self,
@@ -306,6 +374,8 @@ class NodeDBCore:
             if health_check_fn:
                 setattr(pattern, "health_check_fn", health_check_fn)
 
+            self._save_snapshot()
+
             return pattern.metadata
 
     async def update_node_state(
@@ -341,10 +411,11 @@ class NodeDBCore:
             ndb_delta = new_quality - old_quality
 
             # Update state
+            effective_quality = ndb_quality or current.ndb_quality
             self.states[node_id] = NodeState(
                 node_id=node_id,
                 stigma_state=state,
-                ndb_quality=ndb_quality or current.ndb_quality,
+                ndb_quality=effective_quality,
                 timestamp=datetime.utcnow(),
                 metrics=metrics or current.metrics,
                 ndb_delta=ndb_delta,
@@ -356,8 +427,10 @@ class NodeDBCore:
             )
 
             logger.info(
-                f"🔄 Updated {node_id}: {state.value} (NDB: {self._quality_to_float(ndb_quality):.2f})"
+                f"🔄 Updated {node_id}: {state.value} (NDB: {self._quality_to_float(effective_quality):.2f})"
             )
+
+            self._save_snapshot()
 
             return self.states[node_id]
 
@@ -426,24 +499,25 @@ class NodeDBCore:
         pattern = self.stigma_patterns[node_id]
         metadata = self.nodes[node_id]
 
-        result = {
+        checks: Dict[str, Any] = {}
+        result: Dict[str, Any] = {
             "node_id": node_id,
             "timestamp": datetime.utcnow().isoformat(),
-            "checks": {},
+            "checks": checks,
         }
 
         # Custom health check if available
-        if hasattr(pattern, "health_check_fn"):
+        if pattern.health_check_fn is not None:
             try:
                 custom_result = await pattern.health_check_fn()
-                result["checks"]["custom"] = custom_result
+                checks["custom"] = custom_result
             except Exception as e:
                 logger.error(f"Health check failed for {node_id}: {e}")
-                result["checks"]["custom"] = {"status": "error", "error": str(e)}
+                checks["custom"] = {"status": "error", "error": str(e)}
 
         # Check known endpoints from introspection
         for endpoint in metadata.health_checks:
-            result["checks"][endpoint] = {"status": "detected", "type": "endpoint"}
+            checks[endpoint] = {"status": "detected", "type": "endpoint"}
 
         return result
 
@@ -459,7 +533,61 @@ class NodeDBCore:
             for node_id in self.states:
                 self.states[node_id].tide_pressure = self.tide_pressure
 
+            self._save_snapshot()
+
         logger.info(f"🌊 Tide pressure updated: {self.tide_pressure:.2f}")
+
+    def _save_snapshot(self) -> None:
+        payload = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "ndb_quality_baseline": self.ndb_quality_baseline,
+            "tide_pressure": self.tide_pressure,
+            "nodes": {node_id: meta.to_dict() for node_id, meta in self.nodes.items()},
+            "states": {
+                node_id: state.to_dict() for node_id, state in self.states.items()
+            },
+        }
+        self.snapshot_path.write_text(
+            json.dumps(payload, ensure_ascii=True), encoding="utf-8"
+        )
+
+    def load_snapshot(self) -> None:
+        if not self.snapshot_path.exists():
+            return
+
+        try:
+            payload = json.loads(self.snapshot_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            logger.warning(f"Could not load NodeDB snapshot: {exc}")
+            return
+
+        self.ndb_quality_baseline = float(payload.get("ndb_quality_baseline", 0.95))
+        self.tide_pressure = float(payload.get("tide_pressure", 0.5))
+
+        raw_nodes = dict(payload.get("nodes", {}))
+        raw_states = dict(payload.get("states", {}))
+
+        self.nodes.clear()
+        self.states.clear()
+        self.stigma_patterns.clear()
+
+        for node_id, raw_meta in raw_nodes.items():
+            try:
+                metadata = NodeMetadata.from_dict(raw_meta)
+                self.nodes[node_id] = metadata
+            except Exception as exc:
+                logger.warning(f"Skipping invalid node metadata {node_id}: {exc}")
+
+        for node_id, raw_state in raw_states.items():
+            try:
+                state = NodeState.from_dict(raw_state)
+                self.states[node_id] = state
+            except Exception as exc:
+                logger.warning(f"Skipping invalid node state {node_id}: {exc}")
+
+        logger.info(
+            f"📦 NodeDB snapshot loaded: {len(self.nodes)} nodes, {len(self.states)} states"
+        )
 
 
 class NodeDBClient:
@@ -509,6 +637,7 @@ async def initialize_nodendb() -> NodeDBCore:
     """Initialize global NodeDB instance"""
     global _global_nodedb
     _global_nodedb = NodeDBCore()
+    _global_nodedb.load_snapshot()
     logger.info("🚀 NodeDB Stigma Pattern initialized")
     return _global_nodedb
 
@@ -557,9 +686,11 @@ async def example_usage():
         __name__ = "fastapi_service"
         __version__ = "1.0.0"
 
+        @staticmethod
         def health():
             pass
 
+        @staticmethod
         def status():
             pass
 
@@ -567,6 +698,7 @@ async def example_usage():
         __name__ = "async_service"
         __version__ = "2.1.0"
 
+        @staticmethod
         async def process():
             pass
 

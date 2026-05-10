@@ -16,7 +16,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 # Config
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-ollama:11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://kloud-clx:11434")
 MODEL = os.getenv("MODEL", "llama3.1:8b")
 PORT = int(os.getenv("PORT", "8030"))
 
@@ -44,13 +44,14 @@ async def stream_from_ollama(prompt: str, model: str):
                     "num_predict": 50000,
                     "num_ctx": 8192,
                     "temperature": 0.7,
-                }
-            }
+                },
+            },
         ) as response:
             async for line in response.aiter_lines():
                 if line:
                     try:
                         import json
+
                         data = json.loads(line)
                         if "response" in data:
                             yield data["response"]
@@ -64,12 +65,9 @@ async def chat_stream(req: ChatRequest):
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(400, "message required")
-    
+
     model = req.model or MODEL
-    return StreamingResponse(
-        stream_from_ollama(prompt, model),
-        media_type="text/plain"
-    )
+    return StreamingResponse(stream_from_ollama(prompt, model), media_type="text/plain")
 
 
 @app.post("/api/v1/chat")
@@ -78,9 +76,9 @@ async def chat(req: ChatRequest):
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(400, "message required")
-    
+
     model = req.model or MODEL
-    
+
     async with httpx.AsyncClient(timeout=300.0) as client:
         resp = await client.post(
             f"{OLLAMA_HOST}/api/generate",
@@ -92,8 +90,8 @@ async def chat(req: ChatRequest):
                     "num_predict": 50000,
                     "num_ctx": 8192,
                     "temperature": 0.7,
-                }
-            }
+                },
+            },
         )
         data = resp.json()
         return {"response": data.get("response", ""), "model": model}
@@ -111,6 +109,6 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
+
     print(f"🌊 Ocean Simple - {MODEL} @ {OLLAMA_HOST}")
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-
