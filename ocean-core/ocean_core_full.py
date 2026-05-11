@@ -254,6 +254,8 @@ class ChatRequest(BaseModel):
     message: str = None
     query: str = None
     model: str = None
+    language: str = "en"  # Optional language field for frontend compatibility
+    mode: str = "normal"  # Optional mode field for frontend compatibility
     use_mega_layers: bool = True
     use_knowledge_seeds: bool = True
     strict_mode: bool = False  # Detyron ndjekjen e rregullave pa devijim
