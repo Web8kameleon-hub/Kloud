@@ -360,7 +360,7 @@ services:
       KITCHEN_REPORTS_DIR: "/app/kitchen-reports"
       KITCHEN_RUN_API_KEY: ${KITCHEN_RUN_API_KEY:-kloud-kitchen-secret}
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       # Share kitchen jobs/reports with worker
       - kitchen_jobs:/app/kitchen-jobs
