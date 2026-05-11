@@ -1,5 +1,5 @@
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
+const config = {
   siteUrl: process.env.SITE_URL || 'https://kameleon.life',
   generateRobotsTxt: false, // We have custom robots.txt
   generateIndexSitemap: true,
@@ -85,4 +85,6 @@ module.exports = {
     };
   },
 };
+
+export default config;
 
