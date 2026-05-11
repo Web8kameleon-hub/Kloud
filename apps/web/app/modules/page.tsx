@@ -31,11 +31,39 @@ import {
   Globe,
   Archive,
   Target,
-  Users
+  Users,
+  Shield
 } from 'lucide-react';
 
 // Module definitions with Lucide icons
 const publicModules = [
+  {
+    id: 'services-ocean-core',
+    name: 'Ocean Core Concierge',
+    description: 'Always-on seller and routing layer for every Kloud product and workflow',
+    icon: MessageSquare,
+    category: 'Services',
+    href: '/ocean',
+    accent: 'slate'
+  },
+  {
+    id: 'services-sovereign-edge',
+    name: 'Sovereign Edge Operations',
+    description: 'Multi-PoP routing, DNS policy orchestration, and controlled failover drills',
+    icon: Cloud,
+    category: 'Services',
+    href: '/status',
+    accent: 'slate'
+  },
+  {
+    id: 'services-security',
+    name: 'Security and Compliance',
+    description: 'Live posture telemetry, event integrity, and trust-layer operations',
+    icon: Shield,
+    category: 'Services',
+    href: '/security',
+    accent: 'slate'
+  },
   {
     id: 'zurich',
     name: 'Zürich Engine',
@@ -170,6 +198,15 @@ const publicModules = [
     icon: BarChart3,
     category: 'Data',
     href: '/modules/my-data-dashboard',
+    accent: 'slate'
+  },
+  {
+    id: 'dns-hosting-control',
+    name: 'DNS & Hosting Control',
+    description: 'DNS zones, hosting origins, SSL/TLS, and edge policies in one dashboard',
+    icon: Cloud,
+    category: 'Networking',
+    href: '/modules/dns-hosting-control',
     accent: 'slate'
   },
   {

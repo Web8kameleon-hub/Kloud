@@ -1,3 +1,13 @@
+x-runtime-hardening: &runtime_hardening
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:size=64m,noexec,nosuid
+  stop_grace_period: 20s
+
 services:
   # ==========================
   # DATABASES
@@ -79,6 +89,7 @@ services:
   # ASI TRINITY - ALBA (Analytical Intelligence)
   # ==========================
   alba:
+    <<: *runtime_hardening
     build:
       context: .
       dockerfile: Dockerfile.alba
@@ -102,6 +113,7 @@ services:
   # ASI TRINITY - ALBI (Creative Intelligence)
   # ==========================
   albi:
+    <<: *runtime_hardening
     build:
       context: .
       dockerfile: Dockerfile.albi
@@ -126,6 +138,7 @@ services:
   # ASI TRINITY - JONA (Emotional Intelligence)
   # ==========================
   jona:
+    <<: *runtime_hardening
     build:
       context: .
       dockerfile: Dockerfile.jona
@@ -196,6 +209,7 @@ services:
   # OCEAN-CORE (Knowledge Engine & Curiosity AI)
   # ==========================
   ocean-core:
+    <<: *runtime_hardening
     build:
       context: ./ocean-core
       dockerfile: Dockerfile
@@ -230,6 +244,7 @@ services:
   # AI GLOBAL CPU (NANOGRID)
   # ==========================
   ai-global-9999:
+    <<: *runtime_hardening
     build:
       context: ./9999
       dockerfile: Dockerfile
@@ -285,6 +300,7 @@ services:
   # API BACKEND (JONA - Coordinator)
   # ==========================
   api:
+    <<: *runtime_hardening
     build:
       context: ./apps/api
       dockerfile: Dockerfile
@@ -314,6 +330,7 @@ services:
   # FRONTEND
   # ==========================
   web:
+    <<: *runtime_hardening
     build:
       context: ./apps/web
       dockerfile: Dockerfile

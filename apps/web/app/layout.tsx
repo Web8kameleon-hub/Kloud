@@ -21,23 +21,34 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kameleon.life';
+const siteName = 'Kameleon Life';
+
 // 🚀 AGGRESSIVE SEO - Maximum visibility
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kloud.com'),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Kloud Cloud - AI-Powered Industrial Intelligence Platform",
-    template: "%s | Kloud Cloud"
+    default: "Kameleon Life - AI-Powered Industrial Intelligence Platform",
+    template: "%s | Kameleon Life"
   },
-  description: "Kloud Cloud: The next-generation AI platform for industrial intelligence, behavioral science, and real-time analytics. Transform your data into actionable insights with our advanced machine learning solutions.",
+  description: "Kameleon Life is the next-generation AI platform for industrial intelligence, behavioral science, EEG analytics, real-time monitoring, and adaptive automation. Transform data into actionable insights.",
   keywords: [
-    "AI platform", "industrial intelligence", "machine learning", "behavioral science",
-    "real-time analytics", "cloud computing", "neural networks", "data science",
-    "IoT analytics", "predictive analytics", "cognitive computing", "deep learning",
-    "automation", "smart manufacturing", "Industry 4.0", "digital transformation",
-    "Kloud", "AGI", "artificial general intelligence"
+    "kameleon life", "kameleon.life", "ai platform", "industrial intelligence",
+    "machine learning platform", "behavioral science ai", "real-time analytics",
+    "eeg analysis platform", "neural analytics", "biofeedback analytics",
+    "curiosity ocean ai", "multilingual ai assistant", "fastapi microservices",
+    "cloud-native ai", "predictive analytics", "cognitive computing",
+    "deep learning services", "iot analytics", "telemetry analytics",
+    "signal processing ai", "audio synthesis ai", "api orchestration",
+    "enterprise api platform", "saas ai infrastructure", "automation platform",
+    "smart manufacturing ai", "industry 4.0 ai", "digital transformation",
+    "system monitoring ai", "ai observability", "payment enabled saas",
+    "stripe sepa paypal integration", "jwt authentication api", "secure api gateway",
+    "data intelligence platform", "ai for operations", "adaptive intelligence",
+    "kloud cloud", "albi", "alba", "jona", "agi ecosystem"
   ],
   authors: [
-    { name: "Ledjan Ahmati", url: "https://kloud.com" },
+    { name: "Ledjan Ahmati", url: siteUrl },
     { name: "ABA GmbH", url: "https://aba-gmbh.eu" }
   ],
   creator: "Ledjan Ahmati",
@@ -56,28 +67,28 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://kloud.com',
-    siteName: 'Kloud Cloud',
-    title: 'Kloud Cloud - AI-Powered Industrial Intelligence',
-    description: 'Transform your industrial operations with AI-powered analytics, behavioral science insights, and real-time monitoring.',
+    url: siteUrl,
+    siteName,
+    title: 'Kameleon Life - AI-Powered Industrial Intelligence',
+    description: 'Transform operations with AI analytics, behavioral science insights, EEG processing, and real-time monitoring.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Kloud Cloud - Industrial AI Platform',
+        alt: 'Kameleon Life - Industrial AI Platform',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kloud Cloud - AI-Powered Industrial Intelligence',
-    description: 'Next-generation AI platform for industrial intelligence and behavioral science.',
+    title: 'Kameleon Life - AI-Powered Industrial Intelligence',
+    description: 'AI platform for industrial intelligence, behavioral science, and real-time analytics.',
     images: ['/og-image.png'],
-    creator: '@kloud',
+    creator: '@kameleonlife',
   },
   alternates: {
-    canonical: 'https://kloud.com',
+    canonical: siteUrl,
   },
   category: 'Technology',
 };
@@ -85,7 +96,7 @@ export const metadata: Metadata = {
 const softwareApplicationSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Kloud Cloud',
+  name: 'Kameleon Life',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   offers: [
@@ -103,7 +114,7 @@ const softwareApplicationSchema = {
   creator: {
     '@type': 'Person',
     name: 'Ledjan Ahmati',
-    url: 'https://kloud.com',
+    url: siteUrl,
   },
   aggregateRating: {
     '@type': 'AggregateRating',
@@ -111,11 +122,11 @@ const softwareApplicationSchema = {
     ratingCount: '150',
   },
   description: 'AI-powered industrial intelligence and behavioral science platform',
-  url: 'https://kloud.com',
+  url: siteUrl,
   author: {
     '@type': 'Organization',
-    name: 'Kloud',
-    url: 'https://kloud.com',
+    name: 'Kameleon Life',
+    url: siteUrl,
   },
 };
 
@@ -141,9 +152,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Kloud Cloud",
-              "url": "https://kloud.com",
-              "logo": "https://kloud.com/logo.png",
+              "name": "Kameleon Life",
+              "url": siteUrl,
+              "logo": `${siteUrl}/logo.png`,
               "legalName": "ABA GmbH",
               "founder": {
                 "@type": "Person",
@@ -166,7 +177,7 @@ export default function RootLayout({
             })
           }}
         />
-        <link rel="canonical" href="https://kloud.com" />
+        <link rel="canonical" href={siteUrl} />
         <meta name="theme-color" content="#6366f1" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

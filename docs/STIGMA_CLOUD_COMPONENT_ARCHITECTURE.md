@@ -183,6 +183,11 @@ Control goals:
 - Zero-trust posture for write endpoints and control APIs.
 - DNS and edge routing policy aligned with control-plane identity.
 
+Implementation note:
+
+- The sovereign 3-PoP target layout is defined in [THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md](THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md).
+- Use that document as the rollout target when moving from a single external CDN dependency to an independent edge fabric.
+
 ## 13) Observability
 
 Required views:

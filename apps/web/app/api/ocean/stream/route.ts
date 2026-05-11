@@ -1,13 +1,16 @@
 /**
  * OCEAN STREAMING API - Real-time AI responses
  *
- * This endpoint adapts the Curiosity Ocean /ask API to the frontend streaming UI.
+ * This endpoint adapts Ocean Core /api/v1/chat to the frontend streaming UI.
  */
 
 const isDev = process.env.NODE_ENV !== "production";
-const CURIOSITY_URL =
-  process.env.CURIOSITY_URL ||
-  (isDev ? "http://localhost:8019" : "http://curiosity:8019");
+const OCEAN_CORE_URL =
+  process.env.OCEAN_INTERNAL_URL ||
+  process.env.OCEAN_CORE_URL ||
+  "http://ocean-core:8030";
+
+const OCEAN_CHAT_URL = `${OCEAN_CORE_URL}/api/v1/chat`;
 
 export async function POST(request: Request) {
   try {
@@ -30,13 +33,13 @@ export async function POST(request: Request) {
     }
 
     console.log(
-      `[Stream] Connecting to ${CURIOSITY_URL}/ask with message: ${message.substring(0, 50)}...`,
+      `[Stream] Connecting to ${OCEAN_CHAT_URL} with message: ${message.substring(0, 50)}...`,
     );
 
-    const response = await fetch(`${CURIOSITY_URL}/ask`, {
+    const response = await fetch(OCEAN_CHAT_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: message, language }),
+      body: JSON.stringify({ message, language, mode: "normal" }),
     });
 
     if (!response.ok) {
@@ -47,12 +50,15 @@ export async function POST(request: Request) {
       return new Response(`Curiosity Ocean error: ${response.status}`, { status: 500 });
     }
 
-    const data = (await response.json()) as { answer?: string };
-    const answer = data.answer?.trim() || "Curiosity Ocean returned an empty response.";
+    const data = (await response.json()) as { response?: string; answer?: string };
+    const answer = (data.response || data.answer || "Ocean returned an empty response.").trim();
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       start(controller) {
-        controller.enqueue(encoder.encode(answer));
+        const chunks = answer.match(/.{1,64}(\s|$)/g) || [answer];
+        for (const chunk of chunks) {
+          controller.enqueue(encoder.encode(chunk));
+        }
         controller.close();
       },
     });

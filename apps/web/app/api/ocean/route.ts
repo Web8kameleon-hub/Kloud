@@ -22,9 +22,12 @@ import { NextResponse } from "next/server";
 
 // Detect environment for correct API URL
 const isDev = process.env.NODE_ENV !== "production";
-const CURIOSITY_URL =
-  process.env.CURIOSITY_URL ||
-  (isDev ? "http://localhost:8019" : "http://curiosity:8019");
+const OCEAN_CORE_URL =
+  process.env.OCEAN_INTERNAL_URL ||
+  process.env.OCEAN_CORE_URL ||
+  "http://ocean-core:8030";
+
+const OCEAN_CHAT_URL = `${OCEAN_CORE_URL}/api/v1/chat`;
 
 interface CuriosityResponse {
   answer: string;
@@ -34,7 +37,27 @@ interface CuriosityResponse {
 }
 
 /**
- * Query the Curiosity Ocean service configured in Docker
+ * Health check for Ocean-Core service
+ */
+async function checkOceanCoreHealth(): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${OCEAN_CORE_URL}/health`, {
+      method: "GET",
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Query the Ocean Core chat endpoint configured in Docker
  */
 async function queryCuriosity(
   question: string,
@@ -44,12 +67,13 @@ async function queryCuriosity(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    const response = await fetch(`${CURIOSITY_URL}/ask`, {
+    const response = await fetch(OCEAN_CHAT_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: question,
+        message: question,
         language,
+        mode: "normal",
       }),
       signal: controller.signal,
     });
@@ -57,7 +81,13 @@ async function queryCuriosity(
     clearTimeout(timeoutId);
 
     if (response.ok) {
-      return (await response.json()) as CuriosityResponse;
+      const data = await response.json();
+      return {
+        answer: data.response || data.answer || data.persona_answer || "",
+        sources: data.sources_consulted || data.sources || [],
+        confidence: data.confidence || 0.7,
+        reasoning_chain: data.reasoning_chain || [],
+      };
     }
     console.error(`Curiosity Ocean returned ${response.status}`);
     return null;

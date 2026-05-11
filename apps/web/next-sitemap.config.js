@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://kloud.cloud',
+  siteUrl: process.env.SITE_URL || 'https://kameleon.life',
   generateRobotsTxt: false, // We have custom robots.txt
   generateIndexSitemap: true,
   sitemapSize: 7000,

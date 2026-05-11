@@ -85,6 +85,8 @@ The platform now treats NDB, Stigma, and Tide as shared cross-service primitives
 The canonical contract lives in [docs/RESONANT_CORE.md](docs/RESONANT_CORE.md).
 Existing REST and JSON APIs remain compatible during migration.
 
+For the sovereign edge layout that replaces a single external edge dependency, see [docs/THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md](docs/THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md).
+
 ## Technology Stack
 
 ### Backend (Python)
@@ -116,6 +118,14 @@ Existing REST and JSON APIs remain compatible during migration.
 - Kubernetes (Production)
 - Nginx (Reverse Proxy)
 - GitHub Actions (CI/CD)
+
+## Sovereign Edge
+
+- Three-PoP edge architecture for independent DNS, routing, and failover
+- Low-power edge nodes with health-based traffic selection
+- Resonant compatibility through shared NDB, Tide, and Stigma signals
+
+See [docs/THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md](docs/THREE_POP_SOVEREIGN_EDGE_ARCHITECTURE.md).
 
 ## Security Measures
 

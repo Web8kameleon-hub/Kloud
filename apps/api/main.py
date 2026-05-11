@@ -6405,6 +6405,22 @@ except ImportError as e:
     logger.warning(f"[WARN] JONA routes not loaded: {e}")
 
 
+# ============================================================================
+# DNS & HOSTING MANAGEMENT ROUTES (Multi-Tenant)
+# ============================================================================
+try:
+    from dns_hosting_api import router as dns_router
+
+    app.include_router(dns_router)
+    logger.info(
+        "✅ DNS & Hosting Management API loaded (/api/dns/*) - Multi-tenant enabled"
+    )
+except ImportError as e:
+    logger.warning(f"⚠️  DNS & Hosting API not loaded: {e}")
+except Exception as e:
+    logger.error(f"❌ DNS & Hosting API initialization failed: {e}")
+
+
 # ------------- Documentation Index -------------
 @app.get("/api/docs-index")
 async def docs_index():

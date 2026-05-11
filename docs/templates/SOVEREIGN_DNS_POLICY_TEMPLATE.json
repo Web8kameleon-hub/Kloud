@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "domain": "kloud.aiagi.io",
+  "strategy": "weighted-health-failover",
+  "ttl_seconds": 30,
+  "records": [
+    {
+      "id": "pop1-primary",
+      "name": "api",
+      "type": "A",
+      "value": "91.98.47.131",
+      "weight": 70,
+      "region": "eu-central",
+      "health_url": "https://91.98.47.131/health",
+      "enabled": true
+    },
+    {
+      "id": "pop2-standby",
+      "name": "api",
+      "type": "A",
+      "value": "62.238.21.125",
+      "weight": 20,
+      "region": "eu-west",
+      "health_url": "https://62.238.21.125/health",
+      "enabled": true
+    },
+    {
+      "id": "pop3-recovery",
+      "name": "api",
+      "type": "A",
+      "value": "37.27.216.254",
+      "weight": 10,
+      "region": "global-recovery",
+      "health_url": "https://37.27.216.254/health",
+      "enabled": true
+    }
+  ],
+  "failover": {
+    "mode": "ordered",
+    "order": ["pop1-primary", "pop2-standby", "pop3-recovery"],
+    "remove_unhealthy_after_failures": 2,
+    "restore_after_successes": 3
+  }
+}

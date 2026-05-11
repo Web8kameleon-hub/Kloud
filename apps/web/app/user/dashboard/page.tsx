@@ -36,16 +36,56 @@ interface UserStats {
   billingCycle: string;
 }
 
+interface SovereignEvent {
+  timestamp_ms: number;
+  endpoint: string;
+  action: string;
+  stigma_level: number;
+  ndb_score: number;
+  outcome: string;
+}
+
+interface SovereignData {
+  source: string;
+  status: {
+    metrics?: {
+      active_peers?: number;
+      avg_latency_ms?: number;
+      bandwidth_kbps?: number;
+      load?: number;
+    };
+    ndb_score?: number;
+    ndb_delta?: number;
+    ndb_threshold?: number;
+    state?: string;
+    tide?: string;
+  };
+  security: {
+    node_id?: number;
+    event_count?: number;
+    high_risk?: boolean;
+  };
+  events: SovereignEvent[];
+  localState: Array<{
+    key: string;
+    raw: string;
+    decoded: Record<string, unknown> | null;
+  }>;
+}
+
 export default function UserDashboardPage() {
   const { user, isLoaded } = useUser();
   const [stats, setStats] = useState<UserStats | null>(null);
   const [recentChats, setRecentChats] = useState<Array<{id: string, title: string, updatedAt: string}>>([]);
+  const [sovereignData, setSovereignData] = useState<SovereignData | null>(null);
+  const [sovereignError, setSovereignError] = useState<string>("");
 
   useEffect(() => {
     if (isLoaded && user) {
       // Fetch user stats
       fetchUserStats();
       fetchRecentChats();
+      fetchSovereignData();
     } else if (isLoaded && !user && isClerkConfigured) {
       // Redirect to sign in if not authenticated and Clerk is configured
       window.location.href = "/sign-in";
@@ -75,6 +115,29 @@ export default function UserDashboardPage() {
       // Use empty array on error
     }
   };
+
+  const fetchSovereignData = async () => {
+    try {
+      const res = await fetch("/api/sovereign/user-dashboard", { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`failed_${res.status}`);
+      }
+      const payload = await res.json();
+      setSovereignData(sanitizeSovereignData(payload));
+      setSovereignError("");
+    } catch {
+      setSovereignError("Sovereign telemetry is temporarily unavailable.");
+    }
+  };
+
+  const sanitizeSovereignData = (payload: SovereignData): SovereignData => ({
+    ...payload,
+    localState: (payload.localState || []).map((entry) => ({
+      key: entry.key,
+      raw: "[hidden]",
+      decoded: null,
+    })),
+  });
 
   if (!isLoaded) {
     return (
@@ -117,9 +180,7 @@ export default function UserDashboardPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Welcome back, {user?.firstName || "User"}! 👋
-          </h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome back! 👋</h1>
           <p className="text-slate-400">
             Here&apos;s an overview of your Kloud Cloud activity.
           </p>
@@ -153,6 +214,102 @@ export default function UserDashboardPage() {
             color="yellow"
             subtitle={stats?.billingCycle}
           />
+        </div>
+
+        {/* Sovereign Fabric */}
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-white">Sovereign Fabric Telemetry</h2>
+            <button
+              onClick={fetchSovereignData}
+              className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-sm transition-colors"
+            >
+              Refresh
+            </button>
+          </div>
+
+          {sovereignError ? (
+            <p className="text-amber-300 text-sm">{sovereignError}</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
+                <StatCard
+                  title="TIDE"
+                  value={sovereignData?.status?.tide || "Low"}
+                  icon="🌊"
+                  color="blue"
+                  subtitle={sovereignData?.status?.state || "active"}
+                />
+                <StatCard
+                  title="NDB Score"
+                  value={Number(sovereignData?.status?.ndb_score || 0).toFixed(3)}
+                  icon="🧠"
+                  color="purple"
+                  subtitle={`delta ${Number(sovereignData?.status?.ndb_delta || 0).toFixed(3)}`}
+                />
+                <StatCard
+                  title="Active Peers"
+                  value={String(sovereignData?.status?.metrics?.active_peers || 0)}
+                  icon="🔗"
+                  color="green"
+                  subtitle={`${sovereignData?.status?.metrics?.avg_latency_ms || 0} ms`}
+                />
+                <StatCard
+                  title="State Keys"
+                  value={String(sovereignData?.localState?.length || 0)}
+                  icon="🗂️"
+                  color="yellow"
+                  subtitle={`${sovereignData?.security?.event_count || 0} events`}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div className="rounded-xl border border-slate-700 bg-slate-900/40 p-4">
+                  <h3 className="text-white font-medium mb-3">Recent Security Events</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-slate-400 border-b border-slate-700">
+                          <th className="py-2 pr-3">Endpoint</th>
+                          <th className="py-2 pr-3">Action</th>
+                          <th className="py-2 pr-3">Stigma</th>
+                          <th className="py-2">Outcome</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(sovereignData?.events || []).slice(0, 6).map((e) => (
+                          <tr key={`${e.timestamp_ms}-${e.endpoint}`} className="border-b border-slate-800 text-slate-200">
+                            <td className="py-2 pr-3">{e.endpoint}</td>
+                            <td className="py-2 pr-3">{e.action}</td>
+                            <td className="py-2 pr-3">L{e.stigma_level}</td>
+                            <td className="py-2">{e.outcome}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-700 bg-slate-900/40 p-4">
+                  <h3 className="text-white font-medium mb-3">Local CRDT State</h3>
+                  {(sovereignData?.localState || []).length === 0 ? (
+                    <p className="text-slate-400 text-sm">No local keys yet</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {(sovereignData?.localState || []).slice(0, 3).map((entry) => (
+                        <div key={entry.key} className="rounded-lg bg-slate-800/70 p-3 border border-slate-700">
+                          <p className="text-emerald-300 text-sm font-medium">{entry.key}</p>
+                          <p className="text-slate-300 text-xs mt-1 break-all">
+                            Value hidden for privacy
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Main Content Grid */}
@@ -218,11 +375,11 @@ export default function UserDashboardPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold">
-                    {user?.firstName?.[0]}{user?.lastName?.[0]}
+                    •
                   </div>
                   <div>
-                    <p className="text-white font-medium">{user?.fullName}</p>
-                    <p className="text-slate-400 text-sm">{user?.emailAddresses[0]?.emailAddress}</p>
+                    <p className="text-white font-medium">Authenticated user</p>
+                    <p className="text-slate-400 text-sm">Profile details hidden</p>
                   </div>
                 </div>
                 <div className="pt-4 border-t border-slate-700 space-y-2">
