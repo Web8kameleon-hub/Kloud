@@ -140,6 +140,8 @@ financial_records/
 *.bak
 *.backup
 backup_*
+kloud-deploy*.tar.gz
+kloud-deploy*.tgz
 node_modules
 
 # ═══════════════════════════════════════════════════════════════

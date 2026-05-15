@@ -12,20 +12,106 @@
       "googleLinked": false,
       "createdAt": "2026-05-10T07:43:49.237Z",
       "updatedAt": "2026-05-10T07:43:58.232Z"
+    },
+    "8ce8dee8e3f70828d9b3": {
+      "id": "8ce8dee8e3f70828d9b3",
+      "name": "Billing Test",
+      "email": "billing.test@kloud.local",
+      "phone": null,
+      "passwordHash": "24ad25372510413c943d7b21320bdb752b79e9d8fe64199839fe9188555dbf60",
+      "passwordSalt": "c7dc2bb607e927dd57b243257b07f69a",
+      "emailVerified": false,
+      "phoneVerified": false,
+      "googleLinked": false,
+      "createdAt": "2026-05-15T17:47:36.803Z",
+      "updatedAt": "2026-05-15T17:47:36.803Z"
+    },
+    "a62d4d0bb6f183a77fcb": {
+      "id": "a62d4d0bb6f183a77fcb",
+      "name": "Stigma User",
+      "email": "stigma.user@test.local",
+      "phone": null,
+      "passwordHash": "e26043ea24e76efa673f9b6326a50260545298446711d2b85a67dcbc842d24ce",
+      "passwordSalt": "52fdfd2007a617bcca9568011f0dac6b",
+      "emailVerified": true,
+      "phoneVerified": false,
+      "googleLinked": false,
+      "createdAt": "2026-05-15T17:50:41.168Z",
+      "updatedAt": "2026-05-15T17:50:41.629Z"
+    },
+    "6c590347a3905ebe3f41": {
+      "id": "6c590347a3905ebe3f41",
+      "name": "Stigma User2",
+      "email": "stigma2@test.local",
+      "phone": null,
+      "passwordHash": "b3e20d7fdfdce0569d19175921f671325ab8f85d63fd0f8af88021f851ec191a",
+      "passwordSalt": "70594deeb2e1b3d5b33ac1cf676eee96",
+      "emailVerified": false,
+      "phoneVerified": false,
+      "googleLinked": false,
+      "createdAt": "2026-05-15T17:51:29.508Z",
+      "updatedAt": "2026-05-15T17:51:29.508Z"
+    },
+    "2fa7e60be9cfa62a31de": {
+      "id": "2fa7e60be9cfa62a31de",
+      "name": "Stigma User3",
+      "email": "stigma3@test.local",
+      "phone": null,
+      "passwordHash": "0e2fc302114ed64753656d10b318504d76e6a1893a03d31ae15862f58ebb6269",
+      "passwordSalt": "1821cacb4359ca8ffc8ed3437681a031",
+      "emailVerified": false,
+      "phoneVerified": false,
+      "googleLinked": false,
+      "createdAt": "2026-05-15T17:52:16.468Z",
+      "updatedAt": "2026-05-15T17:52:16.468Z"
     }
   },
   "otpChallenges": {
-    "2ba61e2027dcaf6462658600": {
-      "id": "2ba61e2027dcaf6462658600",
-      "userId": "fe4d12b60a3e19fb7e4e",
+    "8b2ddb17b173f17f89c73182": {
+      "id": "8b2ddb17b173f17f89c73182",
+      "userId": "8ce8dee8e3f70828d9b3",
       "channel": "email",
-      "target": "test.internal@kloud.local",
-      "codeHash": "f853299231b84c157d35ee4a3d16a9fbf9bf51a40f250cf4487fddc2f947a0fa",
-      "expiresAt": "2026-05-10T07:48:58.205Z",
-      "attempts": 1,
-      "purpose": "login",
-      "consumed": true,
-      "createdAt": "2026-05-10T07:43:58.205Z"
+      "target": "billing.test@kloud.local",
+      "codeHash": "6177e0aa250a49420c9be5e5d558bd28bfaa7af787d3753c361b4d52fc399662",
+      "expiresAt": "2026-05-15T17:52:36.804Z",
+      "attempts": 0,
+      "purpose": "register",
+      "consumed": false,
+      "createdAt": "2026-05-15T17:47:36.804Z"
+    },
+    "027fc16bebbe61a49f1e1b60": {
+      "id": "027fc16bebbe61a49f1e1b60",
+      "userId": "6c590347a3905ebe3f41",
+      "channel": "email",
+      "target": "stigma2@test.local",
+      "codeHash": "22684e92ffe04da1a06d993956c066244ce95db6e675c0e94e4f71604f0aa698",
+      "expiresAt": "2026-05-15T17:56:29.508Z",
+      "attempts": 0,
+      "purpose": "register",
+      "remember": true,
+      "context": {
+        "ip": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26200; de-DE) PowerShell/7.6.0"
+      },
+      "consumed": false,
+      "createdAt": "2026-05-15T17:51:29.508Z"
+    },
+    "096ebb730437343c27ec7977": {
+      "id": "096ebb730437343c27ec7977",
+      "userId": "2fa7e60be9cfa62a31de",
+      "channel": "email",
+      "target": "stigma3@test.local",
+      "codeHash": "ec91bd86763e445f5e8e43313a58e29448079994bbc6cc35b927b859bf6b0b2d",
+      "expiresAt": "2026-05-15T17:57:16.469Z",
+      "attempts": 0,
+      "purpose": "register",
+      "remember": true,
+      "context": {
+        "ip": "::1",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26200; de-DE) PowerShell/7.6.0"
+      },
+      "consumed": false,
+      "createdAt": "2026-05-15T17:52:16.469Z"
     }
   },
   "googleStates": {}

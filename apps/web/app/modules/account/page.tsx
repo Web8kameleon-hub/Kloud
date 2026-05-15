@@ -162,10 +162,15 @@ export default function AccountPage() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
 
   // Stripe checkout handler
+  const getAuthToken = () => {
+    if (typeof window === 'undefined') return null
+    return localStorage.getItem('kloud_auth_token') || sessionStorage.getItem('kloud_auth_token')
+  }
+
   const handleUpgrade = async (priceId: string, planName: string) => {
     setIsCheckoutLoading(true)
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('kloud_auth_token') : null
+      const token = getAuthToken()
       const response = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: {
@@ -373,12 +378,15 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchBillingData = async () => {
       try {
+        const token = getAuthToken()
+        const authHeaders: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
+
         // Fetch all billing data in parallel
         const [subscriptionRes, invoicesRes, paymentMethodsRes, addressRes] = await Promise.all([
-          fetch('/api/billing/subscription'),
-          fetch('/api/billing/invoices'),
-          fetch('/api/billing/payment-methods'),
-          fetch('/api/billing/billing-address'),
+          fetch('/api/billing/subscription', { headers: authHeaders }),
+          fetch('/api/billing/invoices', { headers: authHeaders }),
+          fetch('/api/billing/payment-methods', { headers: authHeaders }),
+          fetch('/api/billing/billing-address', { headers: authHeaders }),
         ])
 
         const [subscriptionData, invoicesData, paymentMethodsData, addressData] = await Promise.all([
@@ -1366,9 +1374,13 @@ export default function AccountPage() {
                 
                 setIsSavingAddress(true)
                 try {
+                  const token = getAuthToken()
                   const response = await fetch('/api/billing/billing-address', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                      'Content-Type': 'application/json',
+                      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
                     body: JSON.stringify({
                       name: formData.get('name'),
                       line1: formData.get('line1'),

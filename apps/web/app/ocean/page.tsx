@@ -34,9 +34,26 @@ interface OceanStatus {
 const OCEAN_API = '/api/ocean'
 
 export default function OceanPage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const now = new Date()
+    return [{
+      id: 1,
+      role: 'assistant',
+      content: `🌊 **Curiosity Ocean është online.**
+
+Platforma është gati për pyetje teknike, kërkim, analizë dhe orkestrim operacional.
+
+Mund të fillojmë me:
+- Arkitekturë dhe troubleshooting
+- Kërkim dokumentacioni
+- Analizë kodi dhe API
+
+Shkruaj pyetjen tënde.`,
+      timestamp: now,
+    }]
+  })
   const [inputMessage, setInputMessage] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [chatLoading, setChatLoading] = useState(false)
   const [status, setStatus] = useState<OceanStatus | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -66,31 +83,11 @@ export default function OceanPage() {
             timestamp: new Date().toISOString()
           })
           setError(null)
-          
-          // Add welcome message with current date
-          const now = new Date()
-          setMessages([{
-            id: 1,
-            role: 'assistant',
-            content: `🌊 **Mirë se vini në Curiosity Ocean!**
-
-📅 Sot është ${now.toLocaleDateString('sq-AL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-🕐 Ora: ${now.toLocaleTimeString('sq-AL')}
-
-Jam i fuqizuar nga Kloud AI me:
-- 📊 Data në kohë reale (data, ora, moti)
-- 📖 Wikipedia & Arxiv
-- 💻 GitHub API
-- 🌍 Weather API
-
-Çfarë dëshironi të dini sot?`,
-            timestamp: now
-          }])
         } else {
           throw new Error('API not available')
         }
       } catch (err) {
-        // Still show welcome even if status check fails
+        // Keep chat usable even if status check fails
         setStatus({ 
           service: 'Ocean Core',
           version: '2.0',
@@ -98,21 +95,7 @@ Jam i fuqizuar nga Kloud AI me:
           timestamp: new Date().toISOString()
         })
         setError(null)
-        
-        const now = new Date()
-        setMessages([{
-          id: 1,
-          role: 'assistant',
-          content: `🌊 **Mirë se vini në Curiosity Ocean!**
-
-📅 Sot është ${now.toLocaleDateString('sq-AL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-
-Çfarë dëshironi të dini sot?`,
-          timestamp: now
-        }])
         console.error('Ocean Core connection error:', err)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -270,7 +253,7 @@ Jam i fuqizuar nga Kloud AI me:
               <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-violet-400 bg-clip-text text-transparent">
                 Curiosity Ocean
               </h1>
-              <p className="text-xs text-gray-400">AI Orchestrator • 14 Personas • 23 Labs • 61 Layers</p>
+              <p className="text-xs text-gray-400">AI Orchestrator • Sovereign Runtime • Real-time Telemetry</p>
             </div>
           </div>
           {status && (
@@ -372,7 +355,7 @@ Jam i fuqizuar nga Kloud AI me:
             </button>
           </div>
           <p className="text-center text-xs text-gray-500 mt-2">
-            Powered by Kloud Ocean Core • 61 Alphabet Layers • Real Knowledge Integration
+            Powered by Kloud Ocean Core • Operational reasoning and verified integrations
           </p>
         </div>
       </main>

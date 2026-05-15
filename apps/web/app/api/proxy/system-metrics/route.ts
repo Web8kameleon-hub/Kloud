@@ -5,8 +5,7 @@ const API_URL = process.env.NODE_ENV === 'production' ? 'http://kloud-api:8000' 
 
 export async function GET() {
   try {
-    // Use /api/system-status which has the real metrics
-    const response = await fetch(`${API_URL}/api/system-status`, {
+    const response = await fetch(`${API_URL}/api/mymirror/live-metrics`, {
       cache: 'no-store',
       headers: { 'Accept': 'application/json' }
     })
@@ -16,13 +15,14 @@ export async function GET() {
     }
     
     const data = await response.json()
-    // Extract system metrics from the response
+    const system = data?.system || {}
+
     return NextResponse.json({
-      cpu_percent: data.system?.cpu_percent || 0,
-      memory_percent: data.system?.memory_percent || 0,
-      disk_percent: data.system?.disk_percent || 0,
+      cpu_percent: Number(system.cpu || 0),
+      memory_percent: Number(system.memory || 0),
+      disk_percent: Number(system.disk || 0),
       uptime: data.uptime || '0h',
-      hostname: data.system?.hostname || 'unknown'
+      hostname: data.hostname || 'unknown'
     })
   } catch (error) {
     console.error('System metrics fetch error:', error)

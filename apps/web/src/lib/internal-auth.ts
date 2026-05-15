@@ -1,6 +1,7 @@
 import { randomBytes, randomInt, createHmac, pbkdf2Sync, timingSafeEqual } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
+import { writeAuthStigmaEvent } from "@/lib/stigma-memory";
 
 export type AuthChannel = "sms" | "email";
 
@@ -27,8 +28,16 @@ type OtpChallenge = {
   expiresAt: string;
   attempts: number;
   purpose: "register" | "login";
+  remember: boolean;
+  context?: AuthUsageContext;
   consumed: boolean;
   createdAt: string;
+};
+
+export type AuthUsageContext = {
+  nodeId?: string;
+  ip?: string;
+  userAgent?: string;
 };
 
 type GoogleState = {
@@ -57,6 +66,9 @@ const INTERNAL_AUTH_KEY =
   process.env.INTERNAL_AUTH_KEY || "dev-internal-auth-key-change-me";
 
 const TOKEN_TTL_SECONDS = Number(process.env.INTERNAL_AUTH_TOKEN_TTL || "86400");
+const PERSISTENT_TOKEN_TTL_SECONDS = Number(
+  process.env.INTERNAL_AUTH_PERSISTENT_TOKEN_TTL || "315360000",
+);
 const OTP_TTL_SECONDS = Number(process.env.INTERNAL_AUTH_OTP_TTL || "300");
 const OTP_MAX_ATTEMPTS = Number(process.env.INTERNAL_AUTH_OTP_MAX_ATTEMPTS || "5");
 
@@ -111,9 +123,9 @@ function signTokenPayload(payload: Record<string, unknown>): string {
   return `kli.${encoded}.${signature}`;
 }
 
-function createToken(user: InternalUser): string {
+function createToken(user: InternalUser, ttlSeconds: number): string {
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + Math.max(300, TOKEN_TTL_SECONDS);
+  const exp = iat + Math.max(300, ttlSeconds);
   return signTokenPayload({
     sub: user.id,
     email: user.email,
@@ -123,6 +135,43 @@ function createToken(user: InternalUser): string {
     exp,
     provider: "internal",
   });
+}
+
+async function sendOtpCode(channel: AuthChannel, target: string, code: string): Promise<void> {
+  const smsEnabled = String(process.env.AUTH_SMS_ENABLED || "false").toLowerCase() === "true";
+  const emailEnabled = String(process.env.AUTH_EMAIL_OTP_ENABLED || "false").toLowerCase() === "true";
+
+  if (channel === "sms" && !smsEnabled) {
+    return;
+  }
+  if (channel === "email" && !emailEnabled) {
+    return;
+  }
+
+  const webhook = process.env.AUTH_OTP_WEBHOOK_URL;
+  if (!webhook) {
+    return;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2500);
+  try {
+    await fetch(webhook, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.AUTH_OTP_WEBHOOK_KEY
+          ? { "X-OTP-Webhook-Key": process.env.AUTH_OTP_WEBHOOK_KEY }
+          : {}),
+      },
+      body: JSON.stringify({ channel, target, code }),
+    });
+  } catch {
+    // Delivery failures are intentionally non-fatal in this stage.
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function parseTokenUnsafe(token: string): Record<string, unknown> | null {
@@ -235,7 +284,9 @@ async function createOtpChallenge(
   store: InternalStore,
   user: InternalUser,
   channel: AuthChannel,
-  purpose: "register" | "login"
+  purpose: "register" | "login",
+  remember: boolean,
+  context?: AuthUsageContext,
 ): Promise<{ challenge: OtpChallenge; code: string }> {
   const target = channel === "sms" ? user.phone : user.email;
   if (!target) {
@@ -253,6 +304,8 @@ async function createOtpChallenge(
     expiresAt: plusSeconds(OTP_TTL_SECONDS),
     attempts: 0,
     purpose,
+    remember,
+    context,
     consumed: false,
     createdAt: nowIso(),
   };
@@ -275,12 +328,16 @@ export async function registerInternalUser(input: {
   phone?: string;
   password: string;
   channel?: AuthChannel;
+  remember?: boolean;
+  context?: AuthUsageContext;
 }): Promise<Record<string, unknown>> {
+  const startedAt = Date.now();
   const name = (input.name || "Kloud User").trim();
   const email = input.email ? sanitizeIdentifier(input.email) : null;
   const phone = input.phone ? normalizePhone(input.phone) : null;
   const password = input.password || "";
   const channel: AuthChannel = input.channel || (phone ? "sms" : "email");
+  const remember = Boolean(input.remember);
 
   if (!email && !phone) {
     throw new Error("Either email or phone is required");
@@ -319,7 +376,28 @@ export async function registerInternalUser(input: {
 
     store.users[userId] = user;
 
-    const { challenge, code } = await createOtpChallenge(store, user, channel, "register");
+    const { challenge, code } = await createOtpChallenge(
+      store,
+      user,
+      channel,
+      "register",
+      remember,
+      input.context,
+    );
+    await sendOtpCode(channel, challenge.target, code);
+
+    await writeAuthStigmaEvent({
+      event: "register",
+      success: true,
+      userId: user.id,
+      identifier: email || phone || undefined,
+      channel,
+      remember,
+      latencyMs: Date.now() - startedAt,
+      ip: input.context?.ip,
+      userAgent: input.context?.userAgent,
+      extra: input.context?.nodeId ? { nodeId: input.context.nodeId } : undefined,
+    });
 
     return {
       success: true,
@@ -338,10 +416,14 @@ export async function loginInternalUser(input: {
   identifier: string;
   password: string;
   channel?: AuthChannel;
+  remember?: boolean;
+  context?: AuthUsageContext;
 }): Promise<Record<string, unknown>> {
+  const startedAt = Date.now();
   const identifier = input.identifier.trim();
   const password = input.password || "";
   const preferredChannel: AuthChannel | undefined = input.channel;
+  const remember = Boolean(input.remember);
 
   if (!identifier || !password) {
     throw new Error("Identifier and password are required");
@@ -368,7 +450,28 @@ export async function loginInternalUser(input: {
     const channel: AuthChannel =
       preferredChannel || (user.phone ? "sms" : "email");
 
-    const { challenge, code } = await createOtpChallenge(store, user, channel, "login");
+    const { challenge, code } = await createOtpChallenge(
+      store,
+      user,
+      channel,
+      "login",
+      remember,
+      input.context,
+    );
+    await sendOtpCode(channel, challenge.target, code);
+
+    await writeAuthStigmaEvent({
+      event: "login",
+      success: true,
+      userId: user.id,
+      identifier,
+      channel,
+      remember,
+      latencyMs: Date.now() - startedAt,
+      ip: input.context?.ip,
+      userAgent: input.context?.userAgent,
+      extra: input.context?.nodeId ? { nodeId: input.context.nodeId } : undefined,
+    });
 
     return {
       success: true,
@@ -386,7 +489,9 @@ export async function loginInternalUser(input: {
 export async function verifyInternalOtp(input: {
   challengeId: string;
   code: string;
+  context?: AuthUsageContext;
 }): Promise<Record<string, unknown>> {
+  const startedAt = Date.now();
   const challengeId = input.challengeId.trim();
   const code = input.code.trim();
 
@@ -438,7 +543,27 @@ export async function verifyInternalOtp(input: {
     challenge.consumed = true;
     store.otpChallenges[challenge.id] = challenge;
 
-    const token = createToken(user);
+    const ttlSeconds = challenge.remember
+      ? Math.max(TOKEN_TTL_SECONDS, PERSISTENT_TOKEN_TTL_SECONDS)
+      : TOKEN_TTL_SECONDS;
+    const token = createToken(user, ttlSeconds);
+
+    await writeAuthStigmaEvent({
+      event: "otp_verified",
+      success: true,
+      userId: user.id,
+      channel: challenge.channel,
+      remember: challenge.remember,
+      latencyMs: Date.now() - startedAt,
+      ip: input.context?.ip || challenge.context?.ip,
+      userAgent: input.context?.userAgent || challenge.context?.userAgent,
+      extra: {
+        ttlSeconds,
+        ...(input.context?.nodeId || challenge.context?.nodeId
+          ? { nodeId: input.context?.nodeId || challenge.context?.nodeId }
+          : {}),
+      },
+    });
 
     return {
       success: true,
@@ -481,7 +606,16 @@ export async function resolveBearerUser(authorizationHeader: string | null): Pro
   if (!sub) {
     return null;
   }
-  return getInternalUserById(sub);
+  const user = await getInternalUserById(sub);
+  if (user) {
+    await writeAuthStigmaEvent({
+      event: "token_validated",
+      success: true,
+      userId: user.id,
+      latencyMs: 0,
+    });
+  }
+  return user;
 }
 
 export async function startGoogleAuth(returnUrl?: string): Promise<Record<string, unknown>> {
@@ -609,7 +743,7 @@ export async function finishGoogleAuth(code: string, state: string): Promise<Rec
 
     store.users[user.id] = user;
 
-    const token = createToken(user);
+    const token = createToken(user, TOKEN_TTL_SECONDS);
     return {
       success: true,
       stage: "authenticated",

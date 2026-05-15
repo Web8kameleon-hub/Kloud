@@ -18,7 +18,6 @@ const publicRoutes = [
   "/",
   "/sign-in",
   "/sign-up",
-  "/landing",
   "/about-us",
   "/pricing",
   "/why-kloud",

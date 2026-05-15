@@ -1,6 +1,6 @@
 /**
  * Kloud Dashboard
- * Professional UI inspired by Figma, Postman, Datadog, Opera
+ * Professional UI for sovereign fabric operations
  * No emoji - clean Lucide icons only
  */
 
@@ -221,7 +221,7 @@ const publicModules = [
   {
     id: 'nodedb-control-surface',
     name: 'NodeDB Control Surface',
-    description: 'Live bootstrap, sync loop, and STIGMA runtime state for hybrid fabric',
+    description: 'Live bootstrap, sync loop, STIGMA behavioral trace (BTI), and NDB deviation score (DAS) for sovereign fabric',
     icon: Command,
     category: 'Admin',
     href: '/modules/nodedb-control-surface',

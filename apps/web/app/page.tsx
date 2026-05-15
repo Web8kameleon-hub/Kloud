@@ -5,113 +5,95 @@ import { useState, useEffect } from 'react';
 
 /**
  * KLOUD HOME PAGE
- * User-facing tools and modules
+ * Enterprise-first sovereign fabric positioning
  */
 
 const MODULES = [
-  // 🎵 CREATIVE TOOLS
-  {
-    id: 'music-studio',
-    name: 'Music Studio',
-    description: 'Create music with solfège notes (do-re-mi), waveforms, effects & genres',
-    icon: '🎵',
-    color: 'from-purple-500 to-pink-600',
-    category: 'Creative',
-    isNew: true,
-    featured: true
-  },
-  {
-    id: 'openmind',
-    name: 'OpenMind AI',
-    description: 'Complete AI workspace: chat, memory, tasks, music & vision generation',
-    icon: '🧠',
-    color: 'from-blue-500 to-purple-600',
-    category: 'AI Chat',
-    featured: true
-  },
-  // 🌊 AI & CHAT
+  // AI & COGNITIVE SURFACES
   {
     id: 'curiosity-ocean',
     name: 'Curiosity Ocean',
-    description: 'AI-powered chat interface for exploring knowledge',
+    description: 'AI service interface for guided reasoning, routing, and operational assistance.',
     icon: '🌊',
     color: 'from-emerald-500 to-teal-600',
-    category: 'AI Chat'
+    category: 'AI Operations',
+    featured: true
   },
   {
     id: 'web-reader',
     name: 'Web Reader',
-    description: 'Browse any webpage, search the web, chat with page content',
+    description: 'Controlled web ingestion and contextual analysis inside the sovereign runtime.',
     icon: '🌐',
     color: 'from-blue-500 to-cyan-600',
-    category: 'AI Chat',
+    category: 'AI Operations',
     isNew: true
   },
   {
     id: 'archive',
     name: 'Archive & Research',
-    description: 'Search ArXiv, Wikipedia, PubMed and 5000+ global data sources',
+    description: 'Federated access to research corpora and trusted technical knowledge sources.',
     icon: '📜',
     color: 'from-indigo-500 to-violet-600',
     category: 'Research',
     isNew: true
   },
-  // 🧠 NEUROSCIENCE
+  // COGNITIVE TELEMETRY
   {
     id: 'eeg-analysis',
     name: 'EEG Analysis',
-    description: 'Real-time brainwave pattern analysis',
+    description: 'Real-time cognitive telemetry for behavioral signal interpretation.',
     icon: '🧠',
     color: 'from-purple-500 to-pink-600',
-    category: 'Neuroscience'
+    category: 'Neuroscience',
+    featured: true
   },
   {
     id: 'neural-synthesis',
     name: 'Neural Synthesis',
-    description: 'Synthesize neural patterns and waveforms',
+    description: 'Synthesis and transformation workflows for advanced neural signal pipelines.',
     icon: '⚡',
     color: 'from-yellow-500 to-orange-600',
     category: 'Neuroscience'
   },
-  // 🔒 PRIVATE - Neural Biofeedback & Neuroacoustic Converter hidden from public access
-  // {
-  //   id: 'neural-biofeedback',
-  //   name: 'Neural Biofeedback',
-  //   description: 'Real-time cognitive state monitoring',
-  //   icon: '💫',
-  //   color: 'from-indigo-500 to-purple-600',
-  //   category: 'Neuroscience'
-  // },
-  // {
-  //   id: 'neuroacoustic-converter',
-  //   name: 'Neuroacoustic Converter',
-  //   description: 'Convert brain signals to audio',
-  //   icon: '🎵',
-  //   color: 'from-violet-500 to-purple-600',
-  //   category: 'Neuroscience'
-  // },
-  // 📊 USER TOOLS
+  // FABRIC OPERATIONS
   {
-    id: 'fitness-dashboard',
-    name: 'Fitness Dashboard',
-    description: 'Health metrics and performance tracking',
-    icon: '💪',
-    color: 'from-red-500 to-pink-600',
-    category: 'Health'
+    id: 'nodedb-control-surface',
+    name: 'NodeDB Control Surface',
+    description: 'Live node membership, STIGMA/BTI state, and DAS quality supervision across the fabric.',
+    icon: '🧩',
+    color: 'from-teal-500 to-emerald-600',
+    category: 'Infrastructure',
+    featured: true
   },
   {
-    id: 'weather-dashboard',
-    name: 'Weather & Cognitive',
-    description: 'How weather impacts cognitive performance',
-    icon: '🌤️',
-    color: 'from-sky-500 to-teal-600',
-    category: 'Environment'
+    id: 'dns-hosting-control',
+    name: 'DNS Hosting Control',
+    description: 'Trust-aware DNS and routing governance for production domain operations.',
+    icon: '🛰️',
+    color: 'from-cyan-500 to-sky-600',
+    category: 'Infrastructure'
   },
-  // 👤 ACCOUNT & DATA
+  {
+    id: 'protocol-kitchen',
+    name: 'Protocol Kitchen',
+    description: 'Design and validate protocol contracts for secure distributed execution.',
+    icon: '🧪',
+    color: 'from-fuchsia-500 to-violet-600',
+    category: 'Infrastructure'
+  },
+  {
+    id: 'functions-registry',
+    name: 'Functions Registry',
+    description: 'Governed catalog of runtime functions, contracts, and deployment readiness.',
+    icon: '📚',
+    color: 'from-amber-500 to-orange-600',
+    category: 'Governance'
+  },
+  // TENANT & DEVELOPER LAYERS
   {
     id: 'account',
     name: 'Account & Billing',
-    description: 'Manage your profile, subscriptions, payment methods and settings',
+    description: 'Tenant profile, subscriptions, policy controls, and payment governance.',
     icon: '👤',
     color: 'from-emerald-500 to-teal-600',
     category: 'Account'
@@ -119,16 +101,15 @@ const MODULES = [
   {
     id: 'my-data-dashboard',
     name: 'My Data Dashboard',
-    description: 'IoT devices, API integrations, LoRa/GSM networks',
+    description: 'IoT devices, API integrations, and ingestion channels across sovereign data flows.',
     icon: '📊',
     color: 'from-green-500 to-teal-600',
     category: 'Data'
   },
-  // 👨‍💻 DEVELOPER
   {
     id: 'developer-docs',
     name: 'Developer Documentation',
-    description: 'API Reference, SDKs, Quick Start Guide',
+    description: 'API reference, SDKs, quick starts, and integration standards for platform teams.',
     icon: '👨‍💻',
     color: 'from-purple-500 to-pink-600',
     category: 'Developer'
@@ -138,25 +119,25 @@ const MODULES = [
 const SERVICES = [
   {
     title: 'Ocean Core — AI Service Guide',
-    summary: 'Chat-based assistant that answers product questions, routes users to the right module or plan, and executes service operations in real time. Available 24/7.',
+    summary: 'Ocean Core is the autonomous operational brain of Kloud: it orchestrates workloads, enforces policy, guides users, and maintains integrity in real time.',
     href: '/ocean',
     badge: 'Assistant'
   },
   {
-    title: 'AI Inference & Analytics',
-    summary: 'EEG cognitive analysis, audio intelligence, and adaptive AI pipelines (ALBI, ALBA, ASI). Production-ready endpoints for real-time and batch workloads.',
+    title: 'AI Inference & Cognitive Analytics',
+    summary: 'EEG analysis, audio intelligence, and adaptive pipelines (ALBI, ALBA, ASI) for production real-time and batch execution.',
     href: '/modules/curiosity-ocean',
     badge: 'AI Platform'
   },
   {
-    title: 'Billing & Subscription Management',
-    summary: 'Stripe, SEPA, and PayPal payment processing with webhook activation, usage-based billing, and per-tenant plan enforcement.',
+    title: 'Billing & Subscription Governance',
+    summary: 'Stripe, SEPA, and PayPal with webhook automation, usage-based billing, and policy enforcement per tenant.',
     href: '/modules',
     badge: 'Payments'
   },
   {
-    title: 'Infrastructure & Edge Routing',
-    summary: 'Multi-container orchestration, DNS policy management, health monitoring, and zero-downtime deploy pipelines across sovereign nodes.',
+    title: 'Sovereign Infrastructure & Edge Routing',
+    summary: 'Multi-container orchestration, DNS trust policy management, health monitoring, and zero-downtime deployment pipelines.',
     href: '/status',
     badge: 'Infrastructure'
   }
@@ -256,14 +237,15 @@ export default function HomePage() {
                 <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
                   Kloud
                 </span>
-                <span className="text-xs text-gray-600 block -mt-1">Practical AI tools for teams</span>
+                <span className="text-xs text-gray-600 block -mt-1">Sovereign Intelligence Fabric</span>
               </div>
             </div>
             
             <div className="hidden md:flex items-center gap-8">
+              <a href="#definition" className="text-gray-600 hover:text-emerald-600 transition-colors">What is Kloud</a>
               <a href="#services" className="text-gray-600 hover:text-emerald-600 transition-colors">Ocean Core</a>
-              <a href="#modules" className="text-gray-600 hover:text-emerald-600 transition-colors">Modules</a>
-              <a href="#tech-stack" className="text-gray-600 hover:text-emerald-600 transition-colors">Capabilities</a>
+              <a href="#capabilities" className="text-gray-600 hover:text-emerald-600 transition-colors">Architecture</a>
+              <a href="#tech-stack" className="text-gray-600 hover:text-emerald-600 transition-colors">Security Model</a>
               <Link href="/security" className="text-gray-600 hover:text-emerald-600 transition-colors">Security</Link>
               <Link href="/modules" className="text-gray-600 hover:text-emerald-600 transition-colors">Dashboard</Link>
             </div>
@@ -273,15 +255,31 @@ export default function HomePage() {
                 href="/modules"
                 className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-lg font-medium transition-all shadow-lg shadow-emerald-500/25"
               >
-                Open Dashboard
+                Start Enterprise Pilot
               </Link>
             </div>
           </div>
         </div>
       </nav>
 
+      {/* Welcome Tagline — above Hero */}
+      <section className="pt-28 pb-0 px-4 text-center">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm uppercase tracking-[0.22em] text-gray-400 font-semibold mb-3">
+            Welcome to the new world of technology.
+          </p>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            A world where intelligence is sovereign, systems are alive, and operations think for themselves.
+            <span className="block mt-2 text-gray-800 font-medium">
+              Kloud is the fabric that powers this world — real-time telemetry, cognitive security,
+              and distributed AI execution in one unified surface.
+            </span>
+          </p>
+        </div>
+      </section>
+
       {/* Hero Section */}
-      <section className="pt-28 pb-20 px-4 relative overflow-hidden">
+      <section className="pt-12 pb-20 px-4 relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -293,7 +291,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gray-100/50 border border-emerald-500/30 mb-8">
             <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
             <span className="text-sm text-emerald-600 font-medium">
-              Platform Online • 99.97% Uptime
+              Sovereign Fabric Online • 99.97% Uptime
             </span>
           </div>
 
@@ -303,15 +301,18 @@ export default function HomePage() {
               Kloud
             </span>
             <br />
-            <span className="text-3xl md:text-5xl text-gray-700">
-              Smart tools your team can actually use
+            <span className="text-2xl md:text-3xl text-gray-500 font-medium block mt-2 mb-1">
+              Built for the world that thinks.
+            </span>
+            <span className="text-2xl md:text-4xl text-gray-700">
+              Sovereign Intelligence Fabric for AI, Infrastructure, and Operations
             </span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Production-grade tools for support, research, automation, and operations.
-            Real-time telemetry, secure workflows, and clear operational control.
+            Real-time telemetry, secure execution, distributed AI pipelines, and operational governance
+            in one unified control surface.
           </p>
 
           {/* CTA Buttons */}
@@ -320,14 +321,45 @@ export default function HomePage() {
               href="/modules"
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl font-semibold text-lg text-black transition-all shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
             >
-              Open Dashboard
+              Start Enterprise Pilot
             </Link>
             <Link 
-              href="/modules"
+              href="#capabilities"
               className="w-full sm:w-auto px-8 py-4 bg-gray-100 hover:bg-gray-200 border border-gray-300 hover:border-emerald-500 rounded-xl font-semibold text-lg text-gray-700 transition-all flex items-center justify-center gap-2"
             >
-              Explore Modules
+              View Architecture
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* What is Kloud */}
+      <section id="definition" className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="rounded-3xl border border-gray-200 bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-emerald-700 font-semibold mb-3">What is Kloud</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Kloud is a Sovereign Intelligence Fabric.
+            </h2>
+            <p className="text-lg text-gray-600 max-w-4xl leading-relaxed">
+              A distributed runtime that unifies AI inference, telemetry, security, and operational governance
+              into one control surface. Built for platform teams that need predictable operations, provable trust,
+              and full infrastructure control.
+            </p>
+            <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                <p className="text-sm font-semibold text-gray-900">Behavioral Telemetry</p>
+                <p className="text-sm text-gray-600 mt-1">STIGMA (BTI), NDB (DAS), Rezonance (PFD)</p>
+              </div>
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                <p className="text-sm font-semibold text-gray-900">Distributed Execution</p>
+                <p className="text-sm text-gray-600 mt-1">CRDT-backed runtime consistency across sovereign nodes</p>
+              </div>
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                <p className="text-sm font-semibold text-gray-900">Operational Governance</p>
+                <p className="text-sm text-gray-600 mt-1">Trust policy enforcement, routing, and incident visibility</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -342,25 +374,25 @@ export default function HomePage() {
             <div className="relative z-10 p-8 md:p-12 lg:p-14">
               <div className="flex flex-wrap items-center gap-3 mb-6">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-emerald-100 text-emerald-700 border border-emerald-300">
-                  Professional Services
+                  Sovereign Fabric
                 </span>
                 <span className="px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-cyan-100 text-cyan-700 border border-cyan-300">
-                  Enterprise Ready
+                  Enterprise Operations
                 </span>
               </div>
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 max-w-4xl">
                 What Kloud delivers.
-                <span className="block text-gray-900">AI inference. Billing. Edge infrastructure.</span>
+                <span className="block text-gray-900">Sovereign AI Fabric. Cognitive Telemetry. Distributed Execution.</span>
                 <span className="block bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
                   Managed by Ocean Core — in one control surface.
                 </span>
               </h2>
 
               <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl leading-relaxed">
-                Kloud runs production AI services — EEG and audio analytics, cognitive pipelines, subscription billing,
-                and sovereign edge deployments. Ocean Core is the operational layer that ties them together:
-                routing traffic, guiding users, and executing policy in real time.
+                Kloud runs production AI services, trust and billing governance, and sovereign routing across distributed nodes.
+                Ocean Core is the autonomous brain that orchestrates workloads, enforces policy,
+                and preserves system integrity in real time.
               </p>
 
               <div className="mt-6">
@@ -376,22 +408,22 @@ export default function HomePage() {
                 <div className="rounded-xl border border-gray-200 bg-white/80 px-4 py-3">
                   <p className="text-2xl font-black text-gray-900">{heroMetrics.totalPaths}</p>
                   <p className="text-xs uppercase tracking-wide text-gray-500">Live API Endpoints</p>
-                  <p className="text-xs text-gray-500 mt-1">Active, externally reachable routes.</p>
+                  <p className="text-xs text-gray-500 mt-1">Inference, telemetry, orchestration, and compute.</p>
                 </div>
                 <div className="rounded-xl border border-gray-200 bg-white/80 px-4 py-3">
                   <p className="text-2xl font-black text-gray-900">{heroMetrics.productDomains}</p>
-                  <p className="text-xs uppercase tracking-wide text-gray-500">Core Product Domains</p>
-                  <p className="text-xs text-gray-500 mt-1">Operational domains under governance.</p>
+                  <p className="text-xs uppercase tracking-wide text-gray-500">Operational Domains</p>
+                  <p className="text-xs text-gray-500 mt-1">Governed under one sovereign control surface.</p>
                 </div>
                 <div className="rounded-xl border border-gray-200 bg-white/80 px-4 py-3">
                   <p className="text-2xl font-black text-gray-900">{heroMetrics.oceanBrainPaths}</p>
                   <p className="text-xs uppercase tracking-wide text-gray-500">Ocean and Brain Services</p>
-                  <p className="text-xs text-gray-500 mt-1">Service endpoints for orchestration.</p>
+                  <p className="text-xs text-gray-500 mt-1">Autonomous routing, cognitive analysis, distributed execution.</p>
                 </div>
                 <div className="rounded-xl border border-gray-200 bg-white/80 px-4 py-3">
                   <p className="text-2xl font-black text-gray-900">24/7</p>
                   <p className="text-xs uppercase tracking-wide text-gray-500">Ocean Core Concierge</p>
-                  <p className="text-xs text-gray-500 mt-1">Continuous guidance and routing.</p>
+                  <p className="text-xs text-gray-500 mt-1">Continuous guidance, routing, and integrity posture.</p>
                 </div>
               </div>
 
@@ -421,13 +453,13 @@ export default function HomePage() {
                   href="/modules"
                   className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-black font-semibold shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition-all"
                 >
-                  Open Dashboard
+                  Start Enterprise Pilot
                 </Link>
                 <Link
-                  href="/modules"
+                  href="#capabilities"
                   className="inline-flex items-center justify-center px-7 py-3.5 rounded-xl border border-gray-300 bg-white text-gray-800 font-semibold hover:border-cyan-500 hover:text-cyan-700 transition-all"
                 >
-                  Explore Modules
+                  View Architecture
                 </Link>
               </div>
             </div>
@@ -440,10 +472,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">
-              Production AI Capabilities
+              Sovereign Fabric Architecture
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Production-grade pipelines for analytics, generation, and decision support.
+              The operating model behind secure distributed execution.
             </p>
           </div>
 
@@ -452,22 +484,22 @@ export default function HomePage() {
               <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-6 shadow-lg">
                 <span className="text-3xl">🔬</span>
               </div>
-              <h3 className="text-xl font-bold text-black mb-2">Smart Analysis</h3>
-              <p className="text-gray-600">Pattern detection, anomaly spotting, and operational insights.</p>
+              <h3 className="text-xl font-bold text-black mb-2">Cognitive Telemetry</h3>
+              <p className="text-gray-600">Behavioral traces (BTI), deviation scoring (DAS), and propagation dynamics (PFD).</p>
             </Link>
             <Link href="/modules/curiosity-ocean" className="p-8 rounded-2xl bg-gray-100/50 border border-gray-300 hover:border-teal-500 hover:shadow-xl hover:shadow-teal-500/10 transition-all text-center cursor-pointer">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center mb-6 shadow-lg">
                 <span className="text-3xl">🎨</span>
               </div>
-              <h3 className="text-xl font-bold text-black mb-2">Creative Tools</h3>
-              <p className="text-gray-600">Structured generation workflows for content and media.</p>
+              <h3 className="text-xl font-bold text-black mb-2">Distributed Execution Engine</h3>
+              <p className="text-gray-600">Production inference and workload orchestration with sovereign node control.</p>
             </Link>
             <Link href="/modules" className="p-8 rounded-2xl bg-gray-100/50 border border-gray-300 hover:border-orange-500 hover:shadow-xl hover:shadow-orange-500/10 transition-all text-center cursor-pointer">
               <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-6 shadow-lg">
                 <span className="text-3xl">✨</span>
               </div>
-              <h3 className="text-xl font-bold text-black mb-2">Seamless Experience</h3>
-              <p className="text-gray-600">Unified control surface with consistent operational context.</p>
+              <h3 className="text-xl font-bold text-black mb-2">Operational Governance</h3>
+              <p className="text-gray-600">Unified trust, routing policy, and runtime integrity enforcement in one surface.</p>
             </Link>
           </div>
         </div>
@@ -481,7 +513,7 @@ export default function HomePage() {
               Platform Modules
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-8">
-              Production-ready modules grouped by capability.
+              Operational capabilities of the sovereign fabric, grouped by domain.
             </p>
             
             {/* Category Filter */}
@@ -504,7 +536,7 @@ export default function HomePage() {
 
           {selectedCategory === 'all' && (
             <div className="mb-10">
-              <h3 className="text-2xl font-bold text-black mb-4">Featured Modules</h3>
+              <h3 className="text-2xl font-bold text-black mb-4">Priority Modules for Production Teams</h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {featuredModules.slice(0, 4).map((module) => (
                   <Link
@@ -582,16 +614,16 @@ export default function HomePage() {
               Why Kloud?
             </h2>
             <p className="text-gray-600 text-lg">
-              Built for production, governance, and scale.
+              Built for sovereignty, behavioral integrity, and operational control.
             </p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { name: 'Fast', desc: 'Low-latency responses and resilient routing.', icon: '⚡' },
-              { name: 'Secure', desc: 'Policy-driven controls and protected data paths.', icon: '🔒' },
-              { name: 'Smart', desc: 'Adaptive orchestration with real-time telemetry.', icon: '🧠' },
-              { name: 'Simple', desc: 'Clear controls for operators and product teams.', icon: '✨' },
+              { name: 'Sovereign by Design', desc: 'Run workloads inside your own infrastructure perimeter.', icon: '🛡️' },
+              { name: 'Cognitive Telemetry', desc: 'BTI, DAS, and PFD expose behavior before failure spreads.', icon: '🧠' },
+              { name: 'Distributed Execution', desc: 'CRDT-backed consistency with resilient orchestration.', icon: '⚙️' },
+              { name: 'Zero-Trust Governance', desc: 'Policy enforcement and trust controls in one control surface.', icon: '🔒' },
             ].map((item) => (
               <div 
                 key={item.name}
@@ -611,25 +643,25 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="p-8 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-black mb-2">Ready to operationalize AI?</h2>
-              <p className="text-gray-600">Open your workspace or browse modules by capability.</p>
+              <h2 className="text-3xl font-bold text-black mb-2">Ready to run sovereign operations?</h2>
+              <p className="text-gray-600">Start a pilot, deploy nodes, and govern AI execution from one control surface.</p>
             </div>
             
             <div className="grid md:grid-cols-3 gap-4">
               <div className="p-4 rounded-lg bg-gray-200/50 border border-gray-300 text-center">
-                <p className="text-3xl mb-2">📱</p>
-                <p className="text-gray-800 text-sm font-medium">Mobile Friendly</p>
-                <p className="text-xs text-gray-600">Use on any device</p>
+                <p className="text-lg mb-2 font-bold text-gray-800">SLA</p>
+                <p className="text-gray-800 text-sm font-medium">Production Reliability</p>
+                <p className="text-xs text-gray-600">Measured uptime and controlled incident response</p>
               </div>
               <div className="p-4 rounded-lg bg-gray-200/50 border border-gray-300 text-center">
-                <p className="text-3xl mb-2">🌟</p>
-                <p className="text-gray-800 text-sm font-medium">Free to Try</p>
-                <p className="text-xs text-gray-600">No credit card needed</p>
+                <p className="text-lg mb-2 font-bold text-gray-800">TRUST</p>
+                <p className="text-gray-800 text-sm font-medium">Policy and Telemetry</p>
+                <p className="text-xs text-gray-600">BTI/DAS/PFD plus DNS and email trust governance</p>
               </div>
               <div className="p-4 rounded-lg bg-gray-200/50 border border-gray-300 text-center">
-                <p className="text-3xl mb-2">⚡</p>
-                <p className="text-gray-800 text-sm font-medium">Instant Access</p>
-                <p className="text-xs text-gray-600">Start immediately</p>
+                <p className="text-lg mb-2 font-bold text-gray-800">PILOT</p>
+                <p className="text-gray-800 text-sm font-medium">30-60-90 Rollout</p>
+                <p className="text-xs text-gray-600">Structured path from pilot to full production</p>
               </div>
             </div>
             
@@ -638,10 +670,10 @@ export default function HomePage() {
                 href="/modules"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl font-semibold text-lg transition-all shadow-lg shadow-emerald-500/30"
               >
-                Open Dashboard
+                Start Enterprise Pilot
               </Link>
               <Link 
-                href="/modules"
+                href="#modules"
                 className="inline-flex items-center gap-2 px-8 py-4 border border-gray-300 bg-white hover:border-emerald-500 text-gray-800 hover:text-emerald-700 rounded-xl font-semibold text-lg transition-all"
               >
                 Explore Modules
@@ -660,7 +692,7 @@ export default function HomePage() {
               <span className="text-lg font-bold text-black">Kloud</span>
             </div>
             <p className="text-gray-600 text-sm max-w-xl">
-              Practical AI tools for teams. Production-ready modules for operations, research, and secure execution.
+              Sovereign Intelligence Fabric for production operations, behavioral integrity, and secure distributed execution.
             </p>
           </div>
 
@@ -684,9 +716,8 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4 text-black">Company</h4>
               <ul className="space-y-2 text-gray-600 text-sm">
                 <li><span className="text-gray-700">Ledjan Ahmati</span></li>
-                <li><span className="text-gray-700">WEB8euroweb GmbH</span></li>
                 <li><span className="text-gray-700">ABA GmbH</span></li>
-                <li><a href="mailto:support@kloud.com" className="hover:text-emerald-600 transition-colors">Contact</a></li>
+                <li><a href="mailto:clisonix@pm.me" className="hover:text-emerald-600 transition-colors">clisonix@pm.me</a></li>
               </ul>
             </div>
           </div>

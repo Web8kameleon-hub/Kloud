@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { findCustomerByInternalUser, getStripeClient, requireInternalAuthUser } from "@/lib/stripe-billing";
 
 interface BillingAddress {
   line1: string;
@@ -17,42 +17,19 @@ interface BillingAddress {
   phone?: string;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Check if Stripe is configured
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json({
-        success: true,
-        billingAddress: null,
-        message: "Stripe not configured",
-      });
-    }
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
-
-    // Get customer email from session/auth
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
-
-    // Search for customer by email
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
-
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json({
         success: true,
         billingAddress: null,
         message: "No customer found",
       });
     }
-
-    const customer = customers.data[0];
     const address = customer.address;
 
     if (!address || !address.line1) {
@@ -80,6 +57,18 @@ export async function GET() {
     });
   } catch (error: unknown) {
     console.error("Error fetching billing address:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized", billingAddress: null },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured", billingAddress: null },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message
@@ -93,19 +82,8 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   try {
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Stripe not configured" },
-        { status: 400 },
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
 
     const billingAddress: BillingAddress = await request.json();
 
@@ -122,24 +100,17 @@ export async function PUT(request: Request) {
       );
     }
 
-    // Get customer
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json(
         { success: false, error: "Customer not found" },
         { status: 404 },
       );
     }
 
-    const customerId = customers.data[0].id;
-
     // Update customer address
-    await stripe.customers.update(customerId, {
+    await stripe.customers.update(customer.id, {
       address: {
         line1: billingAddress.line1,
         line2: billingAddress.line2 || undefined,
@@ -158,6 +129,18 @@ export async function PUT(request: Request) {
     });
   } catch (error: unknown) {
     console.error("Error updating billing address:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured" },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message

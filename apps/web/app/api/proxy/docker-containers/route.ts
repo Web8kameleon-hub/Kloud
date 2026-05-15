@@ -5,7 +5,7 @@ const API_URL = process.env.NODE_ENV === 'production' ? 'http://kloud-api:8000' 
 
 export async function GET() {
   try {
-    const response = await fetch(`${API_URL}/api/reporting/docker-containers`, {
+    const response = await fetch(`${API_URL}/api/mymirror/docker-containers`, {
       cache: 'no-store',
       headers: { 'Accept': 'application/json' }
     })

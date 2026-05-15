@@ -4,8 +4,7 @@
  */
 
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
-import { resolveBearerUser } from "@/lib/internal-auth";
+import { getOrCreateCustomerForInternalUser, getStripeClient, requireInternalAuthUser } from "@/lib/stripe-billing";
 
 // Plan pricing configuration (in cents)
 const PLAN_PRICING = {
@@ -43,35 +42,10 @@ const PLAN_PRICING = {
 
 export async function POST(request: Request) {
   try {
-    const authUser = await resolveBearerUser(request.headers.get("authorization"));
-    if (!authUser) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
-    }
+    const authUser = await requireInternalAuthUser(request);
 
     const { priceId, planName, successUrl, cancelUrl } = await request.json();
-
-    // Check if Stripe is configured
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Stripe not configured",
-          message: "Please add STRIPE_SECRET_KEY to environment variables",
-          demo: true,
-        },
-        { status: 400 },
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
+    const stripe = getStripeClient();
 
     // Get pricing for the selected plan
     const pricing = PLAN_PRICING[priceId as keyof typeof PLAN_PRICING];
@@ -83,36 +57,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create or get a customer (required for Stripe Accounts V2 in test mode)
-    // In production, you'd fetch the customer from your database
-    const customerEmail = authUser.email || process.env.USER_EMAIL || "customer@kloud.com";
-
-    // Search for existing customer
-    const existingCustomers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
-
-    let customerId: string;
-    if (existingCustomers.data.length > 0) {
-      customerId = existingCustomers.data[0].id;
-    } else {
-      // Create new customer
-      const customer = await stripe.customers.create({
-        email: customerEmail,
-        name: authUser.name || process.env.USER_NAME || "Kloud User",
-        metadata: {
-          company: process.env.USER_COMPANY || "",
-          internal_user_id: authUser.id,
-        },
-      });
-      customerId = customer.id;
-    }
+    const customer = await getOrCreateCustomerForInternalUser(stripe, authUser);
 
     // Create Checkout Session with dynamic pricing (no pre-created products needed)
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      customer: customerId,
+      customer: customer.id,
       payment_method_types: ["card"],
       line_items: [
         {
@@ -153,6 +103,23 @@ export async function POST(request: Request) {
     });
   } catch (error: unknown) {
     console.error("Stripe checkout error:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Stripe not configured",
+          message: "Please add STRIPE_SECRET_KEY to environment variables",
+          demo: true,
+        },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message

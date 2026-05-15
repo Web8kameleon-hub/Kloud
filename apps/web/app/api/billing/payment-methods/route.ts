@@ -4,36 +4,15 @@
  */
 
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { findCustomerByInternalUser, getStripeClient, requireInternalAuthUser } from "@/lib/stripe-billing";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Check if Stripe is configured
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json({
-        success: true,
-        paymentMethods: [],
-        message: "Stripe not configured",
-      });
-    }
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
-
-    // Get customer email from session/auth
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
-
-    // Search for customer by email
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
-
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json({
         success: true,
         paymentMethods: [],
@@ -41,12 +20,9 @@ export async function GET() {
       });
     }
 
-    const customer = customers.data[0];
-    const customerId = customer.id;
-
     // Fetch payment methods for this customer
     const stripeMethods = await stripe.paymentMethods.list({
-      customer: customerId,
+      customer: customer.id,
       type: "card",
     });
 
@@ -74,6 +50,18 @@ export async function GET() {
     });
   } catch (error: unknown) {
     console.error("Error fetching payment methods:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized", paymentMethods: [] },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured", paymentMethods: [] },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message
@@ -88,19 +76,8 @@ export async function GET() {
 // Set default payment method
 export async function PUT(request: Request) {
   try {
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Stripe not configured" },
-        { status: 400 },
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
 
     const { paymentMethodId } = await request.json();
 
@@ -111,24 +88,17 @@ export async function PUT(request: Request) {
       );
     }
 
-    // Get customer
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json(
         { success: false, error: "Customer not found" },
         { status: 404 },
       );
     }
 
-    const customerId = customers.data[0].id;
-
     // Set as default payment method
-    await stripe.customers.update(customerId, {
+    await stripe.customers.update(customer.id, {
       invoice_settings: {
         default_payment_method: paymentMethodId,
       },
@@ -140,6 +110,18 @@ export async function PUT(request: Request) {
     });
   } catch (error: unknown) {
     console.error("Error updating default payment method:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured" },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message
@@ -154,19 +136,8 @@ export async function PUT(request: Request) {
 // Delete payment method
 export async function DELETE(request: Request) {
   try {
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Stripe not configured" },
-        { status: 400 },
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
+    await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
 
     const { paymentMethodId } = await request.json();
 
@@ -186,6 +157,18 @@ export async function DELETE(request: Request) {
     });
   } catch (error: unknown) {
     console.error("Error removing payment method:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured" },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error
         ? error.message

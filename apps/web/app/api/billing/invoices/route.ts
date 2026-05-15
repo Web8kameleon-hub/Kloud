@@ -4,36 +4,15 @@
  */
 
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { findCustomerByInternalUser, getStripeClient, requireInternalAuthUser } from "@/lib/stripe-billing";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Check if Stripe is configured
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json({
-        success: true,
-        invoices: [],
-        message: "Stripe not configured - no invoices available",
-      });
-    }
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
-
-    // Get customer email from session/auth (in production, get from authenticated user)
-    const customerEmail = process.env.USER_EMAIL || "customer@kloud.com";
-
-    // Search for customer by email
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
-
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json({
         success: true,
         invoices: [],
@@ -41,11 +20,9 @@ export async function GET() {
       });
     }
 
-    const customerId = customers.data[0].id;
-
     // Fetch invoices for this customer
     const stripeInvoices = await stripe.invoices.list({
-      customer: customerId,
+      customer: customer.id,
       limit: 50,
     });
 
@@ -76,6 +53,18 @@ export async function GET() {
     });
   } catch (error: unknown) {
     console.error("Error fetching invoices:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized", invoices: [] },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured", invoices: [] },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch invoices";
     return NextResponse.json(

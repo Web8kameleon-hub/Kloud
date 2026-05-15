@@ -327,6 +327,34 @@ services:
     restart: unless-stopped
 
   # ==========================
+  # NODEDB CONTROL PLANE (Stigma Memory Sink)
+  # ==========================
+  nodedb-control-plane:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.nodedb-control-plane
+    container_name: kloud-nodedb-control-plane
+    environment:
+      PYTHONUNBUFFERED: "1"
+      NODEDB_CONTROL_PLANE_PORT: "9090"
+    ports:
+      - "9090:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./output/nodedb:/app/output/nodedb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ==========================
   # FRONTEND
   # ==========================
   web:
@@ -359,6 +387,10 @@ services:
       KITCHEN_JOBS_DIR: "/app/kitchen-jobs"
       KITCHEN_REPORTS_DIR: "/app/kitchen-reports"
       KITCHEN_RUN_API_KEY: ${KITCHEN_RUN_API_KEY:-kloud-kitchen-secret}
+      # Stigma Memory (NDB binary persistence)
+      STIGMA_NODEDB_URL: "http://kloud-nodedb-control-plane:9090/api/v1/stigma/write"
+      REQUIRE_STIGMA_NODEDB: "1"
+      KLOUD_NODE_ID: "kloud-web"
     ports:
       - "3001:3000"
     volumes:
@@ -367,6 +399,8 @@ services:
       - kitchen_reports:/app/kitchen-reports
     depends_on:
       api:
+        condition: service_healthy
+      nodedb-control-plane:
         condition: service_healthy
     restart: unless-stopped
 

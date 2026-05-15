@@ -122,7 +122,7 @@ export default function DnsHostingControlPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center gap-3 mb-5">
             <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-              Cloudflare-like services
+              Kloud edge services
             </span>
             <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
               One place for DNS, hosting, and edge rules
@@ -133,14 +133,14 @@ export default function DnsHostingControlPage() {
             <div className="rounded-3xl border border-slate-800 bg-white/5 p-8 shadow-2xl shadow-cyan-500/5">
               <div className="flex items-center gap-3 mb-6 text-cyan-300">
                 <Lock className="w-5 h-5" />
-                <span className="text-sm font-medium uppercase tracking-[0.2em]">DNS / Hosting Operations</span>
+                <span className="text-sm font-medium uppercase tracking-[0.2em]">Kloud DNS / Hosting Operations</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-black leading-tight mb-5">
                 Manage domains, origins, security, and routing from one dashboard.
               </h1>
               <p className="text-lg text-gray-300 max-w-3xl leading-relaxed">
                 This view brings together DNS records, hosting origins, SSL/TLS, WAF, caching, Workers routes, and load balancing.
-                It is designed as the Kloud control surface for teams that want Cloudflare-style operations without the confusion.
+                It is designed as the Kloud control surface for teams that want one clear place to run DNS, trust policies, and edge runtime controls.
               </p>
 
               <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -150,7 +150,7 @@ export default function DnsHostingControlPage() {
                 </div>
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
                   <div className="text-3xl font-black text-white">8</div>
-                  <div className="text-xs uppercase tracking-wide text-gray-400 mt-1">Edge services</div>
+                  <div className="text-xs uppercase tracking-wide text-gray-400 mt-1">Kloud services</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
                   <div className="text-3xl font-black text-white">{origins.length}</div>

@@ -25,7 +25,7 @@ type NodeEntry = {
 };
 
 const CONTROL_PLANE_URL =
-  process.env.NEXT_PUBLIC_CONTROL_PLANE_URL || 'http://localhost:8011';
+  '/api/nodedb-control-plane';
 
 export default function NodeDBControlSurfacePage() {
   const [loading, setLoading] = useState(true);

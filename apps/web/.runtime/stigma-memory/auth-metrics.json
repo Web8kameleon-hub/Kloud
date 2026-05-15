@@ -1,0 +1,16 @@
+{
+  "updatedAt": "2026-05-15T17:52:16.471Z",
+  "nodeId": "DESKTOP-I68P1RI",
+  "totals": {
+    "register": 3,
+    "login": 0,
+    "otpVerified": 1,
+    "tokenValidated": 0,
+    "failed": 0,
+    "sms": 0,
+    "email": 4,
+    "rememberEnabled": 4
+  },
+  "avgLatencyMs": 10,
+  "samples": 4
+}

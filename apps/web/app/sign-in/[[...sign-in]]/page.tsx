@@ -28,6 +28,7 @@ export default function SignInPage() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [channel, setChannel] = useState<"sms" | "email">("sms");
+  const [remember, setRemember] = useState(true);
   const [challengeId, setChallengeId] = useState<string | null>(null);
   const [otpCode, setOtpCode] = useState("");
   const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
@@ -48,8 +49,11 @@ export default function SignInPage() {
     try {
       const res = await fetch("/api/internal-auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier, password, channel }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-Kloud-Node-Id": typeof window !== "undefined" ? window.location.hostname : "web-client",
+        },
+        body: JSON.stringify({ identifier, password, channel, remember }),
       });
       const data = (await res.json()) as LoginResult;
       if (!res.ok || !data.success || !data.challengeId) {
@@ -71,7 +75,10 @@ export default function SignInPage() {
     try {
       const res = await fetch("/api/internal-auth/verify-otp", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Kloud-Node-Id": typeof window !== "undefined" ? window.location.hostname : "web-client",
+        },
         body: JSON.stringify({ challengeId, code: otpCode }),
       });
       const data = (await res.json()) as VerifyResult;
@@ -136,6 +143,15 @@ export default function SignInPage() {
               <option value="sms">SMS OTP</option>
               <option value="email">Email OTP</option>
             </select>
+            <label className="flex items-center gap-2 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="h-4 w-4 rounded border-slate-600 bg-slate-800"
+              />
+              Remember this device (persistent session)
+            </label>
             <button
               disabled={loading}
               onClick={handleLogin}

@@ -4,38 +4,15 @@
  */
 
 import { NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
-import Stripe from "stripe";
+import { findCustomerByInternalUser, getStripeClient, requireInternalAuthUser } from "@/lib/stripe-billing";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Check if Stripe is configured
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json({
-        success: true,
-        subscription: null,
-        message: "Stripe not configured",
-      });
-    }
+    const authUser = await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
+    const customer = await findCustomerByInternalUser(stripe, authUser);
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
-
-    // Get customer email from Clerk session
-    const user = await currentUser();
-    const customerEmail = user?.emailAddresses?.[0]?.emailAddress || process.env.USER_EMAIL || "customer@kloud.com";
-
-    // Search for customer by email
-    const customers = await stripe.customers.list({
-      email: customerEmail,
-      limit: 1,
-    });
-
-    if (customers.data.length === 0) {
+    if (!customer) {
       return NextResponse.json({
         success: true,
         subscription: null,
@@ -43,11 +20,9 @@ export async function GET() {
       });
     }
 
-    const customerId = customers.data[0].id;
-
     // Fetch active subscriptions
     const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
+      customer: customer.id,
       status: "all",
       limit: 1,
     });
@@ -111,6 +86,18 @@ export async function GET() {
     });
   } catch (error: unknown) {
     console.error("Error fetching subscription:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized", subscription: null },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured", subscription: null },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch subscription";
     return NextResponse.json(
@@ -123,19 +110,8 @@ export async function GET() {
 // Cancel subscription
 export async function DELETE(request: Request) {
   try {
-    if (
-      !process.env.STRIPE_SECRET_KEY ||
-      process.env.STRIPE_SECRET_KEY.includes("YOUR_")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Stripe not configured" },
-        { status: 400 },
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      
-    });
+    await requireInternalAuthUser(request);
+    const stripe = getStripeClient();
 
     const { subscriptionId, cancelAtPeriodEnd = true } = await request.json();
 
@@ -164,6 +140,18 @@ export async function DELETE(request: Request) {
     });
   } catch (error: unknown) {
     console.error("Error canceling subscription:", error);
+    if (error instanceof Error && error.message === "Unauthorized") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+    if (error instanceof Error && error.message === "Stripe not configured") {
+      return NextResponse.json(
+        { success: false, error: "Stripe not configured" },
+        { status: 400 },
+      );
+    }
     const errorMessage =
       error instanceof Error ? error.message : "Failed to cancel subscription";
     return NextResponse.json(

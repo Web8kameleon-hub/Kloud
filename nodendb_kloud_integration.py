@@ -68,15 +68,16 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 SERVICE_ENDPOINTS = {
-    "api": {"host": "127.0.0.1", "port": 7161, "scheme": "http"},
-    "ocean-core": {"host": "127.0.0.1", "port": 7160, "scheme": "http"},
-    "alba": {"host": "127.0.0.1", "port": 7152, "scheme": "http"},
-    "albi": {"host": "127.0.0.1", "port": 7159, "scheme": "http"},
-    "jona": {"host": "127.0.0.1", "port": 7157, "scheme": "http"},
-    "clx-i": {"host": "127.0.0.1", "port": 7160, "scheme": "http"},
-    "ai-global-9999": {"host": "127.0.0.1", "port": 9080, "scheme": "http"},
-    "aviation": {"host": "127.0.0.1", "port": 8080, "scheme": "http"},
-    "neo4j": {"host": "127.0.0.1", "port": 7474, "scheme": "http"},
+    # Docker-network addresses used by the control-plane container.
+    "api": {"host": "kloud-api", "port": 8000, "scheme": "http"},
+    "ocean-core": {"host": "kloud-ocean-core", "port": 8030, "scheme": "http"},
+    "alba": {"host": "kloud-alba", "port": 5555, "scheme": "http"},
+    "albi": {"host": "kloud-albi", "port": 6680, "scheme": "http"},
+    "jona": {"host": "kloud-jona", "port": 7777, "scheme": "http"},
+    "clx-i": {"host": "kloud-clx-i", "port": 4444, "scheme": "http"},
+    "ai-global-9999": {"host": "kloud-ai-global-9999", "port": 9999, "scheme": "http"},
+    "aviation": {"host": "kloud-aviation", "port": 8080, "scheme": "http"},
+    "neo4j": {"host": "kloud-neo4j", "port": 7474, "scheme": "http"},
 }
 
 SERVICE_HEALTH_PATHS = {
@@ -92,16 +93,16 @@ SERVICE_HEALTH_PATHS = {
 }
 
 DATABASE_ENDPOINTS = {
-    "redis": {"host": "localhost", "port": 6379},
+    "redis": {"host": "redis", "port": 6379},
     "postgres": {
-        "host": "localhost",
+        "host": "postgres",
         "port": 5432,
         "user": "kloud",
         "password": "kloud",
         "db": "klouddb",
     },
     "neo4j": {
-        "host": "localhost",
+        "host": "neo4j",
         "port": 7687,
         "user": "neo4j",
         "password": "kloud123",
@@ -285,6 +286,57 @@ async def _get_first_ok_json(
     if last_error:
         raise last_error
     raise RuntimeError(f"No healthy paths responded for {endpoint}")
+
+
+async def discover_service_availability() -> Dict[str, Any]:
+    """Scan configured services and return detailed availability diagnostics."""
+    available_services: Dict[str, bool] = {}
+    scan: Dict[str, Dict[str, Any]] = {}
+
+    async with httpx.AsyncClient(timeout=5.0) as client:
+        for service_name, endpoint_config in SERVICE_ENDPOINTS.items():
+            endpoint = (
+                f"{endpoint_config['scheme']}://"
+                f"{endpoint_config['host']}:{endpoint_config['port']}"
+            )
+            paths = SERVICE_HEALTH_PATHS.get(service_name, ["/health", "/status", "/"])
+
+            detail: Dict[str, Any] = {
+                "service": service_name,
+                "endpoint": endpoint,
+                "paths": paths,
+                "status": "unavailable",
+                "health_path": None,
+                "http_status": None,
+                "last_error": None,
+            }
+
+            for path in paths:
+                try:
+                    response = await client.get(f"{endpoint}{path}", timeout=10.0)
+                    detail["http_status"] = response.status_code
+
+                    if response.status_code in [200, 201, 202, 204]:
+                        detail["status"] = "available"
+                        detail["health_path"] = path
+                        available_services[service_name] = True
+                        break
+                except Exception as exc:
+                    detail["last_error"] = f"{type(exc).__name__}: {exc}"
+
+            scan[service_name] = detail
+
+    unavailable_services = sorted(
+        [name for name in SERVICE_ENDPOINTS.keys() if name not in available_services]
+    )
+
+    return {
+        "available_count": len(available_services),
+        "total_count": len(SERVICE_ENDPOINTS),
+        "available_services": available_services,
+        "unavailable_services": unavailable_services,
+        "scan": scan,
+    }
 
 
 async def check_api_health() -> Dict[str, Any]:
@@ -711,30 +763,30 @@ async def initialize_kloud_nodedb_real():
 
     logger.info("🔍 Scanning for available real services...\n")
 
-    available_services = {}
-    async with httpx.AsyncClient(timeout=5.0) as client:
-        for service_name, endpoint_config in SERVICE_ENDPOINTS.items():
-            endpoint = f"{endpoint_config['scheme']}://{endpoint_config['host']}:{endpoint_config['port']}"
-            try:
-                paths = SERVICE_HEALTH_PATHS.get(
-                    service_name, ["/health", "/status", "/"]
-                )
-                response, _, health_path = await _get_first_ok_json(
-                    client, endpoint, paths
-                )
-                if response.status_code in [200, 201, 202, 204]:
-                    available_services[service_name] = True
-                    logger.info(
-                        f"✓ {service_name}: Available at {endpoint}{health_path}"
-                    )
-            except Exception as e:
-                logger.warning(f"✗ {service_name}: Not available ({type(e).__name__})")
+    discovery = await discover_service_availability()
+    available_services = discovery.get("available_services", {})
+    service_scan = discovery.get("scan", {})
+
+    for service_name, detail in service_scan.items():
+        if detail.get("status") == "available":
+            logger.info(
+                f"✓ {service_name}: Available at {detail.get('endpoint')}{detail.get('health_path')}"
+            )
+        else:
+            reason = detail.get("last_error") or f"HTTP {detail.get('http_status')}"
+            logger.warning(f"✗ {service_name}: Not available ({reason})")
 
     if not available_services:
         logger.critical("❌ NO SERVICES AVAILABLE!")
         logger.critical("   Please ensure docker-compose services are running:")
         logger.critical("   docker-compose up -d")
-        return {"nodedb": nodedb, "services": {}, "available_count": 0}
+        return {
+            "nodedb": nodedb,
+            "services": {},
+            "available_count": 0,
+            "unavailable_services": discovery.get("unavailable_services", []),
+            "service_scan": service_scan,
+        }
 
     logger.info(f"\n✅ Found {len(available_services)} available services\n")
 
@@ -1012,6 +1064,8 @@ async def initialize_kloud_nodedb_real():
         "services": registered,
         "sovereign_nodes": sovereign_fabric_nodes,
         "available_count": len(registered),
+        "unavailable_services": discovery.get("unavailable_services", []),
+        "service_scan": service_scan,
     }
 
 

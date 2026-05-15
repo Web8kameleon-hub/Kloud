@@ -26,6 +26,7 @@ from nodendb_stigma import get_nodedb
 from nodendb_kloud_integration import (
     initialize_kloud_nodedb_real,
     monitor_real_services,
+    discover_service_availability,
     check_jona_sandbox_health,
     evaluate_governance_proposal,
 )
@@ -46,6 +47,7 @@ async def root() -> Dict[str, Any]:
         "routes": [
             "/health",
             "/api/v1/control-plane/bootstrap",
+            "/api/v1/control-plane/discovery",
             "/api/v1/control-plane/sync",
             "/api/v1/control-plane/sync/loop/status",
             "/api/v1/control-plane/nodes",
@@ -201,6 +203,25 @@ async def bootstrap() -> Dict[str, Any]:
         "status": "bootstrapped",
         "available_count": ctx.get("available_count", 0),
         "registered_services": list(ctx.get("services", {}).keys()),
+        "unavailable_services": ctx.get("unavailable_services", []),
+        "service_scan": ctx.get("service_scan", {}),
+    }
+
+
+@app.get("/api/v1/control-plane/discovery")
+async def discovery() -> Dict[str, Any]:
+    result = await discover_service_availability()
+    available_services_map = result.get("available_services", {})
+    available_services = sorted(list(available_services_map.keys()))
+
+    return {
+        "status": "ok",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "available_count": result.get("available_count", 0),
+        "total_count": result.get("total_count", 0),
+        "available_services": available_services,
+        "unavailable_services": result.get("unavailable_services", []),
+        "scan": result.get("scan", {}),
     }
 
 

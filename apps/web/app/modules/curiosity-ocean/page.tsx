@@ -79,7 +79,7 @@ const translations: Record<string, {
     close: "Close",
   },
   sq: {
-    welcome: "Përshëndetje! Jam Curiosity Ocean — më pyet çdo gjë dhe le të eksplorojmë thellësitë e dijes së bashku. Çfarë ngjall kuriozitetin tënd sot?",
+    welcome: "Përshëndetje! Jam Curiosity Ocean — i optimizuar për arsyetim elastik dhe përgjigje të thelluara. Më pyet çdo gjë dhe do ta trajtojmë pa barriera artificiale, me rregulla të qarta operacionale.",
     chatCleared: "Biseda u pastrua! Gati për eksplorime të reja. Çfarë dëshiron të zbulosh?",
     modules: "Module",
     title: "Curiosity Ocean",
@@ -647,7 +647,18 @@ export default function CuriosityOceanChat() {
       const response = await fetch('/api/ocean/stream', {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ message: messageText, language, clerk_user_id: userId, user_name: user?.firstName || user?.username }),
+        body: JSON.stringify({
+          message: messageText,
+          language,
+          curiosityLevel,
+          resonance_profile: "wwwmmm-ndb-stigma-tide-rezonance-nanogrid",
+          resonance_ndb:
+            curiosityLevel === 'genius' ? 0.93 :
+            curiosityLevel === 'chaos' ? 0.88 :
+            curiosityLevel === 'wild' ? 0.82 : 0.74,
+          clerk_user_id: userId,
+          user_name: user?.firstName || user?.username,
+        }),
         signal: abortControllerRef.current.signal,
       });
       if (!response.ok) throw new Error('Stream failed');
@@ -676,7 +687,13 @@ export default function CuriosityOceanChat() {
       setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, isStreaming: false } : msg));
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
-        setMessages(prev => prev.map(msg => msg.id === aiMessageId ? { ...msg, content: 'Connection interrupted. Please try again.', isStreaming: false } : msg));
+        setMessages(prev => prev.map(msg => msg.id === aiMessageId ? {
+          ...msg,
+          content: 'Stream-i u ndërpre. Po kaloj automatikisht në modalitet rezilient...',
+          isStreaming: false,
+        } : msg));
+        // Resilient fallback: if stream fails, continue through non-stream endpoint.
+        await sendRegularMessage(messageText);
       }
     } finally {
       setIsStreaming(false);
@@ -692,7 +709,18 @@ export default function CuriosityOceanChat() {
       const res = await fetch('/api/ocean', {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ question: messageText, curiosityLevel, clerk_user_id: userId, user_name: user?.firstName || user?.username, language }),
+        body: JSON.stringify({
+          question: messageText,
+          curiosity_level: curiosityLevel,
+          resonance_profile: "wwwmmm-ndb-stigma-tide-rezonance-nanogrid",
+          resonance_ndb:
+            curiosityLevel === 'genius' ? 0.93 :
+            curiosityLevel === 'chaos' ? 0.88 :
+            curiosityLevel === 'wild' ? 0.82 : 0.74,
+          clerk_user_id: userId,
+          user_name: user?.firstName || user?.username,
+          language,
+        }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -705,7 +733,12 @@ export default function CuriosityOceanChat() {
         setMessages(prev => [...prev, { id: `error-${Date.now()}`, type: 'ai', content: 'Service is processing. Please try again.', timestamp: new Date() }]);
       }
     } catch {
-      setMessages(prev => [...prev, { id: `error-${Date.now()}`, type: 'ai', content: 'Connection interrupted. Please try again.', timestamp: new Date() }]);
+      setMessages(prev => [...prev, {
+        id: `error-${Date.now()}`,
+        type: 'ai',
+        content: 'Shërbimi është përkohësisht i ngarkuar. Provo përsëri ose vazhdo me pyetje më specifike për arsyetim më të qëndrueshëm.',
+        timestamp: new Date(),
+      }]);
     }
   };
 
