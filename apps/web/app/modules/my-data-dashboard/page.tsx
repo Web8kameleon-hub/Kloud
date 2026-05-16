@@ -97,31 +97,31 @@ export default function DataSourcesDashboard() {
         if (data.sources && Array.isArray(data.sources)) {
           setSources(data.sources)
         } else {
-          setSources(DEMO_SOURCES)
+            setSources([])
         }
       } else {
-        setSources(DEMO_SOURCES)
+          setSources([])
       }
 
       if (metricsRes.ok) {
         const data = await metricsRes.json()
-        setMetrics({
-          totalSources: data.total_sources || DEMO_SOURCES.length,
-          connectedSources: data.connected_sources || 5,
-          totalDataPoints: data.total_requests || 2367700,
-          dataPointsToday: data.requests_today || 89420,
-          storageUsed: data.disk_used || '18.4 GB',
-          apiCallsToday: data.api_calls || 127840,
-          avgLatency: data.avg_latency || 52,
-          uptime: data.uptime || '99.97%'
+          setMetrics({
+            totalSources: data.total_sources ?? 0,
+            connectedSources: data.connected_sources ?? 0,
+            totalDataPoints: data.total_requests ?? 0,
+            dataPointsToday: data.requests_today ?? 0,
+            storageUsed: data.disk_used ?? '0 GB',
+            apiCallsToday: data.api_calls ?? 0,
+            avgLatency: data.avg_latency ?? 0,
+            uptime: data.uptime ?? '0%'
         })
       } else {
-        setMetrics(DEMO_METRICS)
+        setMetrics(null)
       }
     } catch (err) {
       console.error('Failed to fetch data:', err)
-      setSources(DEMO_SOURCES)
-      setMetrics(DEMO_METRICS)
+        setSources([])
+      setMetrics(null)
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -195,22 +195,7 @@ export default function DataSourcesDashboard() {
       }
     } catch (err) {
       console.error('Failed to add source:', err)
-      // Add locally for demo purposes
-      const created: DataSource = {
-        id: `local_${Date.now()}`,
-        name: newSource.name,
-        type: newSource.type,
-        status: 'syncing',
-        endpoint: newSource.endpoint,
-        lastSync: 'Just now',
-        dataPoints: 0,
-        throughput: '0/s',
-        latency: Math.floor(Math.random() * 100) + 10,
-        createdAt: new Date().toISOString()
-      }
-      setSources(prev => [created, ...prev])
-      setShowAddModal(false)
-      resetNewSource()
+      alert('Failed to create data source. No local demo item was added.')
     } finally {
       setAddingSource(false)
     }
@@ -753,91 +738,17 @@ function formatNumber(num: number): string {
   return num.toString()
 }
 
-// Demo data (fallback when API unavailable)
-const DEMO_SOURCES: DataSource[] = [
-  {
-    id: 'src-001',
-    name: 'Industrial Temperature Array',
-    type: 'iot',
-    status: 'connected',
-    endpoint: 'mqtt://sensors.kloud.cloud:1883/temp/*',
-    lastSync: '12s ago',
-    dataPoints: 284930,
-    throughput: '1.2K/s',
-    latency: 23,
-    createdAt: '2025-11-15'
-  },
-  {
-    id: 'src-002',
-    name: 'Weather Service API',
-    type: 'api',
-    status: 'connected',
-    endpoint: 'https://api.weather.kloud.cloud/v2',
-    lastSync: '2m ago',
-    dataPoints: 45120,
-    throughput: '50/s',
-    latency: 89,
-    createdAt: '2025-12-01'
-  },
-  {
-    id: 'src-003',
-    name: 'LoRaWAN Gateway EU868',
-    type: 'lora',
-    status: 'connected',
-    endpoint: 'lorawan://eu868.kloud.cloud',
-    lastSync: '45s ago',
-    dataPoints: 128450,
-    throughput: '200/s',
-    latency: 156,
-    createdAt: '2025-10-20'
-  },
-  {
-    id: 'src-004',
-    name: 'Cellular Modem Fleet',
-    type: 'gsm',
-    status: 'disconnected',
-    endpoint: 'gsm://fleet.kloud.cloud',
-    lastSync: '4h ago',
-    dataPoints: 12340,
-    throughput: '0/s',
-    latency: 0,
-    createdAt: '2026-01-05'
-  },
-  {
-    id: 'src-005',
-    name: 'Production MQTT Cluster',
-    type: 'mqtt',
-    status: 'connected',
-    endpoint: 'mqtts://prod.kloud.cloud:8883',
-    lastSync: '3s ago',
-    dataPoints: 1892340,
-    throughput: '5.8K/s',
-    latency: 12,
-    createdAt: '2025-08-10'
-  },
-  {
-    id: 'src-006',
-    name: 'Stripe Payment Webhooks',
-    type: 'webhook',
-    status: 'connected',
-    endpoint: 'https://kloud.cloud/api/webhooks/stripe',
-    lastSync: '8m ago',
-    dataPoints: 4520,
-    throughput: '2/s',
-    latency: 34,
-    createdAt: '2025-12-15'
-  }
-]
+const EMPTY_SOURCES: DataSource[] = []
 
-const DEMO_METRICS: DashboardMetrics = {
-  totalSources: 6,
-  connectedSources: 5,
-  totalDataPoints: 2367700,
-  dataPointsToday: 89420,
-  storageUsed: '18.4 GB',
-  apiCallsToday: 127840,
-  avgLatency: 52,
-  uptime: '99.97%'
+const EMPTY_METRICS: DashboardMetrics = {
+  totalSources: 0,
+  connectedSources: 0,
+  totalDataPoints: 0,
+  dataPointsToday: 0,
+  storageUsed: '0 GB',
+  apiCallsToday: 0,
+  avgLatency: 0,
+  uptime: '0%'
 }
 
 
