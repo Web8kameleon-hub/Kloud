@@ -89,6 +89,7 @@ ENV/
 
 # Rust / Cargo local homes
 .cargo-home/
+target/
 
 # Redis
 redis.conf
