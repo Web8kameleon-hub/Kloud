@@ -100,14 +100,12 @@ type StigmaBus = broadcast::Sender<StigmaEvent>;
 struct AppState {
     fabric: Arc<RwLock<FabricState>>,
     flow_fields: Arc<RwLock<FlowFields>>,
+    impulse_mesh: Arc<RwLock<OceanImpulse>>,
     latest_telemetry: Arc<RwLock<HashMap<String, TelemetryPayload>>>,
     mesh_registry: Arc<RwLock<HashMap<String, MeshNodeRegistration>>>,
     mesh_status: Arc<RwLock<HashMap<String, MeshNodeStatus>>>,
     stigma_bus: StigmaBus,
 }
-        impulse_mesh: Arc<RwLock<OceanImpulse>>,
-
-
 
 fn create_stigma_bus() -> (StigmaBus, broadcast::Receiver<StigmaEvent>) {
     broadcast::channel(10_000)
@@ -124,7 +122,8 @@ fn vec_strings_from_payload(payload: &Value, key: &str) -> Vec<String> {
         .map(|items| {
             items
                 .iter()
-                impulse_mesh.broadcast(impulse, &flow_fields.read().await, fabric).await;
+                .filter_map(Value::as_str)
+                .map(ToString::to_string)
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default()
@@ -726,7 +725,12 @@ async fn handle_asi(fabric: &SharedFabricState, ev: StigmaEvent) {
 
 // ─── dispatcher ────────────────────────────────────────────────────────────
 
-async fn dispatch_event(fabric: &SharedFabricState, flow_fields: Arc<RwLock<FlowFields>>, ev: StigmaEvent) {
+async fn dispatch_event(
+    fabric: &SharedFabricState,
+    flow_fields: Arc<RwLock<FlowFields>>,
+    impulse_mesh: Arc<RwLock<OceanImpulse>>,
+    ev: StigmaEvent,
+) {
     // 1) Update fabric state per-module
     match ev.source.as_str() {
         "ALBA" | "ALBI" | "JONA" => handle_trinity(fabric, ev.clone()).await,
@@ -805,29 +809,37 @@ async fn dispatch_event(fabric: &SharedFabricState, flow_fields: Arc<RwLock<Flow
         ocean_decision(&fields)
     };
 
-    // 6) If impulse generated, apply it
+    // 6) If impulse generated, guard it through JONA and apply it
     if let Some(impulse) = impulse {
+        let safe_impulse = {
+            let fields = flow_fields.read().await;
+            let mesh = ImpulseMesh::new();
+            mesh.jona.filter_impulse(impulse, &fields)
+        };
+
+        *impulse_mesh.write().await = safe_impulse.clone();
+
         let mut state = fabric.write().await;
-        match impulse.action.as_str() {
+        match safe_impulse.action.as_str() {
             "reroute" => {
                 state.active_origin = state.fallback_origin.clone();
-                state.decision_explanation = impulse.reason;
+                state.decision_explanation = safe_impulse.reason;
             }
             "scale" => {
                 state.asi_signal = "scale_up".into();
-                state.decision_explanation = impulse.reason;
+                state.decision_explanation = safe_impulse.reason;
             }
             "optimize" => {
                 state.asi_signal = "optimize".into();
-                state.decision_explanation = impulse.reason;
+                state.decision_explanation = safe_impulse.reason;
             }
             "protect" => {
                 state.asi_signal = "protect".into();
-                state.decision_explanation = impulse.reason;
+                state.decision_explanation = safe_impulse.reason;
             }
             "stabilize" => {
                 state.asi_signal = "stabilize".into();
-                state.decision_explanation = impulse.reason;
+                state.decision_explanation = safe_impulse.reason;
             }
             _ => {}
         }
@@ -838,12 +850,17 @@ async fn dispatch_event(fabric: &SharedFabricState, flow_fields: Arc<RwLock<Flow
         trigger_autoscale(&cap_target.capability, cap_target.target_capacity).await;
     }
 }
-        let impulse_mesh = &app_state.impulse_mesh;
 
 fn start_stigma_worker(app_state: AppState, mut rx: broadcast::Receiver<StigmaEvent>) {
     tokio::spawn(async move {
         while let Ok(ev) = rx.recv().await {
-                dispatch_event(app_state.clone(), ev).await;
+            dispatch_event(
+                &app_state.fabric,
+                app_state.flow_fields.clone(),
+                app_state.impulse_mesh.clone(),
+                ev,
+            )
+            .await;
         }
     });
 }
