@@ -4,5 +4,12 @@ members = [
     "protocol",
     "security",
     "node",
+    "crates/core_api",
+    "crates/ocean_core",
+    "crates/asi_trinity",
+    "crates/edge_gateway",
+    "crates/worker_compute",
+    "crates/telemetry_agent",
+    "crates/telemetry_collector",
 ]
 resolver = "2"
