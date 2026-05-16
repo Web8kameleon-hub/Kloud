@@ -146,6 +146,7 @@ const PLANS = [
 export default function AccountPage() {
   // i18n translation hook
   const { t, language, setLanguage, isLoaded } = useTranslation()
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@kloud.com'
   
   const [activeTab, setActiveTab] = useState<'overview' | 'billing' | 'subscription' | 'security' | 'settings'>('overview')
   const [isLoading, setIsLoading] = useState(true)
@@ -607,11 +608,11 @@ export default function AccountPage() {
                     <div className="text-sm text-gray-400">{t('overview.passwordAnd2FA')}</div>
                   </div>
                 </button>
-                <a href="mailto:contact@kloud.com" className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
+                <a href={`mailto:${supportEmail}`} className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
                   <span className="text-2xl">📧</span>
                   <div>
                     <div className="font-medium">{t('overview.contactSupport')}</div>
-                    <div className="text-sm text-gray-400">contact@kloud.com</div>
+                    <div className="text-sm text-gray-400">{supportEmail}</div>
                   </div>
                 </a>
               </div>
@@ -1345,7 +1346,7 @@ export default function AccountPage() {
               {/* Footer */}
               <div className="mt-8 text-center">
                 <p className="text-gray-400 text-sm">
-                  💳 Secure payment via Stripe • 🔄 Cancel anytime • 📧 Questions? <a href="mailto:contact@kloud.com" className="text-violet-400 hover:underline">contact@kloud.com</a>
+                  💳 Secure payment via Stripe • 🔄 Cancel anytime • 📧 Questions? <a href={`mailto:${supportEmail}`} className="text-violet-400 hover:underline">{supportEmail}</a>
                 </p>
               </div>
             </div>

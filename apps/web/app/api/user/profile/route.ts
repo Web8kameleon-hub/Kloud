@@ -9,34 +9,90 @@
 
 import { NextResponse } from "next/server";
 
-// User profile configuration - In production, this comes from database
-// Plan is determined by Stripe subscription status (default: free)
-const USER_PROFILE = {
-  id: "usr_kloud_001",
-  name: process.env.USER_NAME || "Ledjan Ahmati",
-  email: process.env.USER_EMAIL || "ledjan@kloud.com",
-  avatar: process.env.USER_AVATAR || null,
-  plan: process.env.USER_PLAN || "free", // Will be overridden by Stripe subscription
-  company: process.env.USER_COMPANY || "WEB8euroweb GmbH",
-  phone: process.env.USER_PHONE || "+49 176 XXX XXXX",
-  timezone: process.env.USER_TIMEZONE || "Europe/Berlin",
-  language: process.env.USER_LANGUAGE || "en",
-  role: "admin",
-  createdAt: "2024-01-15T10:00:00Z",
-  updatedAt: new Date().toISOString(),
+type DecodedToken = {
+  sub?: string;
+  email?: string;
+  name?: string;
+  preferred_username?: string;
+  picture?: string;
 };
 
-export async function GET() {
+function decodeBearerPayload(authorizationHeader: string | null): DecodedToken {
+  if (!authorizationHeader?.startsWith("Bearer ")) {
+    return {};
+  }
+
+  const token = authorizationHeader.slice("Bearer ".length).trim();
+  const parts = token.split(".");
+  if (parts.length < 2) {
+    return {};
+  }
+
+  try {
+    const payload = parts[1];
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized + "===".slice((normalized.length + 3) % 4);
+    const decoded = Buffer.from(padded, "base64").toString("utf8");
+    const parsed = JSON.parse(decoded) as DecodedToken;
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+function resolveProfile(request: Request) {
+  const tokenPayload = decodeBearerPayload(request.headers.get("authorization"));
+  const now = new Date().toISOString();
+
+  const headerUserId = request.headers.get("x-user-id")?.trim();
+  const headerUserName = request.headers.get("x-user-name")?.trim();
+  const headerUserEmail = request.headers.get("x-user-email")?.trim();
+
+  const id =
+    headerUserId ||
+    tokenPayload.sub ||
+    process.env.USER_ID ||
+    "usr_local_default";
+
+  const name =
+    headerUserName ||
+    tokenPayload.name ||
+    tokenPayload.preferred_username ||
+    process.env.USER_NAME ||
+    "Kloud User";
+
+  const email =
+    headerUserEmail || tokenPayload.email || process.env.USER_EMAIL || "";
+
+  return {
+    id,
+    name,
+    email,
+    avatar: tokenPayload.picture || process.env.USER_AVATAR || null,
+    plan: process.env.USER_PLAN || "free",
+    company: process.env.USER_COMPANY || "",
+    phone: process.env.USER_PHONE || "",
+    timezone: process.env.USER_TIMEZONE || "UTC",
+    language: process.env.USER_LANGUAGE || "en",
+    role: process.env.USER_ROLE || "user",
+    createdAt: process.env.USER_CREATED_AT || now,
+    updatedAt: now,
+  };
+}
+
+export async function GET(request: Request) {
   try {
     // TODO: In production, fetch from database using authenticated user's session
     // const session = await getServerSession(authOptions)
     // if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     // const user = await prisma.user.findUnique({ where: { id: session.user.id } })
 
+    const profile = resolveProfile(request);
+
     return NextResponse.json({
       success: true,
-      data: USER_PROFILE,
-      source: process.env.DATABASE_URL ? "database" : "config",
+      data: profile,
+      source: process.env.DATABASE_URL ? "database" : "runtime",
     });
   } catch (error) {
     console.error("Profile fetch error:", error);
@@ -61,7 +117,7 @@ export async function PUT(request: Request) {
 
     // For now, just return success (data won't persist without database)
     const updatedProfile = {
-      ...USER_PROFILE,
+      ...resolveProfile(request),
       ...body,
       updatedAt: new Date().toISOString(),
     };
