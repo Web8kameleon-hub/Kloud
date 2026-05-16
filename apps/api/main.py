@@ -6,7 +6,6 @@ import io
 import json
 import logging
 import os
-import random
 import socket
 import statistics
 import sys
@@ -702,6 +701,23 @@ class Settings(BaseModel):
 
 settings = Settings()
 
+_REAL_ONLY_PRODUCTION = os.getenv("REAL_ONLY_PRODUCTION", "true").lower() in (
+    "1",
+    "true",
+    "yes",
+    "on",
+)
+
+
+def is_production_environment() -> bool:
+    env = (settings.environment or "").strip().lower()
+    return env in {"prod", "production"}
+
+
+def is_strict_real_mode() -> bool:
+    return is_production_environment() and _REAL_ONLY_PRODUCTION
+
+
 # Extend module search path so shared cores can be imported when running from apps/api
 ROOT_DIR = Path(__file__).resolve().parents[0]
 if str(ROOT_DIR) not in sys.path:
@@ -794,6 +810,8 @@ logger = setup_logging()
 # ------------- Globals -------------
 START_TIME = time.time()
 INSTANCE_ID = uuid.uuid4().hex[:8]
+API_CALLS_DAY = datetime.now(timezone.utc).date().isoformat()
+API_CALLS_COUNTER = 0
 
 # Redis client (with safe fallback when aioredis not available)
 redis_client: Optional[Any] = None
@@ -2014,6 +2032,14 @@ async def on_shutdown():
 # ------------- Middlewares -------------
 @app.middleware("http")
 async def correlation_middleware(request: Request, call_next):
+    global API_CALLS_DAY, API_CALLS_COUNTER
+
+    today = datetime.now(timezone.utc).date().isoformat()
+    if API_CALLS_DAY != today:
+        API_CALLS_DAY = today
+        API_CALLS_COUNTER = 0
+    API_CALLS_COUNTER += 1
+
     cid = request.headers.get(
         "X-Correlation-ID", f"REQ-{int(time.time())}-{uuid.uuid4().hex[:6]}"
     )
@@ -2887,6 +2913,7 @@ async def prometheus_metrics():
 async def alba_metrics():
     """ALBA Network - Real Prometheus metrics OR psutil (NO MOCK DATA)"""
     try:
+        t0 = time.perf_counter()
         # Query REAL Prometheus metrics - using prometheus job since kloud-api may not exist
         cpu_result = await query_prometheus(
             'process_cpu_seconds_total{job="prometheus"}'
@@ -2929,8 +2956,8 @@ async def alba_metrics():
                     memory.available / memory.total
                 ) * 0.3
 
-                # Simulated latency based on CPU load
-                latency_ms = 5 + (cpu_percent * 0.3)
+                # Real endpoint processing latency (ms)
+                latency_ms = (time.perf_counter() - t0) * 1000
                 data_source = "system_psutil"
             else:
                 return {
@@ -3111,10 +3138,17 @@ async def asi_status():
             "status": "operational",
             "timestamp": utcnow(),
             "trinity": {
-                "alba": alba.get("alba_network", {"status": "active", "health": 0.92}),
-                "albi": albi.get("albi_neural", {"status": "active", "health": 0.88}),
+                "alba": alba.get(
+                    "alba_network",
+                    {"status": "unknown", "health": 0.0, "operational": False},
+                ),
+                "albi": albi.get(
+                    "albi_neural",
+                    {"status": "unknown", "health": 0.0, "operational": False},
+                ),
                 "jona": jona.get(
-                    "jona_coordination", {"status": "active", "health": 0.95}
+                    "jona_coordination",
+                    {"status": "unknown", "health": 0.0, "operational": False},
                 ),
             },
             "system": {
@@ -4242,6 +4276,12 @@ async def analyze_neural_data(query: str):
             "external_dependencies": [],
         }
 
+    if is_strict_real_mode():
+        raise HTTPException(
+            status_code=503,
+            detail="Local AI engine unavailable in REAL-ONLY production mode",
+        )
+
     # Fallback nëse AI Engine nuk është i disponueshëm
     return {
         "status": "success",
@@ -4680,6 +4720,8 @@ async def get_asi_trinity_metrics() -> Dict[str, Any]:
         }
     except Exception as e:
         logger.error(f"ASI metrics error: {e}")
+        if is_strict_real_mode():
+            raise RuntimeError("ASI Trinity fallback disabled in REAL-ONLY production")
         return {
             "alba": {"network_depth": 1000, "status": "fallback", "health": 70},
             "albi": {"creativity_score": 800, "status": "fallback", "health": 70},
@@ -4706,6 +4748,43 @@ async def curiosity_ocean_chat(
     start_time = time.perf_counter()
 
     try:
+        if LOCAL_AI_AVAILABLE and callable(ocean_chat):
+            try:
+                local_response = ocean_chat(
+                    question, mode=mode, ultra_thinking=ultra_thinking
+                )  # type: ignore[misc]
+                processing_time = round((time.perf_counter() - start_time) * 1000, 2)
+                return {
+                    "status": "success",
+                    "timestamp": utcnow(),
+                    "source": "Kloud AI Engine (Local Real Service)",
+                    "question": question,
+                    "mode": mode,
+                    "ultra_thinking": ultra_thinking,
+                    "response": local_response,
+                    "metrics": {
+                        "processing_time_ms": processing_time,
+                        "thinking_depth": "ultra" if ultra_thinking else "standard",
+                        "optimization": "LOCAL_REAL_SERVICE",
+                    },
+                    "conversation_id": conversation_id or str(uuid.uuid4()),
+                    "is_local": True,
+                    "model": "kloud-curiosity-local",
+                }
+            except Exception as local_err:
+                logger.error(f"Curiosity local engine error: {local_err}")
+                if is_strict_real_mode():
+                    raise HTTPException(
+                        status_code=503,
+                        detail="Curiosity local engine unavailable in REAL-ONLY production mode",
+                    )
+
+        if is_strict_real_mode():
+            raise HTTPException(
+                status_code=503,
+                detail="Curiosity endpoint requires local real AI engine in production",
+            )
+
         # Quick mode validation (minimal processing)
         mode = mode.lower() if isinstance(mode, str) else "curious"
         if mode not in ["curious", "wild", "chaos", "genius"]:
@@ -4713,8 +4792,8 @@ async def curiosity_ocean_chat(
 
         # Fast response generation - optimized paths
         async def generate_fast_response(q: str, m: str) -> str:
-            # Minimal artificial delay (50-100ms instead of 700-1300ms)
-            await asyncio.sleep(random.uniform(0.05, 0.10))
+            # Keep deterministic short debounce only for non-production fallback path.
+            await asyncio.sleep(0.075)
 
             templates = {
                 "conscious": "Consciousness represents the state of awareness and subjective experience. It emerges from complex neural patterns in the brain, involving integrated information across distributed networks.",
@@ -4912,6 +4991,12 @@ async def ocean_query_unified(request: OceanQueryRequest):
             }
 
         # 🔄 FALLBACK: Ocean-Core unavailable, use Main.py API synthesis (65 endpoints)
+        if is_strict_real_mode():
+            raise HTTPException(
+                status_code=503,
+                detail="Ocean-Core unavailable and fallback is disabled in REAL-ONLY production",
+            )
+
         logger.warning(
             "⚠️ Ocean-Core 8030 unavailable, using Main.py API synthesis (65 endpoints)"
         )
@@ -5957,6 +6042,67 @@ _data_sources_summary = {
 }
 
 
+def _mymirror_excel_sources() -> List[Dict[str, Any]]:
+    """Build MyMirror source entries from real Excel dashboards."""
+    entries: List[Dict[str, Any]] = []
+    for dashboard in _scan_excel_files():
+        entries.append(
+            {
+                "id": f"excel_{dashboard['name'].replace('.', '_').lower()}",
+                "name": dashboard["name"],
+                "type": "excel",
+                "endpoint": f"/api/excel/download/{dashboard['name']}",
+                "status": "active",
+                "last_data": dashboard.get("modified"),
+                "data_points": max(1, int(dashboard.get("size_bytes", 0) / 1024)),
+                "created_at": dashboard.get("modified") or utcnow(),
+                "region": "LOCAL",
+                "country": "EXCEL",
+                "source_module": "excel-core",
+                "path": dashboard.get("path"),
+            }
+        )
+    return entries
+
+
+async def _mymirror_kitchen_sources() -> List[Dict[str, Any]]:
+    """Build MyMirror source entries from Protocol Kitchen endpoints."""
+    status_payload = await kitchen_status()
+    metrics_payload = await kitchen_metrics()
+    kitchen_health_payload = await kitchen_health()
+
+    processed = int(metrics_payload.get("metrics", {}).get("total_processed", 0))
+    layer_count = int(kitchen_health_payload.get("layers_operational", 0))
+    last_data = status_payload.get("timestamp") or utcnow()
+
+    return [
+        {
+            "id": "kitchen_protocol_status",
+            "name": "Protocol Kitchen Status",
+            "type": "kitchen",
+            "endpoint": "/api/kitchen/status",
+            "status": "active"
+            if status_payload.get("status") == "operational"
+            else "inactive",
+            "last_data": last_data,
+            "data_points": max(1, layer_count + processed),
+            "created_at": last_data,
+            "region": "LOCAL",
+            "country": "KITCHEN",
+            "source_module": "protocol-kitchen",
+        }
+    ]
+
+
+async def _mymirror_real_sources() -> List[Dict[str, Any]]:
+    """Aggregate MyMirror sources from Excel Core + Protocol Kitchen + custom entries."""
+    sources: List[Dict[str, Any]] = []
+    sources.extend(_mymirror_excel_sources())
+    sources.extend(await _mymirror_kitchen_sources())
+    sources.extend(_tenant_data_sources.get("default", []))
+    return sources
+
+
 @mymirror_router.get("/live-metrics")
 async def mymirror_live_metrics():
     """Get live system metrics for client dashboard"""
@@ -5988,6 +6134,8 @@ async def mymirror_live_metrics():
     except Exception:
         pass
 
+    sources = await _mymirror_real_sources()
+
     return {
         "timestamp": utcnow(),
         "system": {
@@ -5998,19 +6146,15 @@ async def mymirror_live_metrics():
             "active_containers": containers_running,
         },
         "stats": {
-            "data_sources_count": _data_sources_summary[
-                "total_in_project"
-            ],  # 4100+ real sources
-            "active_sources": len(
-                [s for s in _demo_sources if s["status"] == "active"]
-            ),
-            "displayed_sources": len(_demo_sources),
-            "total_data_points": sum(s["data_points"] for s in _demo_sources),
+            "data_sources_count": len(sources),
+            "active_sources": len([s for s in sources if s.get("status") == "active"]),
+            "displayed_sources": len(sources),
+            "total_data_points": sum(int(s.get("data_points", 0)) for s in sources),
             "tracked_metrics": _data_sources_summary["categories"],  # 21 categories
             "countries_covered": _data_sources_summary["countries_covered"],  # 200+
             "regional_files": _data_sources_summary["regional_files"],  # 11 files
             "storage_used_gb": 2.4,
-            "api_calls_today": random.randint(800, 1500),
+            "api_calls_today": API_CALLS_COUNTER,
         },
     }
 
@@ -6097,14 +6241,14 @@ async def mymirror_docker_containers():
 
 @mymirror_router.get("/data-sources")
 async def mymirror_get_data_sources():
-    """Get all data sources for client"""
-    # In production, filter by tenant_id from auth
-    sources = _demo_sources.copy()
+    """Get all data sources for client (Excel Core + Protocol Kitchen + tenant additions)."""
+    # In production, filter by tenant_id from auth.
+    sources = await _mymirror_real_sources()
 
     return {
         "timestamp": utcnow(),
         "count": len(sources),
-        "active": len([s for s in sources if s["status"] == "active"]),
+        "active": len([s for s in sources if s.get("status") == "active"]),
         "sources": sources,
     }
 
@@ -6173,28 +6317,53 @@ async def mymirror_source_metrics(source_id: str):
     if not source:
         raise HTTPException(status_code=404, detail="Data source not found")
 
-    # Generate sample metrics
+    # Generate metrics only from live source checks (no fabricated random values).
     now = datetime.now(timezone.utc)
-    data_points = []
-    for i in range(24):
+    data_points: List[Dict[str, Any]] = []
+    value = 0.0
+    reachable = False
+    endpoint = source.get("endpoint")
+    if endpoint:
+        try:
+            t0 = time.perf_counter()
+            response = requests.get(endpoint, timeout=5)
+            value = round((time.perf_counter() - t0) * 1000, 1)
+            reachable = response.status_code < 500
+        except requests.RequestException:
+            reachable = False
+
+    if not reachable and is_strict_real_mode():
+        raise HTTPException(
+            status_code=503,
+            detail=f"Live source metrics unavailable for {source_id} in REAL-ONLY production",
+        )
+
+    if reachable:
         data_points.append(
             {
-                "timestamp": (now.replace(hour=i, minute=0, second=0)).isoformat(),
-                "value": round(random.uniform(20.0, 30.0), 1),
+                "timestamp": now.isoformat(),
+                "value": value,
             }
         )
 
     return {
         "source_id": source_id,
         "source_name": source["name"],
-        "time_range": "last_24_hours",
+        "time_range": "latest_live_probe",
         "data_points": data_points,
         "summary": {
-            "avg_value": round(statistics.mean([d["value"] for d in data_points]), 1),
-            "min_value": min([d["value"] for d in data_points]),
-            "max_value": max([d["value"] for d in data_points]),
+            "avg_value": round(statistics.mean([d["value"] for d in data_points]), 1)
+            if data_points
+            else None,
+            "min_value": min([d["value"] for d in data_points])
+            if data_points
+            else None,
+            "max_value": max([d["value"] for d in data_points])
+            if data_points
+            else None,
             "data_points_count": len(data_points),
-            "uptime_percent": 99.8,
+            "uptime_percent": 100.0 if reachable else 0.0,
+            "probe_status": "reachable" if reachable else "unreachable",
         },
     }
 

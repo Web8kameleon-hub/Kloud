@@ -1,38 +1,43 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from .auth_controller import router as auth_router
-from .billing_controller import router as billing_router
-from .usage_controller import router as usage_router
+"""Dynamic entrypoint for backend API service."""
 
-app = FastAPI(
-    title="Kloud Cloud API",
-    version="1.0.0",
-    description="Industrial EEG + Audio + Neuro Feedback API (REAL DATA)"
-)
+from __future__ import annotations
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+import importlib
+import os
+from types import ModuleType
+from typing import Any
 
-app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(billing_router, prefix="/api/billing", tags=["Billing"])
-app.include_router(usage_router, prefix="/api/usage", tags=["Usage"])
-
-@app.get("/health")
-def health_check():
-    return {"status": "ok", "service": "Kloud Cloud API"}
-
-# ASI Trinity status endpoint for frontend integration
-@app.get("/asi/status")
-def asi_status():
-    return {
-        "alba": {"status": "active"},
-        "albi": {"consciousness": 0.95},
-        "jona": {"protection": 0.98}
-    }
+_DEFAULT_MODULE = "backend.api.app_impl"
 
 
+def _load_module() -> ModuleType:
+    module_name = (
+        os.getenv("KLOUD_BACKEND_API_APP_MODULE", _DEFAULT_MODULE).strip()
+        or _DEFAULT_MODULE
+    )
+    try:
+        return importlib.import_module(module_name)
+    except Exception as primary_error:
+        if module_name != _DEFAULT_MODULE:
+            try:
+                return importlib.import_module(_DEFAULT_MODULE)
+            except Exception:
+                pass
+        raise RuntimeError(
+            f"Unable to load backend app module '{module_name}'. "
+            "Set KLOUD_BACKEND_API_APP_MODULE to a valid module path."
+        ) from primary_error
+
+
+_module = _load_module()
+
+if not hasattr(_module, "app"):
+    raise RuntimeError(
+        f"Module '{_module.__name__}' does not expose a FastAPI 'app' instance"
+    )
+
+app = getattr(_module, "app")
+
+
+def __getattr__(name: str) -> Any:
+    return getattr(_module, name)
