@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir fastapi uvicorn httpx pydantic
+
+COPY ocean-core/clx_i_engine.py /app/clx_i_engine.py
+COPY ocean-core/clx_i_api.py /app/clx_i_api.py
+
+EXPOSE 4444
+
+CMD ["python", "clx_i_api.py"]

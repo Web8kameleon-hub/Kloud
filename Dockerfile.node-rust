@@ -1,5 +1,5 @@
 # Rust node service for Kloud Fabric (NDB/TIDE/STIGMA)
-FROM rust:1.82-slim AS builder
+FROM rust:1.88-slim AS builder
 WORKDIR /app
 
 # Build deps for crates like ring/openssl if needed
