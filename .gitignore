@@ -84,6 +84,8 @@ ENV/
 .pip-cache/
 .uv-cache/
 .pytest_cache/
+!infra/env/
+!infra/env/*.env
 
 # Rust / Cargo local homes
 .cargo-home/
