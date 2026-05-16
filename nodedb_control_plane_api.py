@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import base64
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -31,8 +32,10 @@ from nodendb_kloud_integration import (
     evaluate_governance_proposal,
 )
 
-NANOGRID_BASE_URL = "http://127.0.0.1:9080"
-RUNTIME_SUBMIT_URL = "http://127.0.0.1:9080/submit"
+NANOGRID_BASE_URL = os.getenv("NANOGRID_BASE_URL", "http://127.0.0.1:9080")
+RUNTIME_SUBMIT_URL = os.getenv(
+    "NODENDB_RUNTIME_SUBMIT_URL", f"{NANOGRID_BASE_URL.rstrip('/')}/submit"
+)
 MEMBERSHIP_FILE = Path("output/nodedb/membership_registry.json")
 
 app = FastAPI(title="NodeDB Control Plane", version="1.0.0")

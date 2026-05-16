@@ -1,0 +1,412 @@
+# =============================================================================
+# KLOUD — HQ NODE  (CPX62 · 178.105.52.245 · Nuremberg)
+# Role: Brain + API + Dashboard + Ocean Core + ASI Trinity + Observability
+# Deploy: docker compose -f docker-compose.hq.yml up -d
+# =============================================================================
+
+x-runtime-hardening: &runtime_hardening
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:size=64m,noexec,nosuid
+  stop_grace_period: 20s
+
+services:
+
+  # ── Databases ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: kloud-postgres
+    environment:
+      POSTGRES_USER: kloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: klouddb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kloud"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: kloud-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: kloud-neo4j
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:?Set NEO4J_AUTH}
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data/neo4j:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  # ── CLX (LLM Backend) ───────────────────────────────────────────────────────
+  clx:
+    image: ollama/ollama:latest
+    container_name: kloud-clx
+    ports:
+      - "${CLX_HOST_PORT:-11434}:11434"
+    volumes:
+      - clx_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  clx-i:
+    build:
+      context: .
+      dockerfile: Dockerfile.clx-i
+    container_name: kloud-clx-i
+    environment:
+      PYTHONUNBUFFERED: "1"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      PORT: "4444"
+    ports:
+      - "4444:4444"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── ASI Trinity ─────────────────────────────────────────────────────────────
+  alba:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.alba
+    container_name: kloud-alba
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  albi:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.albi
+    container_name: kloud-albi
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+      PORT: "6680"
+    ports:
+      - "6680:6680"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6680/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  jona:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.jona
+    container_name: kloud-jona
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+      PORT: "7777"
+    ports:
+      - "7777:7777"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Ocean Core ──────────────────────────────────────────────────────────────
+  ocean-core:
+    <<: *runtime_hardening
+    build:
+      context: ./ocean-core
+      dockerfile: Dockerfile
+    container_name: kloud-ocean-core
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OCEAN_PORT: "8030"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      MODEL: "llama3.1:8b"
+      REDIS_URL: "redis://redis:6379/0"
+      API_KEYS_FILE: "/app/config/api_keys.json"
+      KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
+      NODE_ROLE: "hq"
+      NODE_ID: "ocean-hq"
+    volumes:
+      - ./config/api_keys.json:/app/config/api_keys.json:ro
+      - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
+    ports:
+      - "8030:8030"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── AI Global (Nanogrid) ───────────────────────────────────────────────────
+  ai-global-9999:
+    <<: *runtime_hardening
+    build:
+      context: ./9999
+      dockerfile: Dockerfile
+    container_name: kloud-ai-global-9999
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PORT: "9999"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      MODEL: "llama3.1:8b"
+      API_KEYS_FILE: "/app/config/api_keys.json"
+      KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
+    volumes:
+      - ./9999/output:/app/output
+      - ./config/api_keys.json:/app/config/api_keys.json:ro
+      - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
+    ports:
+      - "9999:9999"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9999/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Main API Backend ────────────────────────────────────────────────────────
+  api:
+    <<: *runtime_hardening
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: kloud-api
+    env_file:
+      - .env
+    environment:
+      PYTHONUNBUFFERED: "1"
+      API_PORT: "8000"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
+      REDIS_URL: "redis://redis:6379/0"
+      NODE_ROLE: "hq"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── NodeDB Control Plane ───────────────────────────────────────────────────
+  nodedb-control-plane:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.nodedb-control-plane
+    container_name: kloud-nodedb-control-plane
+    environment:
+      PYTHONUNBUFFERED: "1"
+      NODEDB_CONTROL_PLANE_PORT: "9090"
+    ports:
+      - "9090:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./output/nodedb:/app/output/nodedb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Frontend ────────────────────────────────────────────────────────────────
+  web:
+    <<: *runtime_hardening
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: kloud-web
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: "production"
+      API_INTERNAL_URL: "http://kloud-api:8000"
+      NEXT_PUBLIC_API_BASE: "/api"
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      STIGMA_NODEDB_URL: "http://kloud-nodedb-control-plane:9090/api/v1/stigma/write"
+      REQUIRE_STIGMA_NODEDB: "1"
+      KLOUD_NODE_ID: "ocean-hq"
+    ports:
+      - "3001:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+      nodedb-control-plane:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Fabric Core (Sovereign Mesh — port 18800) ──────────────────────────────
+  fabric:
+    build:
+      context: .
+      dockerfile: Dockerfile.fabric
+    container_name: kloud-fabric
+    environment:
+      PYTHONUNBUFFERED: "1"
+      FABRIC_API_PORT: "18800"
+      FABRIC_HEALTH_INTERVAL: "30"
+      NODE_ROLE: "hq"
+      FABRIC_OCEAN_HQ_IP: "${FABRIC_OCEAN_HQ_IP:-178.105.52.245}"
+      FABRIC_OCEAN_HQ_PORT: "${FABRIC_OCEAN_HQ_PORT:-18080}"
+      FABRIC_COMPUTE_FSK_IP: "${FABRIC_COMPUTE_FSK_IP:-91.98.47.131}"
+      FABRIC_COMPUTE_FSK_PORT: "${FABRIC_COMPUTE_FSK_PORT:-18080}"
+      FABRIC_FAILOVER_NBG_IP: "${FABRIC_FAILOVER_NBG_IP:-46.224.203.89}"
+      FABRIC_FAILOVER_NBG_PORT: "${FABRIC_FAILOVER_NBG_PORT:-18080}"
+      FABRIC_EDGE_HEL_IP: "${FABRIC_EDGE_HEL_IP:-37.27.216.254}"
+      FABRIC_EDGE_HEL_PORT: "${FABRIC_EDGE_HEL_PORT:-18080}"
+      FABRIC_EDGE_ASH_IP: "${FABRIC_EDGE_ASH_IP:-5.161.114.189}"
+      FABRIC_EDGE_ASH_PORT: "${FABRIC_EDGE_ASH_PORT:-18080}"
+      FABRIC_EDGE_SIN_IP: "${FABRIC_EDGE_SIN_IP:-5.223.75.178}"
+      FABRIC_EDGE_SIN_PORT: "${FABRIC_EDGE_SIN_PORT:-18080}"
+    ports:
+      - "18800:18800"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18800/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Telemetry Collector (HQ sink — port 18001) ─────────────────────────────
+  telemetry-collector:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.telemetry-collector
+    container_name: kloud-telemetry-collector
+    environment:
+      PYTHONUNBUFFERED: "1"
+      TELEMETRY_PORT: "18001"
+      NODE_ID: "ocean-hq"
+      NODE_ROLE: "hq"
+      REDIS_URL: "redis://redis:6379/0"
+      VICTORIAMETRICS_URL: "http://kloud-victoriametrics:8428"
+    ports:
+      - "18001:18001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Observability Stack ─────────────────────────────────────────────────────
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.96.0
+    container_name: kloud-victoriametrics
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./data/victoriametrics:/victoria-metrics-data
+    command:
+      - "-storageDataPath=/victoria-metrics-data"
+      - "-retentionPeriod=12"
+      - "-httpListenAddr=0.0.0.0:8428"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: kloud-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-kloud-grafana}
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+    restart: unless-stopped
+
+volumes:
+  clx_data:
+    driver: local

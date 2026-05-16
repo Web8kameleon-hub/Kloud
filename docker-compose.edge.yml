@@ -1,0 +1,89 @@
+# =============================================================================
+# KLOUD — EDGE NODE  (CX23 Helsinki · CPX21 Ashburn · CPX22 Singapore)
+# Role: Edge Gateway + Telemetry ears — TLS termination, health check, forward
+# Deploy: REGION=eu-north NODE_ID=hel1-edge docker compose -f docker-compose.edge.yml up -d
+#
+# Required env vars per deployment:
+#   REGION      — eu-north | us-east | ap-southeast
+#   NODE_ID     — hel1-edge | ash1-edge | sin1-edge
+#   OCEAN_HQ_IP — 178.105.52.245  (HQ)
+#   COMPUTE_IP  — 91.98.47.131    (compute-fsk)
+# =============================================================================
+
+services:
+
+  # ── Edge Gateway (port 18000) ───────────────────────────────────────────────
+  # Lightweight FastAPI: TLS termination + health check + smart forward
+  # Routes:
+  #   /api/compute/* → COMPUTE_IP:8000
+  #   /api/*         → OCEAN_HQ_IP:8000
+  #   /health        → local
+  edge-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.edge-gateway
+    container_name: kloud-edge-gateway
+    environment:
+      PYTHONUNBUFFERED: "1"
+      GATEWAY_PORT: "18000"
+      NODE_ID: "${NODE_ID:-edge-node}"
+      REGION: "${REGION:-eu-north}"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:8000"
+      COMPUTE_URL: "http://${COMPUTE_IP:-91.98.47.131}:8000"
+      OCEAN_CORE_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:8030"
+      HEALTH_CHECK_INTERVAL_S: "10"
+    ports:
+      - "18000:18000"
+      - "80:80"
+      - "443:443"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Rust Fabric Node (NDB/TIDE/STIGMA — port 18080) ────────────────────────
+  rust-node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    container_name: kloud-rust-node
+    environment:
+      LISTEN_PORT: "18080"
+      NODE_ID: "${RUST_NODE_ID:-10}"
+      PEERS: "${RUST_PEERS:-}"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18080"
+    ports:
+      - "18080:18080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Telemetry Agent (pushes BTI/DAS/PFD to HQ — port 18001) ───────────────
+  telemetry-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.telemetry-agent
+    container_name: kloud-telemetry-agent
+    environment:
+      PYTHONUNBUFFERED: "1"
+      AGENT_PORT: "18001"
+      NODE_ID: "${NODE_ID:-edge-node}"
+      NODE_ROLE: "edge"
+      REGION: "${REGION:-eu-north}"
+      OCEAN_TELEMETRY_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18001/ingest"
+      REPORT_INTERVAL_S: "10"
+      # Edge collects: latency, error rate, request count, geographic load
+      COLLECT_METRICS: "latency,errors,requests,geo_load"
+    ports:
+      - "18001:18001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped

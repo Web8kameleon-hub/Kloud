@@ -1,0 +1,32 @@
+# Rust node service for Kloud Fabric (NDB/TIDE/STIGMA)
+FROM rust:1.82-slim AS builder
+WORKDIR /app
+
+# Build deps for crates like ring/openssl if needed
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pkg-config \
+    libssl-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY Cargo.toml Cargo.lock ./
+COPY algebra ./algebra
+COPY protocol ./protocol
+COPY security ./security
+COPY node ./node
+
+RUN cargo build --release -p node
+
+FROM debian:bookworm-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/target/release/node /usr/local/bin/node
+
+ENV LISTEN_PORT=18080
+EXPOSE 18080 19080
+
+CMD ["node"]

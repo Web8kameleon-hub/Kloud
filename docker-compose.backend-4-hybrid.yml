@@ -1,0 +1,247 @@
+x-runtime-hardening: &runtime_hardening
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:size=64m,noexec,nosuid
+  stop_grace_period: 20s
+
+services:
+  # Hybrid Sovereign stack:
+  # - CLIX: clx + clx-i
+  # - WWWMMM/TIDE/Resonance: rust-node
+  # - STIGMA/NanoDB: nodedb-control-plane
+
+  # Shared infra needed by Python backends
+  postgres:
+    image: postgres:16-alpine
+    container_name: kloud-postgres
+    environment:
+      POSTGRES_USER: kloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your environment or .env}
+      POSTGRES_DB: klouddb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kloud"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: kloud-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: kloud-neo4j
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:?Set NEO4J_AUTH in your environment or .env}
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data/neo4j:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  clx:
+    image: ollama/ollama:latest
+    container_name: kloud-clx
+    ports:
+      - "${CLX_HOST_PORT:-11434}:11434"
+    volumes:
+      - clx_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Backend 5 (Python): CLIX multi-model router
+  clx-i:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.clx-i
+    container_name: kloud-clx-i
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PORT: "4444"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      CLIX_MODE: "sovereign"
+      CLIX_ENABLE_ROUTING: "1"
+      CLIX_ENABLE_FALLBACK: "1"
+    ports:
+      - "4444:4444"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Backend 1 (Python): Core API
+  api:
+    <<: *runtime_hardening
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: kloud-api
+    env_file:
+      - .env
+    environment:
+      PYTHONUNBUFFERED: "1"
+      API_PORT: "8000"
+      DATABASE_URL: "postgresql://kloud:kloud@postgres:5432/klouddb"
+      REDIS_URL: "redis://redis:6379/0"
+      NODE_ROLE: "core-api"
+      OCEAN_CORE_URL: "http://kloud-ocean-core:8030"
+      CLIX_URL: "http://kloud-clx-i:4444"
+      RUST_NODE_STATUS_URL: "http://kloud-rust-node:19080/status"
+      NODEDB_URL: "http://kloud-nodedb-control-plane:9090"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clx-i:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Backend 2 (Python): Orchestration brain
+  ocean-core:
+    <<: *runtime_hardening
+    build:
+      context: ./ocean-core
+      dockerfile: Dockerfile
+    container_name: kloud-ocean-core
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OCEAN_PORT: "8030"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      MODEL: "llama3.1:8b"
+      REDIS_URL: "redis://redis:6379/0"
+      API_KEYS_FILE: "/app/config/api_keys.json"
+      KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
+      NODE_ROLE: "orchestrator"
+      CLIX_URL: "http://kloud-clx-i:4444"
+      RUST_NODE_STATUS_URL: "http://kloud-rust-node:19080/status"
+      NODEDB_STIGMA_URL: "http://kloud-nodedb-control-plane:9090/api/v1/stigma/write"
+    volumes:
+      - ./config/api_keys.json:/app/config/api_keys.json:ro
+      - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
+    ports:
+      - "8030:8030"
+    depends_on:
+      clx:
+        condition: service_healthy
+      clx-i:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Backend 3 (Rust): Fabric/NDB node
+  # Rust node opens:
+  # - LISTEN_PORT for gossip (18080)
+  # - LISTEN_PORT + 1000 for HTTP status API (19080)
+  rust-node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node-rust
+    container_name: kloud-rust-node
+    environment:
+      LISTEN_PORT: "18080"
+      NODE_ID: "1"
+      PEERS: "${RUST_PEERS:-}"
+      MESH_HEALTHCHECK_INTERVAL_MS: "600000"
+      MESH_HEALTHCHECK_TIMEOUT_MS: "1200"
+      ENABLE_WWWMMM: "1"
+      ENABLE_TIDE: "1"
+      ENABLE_RESONANCE: "1"
+      STIGMA_SINK_URL: "http://kloud-nodedb-control-plane:9090/api/v1/stigma/write"
+    ports:
+      - "18080:18080"
+      - "19080:19080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Backend 4 (Python): Stigma/NDB memory sink
+  nodedb-control-plane:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.nodedb-control-plane
+    container_name: kloud-nodedb-control-plane
+    environment:
+      PYTHONUNBUFFERED: "1"
+      NODEDB_CONTROL_PLANE_PORT: "9090"
+      NODE_ROLE: "telemetry-state"
+      STIGMA_MODE: "enabled"
+      SOURCE_RUST_STATUS_URL: "http://kloud-rust-node:19080/status"
+      SOURCE_RUST_RESONANT_URL: "http://kloud-rust-node:19080/resonant/status"
+    ports:
+      - "9090:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./output/nodedb:/app/output/nodedb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  clx_data:
+    driver: local

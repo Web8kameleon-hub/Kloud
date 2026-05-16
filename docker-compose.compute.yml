@@ -1,0 +1,213 @@
+# =============================================================================
+# KLOUD — COMPUTE NODE  (CCX33 · 91.98.47.131 · Falkenstein)
+# Role: Heavy AI Workers — ALBA/ALBI/JONA models, audio, EEG, batch jobs
+# Deploy: docker compose -f docker-compose.compute.yml up -d
+# NOTE: No frontend. No DB. No public dashboard. Just muscle.
+# =============================================================================
+
+x-runtime-hardening: &runtime_hardening
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:size=64m,noexec,nosuid
+  stop_grace_period: 20s
+
+services:
+
+  # ── Redis (local job queue cache) ──────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: kloud-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── CLX (LLM Backend — heavy models) ───────────────────────────────────────
+  clx:
+    image: ollama/ollama:latest
+    container_name: kloud-clx
+    ports:
+      - "${CLX_HOST_PORT:-11434}:11434"
+    volumes:
+      - clx_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── ASI Trinity — Heavy inference workers ──────────────────────────────────
+  alba:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.alba
+    container_name: kloud-alba
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+      CLX_HOST: "http://kloud-clx:11434"
+      NODE_ROLE: "compute"
+      NODE_ID: "compute-fsk"
+      WORKER_MODE: "heavy"
+    ports:
+      - "5555:5555"
+    depends_on:
+      redis:
+        condition: service_healthy
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  albi:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.albi
+    container_name: kloud-albi
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+      CLX_HOST: "http://kloud-clx:11434"
+      PORT: "6680"
+      NODE_ROLE: "compute"
+      NODE_ID: "compute-fsk"
+      WORKER_MODE: "heavy"
+    ports:
+      - "6680:6680"
+    depends_on:
+      redis:
+        condition: service_healthy
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6680/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  jona:
+    <<: *runtime_hardening
+    build:
+      context: .
+      dockerfile: Dockerfile.jona
+    container_name: kloud-jona
+    environment:
+      PYTHONUNBUFFERED: "1"
+      REDIS_URL: "redis://redis:6379/0"
+      CLX_HOST: "http://kloud-clx:11434"
+      PORT: "7777"
+      NODE_ROLE: "compute"
+      NODE_ID: "compute-fsk"
+      WORKER_MODE: "heavy"
+    ports:
+      - "7777:7777"
+    depends_on:
+      redis:
+        condition: service_healthy
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Ocean Core (standby — listens to HQ for delegated tasks) ───────────────
+  ocean-core:
+    <<: *runtime_hardening
+    build:
+      context: ./ocean-core
+      dockerfile: Dockerfile
+    container_name: kloud-ocean-core
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OCEAN_PORT: "8030"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      MODEL: "llama3.1:8b"
+      REDIS_URL: "redis://redis:6379/0"
+      NODE_ROLE: "compute"
+      NODE_ID: "compute-fsk"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:8030"
+    ports:
+      - "8030:8030"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Rust Fabric Node (NDB/TIDE/STIGMA — port 18080) ────────────────────────
+  rust-node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    container_name: kloud-rust-node
+    environment:
+      LISTEN_PORT: "18080"
+      NODE_ID: "2"
+      PEERS: "${RUST_PEERS:-}"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18080"
+    ports:
+      - "18080:18080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Telemetry Agent (pushes BTI/DAS/PFD to HQ — port 18001) ───────────────
+  telemetry-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.telemetry-agent
+    container_name: kloud-telemetry-agent
+    environment:
+      PYTHONUNBUFFERED: "1"
+      AGENT_PORT: "18001"
+      NODE_ID: "compute-fsk"
+      NODE_ROLE: "compute"
+      OCEAN_TELEMETRY_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18001/ingest"
+      REDIS_URL: "redis://redis:6379/0"
+      REPORT_INTERVAL_S: "15"
+    ports:
+      - "18001:18001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  clx_data:
+    driver: local

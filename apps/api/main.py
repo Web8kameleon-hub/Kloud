@@ -1371,6 +1371,87 @@ async def ocean_megalayer_analysis(request: Request):
 
 app.include_router(neural_router)
 
+# =============================================================================
+# KLOUD FABRIC — Sovereign Intelligence Mesh (proxy → kloud-fabric:7800)
+# =============================================================================
+try:
+    import httpx as _httpx_fabric
+
+    _FABRIC_URL = os.getenv("FABRIC_SERVICE_URL", "http://kloud-fabric:7800")
+
+    fabric_router = APIRouter(prefix="/api/fabric", tags=["fabric"])
+
+    @fabric_router.get("/topology")
+    async def fabric_topology():
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/topology")
+            return r.json()
+
+    @fabric_router.get("/nodes")
+    async def fabric_nodes(role: str = ""):
+        params = {"role": role} if role else {}
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/nodes", params=params)
+            return r.json()
+
+    @fabric_router.get("/nodes/{node_id}")
+    async def fabric_node(node_id: str):
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/nodes/{node_id}")
+            if r.status_code == 404:
+                raise HTTPException(
+                    status_code=404, detail=f"Node '{node_id}' not found"
+                )
+            return r.json()
+
+    @fabric_router.post("/nodes/{node_id}/check")
+    async def fabric_check_node(node_id: str):
+        async with _httpx_fabric.AsyncClient(timeout=15.0) as _c:
+            r = await _c.post(f"{_FABRIC_URL}/fabric/nodes/{node_id}/check")
+            return r.json()
+
+    @fabric_router.post("/check-all")
+    async def fabric_check_all():
+        async with _httpx_fabric.AsyncClient(timeout=20.0) as _c:
+            r = await _c.post(f"{_FABRIC_URL}/fabric/check-all")
+            return r.json()
+
+    @fabric_router.get("/route")
+    async def fabric_route(region: str = "default", service: str = ""):
+        params = {"region": region}
+        if service:
+            params["service"] = service
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/route", params=params)
+            return r.json()
+
+    @fabric_router.get("/summary")
+    async def fabric_summary():
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/summary")
+            return r.json()
+
+    @fabric_router.post("/telemetry")
+    async def fabric_ingest_telemetry(request: Request):
+        body = await request.json()
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.post(f"{_FABRIC_URL}/fabric/telemetry", json=body)
+            return r.json()
+
+    @fabric_router.get("/telemetry")
+    async def fabric_get_telemetry(node_id: str = "", limit: int = 100):
+        params: dict = {"limit": limit}
+        if node_id:
+            params["node_id"] = node_id
+        async with _httpx_fabric.AsyncClient(timeout=8.0) as _c:
+            r = await _c.get(f"{_FABRIC_URL}/fabric/telemetry", params=params)
+            return r.json()
+
+    app.include_router(fabric_router)
+    logger.info("✅ Kloud Fabric router registered → /api/fabric/*")
+except Exception as _fabric_err:
+    logger.warning(f"⚠️ Kloud Fabric router not available: {_fabric_err}")
+
 # --- Chat API ---
 
 SERVICE_PROBES = [

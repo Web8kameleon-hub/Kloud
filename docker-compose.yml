@@ -1916,6 +1916,45 @@ services:
       retries: 3
     restart: unless-stopped
 
+  # ==========================
+  # KLOUD FABRIC (Sovereign Intelligence Mesh)
+  # ==========================
+  fabric:
+    build:
+      context: .
+      dockerfile: Dockerfile.fabric
+    container_name: kloud-fabric
+    environment:
+      PYTHONUNBUFFERED: "1"
+      FABRIC_API_PORT: "18800"
+      FABRIC_HEALTH_INTERVAL: "30"
+      # HQ node (this server — Ocean Core)
+      FABRIC_OCEAN_HQ_IP: "${FABRIC_OCEAN_HQ_IP:-178.105.52.245}"
+      FABRIC_OCEAN_HQ_PORT: "${FABRIC_OCEAN_HQ_PORT:-19080}"
+      # Compute node — Falkenstein CCX33
+      FABRIC_COMPUTE_FSK_IP: "${FABRIC_COMPUTE_FSK_IP:-91.98.47.131}"
+      FABRIC_COMPUTE_FSK_PORT: "${FABRIC_COMPUTE_FSK_PORT:-19080}"
+      # Failover node — Nuremberg CX43
+      FABRIC_FAILOVER_NBG_IP: "${FABRIC_FAILOVER_NBG_IP:-46.224.203.89}"
+      FABRIC_FAILOVER_NBG_PORT: "${FABRIC_FAILOVER_NBG_PORT:-19080}"
+      # EU North Edge — Helsinki CX23
+      FABRIC_EDGE_HEL_IP: "${FABRIC_EDGE_HEL_IP:-37.27.216.254}"
+      FABRIC_EDGE_HEL_PORT: "${FABRIC_EDGE_HEL_PORT:-19080}"
+      # US East Edge — Ashburn CPX21
+      FABRIC_EDGE_ASH_IP: "${FABRIC_EDGE_ASH_IP:-5.161.114.189}"
+      FABRIC_EDGE_ASH_PORT: "${FABRIC_EDGE_ASH_PORT:-19080}"
+      # Asia Edge — Singapore CPX22
+      FABRIC_EDGE_SIN_IP: "${FABRIC_EDGE_SIN_IP:-5.223.75.178}"
+      FABRIC_EDGE_SIN_PORT: "${FABRIC_EDGE_SIN_PORT:-19080}"
+    ports:
+      - "18800:18800"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18800/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
 volumes:
   clx_data:
     driver: local

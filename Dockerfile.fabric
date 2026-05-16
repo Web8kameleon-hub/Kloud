@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir fastapi uvicorn httpx
+
+COPY fabric_core.py .
+COPY fabric_api.py .
+
+EXPOSE 7800
+
+CMD ["python", "fabric_api.py"]

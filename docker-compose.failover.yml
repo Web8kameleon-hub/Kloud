@@ -1,0 +1,159 @@
+# =============================================================================
+# KLOUD — FAILOVER NODE  (CX43 · 46.224.203.89 · Nuremberg)
+# Role: Backup Brain — mirrors HQ, takes over if CPX62 dies
+# Deploy: docker compose -f docker-compose.failover.yml up -d
+# NOTE: ocean-core runs in STANDBY mode. DB is read-replica or failover.
+# =============================================================================
+
+x-runtime-hardening: &runtime_hardening
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  tmpfs:
+    - /tmp:size=64m,noexec,nosuid
+  stop_grace_period: 20s
+
+services:
+
+  # ── Redis (local) ───────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: kloud-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── CLX (LLM — lighter model for failover) ─────────────────────────────────
+  clx:
+    image: ollama/ollama:latest
+    container_name: kloud-clx
+    ports:
+      - "${CLX_HOST_PORT:-11434}:11434"
+    volumes:
+      - clx_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── Ocean Core (STANDBY — becomes active if HQ unreachable) ────────────────
+  ocean-core:
+    <<: *runtime_hardening
+    build:
+      context: ./ocean-core
+      dockerfile: Dockerfile
+    container_name: kloud-ocean-core
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OCEAN_PORT: "8030"
+      CLX_HOST: "http://kloud-clx:11434"
+      CLX_URL: "http://kloud-clx:11434"
+      OLLAMA_HOST: "http://kloud-clx:11434"
+      MODEL: "llama3.1:8b"
+      REDIS_URL: "redis://redis:6379/0"
+      NODE_ROLE: "failover"
+      NODE_ID: "failover-nbg"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:8030"
+      STANDBY_MODE: "true"
+    ports:
+      - "8030:8030"
+    depends_on:
+      clx:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── API Backend (mirror — standby, same code as HQ) ────────────────────────
+  api:
+    <<: *runtime_hardening
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: kloud-api
+    env_file:
+      - .env
+    environment:
+      PYTHONUNBUFFERED: "1"
+      API_PORT: "8000"
+      DATABASE_URL: ${FAILOVER_DATABASE_URL:-postgresql://kloud:kloud@${DB_HQ_IP:-178.105.52.245}:5432/klouddb}
+      REDIS_URL: "redis://redis:6379/0"
+      NODE_ROLE: "failover"
+      NODE_ID: "failover-nbg"
+      STANDBY_MODE: "true"
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Rust Fabric Node (NDB/TIDE/STIGMA — port 18080) ────────────────────────
+  rust-node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    container_name: kloud-rust-node
+    environment:
+      LISTEN_PORT: "18080"
+      NODE_ID: "3"
+      PEERS: "${RUST_PEERS:-}"
+      OCEAN_HQ_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18080"
+    ports:
+      - "18080:18080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18080/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Telemetry Agent ─────────────────────────────────────────────────────────
+  telemetry-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.telemetry-agent
+    container_name: kloud-telemetry-agent
+    environment:
+      PYTHONUNBUFFERED: "1"
+      AGENT_PORT: "18001"
+      NODE_ID: "failover-nbg"
+      NODE_ROLE: "failover"
+      OCEAN_TELEMETRY_URL: "http://${OCEAN_HQ_IP:-178.105.52.245}:18001/ingest"
+      REDIS_URL: "redis://redis:6379/0"
+      REPORT_INTERVAL_S: "15"
+    ports:
+      - "18001:18001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  clx_data:
+    driver: local
