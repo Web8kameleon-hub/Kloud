@@ -505,27 +505,66 @@ neural_router = APIRouter()
             "content": {
                 "audio/wav": {"schema": {"type": "string", "format": "binary"}}
             },
-            "description": "WAV audio stream generated from synthetic EEG alpha wave",
-        }
+            "description": "Real-time WAV audio stream from actual EEG signal processing",
+        },
+        503: {"description": "EEG data source not available (REAL-ONLY policy)"},
     },
 )
 async def neural_symphony():
     """
-    Gjeneron një audio wav demo nga sinjal EEG sintetik (valë alpha)
+    Dërgon WAV audio stream nga REAL EEG data në database.
+    REAL-ONLY: Nuk ka simulim, nuk ka fake data.
+    Nëse burimi real nuk është i disponueshëm, return 503.
     """
-    sr = 22050  # sample rate
-    duration = 5  # sekonda
-    t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-    # Simulo një sinjal alpha (10 Hz)
-    eeg_wave = 0.5 * np.sin(2 * np.pi * 10 * t)
-    # Konverto në int16 për wav
-    audio = np.int16(eeg_wave * 32767)
-    import soundfile as sf
+    require(_EEG and _AUDIO, "EEG or audio processing not available", code=503)
+    require(_PG, "PostgreSQL support not compiled", code=503)
+    if pg_pool is None:
+        raise HTTPException(
+            status_code=503, detail="PostgreSQL pool not initialized for real EEG data"
+        )
 
-    buf = io.BytesIO()
-    sf.write(buf, audio, sr, format="WAV")
-    buf.seek(0)
-    return StreamingResponse(buf, media_type="audio/wav")
+    try:
+        # Query real EEG data nga database
+        async with pg_pool.acquire() as conn:
+            row = await conn.fetchrow(
+                "SELECT eeg_signal, sample_rate FROM eeg_recordings "
+                "WHERE status='active' AND created_at > NOW() - INTERVAL '1 hour' "
+                "ORDER BY created_at DESC LIMIT 1"
+            )
+
+        if not row:
+            raise HTTPException(
+                status_code=503, detail="No active EEG data available in database"
+            )
+
+        eeg_signal = row["eeg_signal"]  # numpy array or bytes
+        sr = row["sample_rate"] or 22050
+
+        # Convert to int16 if needed
+        if isinstance(eeg_signal, bytes):
+            import numpy as np_local
+
+            eeg_wave = np_local.frombuffer(eeg_signal, dtype=np_local.float32)
+        else:
+            eeg_wave = np.asarray(eeg_signal, dtype=np.float32)
+
+        # Normalize to int16 range
+        audio = np.int16((eeg_wave / np.max(np.abs(eeg_wave))) * 32767)
+
+        # Stream as WAV
+        import soundfile as sf
+
+        buf = io.BytesIO()
+        sf.write(buf, audio, sr, format="WAV")
+        buf.seek(0)
+
+        return StreamingResponse(buf, media_type="audio/wav")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[NEURAL-SYMPHONY] Real EEG fetch failed: {e}")
+        raise HTTPException(status_code=503, detail="EEG data processing failed")
 
 
 """
