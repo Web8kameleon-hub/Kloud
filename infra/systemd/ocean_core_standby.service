@@ -1,0 +1,19 @@
+[Unit]
+Description=Kloud Ocean Core Standby
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kloud
+Group=kloud
+WorkingDirectory=/opt/kloud
+Environment=MODE=standby
+EnvironmentFile=-/etc/kloud/ocean_core_standby.env
+ExecStart=/opt/kloud/ocean_core --standby
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

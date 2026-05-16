@@ -1,0 +1,19 @@
+[Unit]
+Description=Kloud Telemetry Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kloud
+Group=kloud
+WorkingDirectory=/opt/kloud
+Environment=TELEMETRY_COLLECTOR_URL=http://178.105.52.245:9100
+EnvironmentFile=-/etc/kloud/telemetry_agent.env
+ExecStart=/opt/kloud/telemetry_agent --collector ${TELEMETRY_COLLECTOR_URL}
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

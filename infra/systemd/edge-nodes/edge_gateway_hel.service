@@ -1,0 +1,19 @@
+[Unit]
+Description=Kloud Edge Gateway (Helsinki)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kloud
+Group=kloud
+WorkingDirectory=/opt/kloud
+Environment=EDGE_REGION=eu-north
+EnvironmentFile=-/etc/kloud/edge_gateway.env
+ExecStart=/opt/kloud/edge_gateway --region ${EDGE_REGION}
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
