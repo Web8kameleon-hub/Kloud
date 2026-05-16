@@ -3,6 +3,7 @@ use std::env;
 use std::sync::Arc;
 
 use axum::{extract::State, routing::{get, post}, Json, Router};
+use async_trait::async_trait;
 use chrono::Utc;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -98,11 +99,15 @@ type StigmaBus = broadcast::Sender<StigmaEvent>;
 #[derive(Clone)]
 struct AppState {
     fabric: Arc<RwLock<FabricState>>,
+    flow_fields: Arc<RwLock<FlowFields>>,
     latest_telemetry: Arc<RwLock<HashMap<String, TelemetryPayload>>>,
     mesh_registry: Arc<RwLock<HashMap<String, MeshNodeRegistration>>>,
     mesh_status: Arc<RwLock<HashMap<String, MeshNodeStatus>>>,
     stigma_bus: StigmaBus,
 }
+        impulse_mesh: Arc<RwLock<OceanImpulse>>,
+
+
 
 fn create_stigma_bus() -> (StigmaBus, broadcast::Receiver<StigmaEvent>) {
     broadcast::channel(10_000)
@@ -119,7 +124,7 @@ fn vec_strings_from_payload(payload: &Value, key: &str) -> Vec<String> {
         .map(|items| {
             items
                 .iter()
-                .filter_map(|v| v.as_str().map(ToString::to_string))
+                impulse_mesh.broadcast(impulse, &flow_fields.read().await, fabric).await;
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default()
@@ -130,6 +135,380 @@ fn maybe_string(payload: &Value, key: &str) -> Option<String> {
         .get(key)
         .and_then(Value::as_str)
         .map(ToString::to_string)
+}
+
+// ─── Ocean Core: Distributed Decision-Making Center ────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowFields {
+    pub tension: f64,
+    pub harmony: f64,
+    pub risk: f64,
+    pub gap: f64,
+    pub pattern: f64,
+    pub compute: f64,
+    pub load: f64,
+    pub protection: f64,
+    pub origin_shift: f64,
+    pub updated_at: String,
+}
+
+impl FlowFields {
+    fn new() -> Self {
+        Self {
+            tension: 0.0,
+            harmony: 100.0,
+            risk: 0.0,
+            gap: 0.0,
+            pattern: 0.0,
+            compute: 0.0,
+            load: 0.0,
+            protection: 0.0,
+            origin_shift: 0.0,
+            updated_at: Utc::now().to_rfc3339(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OceanImpulse {
+    pub action: String,        // reroute, scale, stabilize, optimize, protect
+    pub target: String,        // agent, node, gateway, fabric
+    pub intensity: u8,         // 0-5
+    pub reason: String,
+    pub timestamp: String,
+}
+
+impl OceanImpulse {
+    fn reroute(reason: &str) -> Self {
+        Self {
+            action: "reroute".into(),
+            target: "gateway".into(),
+            intensity: 4,
+            reason: reason.into(),
+            timestamp: Utc::now().to_rfc3339(),
+        }
+    }
+
+    fn scale(reason: &str) -> Self {
+        Self {
+            action: "scale".into(),
+            target: "agents".into(),
+            intensity: 4,
+            reason: reason.into(),
+            timestamp: Utc::now().to_rfc3339(),
+        }
+    }
+
+    fn protect(reason: &str) -> Self {
+        Self {
+            action: "protect".into(),
+            target: "gateway".into(),
+            intensity: 5,
+            reason: reason.into(),
+            timestamp: Utc::now().to_rfc3339(),
+        }
+    }
+
+    fn optimize(reason: &str) -> Self {
+        Self {
+            action: "optimize".into(),
+            target: "agents".into(),
+            intensity: 3,
+            reason: reason.into(),
+            timestamp: Utc::now().to_rfc3339(),
+        }
+    }
+
+    fn stabilize(reason: &str) -> Self {
+        Self {
+            action: "stabilize".into(),
+            target: "fabric".into(),
+            intensity: 2,
+            reason: reason.into(),
+            timestamp: Utc::now().to_rfc3339(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct FabricSelfReport {
+    pub summary: String,
+    pub dominant_field: String,
+    pub stability: f64,
+    pub concern_level: f64,
+    pub recommended_focus: String,
+    pub timestamp: String,
+}
+
+// ─── Resonance Engine: Flow Field Physics ──────────────────────────────────
+
+/// Resonance: fields influence each other as in biological brain
+fn resonate(fields: &mut FlowFields) {
+    // Gap increases risk
+    fields.risk += fields.gap * 0.2;
+
+    // Pattern increases compute demand
+    fields.compute += fields.pattern * 0.15;
+
+    // Tension decreases harmony
+    fields.harmony -= fields.tension * 0.1;
+
+    // Risk increases protection
+    fields.protection += fields.risk * 0.25;
+
+    // Load increases tension
+    fields.tension += fields.load * 0.1;
+
+    // Harmony decreases tension (natural stabilization)
+    fields.tension -= fields.harmony * 0.05;
+
+    // Origin shift increases risk
+    fields.risk += fields.origin_shift * 0.1;
+
+    // Clamp to natural bounds
+    fields.tension = fields.tension.clamp(0.0, 10.0);
+    fields.harmony = fields.harmony.clamp(0.0, 100.0);
+    fields.risk = fields.risk.clamp(0.0, 10.0);
+    fields.gap = fields.gap.clamp(0.0, 10.0);
+    fields.pattern = fields.pattern.clamp(0.0, 10.0);
+    fields.compute = fields.compute.clamp(0.0, 10.0);
+    fields.load = fields.load.clamp(0.0, 10.0);
+    fields.protection = fields.protection.clamp(0.0, 10.0);
+    fields.origin_shift = fields.origin_shift.clamp(0.0, 10.0);
+}
+
+/// Natural damping: biological homeostasis
+fn damp(fields: &mut FlowFields) {
+    fields.tension *= 0.95;
+    fields.risk *= 0.92;
+    fields.gap *= 0.90;
+    fields.pattern *= 0.93;
+    fields.compute *= 0.94;
+    fields.load *= 0.96;
+    fields.protection *= 0.90;
+    fields.origin_shift *= 0.88;
+    fields.updated_at = Utc::now().to_rfc3339();
+}
+
+// ─── JONA: Guardian Layer (Ethical Filtering & Safety) ────────────────────
+
+/// JONA filter: ethical, safe, calm recommendations
+fn jona_filter_recommendation(fields: &FlowFields, concern: f64) -> String {
+    if concern > 7.0 {
+        return "stabilize_gently_and_reduce_pressure".into();
+    }
+
+    if fields.gap > 3.0 {
+        return "improve_clarity_and_reduce_ambiguity".into();
+    }
+
+    if fields.load > 4.0 {
+        return "scale_resources_in_a_balanced_way".into();
+    }
+
+    if fields.risk > 4.0 {
+        return "strengthen_safeguards_carefully".into();
+    }
+
+    "maintain_harmony_and_monitor_softly".into()
+}
+
+/// JONA filter: calm, safe language
+fn jona_filter_summary(text: String) -> String {
+    text.replace("Concern", "Observed concern")
+        .replace("Stability", "Current stability")
+        .replace("dominant field", "leading influence")
+}
+
+// ─── JONA: Impulse Mesh Guardian ───────────────────────────────────────────
+
+#[derive(Debug, Clone)]
+pub struct JonaFilter;
+
+impl JonaFilter {
+    pub fn new() -> Self {
+        Self
+    }
+
+    /// Filter impulse: safety, tone, stability before broadcast
+    pub fn filter_impulse(&self, impulse: OceanImpulse, fields: &FlowFields) -> OceanImpulse {
+        let mut filtered = impulse.clone();
+
+        // 1) Reduce intensity if risk is high (safety)
+        if fields.risk > 6.0 && filtered.intensity > 2 {
+            filtered.intensity = (filtered.intensity - 1).max(1);
+        }
+
+        // 2) Soften language (tone)
+        filtered.reason = self.filter_reason(&filtered.reason);
+
+        // 3) Prevent unnecessary impulses if harmony is high
+        if fields.harmony > 80.0 && filtered.action != "stabilize" {
+            filtered.intensity = (filtered.intensity - 1).max(1);
+        }
+
+        // 4) Redirect to protection if risk is critical
+        if fields.risk > 7.0 && filtered.action != "protect" {
+            filtered.action = "protect".into();
+            filtered.reason = "critical stabilization recommended".into();
+            filtered.intensity = 4;
+        }
+
+        // 5) Clamp intensity to safe range
+        filtered.intensity = filtered.intensity.clamp(1, 4);
+
+        filtered
+    }
+
+    /// Soften language: prevent alarmism
+    fn filter_reason(&self, reason: &str) -> String {
+        reason
+            .replace("high risk", "elevated risk")
+            .replace("critical", "notable")
+            .replace("instability", "variation")
+            .replace("DANGER", "caution")
+            .replace("FAILURE", "degradation")
+            .replace("PANIC", "concern")
+    }
+}
+
+// ─── Impulse Mesh: Distributed Decision Broadcast ─────────────────────────
+
+#[async_trait::async_trait]
+pub trait ImpulseSubscriber {
+    async fn on_impulse(&self, impulse: OceanImpulse);
+}
+
+pub struct ImpulseMesh {
+    pub jona: JonaFilter,
+}
+
+impl ImpulseMesh {
+    pub fn new() -> Self {
+        Self {
+            jona: JonaFilter::new(),
+        }
+    }
+
+    /// Broadcast impulse through JONA filtering
+    pub async fn broadcast(
+        &self,
+        impulse: OceanImpulse,
+        fields: &FlowFields,
+        fabric: &SharedFabricState,
+    ) {
+        // JONA: filter impulse before broadcast
+        let safe_impulse = self.jona.filter_impulse(impulse, fields);
+
+        // Apply to fabric state
+        apply_impulse_to_fabric(&safe_impulse, fabric).await;
+    }
+}
+
+async fn apply_impulse_to_fabric(impulse: &OceanImpulse, fabric: &SharedFabricState) {
+    let mut state = fabric.write().await;
+    match impulse.action.as_str() {
+        "reroute" => {
+            state.active_origin = state.fallback_origin.clone();
+            state.asi_signal = "reroute".into();
+            state.decision_explanation = impulse.reason.clone();
+        }
+        "scale" => {
+            state.asi_signal = "scale_up".into();
+            state.decision_explanation = impulse.reason.clone();
+        }
+        "optimize" => {
+            state.asi_signal = "optimize".into();
+            state.decision_explanation = impulse.reason.clone();
+        }
+        "protect" => {
+            state.asi_signal = "protect".into();
+            state.decision_explanation = impulse.reason.clone();
+        }
+        "stabilize" => {
+            state.asi_signal = "stabilize".into();
+            state.decision_explanation = impulse.reason.clone();
+        }
+        _ => {}
+    }
+}
+
+// ─── Ocean Core Decision Engine ─────────────────────────────────────────────
+
+/// Ocean Core: decision from resonance, not raw events
+fn ocean_decision(fields: &FlowFields) -> Option<OceanImpulse> {
+    // High risk → protect
+    if fields.risk > 4.0 || fields.protection > 3.5 {
+        return Some(OceanImpulse::protect("high risk resonance"));
+    }
+
+    // Compute resonance → scale
+    if fields.compute > 4.0 || fields.load > 4.0 {
+        return Some(OceanImpulse::scale("compute resonance"));
+    }
+
+    // Origin instability → reroute
+    if fields.origin_shift > 3.0 {
+        return Some(OceanImpulse::reroute("origin instability resonance"));
+    }
+
+    // Gap resonance → optimize
+    if fields.gap > 3.0 {
+        return Some(OceanImpulse::optimize("gap resonance"));
+    }
+
+    // Tension high + harmony low → stabilize
+    if fields.tension > 5.0 && fields.harmony < 50.0 {
+        return Some(OceanImpulse::stabilize("tension in fabric"));
+    }
+
+    None
+}
+
+/// Build self-report from flow fields with JONA filtering
+fn build_self_report(fields: &FlowFields) -> FabricSelfReport {
+    let (dominant, value) = {
+        let fields_vec = vec![
+            ("tension", fields.tension),
+            ("harmony", fields.harmony),
+            ("risk", fields.risk),
+            ("gap", fields.gap),
+            ("pattern", fields.pattern),
+            ("compute", fields.compute),
+            ("load", fields.load),
+            ("protection", fields.protection),
+            ("origin_shift", fields.origin_shift),
+        ];
+        fields_vec
+            .into_iter()
+            .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap())
+            .unwrap_or(("unknown", 0.0))
+    };
+
+    let stability = (fields.harmony - fields.tension - fields.risk).clamp(-5.0, 5.0);
+    let concern = (fields.risk + fields.gap + (if fields.protection > 5.0 { 2.0 } else { 0.0 }))
+        .min(10.0);
+
+    // JONA: filtered recommendation
+    let recommended = jona_filter_recommendation(fields, concern);
+
+    // JONA: calm, safe summary
+    let summary_raw = format!(
+        "Current leading influence: {} ({:.2}). Current stability: {:.2}. Observed concern: {:.2}.",
+        dominant.0, value, stability, concern
+    );
+
+    let summary = jona_filter_summary(summary_raw);
+
+    FabricSelfReport {
+        summary,
+        dominant_field: dominant.0.to_string(),
+        stability,
+        concern_level: concern,
+        recommended_focus: recommended,
+        timestamp: Utc::now().to_rfc3339(),
+    }
 }
 
 // ─── capability routing & autoscaling ──────────────────────────────────────
@@ -347,7 +726,7 @@ async fn handle_asi(fabric: &SharedFabricState, ev: StigmaEvent) {
 
 // ─── dispatcher ────────────────────────────────────────────────────────────
 
-async fn dispatch_event(fabric: &SharedFabricState, ev: StigmaEvent) {
+async fn dispatch_event(fabric: &SharedFabricState, flow_fields: Arc<RwLock<FlowFields>>, ev: StigmaEvent) {
     // 1) Update fabric state per-module
     match ev.source.as_str() {
         "ALBA" | "ALBI" | "JONA" => handle_trinity(fabric, ev.clone()).await,
@@ -363,16 +742,108 @@ async fn dispatch_event(fabric: &SharedFabricState, ev: StigmaEvent) {
         _ => {}
     }
 
-    // 2) Capability routing: Check if event triggers autoscaling
+    // 2) Update flow fields from stigma event
+    {
+        let mut fields = flow_fields.write().await;
+
+        match ev.source.as_str() {
+            "ALBA" | "ALBI" => {
+                fields.tension += 0.5;
+                if ev.kind == "anomaly" {
+                    fields.protection += 0.3;
+                }
+            }
+            "MALI" => {
+                fields.pattern += ev.level as f64 * 0.2;
+                if ev.kind == "prediction" && ev.level >= 3 {
+                    fields.compute += 1.0;
+                }
+            }
+            "BLERINA" => {
+                fields.gap += ev.level as f64 * 0.3;
+                if ev.level >= 4 {
+                    fields.risk += 1.5;
+                }
+            }
+            "LIAM" => {
+                if ev.kind == "tensor" && ev.level >= 3 {
+                    fields.compute += 0.8;
+                }
+                if ev.kind == "eigen" {
+                    fields.pattern += 0.5;
+                }
+            }
+            "ALDA" => {
+                fields.load += ev.level as f64 * 0.2;
+            }
+            "KLAJDI" => {
+                if ev.kind == "anomaly" || ev.kind == "risk" {
+                    fields.risk += 0.8;
+                }
+            }
+            "ASI" => {
+                if ev.kind == "signal" {
+                    let signal = ev.payload.get("signal").and_then(|v| v.as_str()).unwrap_or("");
+                    if signal == "reroute" {
+                        fields.origin_shift += 1.0;
+                    }
+                }
+            }
+            _ => {}
+        }
+
+        // 3) Resonance: fields influence each other
+        resonate(&mut fields);
+
+        // 4) Natural damping: homeostasis
+        damp(&mut fields);
+    }
+
+    // 5) Ocean Core decision from resonance
+    let impulse = {
+        let fields = flow_fields.read().await;
+        ocean_decision(&fields)
+    };
+
+    // 6) If impulse generated, apply it
+    if let Some(impulse) = impulse {
+        let mut state = fabric.write().await;
+        match impulse.action.as_str() {
+            "reroute" => {
+                state.active_origin = state.fallback_origin.clone();
+                state.decision_explanation = impulse.reason;
+            }
+            "scale" => {
+                state.asi_signal = "scale_up".into();
+                state.decision_explanation = impulse.reason;
+            }
+            "optimize" => {
+                state.asi_signal = "optimize".into();
+                state.decision_explanation = impulse.reason;
+            }
+            "protect" => {
+                state.asi_signal = "protect".into();
+                state.decision_explanation = impulse.reason;
+            }
+            "stabilize" => {
+                state.asi_signal = "stabilize".into();
+                state.decision_explanation = impulse.reason;
+            }
+            _ => {}
+        }
+    }
+
+    // 7) Capability routing: Check if event triggers autoscaling
     if let Some(cap_target) = capability_router(&ev) {
         trigger_autoscale(&cap_target.capability, cap_target.target_capacity).await;
     }
 }
+        let impulse_mesh = &app_state.impulse_mesh;
 
 fn start_stigma_worker(app_state: AppState, mut rx: broadcast::Receiver<StigmaEvent>) {
     tokio::spawn(async move {
         while let Ok(ev) = rx.recv().await {
-            dispatch_event(&app_state.fabric, ev).await;
+                dispatch_event(app_state.clone(), ev).await;
         }
     });
 }
@@ -394,6 +865,22 @@ async fn get_fabric_explain(State(app_state): State<AppState>) -> Json<ApiResult
             state.active_origin, state.asi_signal, state.harmony, state.decision_explanation
         ),
     })
+}
+
+/// Ocean Core Self-Report: Fabric consciousness with JONA filtering
+async fn get_fabric_resonance(State(app_state): State<AppState>) -> Json<FabricSelfReport> {
+    let fields = app_state.flow_fields.read().await;
+    Json(build_self_report(&fields))
+}
+
+/// Get current FlowFields: Fabric's internal resonance state
+async fn get_flow_fields(State(app_state): State<AppState>) -> Json<FlowFields> {
+    Json(app_state.flow_fields.read().await.clone())
+}
+
+/// Get current OceanImpulse: Last decision broadcast
+async fn get_ocean_impulse(State(app_state): State<AppState>) -> Json<OceanImpulse> {
+    Json(app_state.impulse_mesh.read().await.clone())
 }
 
 async fn ingest_telemetry(
@@ -625,6 +1112,14 @@ async fn main() {
             decision_explanation: "initial_boot".to_string(),
             updated_at: Utc::now().to_rfc3339(),
         })),
+        flow_fields: Arc::new(RwLock::new(FlowFields::new())),
+            impulse_mesh: Arc::new(RwLock::new(OceanImpulse {
+                action: "stabilize".into(),
+                target: "fabric".into(),
+                intensity: 1,
+                reason: "initial_equilibrium".into(),
+                timestamp: Utc::now().to_rfc3339(),
+            })),
         latest_telemetry: Arc::new(RwLock::new(HashMap::new())),
         mesh_registry: Arc::new(RwLock::new(HashMap::new())),
         mesh_status: Arc::new(RwLock::new(HashMap::new())),
@@ -637,6 +1132,9 @@ async fn main() {
         .route("/health", get(health))
         .route("/fabric/state", get(get_fabric_state))
         .route("/fabric/explain", get(get_fabric_explain))
+        .route("/fabric/resonance", get(get_fabric_resonance))
+            .route("/fabric/flow", get(get_flow_fields))
+            .route("/fabric/ocean/impulse", get(get_ocean_impulse))
         .route("/fabric/stigma", post(ingest_stigma))
         .route("/telemetry", post(ingest_telemetry))
         .route("/asi/signal", post(ingest_asi_signal))

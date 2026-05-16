@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Activity, ArrowRight, CheckCircle2, Cloud, Database, Globe, Lock, Route, Server, Shield, Sparkles, AlertCircle } from 'lucide-react';
 
 type DNSRecord = {
@@ -55,6 +55,25 @@ export default function DnsHostingControlPage() {
   const [origins, setOrigins] = useState<OriginItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+  const [actionBusy, setActionBusy] = useState<string | null>(null);
+  const [showAddRecordModal, setShowAddRecordModal] = useState(false);
+  const [showAddOriginModal, setShowAddOriginModal] = useState(false);
+  const [recordForm, setRecordForm] = useState({
+    zone_id: '',
+    name: 'www',
+    type: 'CNAME',
+    content: 'kloud.cloud',
+    ttl: 300,
+    proxy_status: 'Proxied' as 'Proxied' | 'DNS only',
+  });
+  const [originForm, setOriginForm] = useState({
+    name: 'New Origin',
+    endpoint: 'http://origin.kloud.cloud',
+    region: 'eu-central',
+    role: 'frontend',
+    health_status: 'Healthy' as 'Healthy' | 'Warning' | 'Disabled',
+  });
 
   const observedRoutes = zones.reduce((sum, z) => sum + (z.records?.length || 0), 0);
   const healthyOrigins = origins.filter((o) => o.health_status === 'Healthy').length;
@@ -67,44 +86,129 @@ export default function DnsHostingControlPage() {
     ? Math.round((healthyOrigins / origins.length) * 100)
     : 0;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Fetch DNS zones
-        const zonesRes = await fetch('/api/dns/zones', { cache: 'no-store' });
-        if (zonesRes.ok) {
-          const zonesData = await zonesRes.json();
-          setZones(zonesData);
-        } else {
-          throw new Error(`Failed to fetch zones: ${zonesRes.statusText}`);
-        }
-        
-        // Fetch hosting origins
-        const originsRes = await fetch('/api/dns/origins', { cache: 'no-store' });
-        if (originsRes.ok) {
-          const originsData = await originsRes.json();
-          setOrigins(originsData);
-        } else {
-          throw new Error(`Failed to fetch origins: ${originsRes.statusText}`);
-        }
-        
-        setLastSync(new Date().toLocaleString());
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load DNS data');
-        console.error('DNS data fetch error:', err);
-      } finally {
-        setLoading(false);
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const zonesRes = await fetch('/api/dns/zones', { cache: 'no-store' });
+      if (zonesRes.ok) {
+        const zonesData = await zonesRes.json();
+        setZones(zonesData);
+      } else {
+        throw new Error(`Failed to fetch zones: ${zonesRes.statusText}`);
       }
-    };
-    
+
+      const originsRes = await fetch('/api/dns/origins', { cache: 'no-store' });
+      if (originsRes.ok) {
+        const originsData = await originsRes.json();
+        setOrigins(originsData);
+      } else {
+        throw new Error(`Failed to fetch origins: ${originsRes.statusText}`);
+      }
+
+      setLastSync(new Date().toLocaleString());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load DNS data');
+      console.error('DNS data fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
     fetchData();
     // Refetch every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchData]);
+
+  const handleQuickAction = async (action: string) => {
+    setActionFeedback(null);
+
+    if (action === 'add-dns') {
+      setRecordForm((prev) => ({ ...prev, zone_id: zones[0]?.id || '' }));
+      setShowAddRecordModal(true);
+      return;
+    }
+
+    if (action === 'review-ssl') {
+      window.location.href = '/security';
+      return;
+    }
+
+    if (action === 'deploy-origin') {
+      setShowAddOriginModal(true);
+      return;
+    }
+
+    if (action === 'security-rules') {
+      window.location.href = '/security';
+      return;
+    }
+
+    if (action === 'enable-failover') {
+      try {
+        setActionBusy('enable-failover');
+        const response = await fetch('/api/dns/failover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: 'quick-action' }),
+        });
+        if (!response.ok) {
+          throw new Error('Failover action failed');
+        }
+        const result = await response.json();
+        setActionFeedback(result.message || 'Failover workflow enabled successfully.');
+      } catch (err) {
+        setActionFeedback(err instanceof Error ? err.message : 'Failed to enable failover.');
+      } finally {
+        setActionBusy(null);
+      }
+    }
+  };
+
+  const submitAddRecord = async () => {
+    try {
+      setActionBusy('submit-record');
+      const response = await fetch('/api/dns/records', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(recordForm),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add DNS record');
+      }
+      setShowAddRecordModal(false);
+      setActionFeedback('DNS record created successfully.');
+      await fetchData();
+    } catch (err) {
+      setActionFeedback(err instanceof Error ? err.message : 'DNS record creation failed.');
+    } finally {
+      setActionBusy(null);
+    }
+  };
+
+  const submitAddOrigin = async () => {
+    try {
+      setActionBusy('submit-origin');
+      const response = await fetch('/api/dns/origins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(originForm),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to deploy hosting origin');
+      }
+      setShowAddOriginModal(false);
+      setActionFeedback('Hosting origin deployed successfully.');
+      await fetchData();
+    } catch (err) {
+      setActionFeedback(err instanceof Error ? err.message : 'Origin deployment failed.');
+    } finally {
+      setActionBusy(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#ecfeff,_#f8fafc_45%,_#f0fdfa)] text-slate-900">
@@ -181,21 +285,32 @@ export default function DnsHostingControlPage() {
               </div>
               <div className="space-y-3">
                 {[
-                  'Add DNS record',
-                  'Review SSL/TLS',
-                  'Deploy hosting origin',
-                  'Enable failover',
-                  'Open security rules'
+                  { id: 'add-dns', label: 'Add DNS record' },
+                  { id: 'review-ssl', label: 'Review SSL/TLS' },
+                  { id: 'deploy-origin', label: 'Deploy hosting origin' },
+                  { id: 'enable-failover', label: 'Enable failover' },
+                  { id: 'security-rules', label: 'Open security rules' },
                 ].map((action) => (
-                  <div key={action} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                    <span className="text-slate-700 text-sm font-medium">{action}</span>
+                  <button
+                    key={action.id}
+                    type="button"
+                    onClick={() => handleQuickAction(action.id)}
+                    disabled={actionBusy === action.id}
+                    className="w-full flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 hover:border-cyan-300 transition-colors disabled:opacity-70"
+                  >
+                    <span className="text-slate-700 text-sm font-medium">{action.label}</span>
                     <ArrowRight className="w-4 h-4 text-cyan-700" />
-                  </div>
+                  </button>
                 ))}
               </div>
             <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-200">
               Last sync: {lastSync || 'Initializing...'}
             </div>
+            {actionFeedback && (
+              <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-4 text-sm text-cyan-200">
+                {actionFeedback}
+              </div>
+            )}
             {error && (
               <div className="mt-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200 flex gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
@@ -370,6 +485,63 @@ export default function DnsHostingControlPage() {
       <footer className="px-6 pb-10 text-center text-slate-500 text-sm">
         <Link href="/modules" className="text-cyan-700 hover:text-cyan-600 transition-colors">Back to modules</Link>
       </footer>
+
+      {showAddRecordModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-xl rounded-2xl bg-white border border-slate-200 p-6">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Add DNS Record</h3>
+            <div className="grid gap-3">
+              <select
+                value={recordForm.zone_id}
+                onChange={(e) => setRecordForm((p) => ({ ...p, zone_id: e.target.value }))}
+                className="rounded-lg border border-slate-300 px-3 py-2"
+              >
+                <option value="">Select zone</option>
+                {zones.map((z) => (
+                  <option key={z.id} value={z.id}>{z.domain}</option>
+                ))}
+              </select>
+              <input value={recordForm.name} onChange={(e) => setRecordForm((p) => ({ ...p, name: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Record name (e.g. www)" />
+              <select value={recordForm.type} onChange={(e) => setRecordForm((p) => ({ ...p, type: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2">
+                {['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SOA', 'SRV'].map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+              <input value={recordForm.content} onChange={(e) => setRecordForm((p) => ({ ...p, content: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Target content" />
+              <input type="number" value={recordForm.ttl} onChange={(e) => setRecordForm((p) => ({ ...p, ttl: Number(e.target.value) || 300 }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="TTL" />
+              <select value={recordForm.proxy_status} onChange={(e) => setRecordForm((p) => ({ ...p, proxy_status: e.target.value as 'Proxied' | 'DNS only' }))} className="rounded-lg border border-slate-300 px-3 py-2">
+                <option value="Proxied">Proxied</option>
+                <option value="DNS only">DNS only</option>
+              </select>
+            </div>
+            <div className="mt-5 flex gap-3 justify-end">
+              <button type="button" onClick={() => setShowAddRecordModal(false)} className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700">Cancel</button>
+              <button type="button" onClick={submitAddRecord} disabled={actionBusy === 'submit-record' || !recordForm.zone_id} className="px-4 py-2 rounded-lg bg-cyan-600 text-white disabled:opacity-60">Save Record</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAddOriginModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-xl rounded-2xl bg-white border border-slate-200 p-6">
+            <h3 className="text-xl font-bold text-slate-900 mb-4">Deploy Hosting Origin</h3>
+            <div className="grid gap-3">
+              <input value={originForm.name} onChange={(e) => setOriginForm((p) => ({ ...p, name: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Origin name" />
+              <input value={originForm.endpoint} onChange={(e) => setOriginForm((p) => ({ ...p, endpoint: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Endpoint URL" />
+              <input value={originForm.region} onChange={(e) => setOriginForm((p) => ({ ...p, region: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Region" />
+              <input value={originForm.role} onChange={(e) => setOriginForm((p) => ({ ...p, role: e.target.value }))} className="rounded-lg border border-slate-300 px-3 py-2" placeholder="Role" />
+              <select value={originForm.health_status} onChange={(e) => setOriginForm((p) => ({ ...p, health_status: e.target.value as 'Healthy' | 'Warning' | 'Disabled' }))} className="rounded-lg border border-slate-300 px-3 py-2">
+                <option value="Healthy">Healthy</option>
+                <option value="Warning">Warning</option>
+                <option value="Disabled">Disabled</option>
+              </select>
+            </div>
+            <div className="mt-5 flex gap-3 justify-end">
+              <button type="button" onClick={() => setShowAddOriginModal(false)} className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700">Cancel</button>
+              <button type="button" onClick={submitAddOrigin} disabled={actionBusy === 'submit-origin'} className="px-4 py-2 rounded-lg bg-cyan-600 text-white disabled:opacity-60">Deploy Origin</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

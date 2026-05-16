@@ -30,9 +30,12 @@ Version: 2.0.0 - Full 23 Labs Integration
 """
 
 import asyncio
+import json
 import logging
 import os
 import sys
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -49,10 +52,12 @@ try:
         LaboratoryNetwork,
         get_laboratory_network,
     )
+
     LABORATORIES_INTEGRATED = True
 except ImportError:
     LABORATORIES_INTEGRATED = False
     LaboratoryNetwork = None  # type: ignore
+    get_laboratory_network = None  # type: ignore
 
 logger = logging.getLogger("location_labs_engine")
 
@@ -60,8 +65,10 @@ logger = logging.getLogger("location_labs_engine")
 # ENUMS & TYPES
 # ============================================================================
 
+
 class LocationRegion(str, Enum):
     """Geographic regions with laboratories - ALL 23 LABS"""
+
     # Albania (7)
     ELBASAN = "elbasan"
     TIRANA = "tirana"
@@ -106,6 +113,7 @@ class LocationRegion(str, Enum):
 
 class LabDomain(str, Enum):
     """Lab domain types by location - ALL 23 TYPES"""
+
     # Core domains
     UNIVERSITY = "university"
     MEDICAL = "medical"
@@ -137,6 +145,7 @@ class LabDomain(str, Enum):
 
 class LabDataType(str, Enum):
     """Types of data produced by location labs"""
+
     EXPERIMENTAL = "experimental"
     OBSERVATIONAL = "observational"
     SENSOR = "sensor"
@@ -147,6 +156,7 @@ class LabDataType(str, Enum):
 @dataclass
 class LocationLabResult:
     """Result from a location-based lab execution"""
+
     lab_id: str
     location: LocationRegion
     domain: LabDomain
@@ -158,20 +168,20 @@ class LocationLabResult:
     artifacts_generated: int
     errors: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'lab_id': self.lab_id,
-            'location': self.location.value,
-            'domain': self.domain.value,
-            'data_type': self.data_type.value,
-            'collection_timestamp': self.collection_timestamp,
-            'processing_time_ms': self.processing_time_ms,
-            'data_quality_score': self.data_quality_score,
-            'sample_count': self.sample_count,
-            'artifacts_generated': self.artifacts_generated,
-            'errors': self.errors,
-            'metadata': self.metadata
+            "lab_id": self.lab_id,
+            "location": self.location.value,
+            "domain": self.domain.value,
+            "data_type": self.data_type.value,
+            "collection_timestamp": self.collection_timestamp,
+            "processing_time_ms": self.processing_time_ms,
+            "data_quality_score": self.data_quality_score,
+            "sample_count": self.sample_count,
+            "artifacts_generated": self.artifacts_generated,
+            "errors": self.errors,
+            "metadata": self.metadata,
         }
 
 
@@ -179,9 +189,11 @@ class LocationLabResult:
 # LOCATION LAB DEFINITIONS
 # ============================================================================
 
+
 @dataclass
 class LocationLabConfig:
     """Configuration for a location laboratory"""
+
     location: LocationRegion
     domain: LabDomain
     country: str
@@ -200,7 +212,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="elbasan.university.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.OBSERVATIONAL],
-        description="Elbasan University Laboratory - Physics & Biology Research"
+        description="Elbasan University Laboratory - Physics & Biology Research",
     ),
     LocationRegion.TIRANA: LocationLabConfig(
         location=LocationRegion.TIRANA,
@@ -209,7 +221,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="tirana.medical.center",
         cycle_interval_minutes=30,
         data_types=[LabDataType.CLINICAL, LabDataType.SENSOR],
-        description="Tirana Medical Center - Clinical & Biomedical Research"
+        description="Tirana Medical Center - Clinical & Biomedical Research",
     ),
     LocationRegion.DURRES: LocationLabConfig(
         location=LocationRegion.DURRES,
@@ -218,7 +230,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="durres.research.institute",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Durrës Research Institute - General Research & Development"
+        description="Durrës Research Institute - General Research & Development",
     ),
     LocationRegion.VLORE: LocationLabConfig(
         location=LocationRegion.VLORE,
@@ -227,7 +239,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="vlore.marine.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.ENVIRONMENTAL],
-        description="Vlorë Marine Laboratory - Marine Biology & Oceanography"
+        description="Vlorë Marine Laboratory - Marine Biology & Oceanography",
     ),
     LocationRegion.SHKODER: LocationLabConfig(
         location=LocationRegion.SHKODER,
@@ -236,7 +248,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="shkoder.university.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.OBSERVATIONAL],
-        description="Shkodër University - Environmental & Ecological Studies"
+        description="Shkodër University - Environmental & Ecological Studies",
     ),
     LocationRegion.KORCE: LocationLabConfig(
         location=LocationRegion.KORCE,
@@ -245,7 +257,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="korce.agricultural.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.ENVIRONMENTAL],
-        description="Korçë Agricultural Lab - Agricultural Science & Soil Studies"
+        description="Korçë Agricultural Lab - Agricultural Science & Soil Studies",
     ),
     LocationRegion.SARANDA: LocationLabConfig(
         location=LocationRegion.SARANDA,
@@ -254,7 +266,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="saranda.ecological.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.ENVIRONMENTAL],
-        description="Sarandë Ecological Lab - Biodiversity & Ecosystem Monitoring"
+        description="Sarandë Ecological Lab - Biodiversity & Ecosystem Monitoring",
     ),
     # KOSOVO
     LocationRegion.PRISHTINA: LocationLabConfig(
@@ -264,7 +276,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="prishtina.university.hospital",
         cycle_interval_minutes=30,
         data_types=[LabDataType.CLINICAL, LabDataType.SENSOR],
-        description="Prishtina University Hospital - Medical & Healthcare Research"
+        description="Prishtina University Hospital - Medical & Healthcare Research",
     ),
     # NORTH MACEDONIA
     LocationRegion.KOSTUR: LocationLabConfig(
@@ -274,7 +286,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="kostur.medical.center",
         cycle_interval_minutes=30,
         data_types=[LabDataType.CLINICAL, LabDataType.SENSOR],
-        description="Kostur Medical Center - Clinical Research & Medicine"
+        description="Kostur Medical Center - Clinical Research & Medicine",
     ),
     # GREECE
     LocationRegion.ATHENS: LocationLabConfig(
@@ -284,7 +296,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="athens.national.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Athens National Lab - Multidisciplinary Research"
+        description="Athens National Lab - Multidisciplinary Research",
     ),
     # ITALY
     LocationRegion.ROME: LocationLabConfig(
@@ -294,7 +306,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="rome.research.center",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.OBSERVATIONAL],
-        description="Rome Research Center - European Research Hub"
+        description="Rome Research Center - European Research Hub",
     ),
     # SWITZERLAND
     LocationRegion.ZURICH: LocationLabConfig(
@@ -304,7 +316,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="zurich.finance.university",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Zurich Finance Lab - Financial Analysis & Blockchain"
+        description="Zurich Finance Lab - Financial Analysis & Blockchain",
     ),
     # SERBIA
     LocationRegion.BEOGRAD: LocationLabConfig(
@@ -314,7 +326,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="beograd.industrial.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Beograd Industrial Lab - Industrial Process Optimization"
+        description="Beograd Industrial Lab - Industrial Process Optimization",
     ),
     # BULGARIA
     LocationRegion.SOFIA: LocationLabConfig(
@@ -324,7 +336,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="sofia.chemistry.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.OBSERVATIONAL],
-        description="Sofia Chemistry Lab - Chemical Research & Material Science"
+        description="Sofia Chemistry Lab - Chemical Research & Material Science",
     ),
     # CROATIA
     LocationRegion.ZAGREB: LocationLabConfig(
@@ -334,7 +346,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="zagreb.biotech.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.CLINICAL],
-        description="Zagreb Biotech Lab - Biotechnology & Genetic Engineering"
+        description="Zagreb Biotech Lab - Biotechnology & Genetic Engineering",
     ),
     # SLOVENIA
     LocationRegion.LJUBLJANA: LocationLabConfig(
@@ -344,7 +356,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="ljubljana.quantum.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Ljubljana Quantum Lab - Quantum Computing & Physics"
+        description="Ljubljana Quantum Lab - Quantum Computing & Physics",
     ),
     # AUSTRIA
     LocationRegion.VIENNA: LocationLabConfig(
@@ -354,7 +366,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="vienna.neuroscience.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.CLINICAL, LabDataType.SENSOR],
-        description="Vienna Neuroscience Lab - Brain Research & Cognitive Science"
+        description="Vienna Neuroscience Lab - Brain Research & Cognitive Science",
     ),
     # CZECH REPUBLIC
     LocationRegion.PRAGUE: LocationLabConfig(
@@ -364,7 +376,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="prague.robotics.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Prague Robotics Lab - Robotics & Automation Systems"
+        description="Prague Robotics Lab - Robotics & Automation Systems",
     ),
     # HUNGARY
     LocationRegion.BUDAPEST: LocationLabConfig(
@@ -374,7 +386,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="budapest.data.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.SENSOR],
-        description="Budapest Data Lab - Big Data Analytics & Visualization"
+        description="Budapest Data Lab - Big Data Analytics & Visualization",
     ),
     # ROMANIA
     LocationRegion.BUCHAREST: LocationLabConfig(
@@ -384,7 +396,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="bucharest.nanotechnology.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.EXPERIMENTAL, LabDataType.SENSOR],
-        description="Bucharest Nanotechnology Lab - Nanomaterials & Research"
+        description="Bucharest Nanotechnology Lab - Nanomaterials & Research",
     ),
     # TURKEY
     LocationRegion.ISTANBUL: LocationLabConfig(
@@ -394,7 +406,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="istanbul.trade.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.SENSOR],
-        description="Istanbul Trade Lab - International Trade & Logistics"
+        description="Istanbul Trade Lab - International Trade & Logistics",
     ),
     # EGYPT
     LocationRegion.CAIRO: LocationLabConfig(
@@ -404,7 +416,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="cairo.archeology.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.ENVIRONMENTAL],
-        description="Cairo Archeology Lab - Archeological Research & Preservation"
+        description="Cairo Archeology Lab - Archeological Research & Preservation",
     ),
     # PALESTINE
     LocationRegion.JERUSALEM: LocationLabConfig(
@@ -414,7 +426,7 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
         source_api="jerusalem.heritage.lab",
         cycle_interval_minutes=30,
         data_types=[LabDataType.OBSERVATIONAL, LabDataType.ENVIRONMENTAL],
-        description="Jerusalem Heritage Lab - Cultural Heritage & Restoration"
+        description="Jerusalem Heritage Lab - Cultural Heritage & Restoration",
     ),
 }
 
@@ -423,33 +435,59 @@ LOCATION_LABS_CONFIG: Dict[LocationRegion, LocationLabConfig] = {
 # LOCATION LAB PROCESSOR
 # ============================================================================
 
+
 class LocationLabProcessor:
     """Processes data from a specific geographic laboratory"""
-    
+
     def __init__(self, config: LocationLabConfig) -> None:
         self.config: LocationLabConfig = config
         self.lab_id: str = f"loc-lab-{config.location.value}"
         self.execution_count: int = 0
         self.total_processing_time: float = 0.0
         self.last_execution: Optional[datetime] = None
-    
+
     async def process(self) -> LocationLabResult:
         """Process lab data cycle"""
         import time
-        from random import randint, random
-        
+
         start_time = time.time()
         collection_timestamp = datetime.utcnow().isoformat()
-        
-        # Simulate data collection
-        await asyncio.sleep(0.1)  # Simulate network/processing
-        
-        sample_count = randint(50, 500)
-        artifacts_generated = randint(1, 10)
-        data_quality_score = 0.75 + (0.2 * random())  # 0.75 - 0.95
-        
+
+        source_payload = await self._collect_source_payload()
         processing_time_ms = (time.time() - start_time) * 1000
-        
+
+        if source_payload.get("ok") is not True:
+            errors = source_payload.get("errors", ["source_collection_failed"])
+            result = LocationLabResult(
+                lab_id=self.lab_id,
+                location=self.config.location,
+                domain=self.config.domain,
+                data_type=self.config.data_types[0],
+                collection_timestamp=collection_timestamp,
+                processing_time_ms=processing_time_ms,
+                data_quality_score=0.0,
+                sample_count=0,
+                artifacts_generated=0,
+                errors=errors,
+                metadata={
+                    "country": self.config.country,
+                    "source_api": self.config.source_api,
+                    "data_types": [dt.value for dt in self.config.data_types],
+                    "real_signal": False,
+                },
+            )
+            self.execution_count += 1
+            self.total_processing_time += processing_time_ms
+            self.last_execution = datetime.utcnow()
+            logger.error(
+                f"❌ {self.config.location.value} lab source failed: {', '.join(errors)}"
+            )
+            return result
+
+        sample_count = int(source_payload["sample_count"])
+        artifacts_generated = int(source_payload["artifacts_generated"])
+        data_quality_score = float(source_payload["data_quality_score"])
+
         result = LocationLabResult(
             lab_id=self.lab_id,
             location=self.config.location,
@@ -461,35 +499,92 @@ class LocationLabProcessor:
             sample_count=sample_count,
             artifacts_generated=artifacts_generated,
             metadata={
-                'country': self.config.country,
-                'source_api': self.config.source_api,
-                'data_types': [dt.value for dt in self.config.data_types]
-            }
+                "country": self.config.country,
+                "source_api": self.config.source_api,
+                "data_types": [dt.value for dt in self.config.data_types],
+                "real_signal": True,
+            },
         )
-        
+
         self.execution_count += 1
         self.total_processing_time += processing_time_ms
         self.last_execution = datetime.utcnow()
-        
-        logger.info(f"✅ {self.config.location.value} lab processed: {sample_count} samples, "
-                   f"{artifacts_generated} artifacts, quality={data_quality_score:.2f}")
-        
+
+        logger.info(
+            f"✅ {self.config.location.value} lab processed: {sample_count} samples, "
+            f"{artifacts_generated} artifacts, quality={data_quality_score:.2f}"
+        )
+
         return result
-    
+
+    async def _collect_source_payload(self) -> Dict[str, Any]:
+        """Collect payload from configured source API without simulation."""
+
+        def _fetch() -> Dict[str, Any]:
+            source_url = self._resolve_source_url()
+            try:
+                req = Request(source_url, method="GET")
+                with urlopen(req, timeout=5.0) as resp:  # nosec B310
+                    body = resp.read().decode("utf-8")
+                    payload = json.loads(body)
+            except (URLError, TimeoutError, ValueError) as exc:
+                return {"ok": False, "errors": [f"source_fetch_failed:{exc}"]}
+
+            required = ("sample_count", "artifacts_generated", "data_quality_score")
+            missing = [key for key in required if key not in payload]
+            if missing:
+                return {
+                    "ok": False,
+                    "errors": [f"source_payload_missing:{','.join(missing)}"],
+                }
+
+            try:
+                sample_count = int(payload["sample_count"])
+                artifacts_generated = int(payload["artifacts_generated"])
+                data_quality_score = float(payload["data_quality_score"])
+            except (TypeError, ValueError):
+                return {"ok": False, "errors": ["source_payload_invalid_types"]}
+
+            if sample_count < 0 or artifacts_generated < 0:
+                return {"ok": False, "errors": ["source_payload_negative_values"]}
+
+            if data_quality_score < 0.0 or data_quality_score > 1.0:
+                return {"ok": False, "errors": ["source_payload_quality_out_of_range"]}
+
+            return {
+                "ok": True,
+                "sample_count": sample_count,
+                "artifacts_generated": artifacts_generated,
+                "data_quality_score": data_quality_score,
+            }
+
+        return await asyncio.to_thread(_fetch)
+
+    def _resolve_source_url(self) -> str:
+        """Resolve real source endpoint from template + lab source_api."""
+        template = os.getenv(
+            "LOCATION_LABS_SOURCE_URL_TEMPLATE",
+            "http://{source_api}/collect",
+        )
+        return template.format(source_api=self.config.source_api)
+
     def get_stats(self) -> Dict[str, Any]:
         """Get lab statistics"""
         avg_processing_time = (
-            self.total_processing_time / self.execution_count 
-            if self.execution_count > 0 else 0
+            self.total_processing_time / self.execution_count
+            if self.execution_count > 0
+            else 0
         )
         return {
-            'lab_id': self.lab_id,
-            'location': self.config.location.value,
-            'execution_count': self.execution_count,
-            'avg_processing_time_ms': avg_processing_time,
-            'last_execution': self.last_execution.isoformat() if self.last_execution else None,
-            'domain': self.config.domain.value,
-            'country': self.config.country
+            "lab_id": self.lab_id,
+            "location": self.config.location.value,
+            "execution_count": self.execution_count,
+            "avg_processing_time_ms": avg_processing_time,
+            "last_execution": self.last_execution.isoformat()
+            if self.last_execution
+            else None,
+            "domain": self.config.domain.value,
+            "country": self.config.country,
         }
 
 
@@ -497,62 +592,64 @@ class LocationLabProcessor:
 # LOCATION LABS ENGINE
 # ============================================================================
 
+
 class LocationLabsEngine:
     """Central engine managing all location-based laboratories"""
-    
+
     def __init__(self) -> None:
         self.labs: Dict[LocationRegion, LocationLabProcessor] = {}
         self.results_cache: Dict[LocationRegion, LocationLabResult] = {}
         self.initialized: bool = False
-    
+
     async def initialize(self) -> None:
         """Initialize all location labs"""
         logger.info("🌍 Initializing Location Labs Engine...")
-        
+
         for location, config in LOCATION_LABS_CONFIG.items():
             processor = LocationLabProcessor(config)
             self.labs[location] = processor
-        
+
         self.initialized = True
-        logger.info(f"✅ Location Labs Engine initialized - {len(self.labs)} labs active")
-    
+        logger.info(
+            f"✅ Location Labs Engine initialized - {len(self.labs)} labs active"
+        )
+
     async def process_lab(self, location: LocationRegion) -> LocationLabResult:
         """Process a single lab"""
         if location not in self.labs:
             raise ValueError(f"Location {location.value} not configured")
-        
+
         processor = self.labs[location]
         result = await processor.process()
         self.results_cache[location] = result
         return result
-    
+
     async def process_all_labs(self) -> List[LocationLabResult]:
         """Process all labs in parallel"""
-        tasks = [
-            self.process_lab(location) 
-            for location in self.labs.keys()
-        ]
+        tasks = [self.process_lab(location) for location in self.labs.keys()]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         # Filter out exceptions and cast to correct type
         valid_results: List[LocationLabResult] = [
-            cast(LocationLabResult, r) for r in results if not isinstance(r, BaseException)
+            cast(LocationLabResult, r)
+            for r in results
+            if not isinstance(r, BaseException)
         ]
         return valid_results
-    
+
     def get_lab_stats(self, location: LocationRegion) -> Optional[Dict[str, Any]]:
         """Get stats for a specific lab"""
         if location not in self.labs:
             return None
         return self.labs[location].get_stats()
-    
+
     def get_all_stats(self) -> List[Dict[str, Any]]:
         """Get stats for all labs"""
         return [lab.get_stats() for lab in self.labs.values()]
-    
+
     def get_last_result(self, location: LocationRegion) -> Optional[LocationLabResult]:
         """Get last result for a location"""
         return self.results_cache.get(location)
-    
+
     def get_engine_status(self) -> Dict[str, Any]:
         """Get overall engine status"""
         return {
@@ -561,9 +658,9 @@ class LocationLabsEngine:
             "labs_by_domain": self._count_by_domain(),
             "labs_by_country": self._count_by_country(),
             "cached_results": len(self.results_cache),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
-    
+
     def _count_by_domain(self) -> Dict[str, int]:
         """Count labs by domain"""
         counts: Dict[str, int] = {}
@@ -571,7 +668,7 @@ class LocationLabsEngine:
             domain = processor.config.domain.value
             counts[domain] = counts.get(domain, 0) + 1
         return counts
-    
+
     def _count_by_country(self) -> Dict[str, int]:
         """Count labs by country"""
         counts: Dict[str, int] = {}
@@ -612,13 +709,14 @@ __all__ = [
     "LOCATION_LABS_CONFIG",
     "get_unified_labs_status",
     "sync_with_laboratory_network",
-    "LABORATORIES_INTEGRATED"
+    "LABORATORIES_INTEGRATED",
 ]
 
 
 # ============================================================================
 # UNIFIED LABORATORY NETWORK INTEGRATION
 # ============================================================================
+
 
 async def get_unified_labs_status() -> Dict[str, Any]:
     """
@@ -629,22 +727,24 @@ async def get_unified_labs_status() -> Dict[str, Any]:
         "location_labs_engine": {},
         "laboratory_network": {},
         "unified_count": 0,
-        "integration_status": LABORATORIES_INTEGRATED
+        "integration_status": LABORATORIES_INTEGRATED,
     }
-    
+
     # Get LocationLabsEngine status
     engine = await get_location_labs_engine()
     result["location_labs_engine"] = engine.get_engine_status()
-    
+
     # Get LaboratoryNetwork status (if integrated)
     if LABORATORIES_INTEGRATED:
         try:
+            if get_laboratory_network is None:
+                raise RuntimeError("get_laboratory_network_not_available")
             network = get_laboratory_network()
             result["laboratory_network"] = network.get_network_stats()
             result["unified_count"] = result["location_labs_engine"]["total_labs"]
         except Exception as e:
             result["laboratory_network"] = {"error": str(e)}
-    
+
     return result
 
 
@@ -654,18 +754,20 @@ async def sync_with_laboratory_network() -> Dict[str, Any]:
     Returns mapping between engine regions and network labs.
     """
     if not LABORATORIES_INTEGRATED:
+        return {"synced": False, "reason": "LaboratoryNetwork not imported", "labs": []}
+
+    engine = await get_location_labs_engine()
+    if get_laboratory_network is None:
         return {
             "synced": False,
-            "reason": "LaboratoryNetwork not imported",
-            "labs": []
+            "reason": "get_laboratory_network_not_available",
+            "labs": [],
         }
-    
-    engine = await get_location_labs_engine()
     network = get_laboratory_network()
-    
+
     # Map engine regions to network labs
     mapping: List[Dict[str, Any]] = []
-    
+
     region_to_lab_prefix = {
         LocationRegion.ELBASAN: "Elbasan_AI",
         LocationRegion.TIRANA: "Tirana_Medical",
@@ -691,26 +793,28 @@ async def sync_with_laboratory_network() -> Dict[str, Any]:
         LocationRegion.CAIRO: "Cairo_Archeology",
         LocationRegion.JERUSALEM: "Jerusalem_Heritage",
     }
-    
+
     for region, lab_id in region_to_lab_prefix.items():
         engine_stats = engine.get_lab_stats(region)
         network_lab = network.get_lab_by_id(lab_id)
-        
-        mapping.append({
-            "region": region.value,
-            "lab_id": lab_id,
-            "engine_active": engine_stats is not None,
-            "network_lab": network_lab.to_dict() if network_lab else None,
-            "synced": engine_stats is not None and network_lab is not None
-        })
-    
+
+        mapping.append(
+            {
+                "region": region.value,
+                "lab_id": lab_id,
+                "engine_active": engine_stats is not None,
+                "network_lab": network_lab.to_dict() if network_lab else None,
+                "synced": engine_stats is not None and network_lab is not None,
+            }
+        )
+
     synced_count = sum(1 for m in mapping if m["synced"])
-    
+
     return {
         "synced": True,
         "total_mappings": len(mapping),
         "synced_labs": synced_count,
-        "labs": mapping
+        "labs": mapping,
     }
 
 
@@ -749,4 +853,3 @@ LABS_REFERENCE = """
 │ Jerusalem       │ Palestine         │ Cultural Heritage                    │
 └─────────────────┴───────────────────┴──────────────────────────────────────┘
 """
-
