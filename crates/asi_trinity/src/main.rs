@@ -98,10 +98,65 @@ fn derive_decision(cpu: f32, harmony: f32, anomaly_score: f32) -> (String, Strin
     ("stable".to_string(), "signals_stable".to_string())
 }
 
+fn derive_signal_quality(
+    alba_ok: bool,
+    albi_ok: bool,
+    jona_ok: bool,
+    asi_ok: bool,
+    cpu: Option<f32>,
+    harmony: Option<f32>,
+    anomaly_score: Option<f32>,
+) -> (bool, Vec<String>) {
+    let mut missing = Vec::new();
+
+    if !alba_ok {
+        missing.push("alba_unreachable".to_string());
+    }
+    if !albi_ok {
+        missing.push("albi_unreachable".to_string());
+    }
+    if !jona_ok {
+        missing.push("jona_unreachable".to_string());
+    }
+    if !asi_ok {
+        missing.push("asi_unreachable".to_string());
+    }
+    if cpu.is_none() {
+        missing.push("cpu_missing".to_string());
+    }
+    if harmony.is_none() {
+        missing.push("harmony_missing".to_string());
+    }
+    if anomaly_score.is_none() {
+        missing.push("anomaly_score_missing".to_string());
+    }
+
+    (missing.is_empty(), missing)
+}
+
 async fn publish_decision(client: &Client, ocean_url: &str, payload: &DecisionPayload) {
     let _ = client
         .post(format!("{ocean_url}/asi/signal"))
         .json(payload)
+        .timeout(Duration::from_millis(1200))
+        .send()
+        .await;
+}
+
+async fn publish_stigma_event(client: &Client, ocean_url: &str, payload: &DecisionPayload) {
+    let _ = client
+        .post(format!("{ocean_url}/fabric/stigma"))
+        .json(&serde_json::json!({
+            "source": "ASI",
+            "kind": payload.signal,
+            "level": 3,
+            "payload": {
+                "reason": payload.reason,
+                "harmony": payload.harmony,
+                "anomalies": payload.anomalies,
+            },
+            "timestamp": chrono::Utc::now().to_rfc3339(),
+        }))
         .timeout(Duration::from_millis(1200))
         .send()
         .await;
@@ -123,25 +178,47 @@ async fn run_orchestrator_loop(app_state: AppState, trinity_base_url: String, oc
 
         let cpu = asi
             .as_ref()
-            .and_then(|v| read_numeric(v, &["cpu", "cpu_load", "cpu_usage"]))
-            .unwrap_or(0.10);
+            .and_then(|v| read_numeric(v, &["cpu", "cpu_load", "cpu_usage"]));
 
         let harmony = jona
             .as_ref()
-            .and_then(|v| read_numeric(v, &["harmony", "harmony_score", "score"]))
-            .unwrap_or(90.0);
+            .and_then(|v| read_numeric(v, &["harmony", "harmony_score", "score"]));
 
         let anomaly_score = albi
             .as_ref()
-            .and_then(|v| read_numeric(v, &["anomaly_score", "anomalies", "risk"]))
-            .unwrap_or(0.10);
+            .and_then(|v| read_numeric(v, &["anomaly_score", "anomalies", "risk"]));
 
         let anomalies = albi
             .as_ref()
             .map(|v| read_vec_string(v, "anomalies"))
             .unwrap_or_default();
 
-        let (decision, reason) = derive_decision(cpu, harmony, anomaly_score);
+        let (signals_ok, mut missing) = derive_signal_quality(
+            alba.is_some(),
+            albi.is_some(),
+            jona.is_some(),
+            asi.is_some(),
+            cpu,
+            harmony,
+            anomaly_score,
+        );
+
+        let (decision, reason) = if signals_ok {
+            derive_decision(
+                cpu.unwrap_or_default(),
+                harmony.unwrap_or_default(),
+                anomaly_score.unwrap_or_default(),
+            )
+        } else {
+            (
+                "degraded_no_signal".to_string(),
+                format!("missing:{}", missing.join(",")),
+            )
+        };
+
+        if !signals_ok {
+            missing.extend(anomalies.clone());
+        }
 
         let payload = DecisionPayload {
             signal: decision.clone(),
@@ -149,19 +226,20 @@ async fn run_orchestrator_loop(app_state: AppState, trinity_base_url: String, oc
             preferred_origin: "http://10.10.0.1:8000".to_string(),
             fallback_origin: "http://10.10.0.3:8000".to_string(),
             compute_origin: "http://10.10.0.2:8000".to_string(),
-            harmony,
-            anomalies,
+            harmony: harmony.unwrap_or(0.0),
+            anomalies: if signals_ok { anomalies } else { missing },
         };
         publish_decision(&client, &ocean_core_url, &payload).await;
+        publish_stigma_event(&client, &ocean_core_url, &payload).await;
 
         let mut write = app_state.snapshot.write().await;
         write.alba_ok = alba.is_some();
         write.albi_ok = albi.is_some();
         write.jona_ok = jona.is_some();
         write.asi_ok = asi.is_some();
-        write.cpu = cpu;
-        write.harmony = harmony;
-        write.anomaly_score = anomaly_score;
+        write.cpu = cpu.unwrap_or(0.0);
+        write.harmony = harmony.unwrap_or(0.0);
+        write.anomaly_score = anomaly_score.unwrap_or(0.0);
         write.decision = decision;
         write.decision_reason = reason;
 

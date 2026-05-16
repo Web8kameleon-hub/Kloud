@@ -469,8 +469,199 @@ async def send_telemetry_async(metrics):
 
 ---
 
-**File:** `agent_telemetry.py`  
-**Services:** Alba (5050), Albi (6060), Jona (7070)  
-**Status:** ✅ Production Ready  
-**Last Updated:** December 13, 2025
+## Stigma Bus Integration (NEW)
+
+### Overview
+
+Stigma Bus is an event-driven reactive system that connects all intelligence modules to Rust Core (Ocean). Every event from Trinity (ALBA/ALBI/JONA), MALI, BLERINA, LIAM, ALDA, KLAJDI, and ASI propagates through Stigma Bus and triggers:
+
+1. **State Updates** - FabricState reflects all module signals
+2. **Capability Routing** - Events map to agent capabilities
+3. **Autoscaling** - Agents scale based on capability demand
+4. **Firewall Intelligence** - Edge Gateway protects based on anomalies & threats
+
+### Architecture: Stigma Fabric
+
+```
+                    ┌─────────────────────────────────────┐
+                    │        TRINITY (ALBA/ALBI/JONA)     │
+                    │      + MALI + BLERINA + LIAM        │
+                    │      + ALDA + KLAJDI + ASI + AGENTS │
+                    └──────────────────┬──────────────────┘
+                                       │
+                                       │ Stigma Event
+                                       │ {source, kind, level, payload}
+                                       │
+                    ┌──────────────────▼──────────────────┐
+                    │     STIGMA BUS (broadcast::channel) │
+                    │    Kapacitet: 10,000 events/buffer  │
+                    └──────────────────┬──────────────────┘
+                                       │
+                     ┌─────────────────┼─────────────────┐
+                     │                 │                 │
+           ┌─────────▼──────────┐  │  │            │
+           │  DISPATCH_EVENT    │  │  │            │
+           │  (per-module       │  │  │            │
+           │   handlers)        │  │  │            │
+           └─────────┬──────────┘  │  │            │
+                     │             │  │            │
+        ┌────────────▼────────┐    │  │       ┌────▼────────────┐
+        │  FabricState Update │    │  │       │ CAPABILITY ROUTER │
+        │  - patterns         │    │  │       │ (event → agent)   │
+        │  - gaps             │    │  │       └────┬─────────────┘
+        │  - risks            │    │  │            │
+        │  - predictions      │    │  │       ┌────▼──────────────┐
+        │  - anomalies        │    │  │       │ AUTOSCALE TRIGGER │
+        │  - harmony          │    │  │       │ POST /agents/scale│
+        │  - asi_signal       │    │  │       └───────────────────┘
+        └────────────┬────────┘    │  │
+                     │             │  │
+        ┌────────────▼─────────────┼──┼───────────────────┐
+        │         GET /fabric/state        (refreshed 150ms)
+        └────────────┬─────────────────────────────────────┘
+                     │
+        ┌────────────▼─────────────────────────────────────┐
+        │  EDGE GATEWAY - Intelligent Routing + Firewall   │
+        │  - Reads FabricState                             │
+        │  - Routes based on asi_signal                    │
+        │  - Applies firewall rules based on anomalies     │
+        │  - Probes health (150ms loop, NOT fabric loop)   │
+        └─────────────────────────────────────────────────┘
+```
+
+### Module → Capability Mapping
+
+| Module  | Event      | Level | Capability          | Target  |
+| ------- | ---------- | ----- | ------------------- | ------- |
+| ALBA    | frame      | 3+    | network-monitoring  | 4 users |
+| ALBI    | anomaly    | 2+    | pattern-recognition | 6 users |
+| JONA    | harmony    | any   | insight-synthesis   | 3 users |
+| MALI    | prediction | 3+    | meta-analysis       | 5 users |
+| MALI    | pattern    | 2+    | pattern-analysis    | 4 users |
+| BLERINA | gap        | 4+    | gap-detection       | 5 users |
+| LIAM    | eigen      | 3+    | tensor-processing   | 5 users |
+| LIAM    | tensor     | 3+    | optimization        | 4 users |
+| ALDA    | batch      | 2+    | labor-orchestration | 6 users |
+| KLAJDI  | anomaly    | 2+    | investigation       | 4 users |
+| KLAJDI  | risk       | 2+    | risk-assessment     | 3 users |
+| ASI     | signal     | any   | node-supervision    | 3 users |
+
+### Sending Stigma Events
+
+All modules can POST to `/fabric/stigma`:
+
+```bash
+curl -X POST http://10.10.0.1:9000/fabric/stigma \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": "MALI",
+    "kind": "prediction",
+    "level": 3,
+    "payload": {
+      "predictions": ["cpu_rising", "memory_spike"],
+      "confidence": 0.95
+    }
+  }'
+```
+
+### Module-Specific Routes (Convenience)
+
+```bash
+# Trinity
+POST /trinity/event
+
+# MALI
+POST /mali/event
+
+# BLERINA
+POST /blerina/event
+
+# LIAM
+POST /liam/event
+
+# ALDA
+POST /alda/event
+
+# KLAJDI
+POST /klajdi/event
+
+# Agents
+POST /agents/submit
+```
+
+### Edge Gateway Firewall Intelligence
+
+Edge Gateway reads `FabricState` every 150ms and applies intelligent firewall rules:
+
+**Rule Categories:**
+
+1. **Trinity Anomalies** → Block suspicious patterns
+   - If `trinity_anomaly` in anomalies AND (large payload OR admin route)
+   - Action: BLOCK (403)
+
+2. **MALI Patterns** → Rate limit high-frequency requests
+   - If `mali_pattern` in anomalies AND (API request AND small payload)
+   - Action: RATE_LIMIT (429)
+
+3. **BLERINA Gaps** → Redirect sensitive routes
+   - If `gap:` in anomalies AND (config/credential route)
+   - Action: REDIRECT to fallback_origin
+
+4. **LIAM Tensor Spikes** → Block large payloads
+   - If `liam_eigen_spike` in anomalies AND (payload > 100KB)
+   - Action: BLOCK (403)
+
+5. **ALDA Compute Overload** → Reroute heavy compute
+   - If `asi_signal == "compute_overload"` AND (analyze/compute route)
+   - Action: REDIRECT to compute_origin
+
+6. **KLAJDI Risks** → Block unknown sources
+   - If `klajdi_risk` in anomalies AND (non-health AND empty body)
+   - Action: BLOCK (403)
+
+7. **Degraded Harmony** → Activate protection
+   - If `harmony < 40%` AND (large payload)
+   - Action: RATE_LIMIT (429)
+
+### Capability Routing Logic
+
+```rust
+// Example: MALI prediction event
+if let Some(cap_target) = capability_router(&event) {
+    // Returns: CapabilityTarget { 
+    //   capability: "meta-analysis", 
+    //   target_capacity: 5 
+    // }
+    trigger_autoscale("meta-analysis", 5).await;
+    
+    // Unified Agents System receives:
+    // POST /agents/scale
+    // { "capability": "meta-analysis", "target_capacity": 5 }
+}
+```
+
+### Autoscaling Flow
+
+```
+Stigma Event (level: 3+)
+    ↓
+capability_router() → (capability, target)
+    ↓
+trigger_autoscale(capability, target)
+    ↓
+POST /agents/scale {capability, target_capacity}
+    ↓
+Unified Agents System scales agent pools
+    ↓
+FabricState reflects new pool sizes
+    ↓
+Edge Gateway routes to newly scaled agents
+```
+
+---
+
+**File:** `agent_telemetry.py`, `ocean_core/src/main.rs`, `edge_gateway/src/main.rs`  
+**Services:** Ocean Core (9000), Edge Gateway (7000)  
+**Status:** ✅ Production Ready (Stigma Fabric Integration Complete)  
+**Last Updated:** May 16, 2026
 
