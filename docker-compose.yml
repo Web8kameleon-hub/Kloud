@@ -372,13 +372,6 @@ services:
       VIDEO_GENERATOR_URL: "http://kloud-video-generator:8029"
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
-      # Clerk Authentication
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-}
-      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: "/sign-in"
-      NEXT_PUBLIC_CLERK_SIGN_UP_URL: "/sign-up"
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: "/dashboard"
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: "/dashboard"
       # Stripe Payments
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
@@ -618,17 +611,6 @@ services:
       LINKEDIN_ORGANIZATION_URN: "${LINKEDIN_ORGANIZATION_URN:-urn:li:organization:111866162}"
       LINKEDIN_PERSON_URN: "${LINKEDIN_PERSON_URN:-urn:li:person:5KOBp94BOT}"
       SITE_URL: "${SITE_URL:-https://kloud.com}"
-      # Twitter/X Integration
-      TWITTER_API_KEY: "${TWITTER_API_KEY}"
-      TWITTER_API_SECRET: "${TWITTER_API_SECRET}"
-      TWITTER_ACCESS_TOKEN: "${TWITTER_ACCESS_TOKEN}"
-      TWITTER_ACCESS_SECRET: "${TWITTER_ACCESS_SECRET}"
-      # Reddit Integration
-      REDDIT_CLIENT_ID: "${REDDIT_CLIENT_ID}"
-      REDDIT_CLIENT_SECRET: "${REDDIT_CLIENT_SECRET}"
-      REDDIT_USERNAME: "${REDDIT_USERNAME}"
-      REDDIT_PASSWORD: "${REDDIT_PASSWORD}"
-      REDDIT_SUBREDDIT: "${REDDIT_SUBREDDIT:-kloud}"
     ports:
       - "8006:8006"
     volumes:
@@ -965,8 +947,8 @@ services:
     environment:
       PYTHONUNBUFFERED: "1"
       USER_MANAGEMENT_PORT: "8070"
-      CLERK_WEBHOOK_SECRET: "${CLERK_WEBHOOK_SECRET}"
-      CLERK_SECRET_KEY: "${CLERK_SECRET_KEY}"
+      CLERK_WEBHOOK_SECRET: "${CLERK_WEBHOOK_SECRET:-}"
+      CLERK_SECRET_KEY: "${CLERK_SECRET_KEY:-}"
     ports:
       - "8070:8070"
     healthcheck:
