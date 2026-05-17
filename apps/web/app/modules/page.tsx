@@ -51,7 +51,7 @@ const publicModules = [
     name: 'Sovereign Edge Operations',
     description: 'Multi-PoP routing, DNS policy orchestration, and controlled failover drills',
     icon: Cloud,
-    category: 'Services',
+    category: 'Control Surfaces',
     href: '/status',
     accent: 'slate'
   },
@@ -60,7 +60,7 @@ const publicModules = [
     name: 'Security and Compliance',
     description: 'Live posture telemetry, event integrity, and trust-layer operations',
     icon: Shield,
-    category: 'Services',
+    category: 'Control Surfaces',
     href: '/security',
     accent: 'slate'
   },
@@ -205,7 +205,7 @@ const publicModules = [
     name: 'DNS & Hosting Control',
     description: 'DNS zones, hosting origins, SSL/TLS, and edge policies in one dashboard',
     icon: Cloud,
-    category: 'Networking',
+    category: 'Control Surfaces',
     href: '/modules/dns-hosting-control',
     accent: 'slate'
   },
@@ -214,7 +214,7 @@ const publicModules = [
     name: 'MyMirror Now',
     description: 'Real-time client admin portal with live metrics & data sources',
     icon: Layout,
-    category: 'Admin',
+    category: 'Control Surfaces',
     href: '/modules/mymirror-now',
     accent: 'slate'
   },
@@ -223,8 +223,17 @@ const publicModules = [
     name: 'NodeDB Control Surface',
     description: 'Live bootstrap, sync loop, STIGMA behavioral trace (BTI), and NDB deviation score (DAS) for sovereign fabric',
     icon: Command,
-    category: 'Admin',
+    category: 'Control Surfaces',
     href: '/modules/nodedb-control-surface',
+    accent: 'slate'
+  },
+  {
+    id: 'kloud-control-surface',
+    name: 'Kloud Control Surface',
+    description: 'Live sovereign fabric telemetry with NDB/STIGMA posture, audit events, and local state visibility',
+    icon: Activity,
+    category: 'Control Surfaces',
+    href: '/modules/control-surface',
     accent: 'slate'
   },
   {

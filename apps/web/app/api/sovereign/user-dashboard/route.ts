@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -40,6 +40,22 @@ type LocalStatePayload = {
   state?: Record<string, string>;
 };
 
+function toCsv(events: SecurityEvent[]): string {
+  const header = ["timestamp_ms", "endpoint", "action", "stigma_level", "ndb_score", "outcome"];
+  const rows = events.map((event) => [
+    String(event.timestamp_ms),
+    event.endpoint,
+    event.action,
+    String(event.stigma_level),
+    String(event.ndb_score),
+    event.outcome,
+  ]);
+
+  return [header, ...rows]
+    .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(","))
+    .join("\n");
+}
+
 function decodeBase64Json(input: string): Record<string, unknown> | null {
   try {
     const raw = Buffer.from(input, "base64").toString("utf-8");
@@ -50,7 +66,8 @@ function decodeBase64Json(input: string): Record<string, unknown> | null {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const format = request.nextUrl.searchParams.get("format")?.toLowerCase();
   const base =
     process.env.KLOUD_PUBLIC_STATUS_BASE ||
     process.env.NEXT_PUBLIC_KLOUD_STATUS_BASE ||
@@ -88,6 +105,16 @@ export async function GET() {
     raw: value,
     decoded: decodeBase64Json(value),
   }));
+
+  if (format === "csv") {
+    return new NextResponse(toCsv(events), {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": 'attachment; filename="kloud-sovereign-events.csv"',
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+      },
+    });
+  }
 
   return NextResponse.json({
     success: true,

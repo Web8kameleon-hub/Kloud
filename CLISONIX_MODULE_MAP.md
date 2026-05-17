@@ -1,4 +1,5 @@
 <!-- cspell:words KLOUD Kloud jona clx Biosignal JONA Zürich -->
+<!-- markdownlint-disable MD012 -->
 
 # KLOUD MODULE MAP
 
@@ -16,20 +17,32 @@ Kloud is a European AI platform focused on modular reasoning engines, distribute
 
 ### Core Services
 
-| Module | Route |
-| ------ | ----- |
-| ocean | /api/ocean |
-| chat | /api/chat |
+| Module  | Route        |
+| ------- | ------------ |
+| ocean   | /api/ocean   |
+| chat    | /api/chat    |
 | trinity | /api/trinity |
-| zurich | /api/zurich |
+| zurich  | /api/zurich  |
 
 ### Specialized Modules
 
-| Module | Route |
-| ------ | ----- |
-| alba | /api/alba |
-| albi | /api/albi |
-| jona | /api/jona |
+| Module | Route     |
+| ------ | --------- |
+| alba   | /api/alba |
+| albi   | /api/albi |
+| jona   | /api/jona |
+
+### Operational Surfaces
+
+| Module                    | Route                           |
+| ------------------------- | ------------------------------- |
+| kloud-control-surface     | /user/dashboard                 |
+| dns-hosting-control       | /modules/dns-hosting-control    |
+| sovereign-edge-operations | /status                         |
+| trust-compliance          | /security                       |
+| mymirror-now              | /modules/mymirror-now           |
+| nodedb-control-surface    | /modules/nodedb-control-surface |
+| control-surface-hub       | /modules/control-surface        |
 
 ### Module Dependencies
 
@@ -71,14 +84,14 @@ Respond in the user's language.
 
 ## MODULE PERSONAS
 
-| Module | Role | Style |
-| ------ | ---- | ----- |
-| Ocean | Conversational AI | Friendly, helpful |
-| Zürich | Deep reasoning | Academic, thorough |
-| Trinity | Multi-perspective | Balanced debate |
-| ALBA | Audio/Video | Technical |
-| ALBI | Biosignal | Precise |
-| JONA | Neural | Scientific |
+| Module  | Role              | Style              |
+| ------- | ----------------- | ------------------ |
+| Ocean   | Conversational AI | Friendly, helpful  |
+| Zürich  | Deep reasoning    | Academic, thorough |
+| Trinity | Multi-perspective | Balanced debate    |
+| ALBA    | Audio/Video       | Technical          |
+| ALBI    | Biosignal         | Precise            |
+| JONA    | Neural            | Scientific         |
 
 ---
 
