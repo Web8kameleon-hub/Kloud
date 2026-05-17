@@ -4,6 +4,21 @@ Industrial Backend & Payment System
 
 ## Industrial-Grade FastAPI Backend with Real Business Integration
 
+---
+
+## 📚 Documentation Suite
+
+**Quick Links for Operations & Development:**
+
+- **🚀 [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md)** — 1-page quick reference for server deployments
+- **📋 [Hosting Execution Baseline](docs/HOSTING_EXECUTION_BASELINE.md)** — Single source of truth for orchestration, routing, and deployment flow
+- **🏗️ [Architecture Wiring Deep Analysis](ARCHITECTURE_WIRING_DEEP_ANALYSIS_KLOUD.md)** — Technical deep dive into service contracts, risk points, and failure modes
+- **📖 [Documentation Index](docs/README.md)** — Full index with decision table and governance rules
+
+**For new team members:** Start with [docs/README.md](docs/README.md) to understand which document to use for your role.
+
+---
+
 ## 📧 Contact & Support
 
 - **Email:** <contact@kloud.com>

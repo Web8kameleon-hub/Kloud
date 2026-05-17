@@ -1,0 +1,81 @@
+# Kloud Deployment Log
+
+Track all production deployments to /opt/kloud.
+
+## Format
+
+```
+DATE | TIME | SHA | SERVICES | STATUS | NOTES
+```
+
+## Entries
+
+| Date | Time | SHA | Services Restarted | Status | Notes |
+|------|------|-----|-------------------|--------|-------|
+| YYYY-MM-DD | HH:MM:SS | 8949e39e | ocean-core, asi | ✅ Success | Initial baseline deployment |
+| | | | | | |
+| | | | | | |
+| | | | | | |
+
+---
+
+## How To Use
+
+**After each deployment on server**, add a line:
+
+```bash
+# On server at /opt/kloud
+cat >> DEPLOYMENT_LOG.txt << EOF
+$(date '+%Y-%m-%d | %H:%M:%S') | $(git rev-parse --short HEAD) | service1,service2 | ✅ Success | Deployed via deploy.sh
+EOF
+```
+
+Or use the full log format:
+
+```bash
+# Log with more detail
+cat >> DEPLOYMENT_LOG.txt << EOF
+---
+Date: $(date '+%Y-%m-%d %H:%M:%S')
+SHA: $(git rev-parse --short HEAD)
+Branch: $(git rev-parse --abbrev-ref HEAD)
+Services Restarted: ocean-core, asi
+Status: ✅ Success
+Health Check:
+  - API: ✅
+  - Ocean-Core: ✅
+  - Frontend: ✅
+Notes: Deployed via deploy.sh with baseline procedures.
+EOF
+```
+
+---
+
+## Example Rollback Entry
+
+```
+2026-05-17 | 15:45:00 | 193e3b61 | ocean-core | ⚠️ Rollback | Reverted to 8949e39e due to health check failure
+```
+
+---
+
+## Monitoring & Alerting
+
+To view recent deployments:
+```bash
+tail -10 DEPLOYMENT_LOG.txt
+```
+
+To count deployments by service:
+```bash
+grep -o 'ocean-core\|asi\|api' DEPLOYMENT_LOG.txt | sort | uniq -c
+```
+
+To find failed deployments:
+```bash
+grep -E 'Failed|Rollback' DEPLOYMENT_LOG.txt
+```
+
+---
+
+**Reference:** [docs/DEPLOYMENT_CHECKLIST.md](../docs/DEPLOYMENT_CHECKLIST.md) | [docs/HOSTING_EXECUTION_BASELINE.md](../docs/HOSTING_EXECUTION_BASELINE.md)
