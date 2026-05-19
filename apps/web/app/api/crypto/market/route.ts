@@ -14,12 +14,13 @@ export async function GET() {
     const payload = await upstream.json()
     return NextResponse.json({ success: true, data: payload })
   } catch (error) {
-    console.error('[crypto/market] fallback engaged:', error)
-    const fallback = [
-      { symbol: 'BTC', price: 45000, change: 2.5 },
-      { symbol: 'ETH', price: 2800, change: -1.2 },
-      { symbol: 'ADA', price: 0.45, change: 5.1 },
-    ]
-    return NextResponse.json({ success: false, data: fallback }, { status: 200 })
+    console.error('[crypto/market] upstream error:', error)
+    return NextResponse.json(
+      {
+        error: 'Crypto service unavailable',
+        source: 'upstream',
+      },
+      { status: 502 },
+    )
   }
 }

@@ -21,6 +21,7 @@ HISTORY.mkdir(exist_ok=True)
 HQ_ENDPOINT = "http://127.0.0.1:7777/mesh/status"
 NODE_ID = os.getenv("KLOUD_NODE_ID", "NEURO-LOCAL")
 
+
 class NeuroTrigger:
     def __init__(self):
         self.triggers = self._load_existing()
@@ -28,7 +29,7 @@ class NeuroTrigger:
             "telemetry_service": "backend/mesh/telemetry_service.py",
             "signal_monitor": "backend/mesh/signal_monitor.py",
             "alert_service": "backend/mesh/alert_service.py",
-            "ddos_guard": "backend/mesh/security/ddos_guard.py"
+            "ddos_guard": "backend/mesh/security/ddos_guard.py",
         }
 
     def _load_existing(self):
@@ -41,13 +42,13 @@ class NeuroTrigger:
 
     def detect_event(self, category: str, message: str, details: dict = None):
         event = {
-            "id": f"TRG-{int(time.time()*1000)}",
+            "id": f"TRG-{int(time.time() * 1000)}",
             "node": NODE_ID,
             "category": category,
             "message": message,
             "details": details or {},
             "timestamp": time.time(),
-            "readable_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+            "readable_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         }
         self.triggers.append(event)
         self._save_local()
@@ -57,7 +58,9 @@ class NeuroTrigger:
     def _save_local(self):
         TRIGGERS_FILE.write_text(json.dumps(self.triggers, indent=2), encoding="utf-8")
         today = datetime.utcnow().strftime("%Y-%m-%d")
-        (HISTORY / f"triggers_{today}.json").write_text(json.dumps(self.triggers, indent=2), encoding="utf-8")
+        (HISTORY / f"triggers_{today}.json").write_text(
+            json.dumps(self.triggers, indent=2), encoding="utf-8"
+        )
 
     def push_to_hq(self, payload: dict):
         try:
@@ -85,9 +88,9 @@ class NeuroTrigger:
     def fallback_module(self, module_name: str):
         fallback_path = f"{Path(self.module_map.get(module_name)).stem}_backup.py"
         if not Path(fallback_path).exists():
-            return f"[NeuroTrigger] No fallback for {module_name}"
+            return f"[NeuroTrigger] Backup not available for {module_name}"
         subprocess.Popen(["python", fallback_path])
-        msg = f"[NeuroTrigger] 🧩 Activated fallback for {module_name}"
+        msg = f"[NeuroTrigger] Activated backup for {module_name}"
         print(msg)
         self.push_to_hq({"event": msg})
         return msg
@@ -108,14 +111,13 @@ class NeuroTrigger:
             "service": "neuro_trigger",
             "action": decision,
             "timestamp": datetime.utcnow().isoformat(),
-            "event": event
+            "event": event,
         }
         self.push_to_hq(payload)
         print(decision)
         return decision
 
+
 if __name__ == "__main__":
     t = NeuroTrigger()
     t.detect_event("error", "Telemetry module crashed", {"module": "telemetry_service"})
-
-

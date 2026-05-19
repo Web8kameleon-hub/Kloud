@@ -177,7 +177,7 @@ class InternalAPIClient:
         if fallback_fn:
             try:
                 data = await fallback_fn() if asyncio.iscoroutinefunction(fallback_fn) else fallback_fn()
-                return {'source': 'fallback', 'data': data}
+                return {'source': 'external', 'data': data}
             except Exception:
                 pass
         

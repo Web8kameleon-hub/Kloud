@@ -4896,13 +4896,13 @@ async def curiosity_ocean_chat(
 
             # Mode-specific variations
             if m == "wild":
-                return f"🌀 WILD MODE! {base_response}\n🔥 This opens up extraordinary dimensions of possibility!"
+                return base_response
             elif m == "chaos":
-                return f"🌌 CHAOS ACTIVATED! {base_response}\n⚡ Reality is bending around your question!"
+                return base_response
             elif m == "genius":
-                return f"🧠 GENIUS SYNTHESIS: {base_response}\n✨ Deep hypercognitive patterns emerging..."
+                return base_response
             else:
-                return f"🤔 {base_response}\n💭 Let's explore this further..."
+                return base_response
 
         # Generate response with minimal delay
         result = await generate_fast_response(question, mode)
@@ -4992,7 +4992,7 @@ async def generate_intelligent_response(
 
     except Exception as e:
         logger.error(f"Response generation error: {e}")
-        return f"Response synthesis completed with local fallback due to: {str(e)}"
+        return ""
 
 
 @app.post("/api/query")

@@ -442,22 +442,15 @@ Confidence: 0.82
         # Sort by quality score
         responses_sorted = sorted(responses, key=lambda r: r.quality_score, reverse=True)
         
-        # Build comprehensive answer from top responses (show 8-10 labs, not just 3!)
-        comprehensive_answer = f"""
-🌊 **Comprehensive Analysis from {len(responses)} Research Labs**
-
-Query: "{query}"
-
-"""
+        # Build comprehensive answer from top responses
+        comprehensive_answer = f"""Query: "{query\""""
         
-        # Show ALL labs - this is ULTRA mode!
         num_to_show = min(23, len(responses_sorted))
         for i, response in enumerate(responses_sorted[:num_to_show], 1):
-            comprehensive_answer += f"\n**{i}. {response.lab_name} ({response.domain})**\n"
-            comprehensive_answer += response.answer[:300] + "...\n"
+            comprehensive_answer += f"\n{i}. {response.lab_name}: {response.answer[:300]}"
         
         # Calculate average confidence
-        avg_confidence = sum(r.confidence for r in responses) / len(responses)
+        avg_confidence = sum(r.confidence for r in responses) / len(responses) if responses else 0.0
         
         # Extract all data sources
         all_sources = set()
@@ -486,14 +479,14 @@ Query: "{query}"
         }
     
     def _create_fallback_response(self, query: str) -> Dict[str, Any]:
-        """Create fallback response if no labs respond"""
+        """Create error response if no labs respond (no fallback)"""
         return {
             "query": query,
-            "comprehensive_answer": f"Query about '{query}' - no specific lab data available",
+            "error": "No lab responses available",
+            "errorCode": "NO_LAB_RESPONSE",
             "lab_responses": [],
             "average_confidence": 0.0,
             "total_labs_queried": 0,
-            "data_sources": ["fallback"],
             "timestamp": datetime.now().isoformat()
         }
 
