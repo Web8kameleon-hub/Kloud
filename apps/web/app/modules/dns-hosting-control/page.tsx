@@ -53,6 +53,7 @@ export default function DnsHostingControlPage() {
   const [lastSync, setLastSync] = useState('');
   const [zones, setZones] = useState<DNSZone[]>([]);
   const [origins, setOrigins] = useState<OriginItem[]>([]);
+  const [syncWarnings, setSyncWarnings] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
@@ -90,25 +91,41 @@ export default function DnsHostingControlPage() {
     try {
       setLoading(true);
       setError(null);
+      setSyncWarnings([]);
 
-      const zonesRes = await fetch('/api/dns/zones', { cache: 'no-store' });
+      const [zonesRes, originsRes] = await Promise.all([
+        fetch('/api/dns/zones', { cache: 'no-store' }),
+        fetch('/api/dns/origins', { cache: 'no-store' }),
+      ]);
+
+      const warnings: string[] = [];
+
       if (zonesRes.ok) {
         const zonesData = await zonesRes.json();
-        setZones(zonesData);
+        setZones(Array.isArray(zonesData) ? zonesData : []);
       } else {
-        throw new Error(`Failed to fetch zones: ${zonesRes.statusText}`);
+        setZones([]);
+        const zonesError = await zonesRes.json().catch(() => null) as { error?: string } | null;
+        warnings.push(zonesError?.error || `Zones unavailable (${zonesRes.status})`);
       }
 
-      const originsRes = await fetch('/api/dns/origins', { cache: 'no-store' });
       if (originsRes.ok) {
         const originsData = await originsRes.json();
-        setOrigins(originsData);
+        setOrigins(Array.isArray(originsData) ? originsData : []);
       } else {
-        throw new Error(`Failed to fetch origins: ${originsRes.statusText}`);
+        setOrigins([]);
+        const originsError = await originsRes.json().catch(() => null) as { error?: string } | null;
+        warnings.push(originsError?.error || `Origins unavailable (${originsRes.status})`);
+      }
+
+      if (warnings.length > 0) {
+        setSyncWarnings(warnings);
       }
 
       setLastSync(new Date().toLocaleString());
     } catch (err) {
+      setZones([]);
+      setOrigins([]);
       setError(err instanceof Error ? err.message : 'Failed to load DNS data');
       console.error('DNS data fetch error:', err);
     } finally {
@@ -315,6 +332,13 @@ export default function DnsHostingControlPage() {
               <div className="mt-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200 flex gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <span>{error}</span>
+              </div>
+            )}
+            {syncWarnings.length > 0 && (
+              <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-200">
+                {syncWarnings.map((warning, idx) => (
+                  <div key={`${warning}-${idx}`}>{warning}</div>
+                ))}
               </div>
             )}
             </div>
