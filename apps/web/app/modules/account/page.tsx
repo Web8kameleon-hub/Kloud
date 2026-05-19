@@ -7,7 +7,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { useTranslation } from '@/lib/i18n'
 
 interface User {
@@ -147,12 +146,11 @@ const PLANS = [
 export default function AccountPage() {
   // i18n translation hook
   const { t, language, setLanguage, isLoaded } = useTranslation()
-  const searchParams = useSearchParams()
   const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@kloud.com'
-  const isOnboarding = searchParams.get('onboarding') === '1'
   
   const [activeTab, setActiveTab] = useState<'overview' | 'billing' | 'subscription' | 'security' | 'settings'>('overview')
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
+  const [isOnboarding, setIsOnboarding] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -403,8 +401,14 @@ export default function AccountPage() {
   }, [])
 
   useEffect(() => {
-    const tab = searchParams.get('tab')
-    const billing = searchParams.get('billing')
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    const tab = params.get('tab')
+    const billing = params.get('billing')
+
     if (tab === 'overview' || tab === 'billing' || tab === 'subscription' || tab === 'security' || tab === 'settings') {
       setActiveTab(tab)
     }
@@ -413,7 +417,8 @@ export default function AccountPage() {
     } else if (billing === 'monthly' || billing === 'month') {
       setBillingInterval('month')
     }
-  }, [searchParams])
+    setIsOnboarding(params.get('onboarding') === '1')
+  }, [])
 
   useEffect(() => {
     if (!isOnboarding || isLoading || hasPromptedOnboardingUpgrade) {
