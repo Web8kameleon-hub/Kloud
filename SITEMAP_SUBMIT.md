@@ -174,8 +174,16 @@ Then select **kameleon.life** → Tools → Sitemaps → Submit `https://kameleo
 
 - ✅ **Sitemap Generated:** `https://kameleon.life/sitemap.xml`
 - ✅ **Last Updated:** 2026-05-19T07:31:55.914Z
+- ✅ **Sitemap Reachability Check:** HTTP 200 (verified on 2026-05-19)
+- ✅ **robots.txt Declaration:** `Sitemap: https://kameleon.life/sitemap.xml` present
 - ⏳ **Google Submission:** Pending (manual or API submission required)
 - ⏳ **Bing Submission:** Pending (manual or API submission required)
+
+## Important Update (Search Engine Ping)
+
+- Google legacy ping endpoint (`/ping?sitemap=...`) is deprecated and returns 404.
+- Bing legacy ping endpoint (`/ping?sitemap=...`) returns 410 Gone.
+- Correct method: submit via Google Search Console and Bing Webmaster Tools.
 
 ## Next Steps
 
