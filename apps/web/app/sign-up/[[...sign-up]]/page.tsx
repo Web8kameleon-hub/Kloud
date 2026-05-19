@@ -25,6 +25,7 @@ type VerifyResult = {
 
 export default function SignUpPage() {
   const router = useRouter();
+  const onboardingTarget = "/modules/account?tab=subscription&onboarding=1";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -95,7 +96,7 @@ export default function SignUpPage() {
         throw new Error(data.error || "OTP verification failed");
       }
       persistSession(data.token, data.user);
-      router.push("/modules/account");
+      router.push(onboardingTarget);
     } catch (err) {
       setError(err instanceof Error ? err.message : "OTP verification failed");
     } finally {

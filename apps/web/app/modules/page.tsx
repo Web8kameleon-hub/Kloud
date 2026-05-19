@@ -294,15 +294,56 @@ const accentColors = {
 export default function DashboardPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showInternal, setShowInternal] = useState(false);
 
-  const categories = ['all', ...new Set(publicModules.map(m => m.category))];
+  const clientFacingModules = publicModules.filter((module) => module.category !== 'Control Surfaces' && module.category !== 'Developer');
+  const operatorModules = publicModules.filter((module) => module.category === 'Control Surfaces' || module.category === 'Developer');
 
-  const filteredModules = publicModules.filter(m => {
+  const categories = ['all', ...new Set(clientFacingModules.map((m) => m.category))];
+
+  const filteredModules = clientFacingModules.filter(m => {
     const matchesCategory = activeCategory === 'all' || m.category === activeCategory;
     const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          m.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const filteredInternalModules = operatorModules.filter((m) => {
+    const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         m.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
+
+  const featuredOffers = [
+    {
+      title: 'AI Workspace',
+      description: 'One place for chat, memory, workflows, research, and AI-assisted execution.',
+      href: '/modules/openmind',
+      icon: Brain,
+      badge: 'Primary'
+    },
+    {
+      title: 'DNS & Hosting',
+      description: 'Clear control for domains, hosting, SSL/TLS, and edge policy without technical overhead.',
+      href: '/modules/dns-hosting-control',
+      icon: Cloud,
+      badge: 'Growth'
+    },
+    {
+      title: 'Data & Reports',
+      description: 'Dashboards, exports, and reporting flows that turn platform data into business visibility.',
+      href: '/modules/my-data-dashboard',
+      icon: BarChart3,
+      badge: 'Operational'
+    },
+    {
+      title: 'Security & Monitoring',
+      description: 'Posture, alerts, health visibility, and stability controls for production operations.',
+      href: '/security',
+      icon: Shield,
+      badge: 'Premium'
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -387,12 +428,60 @@ export default function DashboardPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-2xl font-semibold tracking-tight mb-2">
-              {activeCategory === 'all' ? 'All Modules' : activeCategory}
+              {activeCategory === 'all' ? 'Client Products' : activeCategory}
             </h1>
             <p className="text-black text-sm">
               {filteredModules.length} {filteredModules.length === 1 ? 'module' : 'modules'} available
             </p>
+            <p className="mt-2 text-xs text-black/70 max-w-2xl">
+              Client-facing products are shown first. Internal operator surfaces are available below only when you expand them.
+            </p>
           </div>
+
+          {/* Featured Offers */}
+          <section className="mb-10 rounded-2xl border-2 border-black bg-gray-50 p-6 shadow-sm">
+            <div className="flex items-start justify-between gap-6 mb-6">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-black/60 mb-2">Featured Offers</p>
+                <h2 className="text-xl font-semibold tracking-tight">Four client-facing products, presented in priority order.</h2>
+                <p className="mt-2 text-sm text-black/70 max-w-2xl">
+                  This is the commercial front door: clear product names, clear value, and no internal operator language in the first view.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              {featuredOffers.map((offer) => {
+                const Icon = offer.icon;
+                return (
+                  <Link
+                    key={offer.title}
+                    href={offer.href}
+                    className="group rounded-xl border-2 border-black bg-white p-5 shadow-sm transition-all duration-200 hover:bg-gray-100 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-black" />
+                      </div>
+                      <span className="rounded-full border border-black px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-black/80">
+                        {offer.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="text-[15px] font-semibold mb-2 tracking-tight">{offer.title}</h3>
+                    <p className="text-sm text-black/80 leading-relaxed mb-5">
+                      {offer.description}
+                    </p>
+
+                    <div className="flex items-center gap-1 text-sm font-medium text-black">
+                      <span>Open product</span>
+                      <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
 
           {/* Modules Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -466,6 +555,92 @@ export default function DashboardPage() {
               </p>
             </div>
           )}
+
+          {/* Internal surfaces */}
+          <div className="mt-12 border-t border-slate-200 pt-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">Internal Operator Surfaces</h2>
+                <p className="text-black text-sm">
+                  Control planes, developer docs, and internal diagnostics.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowInternal((value) => !value)}
+                className="px-4 py-2 rounded-lg border-2 border-black bg-white text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                {showInternal ? 'Hide internal surfaces' : 'Show internal surfaces'}
+              </button>
+            </div>
+
+            {showInternal ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredInternalModules.map((module) => {
+                  const colors = accentColors[module.accent as keyof typeof accentColors];
+                  const Icon = module.icon;
+                  const isExternal = 'external' in module && module.external;
+
+                  const CardContent = (
+                    <>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={`w-10 h-10 rounded-lg ${colors.bg} flex items-center justify-center`}>
+                          <Icon className={`w-5 h-5 ${colors.icon}`} />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {isExternal && <ExternalLink className="w-3 h-3 text-slate-500" />}
+                          <span className={`px-2 py-1 rounded text-[11px] font-medium ${colors.badge}`}>
+                            {module.category}
+                          </span>
+                        </div>
+                      </div>
+
+                      <h3 className="text-[15px] font-medium mb-1.5 group-hover:text-white transition-colors">
+                        {module.name}
+                      </h3>
+                      <p className="text-sm text-black leading-relaxed mb-4">
+                        {module.description}
+                      </p>
+
+                      <div className={`flex items-center gap-1 text-sm font-medium ${colors.text} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                        <span>{isExternal ? 'Open in new tab' : 'Open'}</span>
+                        {isExternal ? <ExternalLink className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                      </div>
+                    </>
+                  );
+
+                  return isExternal ? (
+                    <a
+                      key={module.id}
+                      href={module.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative p-5 rounded-lg border-2 border-dashed border-black bg-white/70 shadow-sm ${colors.border} ${colors.borderHover} transition-all duration-200 hover:bg-gray-100`}
+                    >
+                      {CardContent}
+                    </a>
+                  ) : (
+                    <Link
+                      key={module.id}
+                      href={module.href}
+                      className={`group relative p-5 rounded-lg border-2 border-dashed border-black bg-white/70 shadow-sm ${colors.border} ${colors.borderHover} transition-all duration-200 hover:bg-gray-100`}
+                    >
+                      {CardContent}
+                    </Link>
+                  );
+                })}
+
+                {filteredInternalModules.length === 0 && (
+                  <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white p-6 text-sm text-black/70">
+                    No internal surfaces match your search.
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-black/70">
+                Hidden by default. Keep this area for operators, not for the buyer demo.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer */}

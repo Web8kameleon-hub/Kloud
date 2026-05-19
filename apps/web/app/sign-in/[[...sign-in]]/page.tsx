@@ -25,6 +25,7 @@ type VerifyResult = {
 
 export default function SignInPage() {
   const router = useRouter();
+  const onboardingTarget = "/modules/account?tab=subscription&onboarding=1";
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [channel, setChannel] = useState<"sms" | "email">("sms");
@@ -86,7 +87,7 @@ export default function SignInPage() {
         throw new Error(data.error || "OTP verification failed");
       }
       persistSession(data.token, data.user);
-      router.push("/modules/account");
+      router.push(onboardingTarget);
     } catch (err) {
       setError(err instanceof Error ? err.message : "OTP verification failed");
     } finally {
@@ -101,7 +102,7 @@ export default function SignInPage() {
       const res = await fetch("/api/internal-auth/google/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnUrl: "/modules/account" }),
+        body: JSON.stringify({ returnUrl: onboardingTarget }),
       });
       const data = (await res.json()) as { success?: boolean; authUrl?: string; error?: string };
       if (!res.ok || !data.success || !data.authUrl) {

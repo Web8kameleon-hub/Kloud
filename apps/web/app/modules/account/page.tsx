@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useTranslation } from '@/lib/i18n'
 
 interface User {
@@ -146,12 +147,16 @@ const PLANS = [
 export default function AccountPage() {
   // i18n translation hook
   const { t, language, setLanguage, isLoaded } = useTranslation()
+  const searchParams = useSearchParams()
   const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@kloud.com'
+  const isOnboarding = searchParams.get('onboarding') === '1'
   
   const [activeTab, setActiveTab] = useState<'overview' | 'billing' | 'subscription' | 'security' | 'settings'>('overview')
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
   const [isLoading, setIsLoading] = useState(true)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [hasPromptedOnboardingUpgrade, setHasPromptedOnboardingUpgrade] = useState(false)
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
   const [isSavingProfile, setIsSavingProfile] = useState(false)
   const [profileSaveMessage, setProfileSaveMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
@@ -206,6 +211,21 @@ export default function AccountPage() {
     }
   }
 
+  const openUpgradeModal = (planId?: string) => {
+    if (planId) {
+      setSelectedPlan(planId)
+    }
+    setShowUpgradeModal(true)
+  }
+
+  const getPlanPriceId = (planId: 'starter' | 'professional' | 'enterprise') => {
+    return `${planId}_${billingInterval === 'year' ? 'yearly' : 'monthly'}`
+  }
+
+  const getDisplayedPrice = (monthlyPrice: number) => {
+    return billingInterval === 'year' ? monthlyPrice * 10 : monthlyPrice
+  }
+
   // Save profile handler
   const handleSaveProfile = async () => {
     if (!user) return
@@ -214,9 +234,13 @@ export default function AccountPage() {
     setProfileSaveMessage(null)
     
     try {
+      const token = getAuthToken()
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           name: user.name,
           email: user.email,
@@ -361,7 +385,10 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('/api/user/profile')
+        const token = getAuthToken()
+        const response = await fetch('/api/user/profile', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
         const result = await response.json()
         if (result.success && result.data) {
           setUser(result.data)
@@ -374,6 +401,30 @@ export default function AccountPage() {
     }
     fetchProfile()
   }, [])
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    const billing = searchParams.get('billing')
+    if (tab === 'overview' || tab === 'billing' || tab === 'subscription' || tab === 'security' || tab === 'settings') {
+      setActiveTab(tab)
+    }
+    if (billing === 'yearly' || billing === 'year') {
+      setBillingInterval('year')
+    } else if (billing === 'monthly' || billing === 'month') {
+      setBillingInterval('month')
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    if (!isOnboarding || isLoading || hasPromptedOnboardingUpgrade) {
+      return
+    }
+    if (!subscription) {
+      setActiveTab('subscription')
+      openUpgradeModal('professional')
+    }
+    setHasPromptedOnboardingUpgrade(true)
+  }, [isOnboarding, isLoading, hasPromptedOnboardingUpgrade, subscription])
 
   // Fetch billing data from Stripe APIs
   useEffect(() => {
@@ -623,6 +674,14 @@ export default function AccountPage() {
         {/* Subscription Tab */}
         {activeTab === 'subscription' && (
           <div className="space-y-6">
+            {isOnboarding && !subscription && (
+              <div className="rounded-2xl border border-cyan-400/40 bg-cyan-500/10 p-4">
+                <p className="text-sm text-cyan-100">
+                  Registration completed. Choose a plan to activate your workspace and unlock billing features.
+                </p>
+              </div>
+            )}
+
             {/* Current Subscription */}
             <div className="bg-white/5 rounded-2xl border border-white/10 p-6">
               <h3 className="text-lg font-semibold mb-4">{t('subscription.current')}</h3>
@@ -650,13 +709,16 @@ export default function AccountPage() {
                   </div>
                   <div className="flex gap-3 mt-6">
                     <button 
-                      onClick={() => setShowUpgradeModal(true)}
+                      onClick={() => openUpgradeModal()}
                       className="px-6 py-2 bg-violet-600 hover:bg-violet-500 rounded-lg font-medium transition-colors"
                     >
                       🚀 {t('subscription.upgrade')}
                     </button>
-                    <button className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
-                      {t('subscription.switchToYearly')}
+                    <button
+                      onClick={() => setBillingInterval((current) => current === 'month' ? 'year' : 'month')}
+                      className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors"
+                    >
+                      {billingInterval === 'month' ? t('subscription.switchToYearly') : t('subscription.perMonth')}
                     </button>
                     <button className="px-6 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg font-medium transition-colors">
                       {t('subscription.cancel')}
@@ -667,7 +729,7 @@ export default function AccountPage() {
                 <div className="text-center py-8">
                   <div className="text-gray-400 mb-4">{t('subscription.noActive')}</div>
                   <button 
-                    onClick={() => setShowUpgradeModal(true)}
+                    onClick={() => openUpgradeModal()}
                     className="px-6 py-3 bg-violet-600 hover:bg-violet-500 rounded-lg font-medium transition-colors"
                   >
                     🚀 {t('overview.choosePlan')}
@@ -679,6 +741,20 @@ export default function AccountPage() {
             {/* Available Plans */}
             <div>
               <h3 className="text-lg font-semibold mb-4">{t('subscription.availablePlans')}</h3>
+              <div className="mb-4 inline-flex rounded-lg border border-white/10 bg-white/5 p-1">
+                <button
+                  onClick={() => setBillingInterval('month')}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${billingInterval === 'month' ? 'bg-violet-600 text-white' : 'text-gray-300 hover:text-white'}`}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setBillingInterval('year')}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${billingInterval === 'year' ? 'bg-violet-600 text-white' : 'text-gray-300 hover:text-white'}`}
+                >
+                  Yearly
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {PLANS.map(plan => (
                   <div 
@@ -696,8 +772,8 @@ export default function AccountPage() {
                     )}
                     <div className="text-lg font-bold mb-2">{plan.name}</div>
                     <div className="text-3xl font-bold mb-4">
-                      €{plan.price}
-                      <span className="text-sm font-normal text-gray-400">{t('subscription.perMonth')}</span>
+                      €{getDisplayedPrice(plan.price)}
+                      <span className="text-sm font-normal text-gray-400">{billingInterval === 'year' ? t('subscription.perYear') : t('subscription.perMonth')}</span>
                     </div>
                     <ul className="space-y-2 mb-6">
                       {plan.features.slice(0, 5).map((feature, i) => (
@@ -717,8 +793,7 @@ export default function AccountPage() {
                     ) : (
                       <button 
                         onClick={() => {
-                          setSelectedPlan(plan.id)
-                          setShowUpgradeModal(true)
+                          openUpgradeModal(plan.id)
                         }}
                         className="w-full py-2 bg-violet-600 hover:bg-violet-500 rounded-lg font-medium transition-colors"
                       >
@@ -1267,13 +1342,13 @@ export default function AccountPage() {
             <div className="p-8">
               <div className="grid md:grid-cols-3 gap-6">
                 {/* Starter */}
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-violet-500/50 transition-all">
+                <div className={`bg-white/5 rounded-xl p-6 border transition-all ${selectedPlan === 'starter' ? 'border-violet-500/80' : 'border-white/10 hover:border-violet-500/50'}`}>
                   <div className="text-center mb-6">
                     <span className="text-3xl">🚀</span>
                     <h3 className="text-xl font-bold mt-2">Starter</h3>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold">€29</span>
-                      <span className="text-gray-400">{t('subscription.perMonth')}</span>
+                      <span className="text-4xl font-bold">€{getDisplayedPrice(29)}</span>
+                      <span className="text-gray-400">{billingInterval === 'year' ? t('subscription.perYear') : t('subscription.perMonth')}</span>
                     </div>
                   </div>
                   <ul className="space-y-3 mb-6 text-sm">
@@ -1283,13 +1358,17 @@ export default function AccountPage() {
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> 5 GB Storage</li>
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Email Support</li>
                   </ul>
-                  <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors">
-                    {t('subscription.currentPlan')}
+                  <button
+                    onClick={() => handleUpgrade(getPlanPriceId('starter'), `Starter ${billingInterval === 'year' ? 'Yearly' : 'Monthly'}`)}
+                    disabled={isCheckoutLoading}
+                    className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isCheckoutLoading ? t('upgrade.processing') : 'Choose Starter'}
                   </button>
                 </div>
 
                 {/* Professional - Recommended */}
-                <div className="bg-gradient-to-b from-violet-600/20 to-purple-600/20 rounded-xl p-6 border-2 border-violet-500 relative">
+                <div className={`bg-gradient-to-b from-violet-600/20 to-purple-600/20 rounded-xl p-6 border-2 relative ${selectedPlan === 'professional' ? 'border-violet-400 shadow-lg shadow-violet-500/30' : 'border-violet-500'}`}>
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full text-xs font-bold">
                     RECOMMENDED
                   </div>
@@ -1297,8 +1376,8 @@ export default function AccountPage() {
                     <span className="text-3xl">⚡</span>
                     <h3 className="text-xl font-bold mt-2">Professional</h3>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold">€99</span>
-                      <span className="text-gray-400">{t('subscription.perMonth')}</span>
+                      <span className="text-4xl font-bold">€{getDisplayedPrice(99)}</span>
+                      <span className="text-gray-400">{billingInterval === 'year' ? t('subscription.perYear') : t('subscription.perMonth')}</span>
                     </div>
                   </div>
                   <ul className="space-y-3 mb-6 text-sm">
@@ -1310,7 +1389,7 @@ export default function AccountPage() {
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Advanced Analytics</li>
                   </ul>
                   <button 
-                    onClick={() => handleUpgrade('professional_monthly', 'Professional')}
+                    onClick={() => handleUpgrade(getPlanPriceId('professional'), `Professional ${billingInterval === 'year' ? 'Yearly' : 'Monthly'}`)}
                     disabled={isCheckoutLoading}
                     className="w-full py-3 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 rounded-lg font-bold transition-all shadow-lg shadow-violet-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -1319,13 +1398,13 @@ export default function AccountPage() {
                 </div>
 
                 {/* Enterprise */}
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-orange-500/50 transition-all">
+                <div className={`bg-white/5 rounded-xl p-6 border transition-all ${selectedPlan === 'enterprise' ? 'border-orange-400/80' : 'border-white/10 hover:border-orange-500/50'}`}>
                   <div className="text-center mb-6">
                     <span className="text-3xl">🏢</span>
                     <h3 className="text-xl font-bold mt-2">Enterprise</h3>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold">€299</span>
-                      <span className="text-gray-400">{t('subscription.perMonth')}</span>
+                      <span className="text-4xl font-bold">€{getDisplayedPrice(299)}</span>
+                      <span className="text-gray-400">{billingInterval === 'year' ? t('subscription.perYear') : t('subscription.perMonth')}</span>
                     </div>
                   </div>
                   <ul className="space-y-3 mb-6 text-sm">
@@ -1337,9 +1416,13 @@ export default function AccountPage() {
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Dedicated Manager</li>
                     <li className="flex items-center gap-2"><span className="text-green-400">✓</span> Custom Integrations</li>
                   </ul>
-                  <a href="mailto:enterprise@kloud.com" className="block w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors text-center">
-                    {t('upgrade.contactSales')}
-                  </a>
+                  <button
+                    onClick={() => handleUpgrade(getPlanPriceId('enterprise'), `Enterprise ${billingInterval === 'year' ? 'Yearly' : 'Monthly'}`)}
+                    disabled={isCheckoutLoading}
+                    className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isCheckoutLoading ? t('upgrade.processing') : 'Choose Enterprise'}
+                  </button>
                 </div>
               </div>
 

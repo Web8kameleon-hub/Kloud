@@ -270,7 +270,7 @@ async def bootstrap() -> Dict[str, Any]:
     ctx = state.context or {}
 
     try:
-        await monitor_real_services(state.context)
+        await monitor_real_services(ctx)
     except Exception as exc:
         # Bootstrap should still succeed and expose diagnostics if the sync pass fails.
         ctx = {**ctx, "bootstrap_monitor_error": str(exc)}
