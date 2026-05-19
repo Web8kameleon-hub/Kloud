@@ -32,27 +32,33 @@ AI agents (AGIEM, ASI, Blerina, SAAS) can now send telemetry data to the Alba/Al
 ## Components
 
 ### 1. Alba (Port 5050) - Data Collection
+
 **Endpoint:** `POST /api/telemetry/ingest`
 
 Collects raw telemetry data from agents:
+
 - Operation timing
 - Token usage
 - Success/failure status
 - Metadata and context
 
 ### 2. Albi (Port 6060) - Analytics
+
 **Endpoint:** `POST /api/analytics/agent`
 
 Processes agent analytics:
+
 - Performance metrics
 - Token consumption analysis
 - Duration tracking
 - Success rate calculations
 
 ### 3. Jona (Port 7070) - Coordination
+
 **Endpoint:** `POST /api/coordination/event`
 
 Coordinates agent events:
+
 - Operation status tracking
 - Error logging
 - Multi-agent orchestration
@@ -253,6 +259,7 @@ class AgentMetrics:
 ## API Endpoints
 
 ### Alba Telemetry Endpoint
+
 ```http
 POST http://localhost:5050/api/telemetry/ingest
 Content-Type: application/json
@@ -270,6 +277,7 @@ Content-Type: application/json
 ```
 
 ### Albi Analytics Endpoint
+
 ```http
 POST http://localhost:6060/api/analytics/agent
 Content-Type: application/json
@@ -288,6 +296,7 @@ Content-Type: application/json
 ```
 
 ### Jona Coordination Endpoint
+
 ```http
 POST http://localhost:7070/api/coordination/event
 Content-Type: application/json
@@ -304,18 +313,21 @@ Content-Type: application/json
 ## Viewing Telemetry Data
 
 ### Alba - View Collected Data
+
 ```bash
 curl http://localhost:5050/data?limit=10
 curl http://localhost:5050/metrics
 ```
 
 ### Albi - View Analytics
+
 ```bash
 curl http://localhost:6060/insights?limit=10
 curl http://localhost:6060/anomalies?limit=10
 ```
 
 ### Jona - View Coordination Log
+
 ```bash
 curl http://localhost:7070/queue
 curl http://localhost:7070/metrics
@@ -324,6 +336,7 @@ curl http://localhost:7070/metrics
 ## Monitoring & Observability
 
 All telemetry is automatically traced with OpenTelemetry:
+
 - **Tempo** (port 3200): Distributed tracing
 - **Loki** (port 3100): Log aggregation
 - **Prometheus** (port 9090): Metrics collection
@@ -332,7 +345,8 @@ All telemetry is automatically traced with OpenTelemetry:
 ### Grafana Dashboards
 
 View agent telemetry in Grafana:
-1. Open http://localhost:3001
+
+1. Open <http://localhost:3001>
 2. Navigate to "Agent Performance" dashboard
 3. Filter by agent name (AGIEM, ASI, Blerina)
 4. View metrics:
@@ -344,11 +358,13 @@ View agent telemetry in Grafana:
 ## Testing
 
 Test the integration:
+
 ```bash
 python agent_telemetry.py
 ```
 
 Expected output:
+
 ```
 🧪 Testing Agent Telemetry Integration
 
@@ -382,6 +398,7 @@ TELEMETRY_ENABLED=true
 ### Production URLs
 
 For Hetzner deployment (157.90.234.158):
+
 ```python
 router = TelemetryRouter(
     alba_url="http://157.90.234.158:5050",
@@ -395,6 +412,7 @@ router = TelemetryRouter(
 ### Telemetry not sending
 
 1. **Check services are running:**
+
    ```bash
    curl http://localhost:5050/health
    curl http://localhost:6060/health
@@ -402,11 +420,13 @@ router = TelemetryRouter(
    ```
 
 2. **Check network connectivity:**
+
    ```bash
    docker network inspect kloud-network
    ```
 
 3. **View service logs:**
+
    ```bash
    docker logs kloud-alba --tail 50
    docker logs kloud-albi --tail 50
@@ -416,6 +436,7 @@ router = TelemetryRouter(
 ### Partial failures (1/3 or 2/3 success)
 
 This is normal if a service is temporarily unavailable. Telemetry will:
+
 - Log warnings for failed endpoints
 - Continue sending to available endpoints
 - Not block agent operations
@@ -423,6 +444,7 @@ This is normal if a service is temporarily unavailable. Telemetry will:
 ### High latency
 
 If telemetry adds noticeable latency:
+
 1. Increase timeout (default: 5s)
 2. Send telemetry asynchronously
 3. Batch telemetry data
@@ -664,4 +686,3 @@ Edge Gateway routes to newly scaled agents
 **Services:** Ocean Core (9000), Edge Gateway (7000)  
 **Status:** ✅ Production Ready (Stigma Fabric Integration Complete)  
 **Last Updated:** May 16, 2026
-
