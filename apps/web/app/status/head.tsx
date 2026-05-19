@@ -1,6 +1,21 @@
 export default function Head() {
   const pageUrl = 'https://kameleon.life/status';
   const imageUrl = 'https://kameleon.life/og-image.png';
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Kloud Status and Uptime Monitoring Service',
+    serviceType: 'Public Status Monitoring and Incident Reporting',
+    provider: {
+      '@type': 'Organization',
+      name: 'Kameleon Life',
+      url: 'https://kameleon.life',
+    },
+    areaServed: 'Worldwide',
+    url: pageUrl,
+    description:
+      'Real-time uptime monitoring, incident communication, and service health transparency for Kloud infrastructure.',
+  };
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -24,8 +39,9 @@ export default function Head() {
       />
       <meta
         name="keywords"
-        content="kameleon life status,kameleon status page,api uptime monitor,ai platform status,incident history,service health"
+        content="kameleon life status,ai service status page,api uptime monitoring,real-time incident dashboard,service health monitoring,platform availability tracking"
       />
+      <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
       <link rel="canonical" href={pageUrl} />
 
       <meta property="og:type" content="website" />
@@ -48,6 +64,10 @@ export default function Head() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
     </>
   );
