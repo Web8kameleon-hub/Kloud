@@ -456,6 +456,8 @@ class NodeDBCore:
         state: StigmaState,
         metrics: Optional[Dict[str, Any]] = None,
         ndb_quality: Optional[NDBQuality] = None,
+        recovery_attempts: Optional[int] = None,
+        last_heartbeat: Optional[datetime] = None,
     ) -> NodeState:
         """
         Update node's stigma state and NDB quality.
@@ -492,10 +494,13 @@ class NodeDBCore:
                 metrics=metrics or current.metrics,
                 ndb_delta=ndb_delta,
                 tide_pressure=self.tide_pressure,
-                last_heartbeat=datetime.utcnow(),
+                last_heartbeat=last_heartbeat or datetime.utcnow(),
                 consecutive_failures=0
                 if state == StigmaState.ACTIVE
                 else current.consecutive_failures + 1,
+                recovery_attempts=recovery_attempts
+                if recovery_attempts is not None
+                else current.recovery_attempts,
             )
 
             logger.info(
@@ -526,6 +531,7 @@ class NodeDBCore:
             node_id,
             state=StigmaState.RECOVERING,
             ndb_quality=NDBQuality.POOR,
+            recovery_attempts=recovery_attempts,
         )
 
     @staticmethod

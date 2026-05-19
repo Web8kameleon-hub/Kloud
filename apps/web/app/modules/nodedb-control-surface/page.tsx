@@ -10,6 +10,31 @@ type SyncLoopState = {
   last_run_utc: string | null;
 };
 
+type MonitoringSnapshot = {
+  status: string;
+  timestamp_utc: string;
+  node_summary: {
+    nodes_total: number;
+    state_counts: Record<string, number>;
+    quality_counts: Record<string, number>;
+  };
+  membership: {
+    count: number;
+    active_count: number;
+    items: Array<Record<string, unknown>>;
+  };
+  recovery: {
+    count: number;
+    plans: Record<string, unknown>;
+  };
+  sync_loop: SyncLoopState;
+  discovery: {
+    available_count: number;
+    unavailable_services: string[];
+    service_scan: Record<string, unknown>;
+  };
+};
+
 type NodeEntry = {
   metadata: {
     node_id: string;
@@ -61,6 +86,7 @@ export default function NodeDBControlSurfacePage() {
     cycles: 0,
     last_run_utc: null,
   });
+  const [monitoring, setMonitoring] = useState<MonitoringSnapshot | null>(null);
   const [lastRefresh, setLastRefresh] = useState<string>('');
 
   const activeNodes = useMemo(
@@ -75,9 +101,10 @@ export default function NodeDBControlSurfacePage() {
 
   const refresh = async () => {
     try {
-      const [nodesRes, loopRes] = await Promise.all([
+      const [nodesRes, loopRes, monitoringRes] = await Promise.all([
         fetch(`${CONTROL_PLANE_URL}/api/v1/control-plane/nodes`),
         fetch(`${CONTROL_PLANE_URL}/api/v1/control-plane/sync/loop/status`),
+        fetch(`${CONTROL_PLANE_URL}/api/v1/control-plane/monitoring`),
       ]);
 
       if (!nodesRes.ok) {
@@ -91,9 +118,11 @@ export default function NodeDBControlSurfacePage() {
 
       const nodesJson = await nodesRes.json();
       const loopJson = await loopRes.json();
+  const monitoringJson = await monitoringRes.json();
 
       setNodes(Array.isArray(nodesJson.items) ? nodesJson.items : []);
       setLoop(loopJson as SyncLoopState);
+      setMonitoring(monitoringJson as MonitoringSnapshot);
       setLastRefresh(new Date().toLocaleTimeString());
       setError(null);
     } catch (err) {
@@ -149,6 +178,38 @@ export default function NodeDBControlSurfacePage() {
             value={loop.running ? `ON (${loop.interval_seconds}s)` : 'OFF'}
           />
         </div>
+
+        {monitoring && (
+          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <MetricCard label="Registered Members" value={String(monitoring.membership.count)} />
+            <MetricCard label="Active Members" value={String(monitoring.membership.active_count)} />
+            <MetricCard label="Recovery Plans" value={String(monitoring.recovery.count)} />
+          </div>
+        )}
+
+        {monitoring && (
+          <div className="mb-6 rounded-2xl border border-cyan-500/30 bg-cyan-500/5 p-5">
+            <h2 className="mb-3 text-xl font-semibold text-cyan-100">Monitoring Snapshot</h2>
+            <div className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2 xl:grid-cols-4">
+              <div>
+                <div className="text-cyan-200/80">NodeDB Total</div>
+                <div className="font-semibold text-white">{monitoring.node_summary.nodes_total}</div>
+              </div>
+              <div>
+                <div className="text-cyan-200/80">Discovery Available</div>
+                <div className="font-semibold text-white">{monitoring.discovery.available_count}</div>
+              </div>
+              <div>
+                <div className="text-cyan-200/80">Unavailable Services</div>
+                <div className="font-semibold text-white">{monitoring.discovery.unavailable_services.length}</div>
+              </div>
+              <div>
+                <div className="text-cyan-200/80">Snapshot UTC</div>
+                <div className="font-mono text-xs text-white/90">{monitoring.timestamp_utc}</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mb-6 rounded-2xl border border-slate-700 bg-slate-900/70 p-5">
           <h2 className="mb-4 text-xl font-semibold">Control Actions</h2>

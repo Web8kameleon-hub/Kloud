@@ -131,6 +131,72 @@ class ControlPlaneState:
 state = ControlPlaneState()
 
 
+def _summarize_nodes(nodes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    state_counts: Dict[str, int] = {}
+    quality_counts: Dict[str, int] = {}
+
+    for node in nodes:
+        runtime = node.get("state", {}) if isinstance(node, dict) else {}
+        stigma_state = str(runtime.get("stigma_state", "unknown"))
+        ndb_quality = str(runtime.get("ndb_quality", "unknown"))
+        state_counts[stigma_state] = state_counts.get(stigma_state, 0) + 1
+        quality_counts[ndb_quality] = quality_counts.get(ndb_quality, 0) + 1
+
+    return {
+        "nodes_total": len(nodes),
+        "state_counts": state_counts,
+        "quality_counts": quality_counts,
+    }
+
+
+def _sync_loop_snapshot() -> Dict[str, Any]:
+    running = state.sync_task is not None and not state.sync_task.done()
+    return {
+        "running": running,
+        "interval_seconds": state.sync_interval_seconds,
+        "cycles": state.sync_cycles,
+        "last_run_utc": state.sync_last_run_utc,
+    }
+
+
+async def _build_monitoring_snapshot() -> Dict[str, Any]:
+    nodedb = await _ensure_nodedb_initialized()
+    nodes = await nodedb.list_nodes()
+    node_summary = _summarize_nodes(nodes)
+    membership_items = list(state.membership.values())
+    active_members = [
+        member
+        for member in membership_items
+        if member.get("membership_state") == "active"
+    ]
+
+    recovery_plans = {plan_id: plan for plan_id, plan in state.recovery_plans.items()}
+
+    ctx = state.context or {}
+    service_scan = ctx.get("service_scan", {}) if isinstance(ctx, dict) else {}
+
+    return {
+        "status": "ok",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "node_summary": node_summary,
+        "membership": {
+            "count": len(membership_items),
+            "active_count": len(active_members),
+            "items": membership_items,
+        },
+        "recovery": {
+            "count": len(recovery_plans),
+            "plans": recovery_plans,
+        },
+        "sync_loop": _sync_loop_snapshot(),
+        "discovery": {
+            "available_count": ctx.get("available_count", 0),
+            "unavailable_services": ctx.get("unavailable_services", []),
+            "service_scan": service_scan,
+        },
+    }
+
+
 async def _sync_loop_runner() -> None:
     while True:
         if state.context is None:
@@ -202,12 +268,26 @@ async def resonant_events(payload: ResonantEventRequest) -> Dict[str, Any]:
 async def bootstrap() -> Dict[str, Any]:
     state.context = await initialize_kloud_nodedb_real()
     ctx = state.context or {}
+
+    try:
+        await monitor_real_services(state.context)
+    except Exception as exc:
+        # Bootstrap should still succeed and expose diagnostics if the sync pass fails.
+        ctx = {**ctx, "bootstrap_monitor_error": str(exc)}
+
+    nodedb = await _ensure_nodedb_initialized()
+    nodes = await nodedb.list_nodes()
     return {
         "status": "bootstrapped",
         "available_count": ctx.get("available_count", 0),
         "registered_services": list(ctx.get("services", {}).keys()),
         "unavailable_services": ctx.get("unavailable_services", []),
         "service_scan": ctx.get("service_scan", {}),
+        "nodes_total": len(nodes),
+        "node_summary": _summarize_nodes(nodes),
+        "sync_loop": _sync_loop_snapshot(),
+        "recovery_plans": len(state.recovery_plans),
+        "bootstrap_monitor_error": ctx.get("bootstrap_monitor_error"),
     }
 
 
@@ -293,13 +373,7 @@ async def sync_loop_stop() -> Dict[str, Any]:
 @app.get("/api/v1/control-plane/sync/loop/status")
 @app.get("/api/v1/control-plane/sync-loop/status")
 async def sync_loop_status() -> Dict[str, Any]:
-    running = state.sync_task is not None and not state.sync_task.done()
-    return {
-        "running": running,
-        "interval_seconds": state.sync_interval_seconds,
-        "cycles": state.sync_cycles,
-        "last_run_utc": state.sync_last_run_utc,
-    }
+    return _sync_loop_snapshot()
 
 
 @app.get("/api/v1/control-plane/nodes")
@@ -310,6 +384,12 @@ async def list_nodes() -> Dict[str, Any]:
         "count": len(nodes),
         "items": nodes,
     }
+
+
+@app.get("/api/v1/control-plane/monitoring")
+@app.get("/api/v1/control-plane/monitoring/status")
+async def monitoring_status() -> Dict[str, Any]:
+    return await _build_monitoring_snapshot()
 
 
 @app.get("/api/v1/control-plane/scan-print")
@@ -520,7 +600,16 @@ async def recovery_status(node_id: str) -> Dict[str, Any]:
     plan = state.recovery_plans.get(node_id)
     if plan is None:
         raise HTTPException(status_code=404, detail=f"No recovery plan for: {node_id}")
-    return plan
+    try:
+        nodedb = await _ensure_nodedb_initialized()
+        node = await nodedb.get_node_info(node_id)
+    except Exception:
+        node = None
+
+    return {
+        "plan": plan,
+        "node": node,
+    }
 
 
 @app.get("/api/v1/control-plane/topology")
