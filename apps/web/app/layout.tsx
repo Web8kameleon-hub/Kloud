@@ -100,7 +100,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    localeAlternate: ['sq_AL', 'de_DE', 'it_IT', 'fr_FR', 'es_ES', 'pt_PT', 'tr_TR', 'ar_SA', 'hi_IN', 'zh_CN', 'ja_JP'],
+    alternateLocale: ['sq_AL', 'de_DE', 'it_IT', 'fr_FR', 'es_ES', 'pt_PT', 'tr_TR', 'ar_SA', 'hi_IN', 'zh_CN', 'ja_JP'],
     url: siteUrl,
     siteName,
     title: 'Kameleon Life - AI-Powered Industrial Intelligence',
