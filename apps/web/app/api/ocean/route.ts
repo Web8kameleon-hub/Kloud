@@ -211,23 +211,10 @@ export async function POST(request: Request) {
       });
     }
 
-    const fallbackResponse = `🌊 **Curiosity Ocean is offline right now.**
-
-Your question: "${question}"
-
-The frontend is configured for the Docker curiosity service, not Clerk/Redis.
-
-**To start Curiosity Ocean:**
-\`\`\`bash
-docker compose up -d --build curiosity
-\`\`\`
-
-Or locally:
-\`\`\`bash
-cd services/curiosity_ocean
-$env:PORT=8019
-python -m uvicorn api:app --host 127.0.0.1 --port 8019
-\`\`\``;
+    const fallbackResponse =
+      language === "sq"
+        ? "🌊 Curiosity Ocean është përkohësisht në modalitet rezilient. Përgjigjja e thelluar nuk u mor këtë herë. Provo sërish pas pak, ose bëje pyetjen më specifike dhe do vazhdojmë menjëherë."
+        : "🌊 Curiosity Ocean is temporarily in resilient mode. A deep response could not be fetched right now. Please try again in a moment, or ask a more specific question and we will continue immediately.";
 
     return NextResponse.json({
       ocean_response: fallbackResponse,
@@ -238,7 +225,7 @@ python -m uvicorn api:app --host 127.0.0.1 --port 8019
       resonance_ndb: resonanceNdb,
       source: "Fallback (Curiosity offline)",
       curiosity_status: "offline",
-      startup_hint: `docker compose up -d --build ai-global-9999 ocean-core`,
+      startup_hint: `resilient-fallback-active`,
     });
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : "Unknown";

@@ -146,7 +146,7 @@ const PLANS = [
 export default function AccountPage() {
   // i18n translation hook
   const { t, language, setLanguage, isLoaded } = useTranslation()
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@kloud.com'
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL?.trim() || ''
   
   const [activeTab, setActiveTab] = useState<'overview' | 'billing' | 'subscription' | 'security' | 'settings'>('overview')
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
@@ -664,13 +664,23 @@ export default function AccountPage() {
                     <div className="text-sm text-gray-400">{t('overview.passwordAnd2FA')}</div>
                   </div>
                 </button>
-                <a href={`mailto:${supportEmail}`} className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
-                  <span className="text-2xl">📧</span>
-                  <div>
-                    <div className="font-medium">{t('overview.contactSupport')}</div>
-                    <div className="text-sm text-gray-400">{supportEmail}</div>
-                  </div>
-                </a>
+                {supportEmail ? (
+                  <a href={`mailto:${supportEmail}`} className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
+                    <span className="text-2xl">📧</span>
+                    <div>
+                      <div className="font-medium">{t('overview.contactSupport')}</div>
+                      <div className="text-sm text-gray-400">{supportEmail}</div>
+                    </div>
+                  </a>
+                ) : (
+                  <Link href="/status" className="w-full flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left">
+                    <span className="text-2xl">🛟</span>
+                    <div>
+                      <div className="font-medium">Support Center</div>
+                      <div className="text-sm text-gray-400">Configure NEXT_PUBLIC_SUPPORT_EMAIL to enable direct email support.</div>
+                    </div>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
