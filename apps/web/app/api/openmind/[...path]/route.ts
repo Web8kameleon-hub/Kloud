@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 const OPENMIND_BASE_URL =
   process.env.OPENMIND_BASE_URL ||
   process.env.AI_9999_URL ||
-  'http://127.0.0.1:9999'
+  'http://ai-global-9999:9999'
 
 function buildTargetUrl(path: string[], search: string): string {
   const cleanPath = path.join('/')

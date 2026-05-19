@@ -223,6 +223,7 @@ services:
       OLLAMA_HOST: "http://kloud-clx:11434"
       MODEL: "llama3.1:8b"
       REDIS_URL: "redis://redis:6379/0"
+      POSTGRESQL_URL: "postgresql://kloud:${POSTGRES_PASSWORD}@postgres:5432/klouddb"
       API_KEYS_FILE: "/app/config/api_keys.json"
       KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
     volumes:
@@ -232,6 +233,10 @@ services:
       - "8030:8030"
     depends_on:
       clx:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8030/health"]
@@ -246,7 +251,7 @@ services:
   ai-global-9999:
     <<: *runtime_hardening
     build:
-      context: ./9999
+      context: ./services/ai-global-9999
       dockerfile: Dockerfile
     container_name: kloud-ai-global-9999
     environment:
@@ -256,16 +261,21 @@ services:
       CLX_URL: "http://kloud-clx:11434"
       OLLAMA_HOST: "http://kloud-clx:11434"
       MODEL: "llama3.1:8b"
+      POSTGRESQL_URL: "postgresql://kloud:${POSTGRES_PASSWORD}@postgres:5432/klouddb"
+      REDIS_URL: "redis://redis:6379/0"
       API_KEYS_FILE: "/app/config/api_keys.json"
       KLOUD_MODULE_MAP_PATH: "/app/KLOUD_MODULE_MAP.md"
     volumes:
-      - ./9999/output:/app/output
       - ./config/api_keys.json:/app/config/api_keys.json:ro
       - ./KLOUD_MODULE_MAP.md:/app/KLOUD_MODULE_MAP.md:ro
     ports:
       - "9999:9999"
     depends_on:
       clx:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9999/health"]
@@ -371,6 +381,8 @@ services:
       API_INTERNAL_URL: "http://kloud-api:8000"
       VIDEO_GENERATOR_URL: "http://kloud-video-generator:8029"
       NODEDB_CONTROL_PLANE_URL: "http://kloud-nodedb-control-plane:9090"
+      AI_9999_URL: "http://ai-global-9999:9999"
+      OPENMIND_BASE_URL: "http://ai-global-9999:9999"
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
       # Stripe Payments
