@@ -7,6 +7,7 @@
 ## 1) Hartë e përgjithshme (End-to-End)
 
 ### 1.1 Rrjedha kryesore (dominant path)
+
 **Frontend (apps/web) → Main API (apps/api) → Agents/Engines → Storage + Observability**
 
 1. **Frontend** (Next.js) e komunikon **server-side API** përmes `API_INTERNAL_URL=http://kloud-api:8000`.
@@ -19,6 +20,7 @@
 5. **Observability**: shërbimet ekspozojnë `health`/`metrics` që merren nga Prometheus/Grafana/VictoriaMetrics; logs/trace nga Loki/Tempo.
 
 ### 1.2 Rrjedha dytësore (Research/Cycle Engine)
+
 **Cycle Engine + Telemetry Router + Research Data Ecosystem**
 
 - Diagrami “CYCLE” tregon:
@@ -30,6 +32,7 @@
 ## 2) Kontratat e shërbimeve (Ports / Health / Metrics / Naming)
 
 ### 2.1 Konventat e përgjithshme në repo
+
 - Çdo service në `docker-compose*.yml` ka:
   - **`healthcheck`** (zakonisht `GET /health` ose `curl` kundër portit të vet),
   - **`ports:`** për ekspozim (në host),
@@ -38,6 +41,7 @@
 ### 2.2 Shërbimet kryesore (sipas `docker-compose.yml`)
 
 #### Frontend
+
 - **Service:** `web`
 - **Port container:** `3000`
 - **Port host:** `3001`
@@ -47,6 +51,7 @@
   - `STIGMA_NODEDB_URL=http://kloud-nodedb-control-plane:9090/api/v1/stigma/write`
 
 #### Main API (gateway)
+
 - **Service:** `api`
 - **Port container/host:** `8000:8000`
 - **Health:** `GET http://localhost:8000/health`
@@ -56,6 +61,7 @@
   - ngarkohet `.env` për auth/billing/keys.
 
 #### Alba / Albi / Jona
+
 - **Alba** (`alba_api_server.py` / service `alba`)
   - `5555:5555`
   - health `GET /health`
@@ -68,11 +74,13 @@
   - health `GET /health`
 
 #### Orchestrator / AI Global Node
+
 - **Service `ai-global-9999`**
   - `9999:9999`
   - health `GET /health`
 
 #### Storage/infra (minimum i domosdoshëm për funksion)
+
 - **PostgreSQL**
   - `5432:5432`
   - health `pg_isready`
@@ -87,6 +95,7 @@
   - health `GET /minio/health/live`
 
 #### LLM backend
+
 - **CLX (Ollama)**
   - `11434:11434`
   - health `ollama list`
@@ -95,6 +104,7 @@
   - health `GET /health`
 
 #### Observability
+
 - **Prometheus**: `9090:9090`
 - **Grafana**: `3001:3000`
 - **VictoriaMetrics**: `8428:8428`
@@ -108,7 +118,9 @@
 ## 3) Wiring aktual (si vendosen lidhjet në praktikë)
 
 ### 3.1 Docker Compose: “Single Source of Wiring”
+
 Në këtë repo, wiring-i final shfaqet në:
+
 - `docker-compose.yml`
 - `docker-compose.backend-4*.yml`, `docker-compose.compute*.yml`, `docker-compose.edge.yml`, etj.
 
@@ -117,7 +129,9 @@ Që projekti të jetë funksional, **endpoint naming dhe env var** duhet të pë
 ### 3.2 Kompozime të rëndësishme
 
 #### A) Full stack (docker-compose.yml)
+
 Përfshin:
+
 - postgres, redis, neo4j, minio
 - clx + clx-i
 - api (8000), web (3001)
@@ -126,13 +140,16 @@ Përfshin:
 - shumë microservices shtesë
 
 **Arsyetim wiring:**
+
 - API varet nga postgres+redis (me `depends_on` + `condition: service_healthy`).
 - Agents varet nga redis dhe nga CLX (kur kërkon LLM).
 
 #### B) Backend-only (docker-compose.backend-4*.yml)
+
 Heq shumicën e frontend/extra; lë vetëm bazën që u duhet agjentëve dhe gateway.
 
 #### C) Hybrid / Compute / Edge
+
 - `compute` shton node-role logjikë (p.sh. `NODE_ROLE=compute`).
 - `edge` ka ports/healthcheck për një set të ndryshëm nyjash.
 
@@ -141,36 +158,47 @@ Heq shumicën e frontend/extra; lë vetëm bazën që u duhet agjentëve dhe gat
 ## 4) Pikat e riskut që e prishin funksionalitetin (Top failure modes)
 
 ### 4.1 Mospërputhje Ports (container vs host)
+
 Shpesh gabimi është se frontend/consumer përdor port host ndërsa service komunikon me port **container** në brendësi të rrjetit docker.
+
 - Në Docker network, target është **emri i service** dhe **porti container**.
 - P.sh. `http://kloud-api:8000` (jo `localhost:8000`).
 
 ### 4.2 Mospërputhje environment variables
+
 Shembuj nga repo që duhen të jenë të sakta:
+
 - `API_INTERNAL_URL` (web) → duhet të jetë `http://kloud-api:8000`.
 - `DATABASE_URL`, `REDIS_URL` (api) → duhet të referojnë `postgres` dhe `redis` (emrat docker).
 - `CLX_HOST`, `CLX_URL`, `OLLAMA_HOST` → duhet të referojnë `kloud-clx:11434`.
 - `STIGMA_NODEDB_URL` → `http://kloud-nodedb-control-plane:9090/api/v1/stigma/write`
 
 ### 4.3 Startup order: depends_on vs reality
+
 `depends_on: condition: service_healthy` ndihmon, por prapë ka race conditions kur:
+
 - service shfaqet “healthy” para se të ketë ngarkuar resources (model/keys/DB migrations),
 - healthcheck është “light” dhe nuk garanton readiness për endpoint specifike.
 
 Prandaj: për shërbimet e rënda (API, agents me LLM), duhet **readiness gating** shtesë (p.sh. test call ndaj endpoint-it kryesor ose test query DB).
 
 ### 4.4 Endpoint mismatch (path differences)
+
 Në search u panë disa `health`/`status` dhe `/metrics` emra. Risk tipik:
+
 - disa service përdorin `GET /health`, të tjerë `/status`.
 - gateway pret `/metrics` standard, por service nuk e ekspozon.
 
 ### 4.5 “Split-brain wiring” midis docker-compose file-ve
+
 Ka disa compose variants (`backend-4`, `compute`, `edge`, `75-services`). Nëse env var i një service ndryshon mes variantëve, funksionaliteti prishet.
 
 **Shembull praktik:**
+
 - `albi` ka port container `6680` në një file dhe mapping ndryshe në variant tjetër; gjithashtu `healthcheck` mund të jetë për `/health` por API path mund të ndryshojë.
 
 ### 4.6 Security/runtime mismatch
+
 - Ka `api_keys.json` që montohet si volume në disa service.
 - Nëse file mungon/është i gabuar → endpointet dështojnë edhe pse service është “up”.
 
@@ -206,6 +234,7 @@ Ka disa compose variants (`backend-4`, `compute`, `edge`, `75-services`). Nëse 
 ### 5.2 Functional Stabilization checklist (minimum për “projekti të punojë”)
 
 #### A) Docker/Infra sanity (para se të testosh logjikën)
+
 - [ ] `docker compose up -d` për variantin e zgjedhur.
 - [ ] `postgres` healthy (pg_isready success)
 - [ ] `redis` healthy (ping success)
@@ -213,24 +242,29 @@ Ka disa compose variants (`backend-4`, `compute`, `edge`, `75-services`). Nëse 
 - [ ] `minio` healthy
 
 #### B) LLM routing sanity (CLX)
+
 - [ ] `clx` healthy (ollama list ok)
 - [ ] `clx-i` healthy (`GET /health` ok)
 
 #### C) Agent readiness sanity
+
 - [ ] `alba` healthy (`GET /health`)
 - [ ] `albi` healthy (`GET /health`)
 - [ ] `jona` healthy (`GET /health`)
 - [ ] `ai-global-9999` healthy (`GET /health`)
 
 #### D) Gateway/API sanity
+
 - [ ] `api` healthy (`GET /health` ok)
 - [ ] `api` mund të flasë me postgres+redis (test query / cache set-get).
 - [ ] `api` mund të thërrasë një endpoint agent (p.sh. endpoint minimal route që komunikon me Alba/Albi/Jona).
 
 #### E) Frontend wiring sanity
+
 - [ ] `web` ngarkohet dhe bën request drejt `http://kloud-api:8000` (server-side) pa CORS issues.
 
 #### F) Telemetry/observability sanity
+
 - [ ] `prometheus` up
 - [ ] çdo service i targetuar nga scrape i ekspozon `/metrics`.
 - [ ] grafana dashboards shfaqin data.
@@ -240,6 +274,7 @@ Ka disa compose variants (`backend-4`, `compute`, `edge`, `75-services`). Nëse 
 ## 6) Dokumentim i wiring kontratave (si t’i bëjmë explicit)
 
 Rekomandohet që repo të ketë një dokument “Service Contract Registry” (të paktën në Markdown) me tabelë:
+
 - service name
 - port container
 - endpoints:
@@ -249,6 +284,7 @@ Rekomandohet që repo të ketë një dokument “Service Contract Registry” (t
 - env variables required (lista minimale)
 
 Ndërkohë, ky dokument përdor mapping-in nga `docker-compose.yml` + dokumentet ekzistuese:
+
 - `ARCHITECTURE_SUMMARY.md`
 - `CLISONIX_ARCHITECTURE_BASELINE_2025.md`
 - `CYCLE_ARCHITECTURE_DIAGRAM.md`
@@ -272,7 +308,9 @@ Nga që u panë në dokumente dhe wiring, pjesët që zakonisht mungojnë kur nj
 ---
 
 ## 8) Përfundim
+
 Ky dokument ka nxjerrë një “wiring blueprint” mbi bazën e:
+
 - dokumenteve ekzistuese të arkitekturës,
 - `docker-compose.yml` dhe compose variants,
 - analizës së endpoint/search për health/metrics dhe routes.
@@ -296,4 +334,3 @@ Pika kryesore për sukses operacional është: **konsistencë e ports/env naming
 ---
 
 **Dokumenti është shkruar që të shërbejë si “wiring + stabilization playbook” dhe të reduktojë dështimet tipike që vijnë nga mospërputhja e konfigurimeve.**
-

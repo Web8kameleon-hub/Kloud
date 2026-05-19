@@ -370,6 +370,7 @@ services:
       # Use Docker internal network for server-side API calls
       API_INTERNAL_URL: "http://kloud-api:8000"
       VIDEO_GENERATOR_URL: "http://kloud-video-generator:8029"
+      NODEDB_CONTROL_PLANE_URL: "http://kloud-nodedb-control-plane:9090"
       # Client-side calls go through Nginx proxy
       NEXT_PUBLIC_API_BASE: "/api"
       # Stripe Payments

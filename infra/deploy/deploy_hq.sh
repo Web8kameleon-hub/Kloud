@@ -5,6 +5,22 @@ SERVER="178.105.52.245"
 USER="root"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519_nopwd}"
 
+# Resolve SSH key path for Git Bash on Windows when HOME points outside user profile.
+if [ ! -f "$SSH_KEY" ] && [ -n "${USERPROFILE:-}" ] && command -v cygpath >/dev/null 2>&1; then
+	WIN_KEY="$(cygpath -u "$USERPROFILE")/.ssh/id_ed25519_nopwd"
+	if [ -f "$WIN_KEY" ]; then
+		SSH_KEY="$WIN_KEY"
+	fi
+fi
+
+# Ensure cargo is available when running from Git Bash.
+if ! command -v cargo >/dev/null 2>&1; then
+	export PATH="$PATH:$HOME/.cargo/bin:/c/Users/Admin/.cargo/bin:/mnt/c/Users/Admin/.cargo/bin"
+fi
+
+echo "[HQ] Ensuring remote directories..."
+ssh -i "$SSH_KEY" "$USER@$SERVER" "mkdir -p /opt/kloud /etc/kloud"
+
 echo "[HQ] Building Rust binaries..."
 cargo build --release -p core_api -p ocean_core -p asi_trinity -p telemetry_collector
 

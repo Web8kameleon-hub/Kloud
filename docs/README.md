@@ -3,13 +3,17 @@
 ## Deployment & Operations
 
 ### 🚀 Quick Start
+
 **→ [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)** (1 page)
+
 - Step-by-step checklist for server deployments
 - Health checks and rollback procedures
 - Referenced by: deploy.sh, HOSTING_EXECUTION_BASELINE.md
 
 ### 📋 Hosting Execution Baseline
+
 **→ [HOSTING_EXECUTION_BASELINE.md](HOSTING_EXECUTION_BASELINE.md)** (14 sections)
+
 - **Purpose:** Single source of truth for hosting, orchestration, and deployment
 - **Contents:** Service inventory, orchestration map, routing paths, deployment flow, network error playbook, change control
 - **Audiences:** DevOps, deployment team, architects
@@ -17,7 +21,9 @@
 - **When to use:** Before any deployment, when troubleshooting network issues, to understand service choreography
 
 ### 🏗️ Architecture Wiring & Deep Analysis
+
 **→ [../ARCHITECTURE_WIRING_DEEP_ANALYSIS_KLOUD.md](../ARCHITECTURE_WIRING_DEEP_ANALYSIS_KLOUD.md)** (6 sections)
+
 - **Purpose:** Technical deep dive into service contracts, risk points, and failure modes
 - **Contents:** Docker Compose wiring, port/env validation, startup order risks, endpoint mismatches, architectural stability rules
 - **Audiences:** Developers, architects, debugging teams
@@ -29,7 +35,9 @@
 ## Deployment Tools
 
 ### 🔧 deploy.sh (Root Directory)
+
 **→ [../deploy.sh](../deploy.sh)** (Bash script)
+
 - Automated deployment script following HOSTING_EXECUTION_BASELINE.md exactly
 - Includes: ENV validation, targeted service restart (no global down), health checks, error recovery
 - **Usage:** `bash deploy.sh`
@@ -92,6 +100,7 @@
 From **HOSTING_EXECUTION_BASELINE.md § 13: Change Control**
 
 ### Stable Core Sections (Must Never Be Removed)
+
 - Purpose
 - Orchestration Map
 - Mandatory Deployment Flow
@@ -100,12 +109,15 @@ From **HOSTING_EXECUTION_BASELINE.md § 13: Change Control**
 - Change Control Rules
 
 ### Volatile Sections (Allowed To Change)
+
 - Service counts (§ 2 Snapshot Inventory)
 - Route handler totals
 - Service lists (§ 3)
 
 ### Trigger Updates
+
 Any PR that changes **these must also update HOSTING_EXECUTION_BASELINE.md**:
+
 - docker-compose service topology
 - proxy/rewrite rules
 - router registration paths

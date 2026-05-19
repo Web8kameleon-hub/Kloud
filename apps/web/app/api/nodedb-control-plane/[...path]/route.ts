@@ -31,13 +31,30 @@ async function proxy(request: NextRequest, path: string[]): Promise<NextResponse
       method,
       headers,
       body,
+      cache: "no-store",
     });
 
     const text = await upstream.text();
+
+    const contentType = upstream.headers.get("content-type") || "application/json";
+    const isHtml = contentType.includes("text/html");
+
+    if (upstream.status >= 500 && isHtml) {
+      return NextResponse.json(
+        {
+          error: "control_plane_bad_gateway",
+          message: "Control plane returned an upstream gateway error",
+          status: upstream.status,
+          target: url,
+        },
+        { status: upstream.status },
+      );
+    }
+
     return new NextResponse(text, {
       status: upstream.status,
       headers: {
-        "Content-Type": upstream.headers.get("content-type") || "application/json",
+        "Content-Type": contentType,
       },
     });
   } catch (error) {

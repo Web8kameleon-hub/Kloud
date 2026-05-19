@@ -1,6 +1,7 @@
 # Kloud Hosting And Orchestration Baseline
 
 ## Index
+
 1. Purpose
 2. Snapshot Inventory
 3. Service Classification
@@ -17,15 +18,18 @@
 14. Update Procedure For This Document
 
 ## Purpose
+
 This document is the single source of truth for hosting, orchestration, and deployment execution in Kloud.
 
 Goals:
+
 - Keep production deployment deterministic.
 - Keep architecture readable and auditable.
 - Prevent "works local but not on server" drift.
 - Preserve one stable reference that survives deploys and branch switches.
 
 ## Snapshot Inventory (measured on 2026-05-17)
+
 - Docker Compose services in [docker-compose.yml](../docker-compose.yml): 89
 - Infra services (classified): 12
 - Backend/application services (classified): 77
@@ -36,58 +40,74 @@ Goals:
 - Service registry reference in [ocean-core/service_registry.py](../ocean-core/service_registry.py): All 56+ Kloud Microservices
 
 ## Service Classification
+
 ### Infra services (12)
+
 postgres, redis, neo4j, minio, victoriametrics, prometheus, grafana, loki, jaeger, tempo, traefik, web
 
 ### Backend/application services (77)
+
 All remaining services in [docker-compose.yml](../docker-compose.yml) not listed as infra.
 
 ## Orchestration Map (Who Calls Whom)
+
 This section defines runtime call chains. These are operational chains, not just code ownership.
 
 ### Chain A: Public HTTP To Frontend
+
 1. Client request enters reverse proxy layer.
 2. Reverse proxy forwards to frontend container.
 3. Frontend may serve UI directly or rewrite to backend APIs.
 
 Evidence:
+
 - [nginx/default.conf](../nginx/default.conf) forwards root traffic to web:3000.
 - [docker-compose.yml](../docker-compose.yml) exposes traefik on 80 and dashboard on 8088.
 
 ### Chain B: Frontend Rewrite To Main API
+
 1. Browser hits Next.js route like /api/*.
 2. Next.js rewrite sends traffic to API_INTERNAL_URL or kloud-api:8000.
 3. FastAPI app resolves router and executes domain module.
 
 Evidence:
+
 - [apps/web/next.config.js](../apps/web/next.config.js) rewrites /api/* namespaces to API_BASE.
 - [apps/api/main.py](../apps/api/main.py) includes routers via app.include_router(...).
 
 ### Chain C: Frontend Rewrite To Ocean-Core
+
 1. Browser hits /api/zurich/*, /api/debate/*, or /api/ocean/*.
 2. Next.js rewrite sends to OCEAN_BASE (kloud-ocean-core:8030 in production).
 3. Ocean Core handles /api/v1/* endpoints and orchestrates internal engines.
 
 Evidence:
+
 - [apps/web/next.config.js](../apps/web/next.config.js) defines OCEAN_BASE and related rewrites.
 - [docker-compose.yml](../docker-compose.yml) maps ocean-core at 8030.
 
 ### Chain D: Backend Service To Internal Module
+
 1. Request reaches backend service process.
 2. Service dispatches through router registration.
 3. Router delegates to domain implementation modules.
 
 Evidence:
+
 - [apps/api/routers/__init__.py](../apps/api/routers/__init__.py) exports eeg_router, audio_router, brain_api_router.
 - [apps/api/main.py](../apps/api/main.py) includes many routers (brain, eeg, audio, fabric, reporting, billing, jona, dns, and others).
 
 ## Routing And Rewrite Paths
+
 ### Reverse proxy layer
+
 - Traefik service exists as gateway and load balancer in [docker-compose.yml](../docker-compose.yml).
 - Nginx fallback/default proxy forwards root traffic to frontend in [nginx/default.conf](../nginx/default.conf).
 
 ### Rewrite layer (frontend)
+
 In [apps/web/next.config.js](../apps/web/next.config.js), rewrites include:
+
 - /api/crypto/* -> API_BASE
 - /api/weather/* -> API_BASE
 - /api/ai/* -> API_BASE
@@ -96,15 +116,19 @@ In [apps/web/next.config.js](../apps/web/next.config.js), rewrites include:
 - /health and /backend/* -> API_BASE
 
 ### Internal backend target layer
+
 Targets are container DNS names in docker network, for example:
+
 - kloud-api:8000
 - kloud-ocean-core:8030
 - kloud-clx:11434
 
 ## Backend Internal Wiring
+
 Backend wiring is controlled by app.include_router(...) in [apps/api/main.py](../apps/api/main.py).
 
 Observed include points include domains like:
+
 - unified
 - neural
 - fabric
@@ -124,14 +148,17 @@ Observed include points include domains like:
 - dns
 
 This means the runtime chain is:
+
 1. Gateway/rewrite selects backend service.
 2. FastAPI main app selects router.
 3. Router executes module handler.
 
 ## XLC Resonant Reading Wiring (MMM -> WWW)
+
 Reference model is documented in [docs/architecture/XLC_RESONANT_READING_MODEL.md](architecture/XLC_RESONANT_READING_MODEL.md).
 
 Operational wiring summary:
+
 1. Input is normalized into known symbol sequence.
 2. LayerBuilder computes WW, MM, CC (12D each).
 3. XLCInspector.inspect_scan finds strongest resonance window.
@@ -139,6 +166,7 @@ Operational wiring summary:
 5. Command/result is passed to response writer path.
 
 Architecture components explicitly named in source document:
+
 - LayerBuilder
 - XLCInspector.inspect
 - XLCInspector.inspect_scan
@@ -148,7 +176,9 @@ Architecture components explicitly named in source document:
 This wiring must stay aligned with API orchestration when XLC-backed routes are added.
 
 ## Why Changes Did Not Reach Hosting
+
 Most frequent root causes:
+
 1. Local commit not synced to server checkout.
 2. Server path mismatch or wrong target directory.
 3. Wrong env filename edited (env instead of .env).
@@ -157,6 +187,7 @@ Most frequent root causes:
 6. Health check passed for one service but upstream rewrite still pointed elsewhere.
 
 ## Mandatory Deployment Flow
+
 Run on server in /opt/kloud.
 
 ```bash
@@ -186,13 +217,17 @@ curl -s http://localhost:9094/health
 ```
 
 ## Network Active Endpoints Playbook
+
 Error pattern:
+
 - network kloud_default has active endpoints
 
 Golden rule:
+
 - Do not run global docker compose down as first action.
 
 Step-by-step:
+
 ```bash
 # A) Prefer targeted restart
 docker compose stop ocean-core asi
@@ -207,6 +242,7 @@ docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Networks}}'
 ```
 
 ## Release Discipline
+
 1. Merge or push final code to master.
 2. Sync hosting checkout to exact remote SHA.
 3. Record deployed SHA and date in deployment log.
@@ -215,22 +251,28 @@ docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Networks}}'
 6. Confirm rewrite path from frontend reaches the updated backend.
 
 ## Minimum Functional Checks
+
 For ocean-core:
+
 - GET /health returns HTTP 200.
 - docker compose logs ocean-core --tail 80 shows successful startup and no crash loop.
 
 For asi:
+
 - GET /health returns HTTP 200.
 - docker compose logs asi --tail 80 shows successful startup and no crash loop.
 
 For frontend rewrite integrity:
+
 - /api/health resolves to backend health.
 - One /api/ocean/* route resolves to ocean-core.
 
 ## Change Control And Stability Rules
+
 This document must remain stable across deploys and branch switches.
 
 ### Stable core sections (must not be removed)
+
 - Purpose
 - Orchestration Map
 - Mandatory Deployment Flow
@@ -239,12 +281,15 @@ This document must remain stable across deploys and branch switches.
 - Change Control Rules
 
 ### Volatile sections (allowed to change)
+
 - Snapshot Inventory counts
 - Service lists
 - Route totals
 
 ### Governance rule
+
 Any PR that changes one of these must also update this file:
+
 - docker-compose service topology
 - proxy/rewrite rules
 - router registration paths
@@ -253,7 +298,9 @@ Any PR that changes one of these must also update this file:
 If not updated, deployment readiness is incomplete.
 
 ## Update Procedure For This Document
+
 When updating counts or topology:
+
 1. Recompute service count from [docker-compose.yml](../docker-compose.yml).
 2. Recompute route handler count from backend scopes.
 3. Revalidate proxy/rewrite chain from [nginx/default.conf](../nginx/default.conf) and [apps/web/next.config.js](../apps/web/next.config.js).

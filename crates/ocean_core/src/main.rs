@@ -3,7 +3,6 @@ use std::env;
 use std::sync::Arc;
 
 use axum::{extract::State, routing::{get, post}, Json, Router};
-use async_trait::async_trait;
 use chrono::Utc;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -495,14 +494,14 @@ fn build_self_report(fields: &FlowFields) -> FabricSelfReport {
     // JONA: calm, safe summary
     let summary_raw = format!(
         "Current leading influence: {} ({:.2}). Current stability: {:.2}. Observed concern: {:.2}.",
-        dominant.0, value, stability, concern
+        dominant, value, stability, concern
     );
 
     let summary = jona_filter_summary(summary_raw);
 
     FabricSelfReport {
         summary,
-        dominant_field: dominant.0.to_string(),
+        dominant_field: dominant.to_string(),
         stability,
         concern_level: concern,
         recommended_focus: recommended,
@@ -1166,7 +1165,8 @@ async fn main() {
         .route("/mesh/status", post(mesh_status))
         .with_state(app_state);
 
-    let listener = TcpListener::bind("0.0.0.0:9000").await.unwrap();
-    println!("ocean_core running on 0.0.0.0:9000");
+    let bind_addr = env::var("OCEAN_BIND").unwrap_or_else(|_| "0.0.0.0:9000".to_string());
+    let listener = TcpListener::bind(&bind_addr).await.unwrap();
+    println!("ocean_core running on {}", bind_addr);
     axum::serve(listener, app).await.unwrap();
 }

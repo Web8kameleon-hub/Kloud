@@ -27,6 +27,30 @@ type NodeEntry = {
 const CONTROL_PLANE_URL =
   '/api/nodedb-control-plane';
 
+function compactErrorDetail(detail: string): string {
+  const trimmed = detail.trim();
+
+  if (trimmed.startsWith('<!DOCTYPE html') || trimmed.startsWith('<html')) {
+    return 'Upstream returned HTML error page (likely gateway/proxy issue).';
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as { message?: string; error?: string; status?: number; target?: string };
+    if (parsed.message || parsed.error) {
+      const suffix = parsed.status ? ` (status ${parsed.status})` : '';
+      return `${parsed.message || parsed.error}${suffix}`;
+    }
+  } catch {
+    // Fall back to plain-text trimming when payload is not JSON.
+  }
+
+  if (trimmed.length > 240) {
+    return `${trimmed.slice(0, 240)}...`;
+  }
+
+  return trimmed;
+}
+
 export default function NodeDBControlSurfacePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,11 +82,11 @@ export default function NodeDBControlSurfacePage() {
 
       if (!nodesRes.ok) {
         const detail = await nodesRes.text();
-        throw new Error(`nodes endpoint failed: ${detail}`);
+        throw new Error(`nodes endpoint failed: ${compactErrorDetail(detail)}`);
       }
       if (!loopRes.ok) {
         const detail = await loopRes.text();
-        throw new Error(`loop status endpoint failed: ${detail}`);
+        throw new Error(`loop status endpoint failed: ${compactErrorDetail(detail)}`);
       }
 
       const nodesJson = await nodesRes.json();
