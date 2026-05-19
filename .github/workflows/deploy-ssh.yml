@@ -45,7 +45,7 @@ permissions:
   contents: read
 
 env:
-  HETZNER_IP: 46.224.203.89
+  HETZNER_IP: 91.98.47.131
   DEPLOY_PATH: /opt/kloud
   FLUID_AUTOSTART: "true"
   WWWMMM_AUTORUN: "true"

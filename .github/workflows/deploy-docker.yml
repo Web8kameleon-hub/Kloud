@@ -54,7 +54,7 @@ concurrency:
 # =============================================================================
 env:
   # Server
-  HETZNER_IP: 46.224.203.89
+  HETZNER_IP: 91.98.47.131
   DEPLOY_PATH: /opt/kloud
   SERVER_USER: root
   SSH_KEY_SECRET_NAME: HETZNER_SSH_KEY
