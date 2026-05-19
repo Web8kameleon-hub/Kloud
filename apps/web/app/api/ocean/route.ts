@@ -211,31 +211,23 @@ export async function POST(request: Request) {
       });
     }
 
-    const fallbackResponse =
-      language === "sq"
-        ? "🌊 Curiosity Ocean është përkohësisht në modalitet rezilient. Përgjigjja e thelluar nuk u mor këtë herë. Provo sërish pas pak, ose bëje pyetjen më specifike dhe do vazhdojmë menjëherë."
-        : "🌊 Curiosity Ocean is temporarily in resilient mode. A deep response could not be fetched right now. Please try again in a moment, or ask a more specific question and we will continue immediately.";
-
-    return NextResponse.json({
-      ocean_response: fallbackResponse,
-      response: fallbackResponse,
-      rabbit_holes: ["Start Curiosity service", "Check port 8019"],
-      next_questions: ["Is Curiosity Ocean running?", "What sources are available?"],
-      resonance_profile: resonanceProfile,
-      resonance_ndb: resonanceNdb,
-      source: "Fallback (Curiosity offline)",
-      curiosity_status: "offline",
-      startup_hint: `resilient-fallback-active`,
-    });
+    return NextResponse.json(
+      {
+        error: "No upstream AI backend returned a valid response",
+        source: "upstream",
+        resonance_profile: resonanceProfile,
+        resonance_ndb: resonanceNdb,
+        backend_attempts: ["global-9999", "ocean-core"],
+      },
+      { status: 502 },
+    );
   } catch (error: unknown) {
     const errMsg = error instanceof Error ? error.message : "Unknown";
     console.error("Ocean API error:", errMsg);
     return NextResponse.json(
       {
-        ocean_response: "🌊 The Ocean is recalibrating. Please try again.",
-        rabbit_holes: [],
-        next_questions: [],
-        error: errMsg,
+        error: "Ocean API internal error",
+        details: errMsg,
       },
       { status: 500 },
     );
