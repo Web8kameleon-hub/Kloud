@@ -751,13 +751,17 @@ Never invent facts. Admit if unsure: "Nuk e di" / "I don't know"."""
         # All models failed
         self.stats["failed_requests"] += 1
         return MultiModelResponse(
-            content="[WARN] T gjitha modelet dshtuan. Kontrollo nse CLX sht aktiv.",
+            content="",
             model_used="none",
             tier=ModelTier.BALANCED,
             strategy=strategy,
-            done=True,
+            done=False,
             fallback_attempts=fallback_attempts,
             query_complexity=complexity,
+            metadata={
+                "error": "all_models_failed",
+                "message": "No available model returned a valid response",
+            },
         )
 
     async def _call_clx(self, model: str, prompt: str, system: str, temperature: float, max_tokens: int) -> Optional[Dict[str, Any]]:
