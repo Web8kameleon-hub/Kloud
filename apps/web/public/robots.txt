@@ -29,13 +29,22 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-# Block bad bots (optional)
+# SEO crawler tooling (allow to improve worldwide discoverability)
 User-agent: AhrefsBot
-Disallow: /
+Allow: /
 
 User-agent: SemrushBot
-Disallow: /
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
 
 # Host
-Host: https://kameleon.life
+Host: kameleon.life
 

@@ -23,6 +23,21 @@ const inter = Inter({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kameleon.life';
 const siteName = 'Kameleon Life';
+const supportedLanguages: Record<string, string> = {
+  en: `${siteUrl}/en`,
+  sq: `${siteUrl}/sq`,
+  de: `${siteUrl}/de`,
+  it: `${siteUrl}/it`,
+  fr: `${siteUrl}/fr`,
+  es: `${siteUrl}/es`,
+  pt: `${siteUrl}/pt`,
+  tr: `${siteUrl}/tr`,
+  ar: `${siteUrl}/ar`,
+  hi: `${siteUrl}/hi`,
+  zh: `${siteUrl}/zh`,
+  ja: `${siteUrl}/ja`,
+  'x-default': siteUrl,
+};
 
 // 🚀 AGGRESSIVE SEO - Maximum visibility
 export const metadata: Metadata = {
@@ -45,7 +60,15 @@ export const metadata: Metadata = {
     "system monitoring ai", "ai observability", "payment enabled saas",
     "stripe sepa paypal integration", "jwt authentication api", "secure api gateway",
     "data intelligence platform", "ai for operations", "adaptive intelligence",
-    "kloud cloud", "albi", "alba", "jona", "agi ecosystem"
+    "kloud cloud", "albi", "alba", "jona", "agi ecosystem",
+    "enterprise ai platform", "ai infrastructure", "ai orchestration platform",
+    "workflow automation ai", "ai observability platform", "agent telemetry",
+    "predictive maintenance ai", "digital twin intelligence", "neurotech platform",
+    "llm orchestration", "model serving platform", "real-time decision intelligence",
+    "edge ai platform", "distributed systems monitoring", "api-first ai platform",
+    "industrial automation software", "adaptive ai assistant", "sovereign ai cloud",
+    "ai analytics dashboard", "iot telemetry platform", "event-driven ai",
+    "multi-agent platform", "operational ai", "machine intelligence software"
   ],
   authors: [
     { name: "Ledjan Ahmati", url: siteUrl },
@@ -56,6 +79,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -64,9 +88,19 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  referrer: 'origin-when-cross-origin',
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    yahoo: process.env.NEXT_PUBLIC_YAHOO_SITE_VERIFICATION,
+    other: {
+      'msvalidate.01': process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? '',
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
+    localeAlternate: ['sq_AL', 'de_DE', 'it_IT', 'fr_FR', 'es_ES', 'pt_PT', 'tr_TR', 'ar_SA', 'hi_IN', 'zh_CN', 'ja_JP'],
     url: siteUrl,
     siteName,
     title: 'Kameleon Life - AI-Powered Industrial Intelligence',
@@ -89,6 +123,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
+    languages: supportedLanguages,
   },
   category: 'Technology',
 };
@@ -130,6 +165,19 @@ const softwareApplicationSchema = {
   },
 };
 
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: siteUrl,
+  inLanguage: ['en', 'sq', 'de', 'it', 'fr', 'es', 'pt', 'tr', 'ar', 'hi', 'zh', 'ja'],
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${siteUrl}/search?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -143,6 +191,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(softwareApplicationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
           }}
         />
         {/* Organization Schema */}

@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: process.env.SITE_URL || 'https://kameleon.life',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life',
   generateRobotsTxt: false, // We have custom robots.txt
   generateIndexSitemap: true,
   sitemapSize: 7000,
@@ -12,8 +12,26 @@ const config = {
     '/api/*',
     '/server-sitemap.xml',
     '/_next/*',
+    '/sign-in/*',
+    '/sign-up/*',
+    '/auth/*',
     '/404',
     '/500'
+  ],
+  alternateRefs: [
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/en`, hreflang: 'en' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/sq`, hreflang: 'sq' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/de`, hreflang: 'de' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/it`, hreflang: 'it' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/fr`, hreflang: 'fr' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/es`, hreflang: 'es' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/pt`, hreflang: 'pt' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/tr`, hreflang: 'tr' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/ar`, hreflang: 'ar' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/hi`, hreflang: 'hi' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/zh`, hreflang: 'zh' },
+    { href: `${process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life'}/ja`, hreflang: 'ja' },
+    { href: process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://kameleon.life', hreflang: 'x-default' },
   ],
   
   // Additional paths to include
@@ -21,7 +39,7 @@ const config = {
     const result = [];
     
     // High priority pages
-    const highPriority = ['/', '/modules', '/pricing', '/company', '/developers'];
+    const highPriority = ['/', '/modules', '/pricing', '/platform', '/security', '/status', '/ocean', '/developers'];
     for (const path of highPriority) {
       result.push({
         loc: path,
@@ -33,11 +51,17 @@ const config = {
     
     // Module pages - medium-high priority
     const modules = [
+      '/asi-demo',
+      '/debate',
+      '/dashboard',
+      '/user/dashboard',
+      '/terms',
       '/modules/mood-journal',
       '/modules/daily-habits',
       '/modules/focus-timer',
       '/modules/phone-sensors',
       '/modules/curiosity-ocean',
+      '/modules/web-reader',
       '/modules/eeg-analysis',
       '/modules/neural-biofeedback',
       '/modules/spectrum-analyzer',

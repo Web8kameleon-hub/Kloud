@@ -143,6 +143,49 @@ const SERVICES = [
   }
 ];
 
+const SEO_SERVICE_CLUSTERS = [
+  {
+    title: 'AI Operations Platform',
+    keywords: [
+      'enterprise ai platform',
+      'ai orchestration',
+      'multi-agent ai platform',
+      'real-time decision intelligence'
+    ],
+    href: '/ocean'
+  },
+  {
+    title: 'Industrial Intelligence Services',
+    keywords: [
+      'industrial ai services',
+      'predictive analytics',
+      'iot telemetry analytics',
+      'operational intelligence platform'
+    ],
+    href: '/platform'
+  },
+  {
+    title: 'Sovereign Infrastructure Services',
+    keywords: [
+      'sovereign ai cloud',
+      'distributed execution engine',
+      'secure api gateway',
+      'edge routing governance'
+    ],
+    href: '/security'
+  },
+  {
+    title: 'Observability and Telemetry',
+    keywords: [
+      'agent telemetry platform',
+      'ai observability',
+      'runtime monitoring ai',
+      'distributed systems monitoring'
+    ],
+    href: '/status'
+  }
+];
+
 const PRODUCT_DOMAINS = [
   'ocean',
   'brain',
@@ -183,6 +226,18 @@ export default function HomePage() {
     : MODULES.filter(m => m.category === selectedCategory);
   const featuredModules = MODULES.filter((m) => m.featured);
   const modulesToRender = showAllModules ? filteredModules : filteredModules.slice(0, 6);
+  const serviceItemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Kloud Services',
+    itemListElement: SERVICES.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `https://kameleon.life${service.href}`,
+      name: service.title,
+      description: service.summary,
+    })),
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -225,6 +280,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white text-black">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceItemListSchema),
+        }}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -463,6 +524,42 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 px-4 bg-white border-y border-gray-200">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              Global Service Keywords We Are Targeting
+            </h2>
+            <p className="text-gray-600 mt-3 max-w-3xl mx-auto">
+              This service map reflects our core ranking intent for AI operations, industrial intelligence,
+              sovereign infrastructure, and telemetry observability.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5">
+            {SEO_SERVICE_CLUSTERS.map((cluster) => (
+              <Link
+                key={cluster.title}
+                href={cluster.href}
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-5 hover:border-emerald-500 hover:bg-emerald-50/40 transition-all"
+              >
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{cluster.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {cluster.keywords.map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="inline-flex rounded-full border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
