@@ -6,9 +6,9 @@ name: CI - Enterprise Security (Free Tier)
 
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [ master, main, develop, feature/* ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master, main, develop ]
 
 concurrency:
   group: ci-${{ github.ref }}

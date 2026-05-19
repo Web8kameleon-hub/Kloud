@@ -20,7 +20,7 @@ name: "⛵ Full Microservices Deploy"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
     paths:
       - 'docker-compose.microservices.yml'
       - 'Dockerfile*'

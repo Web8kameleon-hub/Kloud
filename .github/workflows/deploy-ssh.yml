@@ -15,7 +15,7 @@ name: "🚀 Deploy via SSH (Docker Compose)"
 on:
   # Auto-deploy on push to main (apps/web changes)
   push:
-    branches: [ main ]
+    branches: [ master, main ]
     paths:
       - 'apps/web/**'
       - 'apps/web/app/**'
@@ -87,7 +87,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ env.HETZNER_IP }} << 'ENDSSH'
           cd ${{ env.DEPLOY_PATH }}
           echo "📥 Pulling latest code..."
-          git pull origin main
+          git pull origin master || git pull origin main
           echo "✅ Code updated"
           ENDSSH
 

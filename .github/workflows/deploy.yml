@@ -13,7 +13,7 @@ name: "🚀 Deploy to Kubernetes"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
     paths:
       - 'apps/**'
       - 'ocean-core/**'
@@ -164,7 +164,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f deploy/kubernetes/kloud-deployment.yaml
+          kubectl apply -f deploy/kubernetes/clisonix-deployment.yaml
 
       - name: Verify deployment
         run: |

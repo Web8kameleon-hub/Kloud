@@ -32,6 +32,28 @@ const publicRoutes = [
 // Middleware function
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = (
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    ""
+  ).toLowerCase();
+
+  const isKameleonBlogHost =
+    host.includes("kameleon-blog") ||
+    host.startsWith("blog.") ||
+    host.startsWith("kameleon-blog.");
+
+  if (isKameleonBlogHost && !pathname.startsWith("/api")) {
+    const url = request.nextUrl.clone();
+    if (pathname === "/") {
+      url.pathname = "/blog";
+      return NextResponse.rewrite(url);
+    }
+    if (!pathname.startsWith("/blog") && !pathname.startsWith("/_next")) {
+      url.pathname = `/blog${pathname}`;
+      return NextResponse.rewrite(url);
+    }
+  }
 
   // If Clerk is not configured, allow all routes
   if (!isClerkConfigured) {
