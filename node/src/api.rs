@@ -311,6 +311,43 @@ fn compact_float(value: f32) -> f32 {
     (value * 1000.0).round() / 1000.0
 }
 
+fn html_escape(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&#x27;")
+}
+
+fn security_event_severity_class(outcome: &str) -> &'static str {
+    if outcome == "ok" || outcome == "accepted" {
+        "sev-ok"
+    } else if outcome.starts_with("rejected") {
+        "sev-warn"
+    } else {
+        "sev-err"
+    }
+}
+
+// Keep all event-row escaping in one place so future field additions do not bypass HTML escaping.
+fn render_security_event_row_html(event: &SecurityEvent) -> String {
+    let endpoint = html_escape(&event.endpoint);
+    let action = html_escape(&event.action);
+    let outcome = html_escape(&event.outcome);
+    let severity_class = security_event_severity_class(&event.outcome);
+
+    format!(
+        "<tr class=\"{}\"><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{:.3}</td><td>{}</td></tr>",
+        severity_class,
+        event.timestamp_ms,
+        endpoint,
+        action,
+        event.stigma_level,
+        event.ndb_score,
+        outcome
+    )
+}
+
 fn now_ms_u64() -> u64 {
     now_ms().min(u64::MAX as u128) as u64
 }
@@ -709,8 +746,8 @@ async fn get_dashboard(
     for (k, v) in &state_map {
         state_html.push_str(&format!(
             "<li><span class=\"state-key\">{}</span><code class=\"state-val\">{}</code></li>",
-            k,
-            B64.encode(v)
+            html_escape(k),
+            html_escape(&B64.encode(v))
         ));
     }
 
@@ -718,36 +755,9 @@ async fn get_dashboard(
         state_html.push_str("<li><span class=\"state-key\">empty</span><code class=\"state-val\">no local keys yet</code></li>");
     }
 
-    // Safety: escape HTML special characters before interpolating event fields into HTML.
-    // All string fields MUST be escaped here to prevent XSS if field values ever become
-    // user-controlled (e.g. endpoint paths, action names, outcome strings from request data).
-    fn html_escape(s: &str) -> String {
-        s.replace('&', "&amp;")
-            .replace('<', "&lt;")
-            .replace('>', "&gt;")
-            .replace('"', "&quot;")
-            .replace('\'', "&#x27;")
-    }
-
     let mut events_rows = String::new();
     for e in &filtered_events {
-        let severity_class = if e.outcome == "ok" || e.outcome == "accepted" {
-            "sev-ok"
-        } else if e.outcome.starts_with("rejected") {
-            "sev-warn"
-        } else {
-            "sev-err"
-        };
-        events_rows.push_str(&format!(
-            "<tr class=\"{}\"><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{:.3}</td><td>{}</td></tr>",
-            severity_class,
-            e.timestamp_ms,
-            html_escape(&e.endpoint),
-            html_escape(&e.action),
-            e.stigma_level,
-            e.ndb_score,
-            html_escape(&e.outcome)
-        ));
+        events_rows.push_str(&render_security_event_row_html(e));
     }
     if events_rows.is_empty() {
         events_rows.push_str("<tr><td colspan=\"6\">No events match the current filters.</td></tr>");

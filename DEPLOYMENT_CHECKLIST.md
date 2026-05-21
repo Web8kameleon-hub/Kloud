@@ -56,12 +56,12 @@
 2. [ ] Go to Domains → kloud.com → DNS Settings
 3. [ ] Add A Records:
 
-   ```
+   ...
    @ → [HETZNER_IP]
    www → [HETZNER_IP]
    api → [HETZNER_IP]
    grafana → [HETZNER_IP] (optional)
-   ```
+   ...
 
 4. [ ] Delete old STRATO hosting records
 5. [ ] Save changes
@@ -73,7 +73,7 @@
 
 ### Phase 3: Deploy Platform (10 min)
 
-1. [ ] SSH into server: `ssh root@[HETZNER_IP]`
+1. [ ] SSH into server: `ssh root@91.98.47.131`
 2. [ ] Run deployment script:
 
    ```bash

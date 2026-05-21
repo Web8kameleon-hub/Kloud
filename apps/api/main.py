@@ -2142,12 +2142,38 @@ async def correlation_middleware(request: Request, call_next):
     return response
 
 
-# Optional simple rate-limit per IP (no fake counters; purely request-count in memory window)
+# Optional simple rate-limit in memory.
+# Uses host+IP key to avoid coupling traffic across different domains on the same proxy IP.
 RATE_BUCKET: Dict[str, list] = {}
+RATE_LIMIT_EXEMPT_PATHS = {
+    "/health",
+    "/status",
+    "/api/health",
+    "/api/status",
+    "/api/system/health",
+    "/docs",
+    "/openapi.json",
+    "/redoc",
+}
+_RATE_LIMIT_ENABLED = os.getenv("ENABLE_SIMPLE_RATE_LIMIT", "1").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+_RATE_LIMIT_WINDOW_SECONDS = float(os.getenv("SIMPLE_RATE_LIMIT_WINDOW_SECONDS", "60"))
+_RATE_LIMIT_PER_MINUTE = int(os.getenv("SIMPLE_RATE_LIMIT_PER_MINUTE", "60"))
 
 
 @app.middleware("http")
 async def simple_rate_limit(request: Request, call_next):
+    if not _RATE_LIMIT_ENABLED:
+        return await call_next(request)
+
+    path = request.url.path
+    if path in RATE_LIMIT_EXEMPT_PATHS:
+        return await call_next(request)
+
     ip = (
         request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
         or request.headers.get("X-Real-IP")
@@ -2155,21 +2181,29 @@ async def simple_rate_limit(request: Request, call_next):
         or (request.client.host if request.client else "unknown")
     )
 
+    raw_host = (
+        request.headers.get("X-Forwarded-Host")
+        or request.headers.get("Host")
+        or "unknown"
+    )
+    host = raw_host.split(",")[0].strip().lower().split(":")[0]
+    bucket_key = f"{host}|{ip}"
+
     now = time.time()
-    window = 60.0
-    limit = 60  # REDUCED from 120 to 60 req/min to stop excessive polling
+    window = _RATE_LIMIT_WINDOW_SECONDS
+    limit = _RATE_LIMIT_PER_MINUTE
 
     # purge old
-    bucket = [t for t in RATE_BUCKET.get(ip, []) if now - t < window]
+    bucket = [t for t in RATE_BUCKET.get(bucket_key, []) if now - t < window]
     bucket.append(now)
-    RATE_BUCKET[ip] = bucket
+    RATE_BUCKET[bucket_key] = bucket
 
     if len(bucket) > limit:
         response = error_response(
             request,
             429,
             "RATE_LIMIT",
-            "Too many requests - limit is 60 per minute",
+            f"Too many requests - limit is {limit} per minute",
             details={"retry_after": int(window), "current_count": len(bucket)},
         )
         response.headers["Retry-After"] = str(int(window))

@@ -438,35 +438,47 @@ export default function AccountPage() {
         const token = getAuthToken()
         const authHeaders: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
 
-        // Fetch all billing data in parallel
-        const [subscriptionRes, invoicesRes, paymentMethodsRes, addressRes] = await Promise.all([
-          fetch('/api/billing/subscription', { headers: authHeaders }),
-          fetch('/api/billing/invoices', { headers: authHeaders }),
-          fetch('/api/billing/payment-methods', { headers: authHeaders }),
-          fetch('/api/billing/billing-address', { headers: authHeaders }),
+        const fetchBillingEndpoint = async (path: string) => {
+          const response = await fetch(path, { headers: authHeaders, cache: 'no-store' })
+          const data = await response.json().catch(() => null)
+
+          if (!response.ok) {
+            throw new Error(data?.error || `${path} failed with status ${response.status}`)
+          }
+
+          return data
+        }
+
+        // Fetch billing data independently so one failing route does not block the rest.
+        const [subscriptionData, invoicesData, paymentMethodsData, addressData] = await Promise.allSettled([
+          fetchBillingEndpoint('/api/billing/subscription'),
+          fetchBillingEndpoint('/api/billing/invoices'),
+          fetchBillingEndpoint('/api/billing/payment-methods'),
+          fetchBillingEndpoint('/api/billing/billing-address'),
         ])
 
-        const [subscriptionData, invoicesData, paymentMethodsData, addressData] = await Promise.all([
-          subscriptionRes.json(),
-          invoicesRes.json(),
-          paymentMethodsRes.json(),
-          addressRes.json(),
-        ])
-
-        if (subscriptionData.success && subscriptionData.subscription) {
-          setSubscription(subscriptionData.subscription)
+        if (subscriptionData.status === 'fulfilled' && subscriptionData.value?.success && subscriptionData.value.subscription) {
+          setSubscription(subscriptionData.value.subscription)
+        } else if (subscriptionData.status === 'rejected') {
+          console.error('Failed to fetch subscription:', subscriptionData.reason)
         }
 
-        if (invoicesData.success && invoicesData.invoices) {
-          setInvoices(invoicesData.invoices)
+        if (invoicesData.status === 'fulfilled' && invoicesData.value?.success && invoicesData.value.invoices) {
+          setInvoices(invoicesData.value.invoices)
+        } else if (invoicesData.status === 'rejected') {
+          console.error('Failed to fetch invoices:', invoicesData.reason)
         }
 
-        if (paymentMethodsData.success && paymentMethodsData.paymentMethods) {
-          setPaymentMethods(paymentMethodsData.paymentMethods)
+        if (paymentMethodsData.status === 'fulfilled' && paymentMethodsData.value?.success && paymentMethodsData.value.paymentMethods) {
+          setPaymentMethods(paymentMethodsData.value.paymentMethods)
+        } else if (paymentMethodsData.status === 'rejected') {
+          console.error('Failed to fetch payment methods:', paymentMethodsData.reason)
         }
 
-        if (addressData.success && addressData.billingAddress) {
-          setBillingAddress(addressData.billingAddress)
+        if (addressData.status === 'fulfilled' && addressData.value?.success && addressData.value.billingAddress) {
+          setBillingAddress(addressData.value.billingAddress)
+        } else if (addressData.status === 'rejected') {
+          console.error('Failed to fetch billing address:', addressData.reason)
         }
       } catch (error) {
         console.error('Failed to fetch billing data:', error)
