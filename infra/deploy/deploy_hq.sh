@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVER="178.105.52.245"
+SERVER="46.62.210.251"
 USER="root"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519_nopwd}"
 

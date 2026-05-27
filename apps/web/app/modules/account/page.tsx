@@ -390,15 +390,22 @@ export default function AccountPage() {
         const result = await response.json()
         if (result.success && result.data) {
           setUser(result.data)
+          setIsLoading(false)
+        } else {
+          // If no user data, still stop loading to show account page
+          setIsLoading(false)
         }
       } catch (error) {
         console.error('Failed to fetch profile:', error)
-      } finally {
         setIsLoading(false)
       }
     }
-    fetchProfile()
-  }, [])
+    
+    // Only fetch if i18n is loaded
+    if (isLoaded) {
+      fetchProfile()
+    }
+  }, [isLoaded])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -418,28 +425,37 @@ export default function AccountPage() {
       setBillingInterval('month')
     }
     setIsOnboarding(params.get('onboarding') === '1')
-  }, [])
+  }, []) // Only run once on mount
 
   useEffect(() => {
     if (!isOnboarding || isLoading || hasPromptedOnboardingUpgrade) {
       return
     }
+    if (subscription === undefined) {
+      // Still loading subscription data
+      return
+    }
     if (!subscription) {
       setActiveTab('subscription')
       openUpgradeModal('professional')
+      setHasPromptedOnboardingUpgrade(true)
     }
-    setHasPromptedOnboardingUpgrade(true)
-  }, [isOnboarding, isLoading, hasPromptedOnboardingUpgrade, subscription])
+  }, [isOnboarding, isLoading, subscription, hasPromptedOnboardingUpgrade])
 
   // Fetch billing data from Stripe APIs
   useEffect(() => {
+    // Only fetch if user is loaded (prevent flickering)
+    if (!user || isLoading) {
+      return
+    }
+
     const fetchBillingData = async () => {
       try {
         const token = getAuthToken()
         const authHeaders: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
 
         const fetchBillingEndpoint = async (path: string) => {
-          const response = await fetch(path, { headers: authHeaders, cache: 'no-store' })
+          const response = await fetch(path, { headers: authHeaders })
           const data = await response.json().catch(() => null)
 
           if (!response.ok) {
@@ -486,7 +502,7 @@ export default function AccountPage() {
     }
 
     fetchBillingData()
-  }, [])
+  }, [user, isLoading])
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('sq-AL', {
@@ -519,13 +535,25 @@ export default function AccountPage() {
     }
   }
 
-  // Wait for i18n to load from localStorage to prevent hydration mismatch
-  if (!isLoaded || isLoading || !user) {
+  // Wait for i18n to load before rendering anything (prevent hydration mismatch)
+  if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-gray-400">Initializing...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading if still fetching user profile (but i18n is ready)
+  if (isLoading || !user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading profile...</p>
         </div>
       </div>
     )

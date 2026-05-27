@@ -21,3 +21,4 @@ msgpack>=1.1.0
 stripe>=12.0.0
 paypalrestsdk>=1.7.1
 pydantic-extra-types>=2.10.0
+pymysql>=1.1.1

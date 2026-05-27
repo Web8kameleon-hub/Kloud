@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clisonix.dev/schemas/clx-event-v1.schema.json",
+  "title": "CLX Event Contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "timestamp",
+    "trace",
+    "delivery",
+    "payload_version",
+    "payload_schema",
+    "payload",
+    "metadata"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "event_type": {
+      "type": "string",
+      "pattern": "^clx\\.[a-z0-9_.-]+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trace_id",
+        "span_id",
+        "correlation_id"
+      ],
+      "properties": {
+        "trace_id": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128
+        },
+        "span_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 64
+        },
+        "parent_span_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 64
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retry_count",
+        "max_retries",
+        "ttl_ms",
+        "delivery_mode"
+      ],
+      "properties": {
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "ttl_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        },
+        "delivery_mode": {
+          "type": "string",
+          "enum": [
+            "at-most-once",
+            "at-least-once",
+            "exactly-once"
+          ]
+        }
+      }
+    },
+    "payload_version": {
+      "type": "string",
+      "pattern": "^v[0-9]+$"
+    },
+    "payload_schema": {
+      "type": "string",
+      "minLength": 3
+    },
+    "payload": {
+      "type": "object"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_service",
+        "target_service",
+        "priority",
+        "auth_context"
+      ],
+      "properties": {
+        "source_service": {
+          "type": "string",
+          "minLength": 2
+        },
+        "target_service": {
+          "type": "string",
+          "minLength": 2
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ]
+        },
+        "auth_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "token_type",
+            "scopes"
+          ],
+          "properties": {
+            "token_type": {
+              "type": "string"
+            },
+            "claims": {
+              "type": "object"
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

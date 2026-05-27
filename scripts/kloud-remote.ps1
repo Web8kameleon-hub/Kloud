@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Local CLI for Kloud Remote Hosting (kloud.aiagi.io @ 46.224.203.89)
+    Local CLI for Kloud Remote Hosting (kameleon.life @ 46.62.210.251)
 .DESCRIPTION
     Execute local commands against the remote hosted instance WITHOUT SSH.
     All commands use HTTPS API to control sovereign nodes and monitoring.
@@ -12,7 +12,7 @@
     .\kloud-remote.ps1 event "adaptive-test" 42
     .\kloud-remote.ps1 dashboard
 .NOTES
-    kloud.aiagi.io -> 46.224.203.89 (Hetzner)
+    kameleon.life -> 46.62.210.251 (Hetzner)
     All requests proxied with auto TTL
 #>
 
@@ -28,8 +28,8 @@ param(
 # CONFIGURATION
 # ════════════════════════════════════════════════════════════════════════════
 
-$REMOTE_HOST = "kloud.aiagi.io"
-$REMOTE_IP = "46.224.203.89"
+$REMOTE_HOST = "kameleon.life"
+$REMOTE_IP = "46.62.210.251"
 $API_BASE = "https://$REMOTE_HOST"
 $TIMEOUT = 15
 

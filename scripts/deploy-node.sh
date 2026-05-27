@@ -1,12 +1,12 @@
 #!/bin/bash
 # deploy-node.sh — run as root on any Hetzner node
-# Usage: NODE_ID=2 PEERS="1:46.224.203.89:8080:9080,3:62.238.21.125:8000:9080,4:37.27.216.254:8000:9080" bash deploy-node.sh
+# Usage: NODE_ID=1 PEERS="" bash deploy-node.sh
 
 set -e
 
-NODE_ID="${NODE_ID:-2}"
+NODE_ID="${NODE_ID:-1}"
 LISTEN_PORT="${LISTEN_PORT:-8080}"
-PEERS="${PEERS:-1:46.224.203.89:8080:9080,3:62.238.21.125:8000:9080,4:37.27.216.254:8000:9080}"
+PEERS="${PEERS:-}"
 
 echo "=== Kloud Node Deploy ==="
 echo "NODE_ID=$NODE_ID  LISTEN_PORT=$LISTEN_PORT"

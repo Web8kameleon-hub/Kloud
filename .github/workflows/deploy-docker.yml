@@ -2,7 +2,7 @@
 # KLOUD - DOCKER COMPOSE DEPLOYMENT (SSH)
 # =============================================================================
 # Deploys services to Hetzner via SSH + Docker Compose
-# Server: 46.224.203.89
+# Server: 46.62.210.251
 #
 # Nuk përdoret Kubernetes - vetëm Docker Compose në server
 # =============================================================================
@@ -54,7 +54,7 @@ concurrency:
 # =============================================================================
 env:
   # Server
-  HETZNER_IP: 91.98.47.131
+  HETZNER_IP: 46.62.210.251
   DEPLOY_PATH: /opt/kloud
   SERVER_USER: root
   SSH_KEY_SECRET_NAME: HETZNER_SSH_KEY

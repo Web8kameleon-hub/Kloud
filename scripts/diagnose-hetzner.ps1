@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
 # ?? Kloud Production Server Diagnostic Script
 # Author: Ledjan Ahmati - ABA GmbH
-# Server: 46.225.14.83
+# Server: 46.62.210.251
 
 param(
-    [string]$Server = "root@46.225.14.83",
+    [string]$Server = "root@46.62.210.251",
     [switch]$Verbose
 )
 
@@ -62,11 +62,13 @@ try {
     if (Test-Path $SSH_KEY) {
         Write-Host "?? Using SSH key" -ForegroundColor Green
         ssh -i $SSH_KEY -o StrictHostKeyChecking=no $Server $DIAGNOSTIC_COMMANDS
-    } else {
+    }
+    else {
         Write-Host "?? Default SSH auth" -ForegroundColor Yellow
         ssh -o StrictHostKeyChecking=no $Server $DIAGNOSTIC_COMMANDS
     }
-} catch {
+}
+catch {
     Write-Host "? Error: $_" -ForegroundColor Red
     exit 1
 }

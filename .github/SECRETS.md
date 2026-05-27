@@ -56,7 +56,7 @@
 #    ssh-keygen -t ed25519 -C "github-actions-kloud" -f ~/.ssh/github_deploy
 #
 # 2. Copy public key to server:
-#    ssh-copy-id -i ~/.ssh/github_deploy.pub root@46.224.203.89
+#    ssh-copy-id -i ~/.ssh/github_deploy.pub root@46.62.210.251
 #
 # 3. Copy private key content:
 #    cat ~/.ssh/github_deploy

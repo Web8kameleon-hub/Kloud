@@ -8,10 +8,22 @@ from fastapi.responses import JSONResponse
 import psutil
 import logging
 import time
-from industrial_data import router as industrial_router
+from apps.api.industrial_data import router as industrial_router
+from apps.api.modules.nodedb_control_plane import router as nodedb_router
+from apps.api.modules.sovereign_mode import router as sovereign_router
+from apps.api.modules.ai_native_scheduler import router as scheduler_router
+from apps.api.modules.benchmark_suite import router as benchmark_router
 
-app = FastAPI(title="Kloud Industrial API", description="Industrial backend for monitoring, logging, and control.")
+app = FastAPI(
+    title="Kloud Industrial API",
+    description="Industrial backend for monitoring, logging, and control.",
+)
 app.include_router(industrial_router)
+app.include_router(nodedb_router)
+app.include_router(sovereign_router)
+app.include_router(scheduler_router)
+app.include_router(benchmark_router)
+
 
 @app.get("/status")
 def get_status():
@@ -21,8 +33,9 @@ def get_status():
         "memory": psutil.virtual_memory()._asdict(),
         "disk": psutil.disk_usage("/")._asdict(),
         "active_users": 1,
-        "system": "Kloud Industrial"
+        "system": "Kloud Industrial",
     }
+
 
 @app.post("/log")
 def log_event(request: Request):
@@ -30,19 +43,23 @@ def log_event(request: Request):
     logging.info(f"Industrial log: {data}")
     return {"status": "logged", "data": data}
 
+
 @app.post("/control")
 def control_system(request: Request):
     data = request.json()
     return {"status": "control received", "data": data}
+
 
 @app.exception_handler(Exception)
 def global_exception_handler(request: Request, exc: Exception):
     logging.error(f"Error: {exc}")
     return JSONResponse(status_code=500, content={"error": str(exc)})
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.get("/dashboard")
 def dashboard():
@@ -52,9 +69,6 @@ def dashboard():
         "metrics": {
             "cpu": psutil.cpu_percent(),
             "memory": psutil.virtual_memory().percent,
-            "disk": psutil.disk_usage("/").percent
-        }
+            "disk": psutil.disk_usage("/").percent,
+        },
     }
-
-
-

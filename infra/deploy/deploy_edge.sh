@@ -41,6 +41,4 @@ deploy_one() {
   echo "[EDGE] ${server} deploy complete."
 }
 
-deploy_one "37.27.216.254" "infra/env/edge_hel.env"
-deploy_one "5.161.114.189" "infra/env/edge_us.env"
-deploy_one "5.223.75.178" "infra/env/edge_sg.env"
+deploy_one "46.62.210.251" "infra/env/edge_hel.env"

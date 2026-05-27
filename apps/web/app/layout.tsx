@@ -9,11 +9,28 @@ import { DynamicFavicon } from "../src/components/DynamicFavicon";
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
 const isClerkConfigured = clerkKey.startsWith('pk_') && !clerkKey.includes('YOUR_CLERK');
 
-// Dynamic import for ClerkProvider - only if configured
-const ClerkProvider = isClerkConfigured 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  ? require("@clerk/nextjs").ClerkProvider 
-  : ({ children }: { children: React.ReactNode }) => <>{children}</>;
+type LayoutProviderProps = {
+  children: React.ReactNode;
+  appearance?: {
+    variables?: Record<string, string>;
+  };
+};
+
+const FallbackProvider = ({ children }: LayoutProviderProps) => <>{children}</>;
+
+// Resolve ClerkProvider defensively to avoid runtime crashes when the module/key is misconfigured.
+let ClerkProvider: (props: LayoutProviderProps) => React.ReactElement = FallbackProvider;
+if (isClerkConfigured) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const clerkModule = require("@clerk/nextjs");
+    if (typeof clerkModule?.ClerkProvider === "function") {
+      ClerkProvider = clerkModule.ClerkProvider;
+    }
+  } catch {
+    ClerkProvider = FallbackProvider;
+  }
+}
 
 
 const inter = Inter({

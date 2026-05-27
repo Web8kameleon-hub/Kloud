@@ -1,0 +1,102 @@
+openapi: 3.1.0
+info:
+  title: CLX Event Contract Fragment
+  version: 1.0.0
+components:
+  schemas:
+    CLXEventV1:
+      type: object
+      required:
+        - event_id
+        - event_type
+        - timestamp
+        - trace
+        - delivery
+        - payload_version
+        - payload_schema
+        - payload
+        - metadata
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+          example: clx.llm.request
+        timestamp:
+          type: string
+          format: date-time
+        trace:
+          type: object
+          required: [trace_id, span_id, correlation_id]
+          properties:
+            trace_id:
+              type: string
+            span_id:
+              type: string
+            parent_span_id:
+              type: string
+            correlation_id:
+              type: string
+        delivery:
+          type: object
+          required: [retry_count, max_retries, ttl_ms, delivery_mode]
+          properties:
+            retry_count:
+              type: integer
+              minimum: 0
+            max_retries:
+              type: integer
+              minimum: 0
+            ttl_ms:
+              type: integer
+              minimum: 1
+            delivery_mode:
+              type: string
+              enum: [at-most-once, at-least-once, exactly-once]
+        payload_version:
+          type: string
+          example: v1
+        payload_schema:
+          type: string
+          example: clx.llm.request.v1
+        payload:
+          type: object
+        metadata:
+          type: object
+          required: [source_service, target_service, priority, auth_context]
+          properties:
+            source_service:
+              type: string
+            target_service:
+              type: string
+            priority:
+              type: string
+              enum: [low, normal, high, critical]
+            auth_context:
+              type: object
+              required: [token_type, scopes]
+              properties:
+                token_type:
+                  type: string
+                claims:
+                  type: object
+                scopes:
+                  type: array
+                  items:
+                    type: string
+paths:
+  /v1/events/validate:
+    post:
+      summary: Validate CLX event envelope
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CLXEventV1'
+      responses:
+        '200':
+          description: Event is valid
+        '400':
+          description: Event is invalid

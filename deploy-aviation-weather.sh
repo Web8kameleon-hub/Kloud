@@ -8,7 +8,7 @@
 
 set -e
 
-HETZNER_IP="46.225.14.83"
+HETZNER_IP="46.62.210.251"
 DEPLOY_PATH="/root/Kloud-cloud"
 SERVICE_NAME="aviation"
 CONTAINER_NAME="kloud-aviation"

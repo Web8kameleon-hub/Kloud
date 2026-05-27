@@ -63,12 +63,12 @@ function Write-Warn {
 }
 
 $nodeMap = @{
-    "ocean-hq"     = @{ ip = "178.105.52.245"; profile = "hq" }
-    "compute-fsk"  = @{ ip = "91.98.47.131"; profile = "compute" }
-    "failover-nbg" = @{ ip = "46.224.203.89"; profile = "failover" }
-    "edge-hel"     = @{ ip = "37.27.216.254"; profile = "edge" }
-    "edge-ash"     = @{ ip = "5.161.114.189"; profile = "edge" }
-    "edge-sin"     = @{ ip = "5.223.75.178"; profile = "edge" }
+    "ocean-hq"     = @{ ip = "46.62.210.251"; profile = "hq" }
+    "compute-fsk"  = @{ ip = "46.62.210.251"; profile = "compute" }
+    "failover-nbg" = @{ ip = "46.62.210.251"; profile = "failover" }
+    "edge-hel"     = @{ ip = "46.62.210.251"; profile = "edge" }
+    "edge-ash"     = @{ ip = "46.62.210.251"; profile = "edge" }
+    "edge-sin"     = @{ ip = "46.62.210.251"; profile = "edge" }
 }
 
 if (-not (Test-Path $ComposeFile)) {
@@ -82,7 +82,8 @@ if (-not (Test-Path $SshKeyPath)) {
 $targets = @()
 if ($Target -eq "all") {
     $targets = @("ocean-hq", "compute-fsk", "failover-nbg", "edge-hel", "edge-ash", "edge-sin")
-} else {
+}
+else {
     $targets = @($Target)
 }
 
@@ -121,7 +122,8 @@ foreach ($node in $targets) {
 
     $pullCmd = if ($SkipGitPull) {
         "echo 'Skip git pull as requested'"
-    } else {
+    }
+    else {
         "if [ -d .git ]; then git pull --ff-only; else echo 'No git repo in remote path, skip pull'; fi"
     }
 

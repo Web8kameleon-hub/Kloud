@@ -6,23 +6,23 @@
     "data": [
       {
         "name": "base_url",
-        "value": "http://46.225.14.83:8000"
+        "value": "http://46.62.210.251:8000"
       },
       {
         "name": "intelligence_url",
-        "value": "http://46.225.14.83:8098"
+        "value": "http://46.62.210.251:8098"
       },
       {
         "name": "users_url",
-        "value": "http://46.225.14.83:8070"
+        "value": "http://46.62.210.251:8070"
       },
       {
         "name": "excel_url",
-        "value": "http://46.225.14.83:8002"
+        "value": "http://46.62.210.251:8002"
       },
       {
         "name": "kitchen_url",
-        "value": "http://46.225.14.83:3100"
+        "value": "http://46.62.210.251:3100"
       },
       {
         "name": "auth_token",

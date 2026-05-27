@@ -17,6 +17,7 @@ COPY asi_realtime_engine.py .
 COPY enhanced_asi.py .
 COPY localization.py .
 COPY agiem_core.py .
+COPY cors_policy.py .
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \

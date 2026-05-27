@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Script from 'next/script';
 import { useState, useEffect } from 'react';
 
 /**
@@ -280,8 +281,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white text-black">
-      <script
+      <Script
+        id="home-services-schema"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(serviceItemListSchema),
         }}

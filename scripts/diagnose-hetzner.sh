@@ -1,9 +1,9 @@
 #!/bin/bash
 # 🔍 Kloud Production Server Diagnostic Script
 # Author: Ledjan Ahmati - ABA GmbH
-# Server: 46.225.14.83
+# Server: 46.62.210.251
 
-SERVER="${1:-root@46.225.14.83}"
+SERVER="${1:-root@46.62.210.251}"
 SSH_KEY="$HOME/.ssh/hetzner_deploy_key"
 
 echo "════════════════════════════════════════════════"

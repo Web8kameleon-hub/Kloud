@@ -2,7 +2,7 @@
 # KLOUD - DOCKER COMPOSE DEPLOYMENT VIA SSH
 # =============================================================================
 # Deploys to Hetzner server using SSH and Docker Compose
-# Server: 46.224.203.89 (kameleon.life)
+# Server: 46.62.210.251 (kameleon.life)
 #
 # This workflow:
 # 1. SSHs to Hetzner and runs git pull
@@ -45,7 +45,7 @@ permissions:
   contents: read
 
 env:
-  HETZNER_IP: 91.98.47.131
+  HETZNER_IP: 46.62.210.251
   DEPLOY_PATH: /opt/kloud
   FLUID_AUTOSTART: "true"
   WWWMMM_AUTORUN: "true"

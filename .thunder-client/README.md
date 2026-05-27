@@ -11,20 +11,20 @@
 
 ### 2. Zgjidh Environment
 
-- **Kloud Production**: Server live (46.225.14.83:8000)
+- **Kloud Production**: Server live (46.62.210.251:8000)
 - **Kloud Local**: localhost:8000
 
 ### 3. APIs të disponueshme
 
-| Folder | Endpoints |
-| ------ | --------- |
-| 📋 Health & Status | `/health`, `/status`, `/api/system-status` |
-| 🧠 ASI Trinity | `/asi/status`, `/asi/health`, `/asi/alba/metrics` |
-| 🌊 Ocean AI | `/api/ocean/status`, `/api/ocean/session/create`, `/api/ocean/labs/execute` |
-| 📊 Excel | `/api/excel/health`, `/api/excel/generate` |
-| 💳 Billing | `/billing/stripe/payment-intent`, `/billing/paypal/order` |
-| 🔬 Neural | `/neural-symphony`, `/api/ask` |
-| 🏭 Content Factory | `/analyze`, `/process`, `/publish`, `/pipeline` |
+| Folder            | Endpoints                                                                   |
+| ----------------- | --------------------------------------------------------------------------- |
+| 📋 Health & Status | `/health`, `/status`, `/api/system-status`                                  |
+| 🧠 ASI Trinity     | `/asi/status`, `/asi/health`, `/asi/alba/metrics`                           |
+| 🌊 Ocean AI        | `/api/ocean/status`, `/api/ocean/session/create`, `/api/ocean/labs/execute` |
+| 📊 Excel           | `/api/excel/health`, `/api/excel/generate`                                  |
+| 💳 Billing         | `/billing/stripe/payment-intent`, `/billing/paypal/order`                   |
+| 🔬 Neural          | `/neural-symphony`, `/api/ask`                                              |
+| 🏭 Content Factory | `/analyze`, `/process`, `/publish`, `/pipeline`                             |
 
 ## 🔐 Environment Variables
 

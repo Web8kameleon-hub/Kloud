@@ -2,7 +2,7 @@
 # KLOUD CLOUD - FULL MICROSERVICES HELM DEPLOYMENT
 # =============================================================================
 # Deploys ALL 56+ containers to Hetzner Kubernetes
-# Server: 46.225.14.83 (rocky-32gb-nbg1-1)
+# Server: 46.62.210.251 (rocky-32gb-hel1-2)
 #
 # Architecture:
 # ├── DATABASES: postgres, redis, neo4j, victoriametrics
@@ -61,7 +61,7 @@ env:
   REGISTRY: ghcr.io
   # Use lowercase repo name for GHCR compatibility
   IMAGE_NAME: web8kameleon-hub/kloud-cloud
-  HETZNER_IP: 46.225.14.83
+  HETZNER_IP: 46.62.210.251
   NAMESPACE_PREFIX: kloud
 
 jobs:
@@ -1201,7 +1201,7 @@ jobs:
           echo "| 🐳 Build Images | ${{ needs.build-images.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| ⛵ Deploy | ${{ needs.deploy.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Server:** 46.224.203.89 (Hetzner Nürnberg)" >> $GITHUB_STEP_SUMMARY
+          echo "**Server:** 46.62.210.251 (Hetzner Helsinki)" >> $GITHUB_STEP_SUMMARY
           echo "**Environment:** ${{ inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Scope:** ${{ inputs.deploy_scope || 'full' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Image Tag:** ${{ needs.build-images.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY

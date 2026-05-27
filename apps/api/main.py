@@ -1448,9 +1448,9 @@ try:
             return r.json()
 
     app.include_router(fabric_router)
-    logger.info("✅ Kloud Fabric router registered → /api/fabric/*")
+    logger.info("Kloud Fabric router registered -> /api/fabric/*")
 except Exception as _fabric_err:
-    logger.warning(f"⚠️ Kloud Fabric router not available: {_fabric_err}")
+    logger.warning(f"Kloud Fabric router not available: {_fabric_err}")
 
 # --- Chat API ---
 
@@ -3075,15 +3075,15 @@ async def alba_metrics():
                 latency_ms = (time.perf_counter() - t0) * 1000
                 data_source = "system_psutil"
             else:
-                return {
-                    "error": "No metrics source available",
-                    "timestamp": utcnow(),
-                    "alba_network": {
-                        "operational": False,
-                        "health": 0,
-                        "data_source": "none",
+                raise HTTPException(
+                    status_code=503,
+                    detail={
+                        "error": "metrics_source_unconfigured",
+                        "endpoint": "/api/asi/alba/metrics",
+                        "required_sources": ["prometheus", "psutil"],
+                        "message": "No fake ever: ALBA metrics unavailable without a real metrics source.",
                     },
-                }
+                )
 
         return {
             "timestamp": utcnow(),
@@ -3101,7 +3101,14 @@ async def alba_metrics():
         }
     except Exception as e:
         logger.error(f"ALBA metrics error: {e}")
-        return {"error": str(e), "timestamp": utcnow()}
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "metrics_endpoint_failure",
+                "endpoint": "/api/asi/alba/metrics",
+                "message": "No fake ever: ALBA metrics endpoint failed.",
+            },
+        )
 
 
 @app.get("/api/asi/albi/metrics")
@@ -3142,15 +3149,15 @@ async def albi_metrics():
                 data_source = "system_psutil"
             else:
                 # psutil not available - return error, NOT mock data
-                return {
-                    "error": "No metrics source available (Prometheus offline, psutil missing)",
-                    "timestamp": utcnow(),
-                    "albi_neural": {
-                        "operational": False,
-                        "health": 0,
-                        "data_source": "none",
+                raise HTTPException(
+                    status_code=503,
+                    detail={
+                        "error": "metrics_source_unconfigured",
+                        "endpoint": "/api/asi/albi/metrics",
+                        "required_sources": ["prometheus", "psutil"],
+                        "message": "No fake ever: ALBI metrics unavailable without a real metrics source.",
                     },
-                }
+                )
 
         return {
             "timestamp": utcnow(),
@@ -3169,7 +3176,14 @@ async def albi_metrics():
         }
     except Exception as e:
         logger.error(f"ALBI metrics error: {e}")
-        return {"error": str(e), "timestamp": utcnow()}
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "metrics_endpoint_failure",
+                "endpoint": "/api/asi/albi/metrics",
+                "message": "No fake ever: ALBI metrics endpoint failed.",
+            },
+        )
 
 
 @app.get("/api/asi/jona/metrics")
@@ -3210,15 +3224,15 @@ async def jona_metrics():
                 requests_value = int(net.packets_sent + net.packets_recv) % 1000
                 data_source = "system_psutil"
             else:
-                return {
-                    "error": "No metrics source available",
-                    "timestamp": utcnow(),
-                    "jona_coordination": {
-                        "operational": False,
-                        "health": 0,
-                        "data_source": "none",
+                raise HTTPException(
+                    status_code=503,
+                    detail={
+                        "error": "metrics_source_unconfigured",
+                        "endpoint": "/api/asi/jona/metrics",
+                        "required_sources": ["prometheus", "psutil"],
+                        "message": "No fake ever: JONA metrics unavailable without a real metrics source.",
                     },
-                }
+                )
 
         return {
             "timestamp": utcnow(),
@@ -3237,7 +3251,14 @@ async def jona_metrics():
         }
     except Exception as e:
         logger.error(f"JONA metrics error: {e}")
-        return {"error": str(e), "timestamp": utcnow()}
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "metrics_endpoint_failure",
+                "endpoint": "/api/asi/jona/metrics",
+                "message": "No fake ever: JONA metrics endpoint failed.",
+            },
+        )
 
 
 @app.get("/api/asi/status")
@@ -3275,12 +3296,14 @@ async def asi_status():
         }
     except Exception as e:
         logger.error(f"ASI status error: {e}")
-        return {
-            "status": "degraded",
-            "timestamp": utcnow(),
-            "error": str(e),
-            "data_source": "Fallback",
-        }
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "asi_status_unavailable",
+                "endpoint": "/api/asi/status",
+                "message": "No fake ever: ASI status unavailable because one or more real metrics sources failed.",
+            },
+        )
 
 
 @app.get("/api/asi/health")
@@ -3311,13 +3334,14 @@ async def asi_health():
         }
     except Exception as e:
         logger.error(f"ASI health error: {e}")
-        return {
-            "healthy": False,
-            "timestamp": utcnow(),
-            "error": str(e),
-            "overall_health": 0.0,
-            "data_source": "Error",
-        }
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "asi_health_unavailable",
+                "endpoint": "/api/asi/health",
+                "message": "No fake ever: ASI health unavailable because one or more real metrics sources failed.",
+            },
+        )
 
 
 # ============================================================================

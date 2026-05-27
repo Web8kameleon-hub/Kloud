@@ -55,9 +55,9 @@ echo "✅ docker-compose.yml production config written"
 # 3. Deploy to Hetzner
 # ═══════════════════════════════════════════════════════════════════
 
-echo "3️⃣  Deploying to Hetzner (91.98.47.131)..."
+echo "3️⃣  Deploying to Hetzner (46.62.210.251)..."
 
-HETZNER_IP="91.98.47.131"
+HETZNER_IP="46.62.210.251"
 HETZNER_PATH="/opt/kloud"
 
 # Git commit all changes
