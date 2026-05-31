@@ -52,6 +52,7 @@ yarn-error.log*
 __pycache__/
 *.py[cod]
 *$py.class
+.venv-linux/
 *.so
 .Python
 build/

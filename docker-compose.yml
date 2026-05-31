@@ -887,7 +887,7 @@ services:
   saas-api:
     build:
       context: .
-      dockerfile: Dockerfile.saas-api
+      dockerfile: Dockerfile.saas
     container_name: kloud-saas-api
     environment:
       PYTHONUNBUFFERED: "1"

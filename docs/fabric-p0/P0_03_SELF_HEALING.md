@@ -1,13 +1,16 @@
 # P0 #3 - Self-Healing Nodes
 
 ## Qellimi
+
 Self-healing i plote: detection -> diagnosis -> remediation -> verification -> incident log.
 
 ## Detection
+
 - heartbeat + metrics: cpu, mem, battery, signal_strength, queue_depth
 - status transitions: healthy -> degraded -> offline
 
 ## Diagnosis (deterministe)
+
 - network_unreachable
 - battery_low
 - cpu_throttling
@@ -18,6 +21,7 @@ Self-healing i plote: detection -> diagnosis -> remediation -> verification -> i
 - heartbeat_timeout
 
 ## Remediation actions
+
 - `node.soft_reset()`
 - `node.hard_reset()`
 - `node.rejoin_mesh()`
@@ -28,10 +32,12 @@ Self-healing i plote: detection -> diagnosis -> remediation -> verification -> i
 - `node.rebalance_jobs()`
 
 ## Verification
+
 - kerkon 2-3 heartbeat te shendetshme pas remediation
 - nese deshton, aktivizo fallback policy
 
 ## Incident logging
+
 - `incident_id`
 - `node_id`
 - `diagnosis`
@@ -40,6 +46,7 @@ Self-healing i plote: detection -> diagnosis -> remediation -> verification -> i
 - `resolved`
 
 ## Teste detyruese
+
 1. heartbeat timeout -> reroute + incident
 2. mesh partition -> rejoin + sync
 3. queue overflow -> rebalance
@@ -47,6 +54,7 @@ Self-healing i plote: detection -> diagnosis -> remediation -> verification -> i
 5. fallback chain soft->hard reset
 
 ## Done when
+
 - [ ] Detection, diagnosis, remediation, verification aktive.
 - [ ] Policy engine i dokumentuar dhe i testuar.
 - [ ] Incident logs queryable.

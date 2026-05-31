@@ -44,6 +44,7 @@ Cdo vendim ruhet me:
 - `Sovereign Mode` status
 
 Për çdo vendim ruhet edhe `candidate_source: "nodedb"` që audit trail të tregojë qartë nëse kandidatura erdhi nga control-plane real apo nga payload i klientit.
+
 - reason
 - score_breakdown
 - ranked_candidates

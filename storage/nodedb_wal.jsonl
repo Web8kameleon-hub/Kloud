@@ -1,0 +1,3 @@
+{"event_type": "node.join", "timestamp": "2026-05-27T06:09:29.754310+00:00", "payload": {"node_id": "edge-auto", "status": "healthy"}}
+{"event_type": "node.join", "timestamp": "2026-05-27T06:09:29.759314+00:00", "payload": {"node_id": "edge-sovereign", "status": "healthy"}}
+{"event_type": "node.join", "timestamp": "2026-05-27T06:09:29.760977+00:00", "payload": {"node_id": "cloud-sovereign", "status": "healthy"}}

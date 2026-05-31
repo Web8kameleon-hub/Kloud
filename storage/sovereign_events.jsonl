@@ -1,0 +1,5 @@
+{"event_type": "sovereign.mode.changed", "timestamp": "2026-05-27T06:09:29.742247+00:00", "payload": {"mode": "normal", "reason": "test_reset", "local_llm_active": false, "node_db_mode": "cloud", "pipeline_mode": "cloud"}}
+{"event_type": "sovereign.mode.changed", "timestamp": "2026-05-27T06:09:29.747913+00:00", "payload": {"mode": "normal", "reason": "test_reset", "local_llm_active": false, "node_db_mode": "cloud", "pipeline_mode": "cloud"}}
+{"event_type": "sovereign.mode.changed", "timestamp": "2026-05-27T06:09:29.752627+00:00", "payload": {"mode": "normal", "reason": "test_reset", "local_llm_active": false, "node_db_mode": "cloud", "pipeline_mode": "cloud"}}
+{"event_type": "sovereign.mode.changed", "timestamp": "2026-05-27T06:09:29.757882+00:00", "payload": {"mode": "normal", "reason": "test_reset", "local_llm_active": false, "node_db_mode": "cloud", "pipeline_mode": "cloud"}}
+{"event_type": "sovereign.mode.changed", "timestamp": "2026-05-27T06:09:29.763053+00:00", "payload": {"mode": "sovereign", "reason": "test_filter", "local_llm_active": true, "node_db_mode": "local", "pipeline_mode": "local"}}
