@@ -411,6 +411,55 @@ async def stream_ollama_response(
         yield f"\n\n[Error: {str(e)}]"
 
 
+def _messages_to_prompt(messages: List[Dict[str, Any]]) -> str:
+    parts: List[str] = []
+    for item in messages:
+        role = str(item.get("role", "user")).strip()
+        content = str(item.get("content", "")).strip()
+        if content:
+            parts.append(f"{role}: {content}")
+    return "\n".join(parts)
+
+
+async def call_ollama_non_stream(
+    client: httpx.AsyncClient,
+    model: str,
+    messages: List[Dict[str, Any]],
+    options: Dict[str, Any],
+) -> str:
+    chat_payload = {
+        "model": model,
+        "messages": messages,
+        "stream": False,
+        "options": options,
+    }
+
+    resp = await client.post(f"{OLLAMA_HOST}/api/chat", json=chat_payload)
+
+    # Some Ollama builds expose /api/generate but not /api/chat.
+    if resp.status_code == 404:
+        generate_payload = {
+            "model": model,
+            "prompt": _messages_to_prompt(messages),
+            "stream": False,
+            "options": options,
+        }
+        resp = await client.post(f"{OLLAMA_HOST}/api/generate", json=generate_payload)
+
+    if resp.status_code != 200:
+        raise HTTPException(status_code=resp.status_code, detail="Ollama error")
+
+    data = resp.json()
+    text = data.get("message", {}).get("content", "")
+    if not text:
+        text = data.get("response", "")
+    text = str(text).strip()
+    if not text:
+        raise HTTPException(status_code=502, detail="Ollama returned empty response")
+
+    return text
+
+
 # ═══════════════════════════════════════════════════════════════════
 # MAIN PROCESSING PIPELINE
 # ═══════════════════════════════════════════════════════════════════
@@ -522,31 +571,22 @@ VIOLATION OF THESE RULES IS NOT ALLOWED."""
     # 6. Call Ollama - 60s timeout, optimized for speed
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
-            resp = await client.post(
-                f"{OLLAMA_HOST}/api/chat",
-                json={
-                    "model": req.model or MODEL,
-                    "messages": [{"role": "system", "content": enhanced_prompt}, {"role": "user", "content": prompt}],
-                    "stream": False,
-                    "options": {
-                        "temperature": 0.7,
-                        "num_ctx": 8192,
-                        "repeat_penalty": 1.2,
-                        "top_p": 0.9,
-                        "num_predict": -1,
-                        "num_keep": 0,
-                        "mirostat": 0,
-                        "repeat_last_n": 64,
-                        "stop": [],
-                    },
+            response_text = await call_ollama_non_stream(
+                client,
+                req.model or MODEL,
+                [{"role": "system", "content": enhanced_prompt}, {"role": "user", "content": prompt}],
+                {
+                    "temperature": 0.7,
+                    "num_ctx": 8192,
+                    "repeat_penalty": 1.2,
+                    "top_p": 0.9,
+                    "num_predict": -1,
+                    "num_keep": 0,
+                    "mirostat": 0,
+                    "repeat_last_n": 64,
+                    "stop": [],
                 },
             )
-
-            if resp.status_code != 200:
-                raise HTTPException(status_code=resp.status_code, detail="Ollama error")
-
-            data = resp.json()
-            response_text = data.get("message", {}).get("content", "No response")
             engines_used.append(f"Ollama({req.model or MODEL})")
 
     except httpx.TimeoutException:
@@ -894,27 +934,18 @@ You provide expert-level, research-backed answers. Be precise, technical, and co
     # Call Ollama with expert context
     try:
         async with httpx.AsyncClient(timeout=90.0) as client:
-            resp = await client.post(
-                f"{OLLAMA_HOST}/api/chat",
-                json={
-                    "model": req.model or MODEL,
-                    "messages": [{"role": "system", "content": expert_prompt}, {"role": "user", "content": prompt}],
-                    "stream": False,
-                    "options": {
-                        "temperature": 0.5,  # Lower for more factual
-                        "num_ctx": 8192,
-                        "repeat_penalty": 1.1,
-                        "top_p": 0.85,
-                        "num_predict": 1024,  # Limit response length
-                    },
+            response_text = await call_ollama_non_stream(
+                client,
+                req.model or MODEL,
+                [{"role": "system", "content": expert_prompt}, {"role": "user", "content": prompt}],
+                {
+                    "temperature": 0.5,  # Lower for more factual
+                    "num_ctx": 8192,
+                    "repeat_penalty": 1.1,
+                    "top_p": 0.85,
+                    "num_predict": 1024,  # Limit response length
                 },
             )
-
-            if resp.status_code != 200:
-                raise HTTPException(status_code=resp.status_code, detail="Ollama error")
-
-            data = resp.json()
-            response_text = data.get("message", {}).get("content", "No response")
             engines_used.append(f"Ollama({req.model or MODEL})")
 
     except httpx.TimeoutException:
