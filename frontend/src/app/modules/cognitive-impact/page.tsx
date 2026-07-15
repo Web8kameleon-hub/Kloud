@@ -89,7 +89,7 @@ const albanianCities = [
     { name: 'Gjirokastër', lat: 40.0758, lon: 20.1389, icao: 'LAGJ' },
 ];
 
-export default function WeatherDashboard() {
+function WeatherDashboard() {
     const [data, setData] = useState<APIResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -630,9 +630,13 @@ export default function WeatherDashboard() {
 }
 
 // Dynamic export to prevent SSR hydration issues
-export default dynamic(() => Promise.resolve(CognitiveImpactDashboard), { ssr: false });
+const Page = dynamic(() => Promise.resolve(CognitiveImpactDashboard), { ssr: false });
 
 function CognitiveImpactDashboard() {
     return <WeatherDashboard />;
 }
 
+
+export default Page;
+
+// removed duplicate default export
