@@ -1,6 +1,8 @@
 // Spectrum Analyzer Industrial Page
 // Author: Ledjan Ahmati
 
+'use client'
+
 import React, { useEffect, useState } from 'react'
 
 interface SpectrumData {
