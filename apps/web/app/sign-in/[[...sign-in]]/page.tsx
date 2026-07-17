@@ -95,25 +95,6 @@ export default function SignInPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/internal-auth/google/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnUrl: onboardingTarget }),
-      });
-      const data = (await res.json()) as { success?: boolean; authUrl?: string; error?: string };
-      if (!res.ok || !data.success || !data.authUrl) {
-        throw new Error(data.error || "Google auth init failed");
-      }
-      window.location.href = data.authUrl;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Google auth init failed");
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-900 p-4 text-white">

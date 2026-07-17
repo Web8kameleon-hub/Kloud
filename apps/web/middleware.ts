@@ -1,6 +1,6 @@
 /**
  * Kloud Cloud - Authentication Middleware
- * Protects routes using Clerk authentication
+ * Internal authentication policy (email + OTP) only.
  *
  * @author Ledjan Ahmati
  * @copyright 2026 Kloud Cloud
@@ -8,10 +8,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Auth provider policy: internal auth is default, Clerk only when explicitly selected.
-const authProvider = process.env.AUTH_PROVIDER || "internal";
-const isClerkConfigured =
-  authProvider === "clerk" && !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+// Internal-only auth policy (no external auth providers)
+const authProvider = "internal";
 
 // Public routes that don't require authentication
 const publicRoutes = [
@@ -55,8 +53,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If Clerk is not configured, allow all routes
-  if (!isClerkConfigured) {
+  // Internal auth flow is handled by internal API routes and client session token checks.
+  // Middleware currently allows requests and avoids external-provider gates.
+  if (authProvider === "internal") {
     return NextResponse.next();
   }
 
@@ -69,8 +68,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For protected routes when Clerk is configured,
-  // let the client-side components handle auth checks
+  // Fallback (kept for safety)
   return NextResponse.next();
 }
 

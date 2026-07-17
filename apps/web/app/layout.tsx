@@ -5,32 +5,6 @@ import { RequestLogger } from "../src/components/telemetry/RequestLogger";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DynamicFavicon } from "../src/components/DynamicFavicon";
 
-// Check if Clerk is configured with a REAL key (not placeholder)
-const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
-const isClerkConfigured = clerkKey.startsWith('pk_') && !clerkKey.includes('YOUR_CLERK');
-
-type LayoutProviderProps = {
-  children: React.ReactNode;
-  appearance?: {
-    variables?: Record<string, string>;
-  };
-};
-
-const FallbackProvider = ({ children }: LayoutProviderProps) => <>{children}</>;
-
-// Resolve ClerkProvider defensively to avoid runtime crashes when the module/key is misconfigured.
-let ClerkProvider: (props: LayoutProviderProps) => React.ReactElement = FallbackProvider;
-if (isClerkConfigured) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const clerkModule = require("@clerk/nextjs");
-    if (typeof clerkModule?.ClerkProvider === "function") {
-      ClerkProvider = clerkModule.ClerkProvider;
-    }
-  } catch {
-    ClerkProvider = FallbackProvider;
-  }
-}
 
 
 const inter = Inter({
@@ -272,23 +246,8 @@ export default function RootLayout({
         className={`${inter.variable} antialiased`}
         suppressHydrationWarning
       >
-        {isClerkConfigured ? (
-          <ClerkProvider
-            appearance={{
-              variables: {
-                colorPrimary: '#10b981',
-              }
-            }}
-          >
-            <RequestLogger />
-            {children}
-          </ClerkProvider>
-        ) : (
-          <>
-            <RequestLogger />
-            {children}
-          </>
-        )}
+        <RequestLogger />
+        {children}
       </body>
     </html>
   );
