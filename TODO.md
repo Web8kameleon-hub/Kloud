@@ -1,4 +1,4 @@
-# TODO - Thorough Docker-based validation for PR #3
+rto # TODO - Thorough Docker-based validation for PR #3
 
 - [ ] Start Docker web service via compose (path A, step 1)
 - [ ] Run container status/health checks
