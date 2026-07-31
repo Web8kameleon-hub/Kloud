@@ -100,7 +100,7 @@ export default function SignInPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-900 p-4 text-white">
       <div className="mx-auto mt-14 max-w-md rounded-2xl border border-cyan-700/50 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-3xl font-bold">Sign In</h1>
-        <p className="mt-1 text-sm text-cyan-100/80">Internal auth: SMS, Email OTP, Google OAuth</p>
+        <p className="mt-1 text-sm text-cyan-100/80">Internal auth only: Email OTP / SMS OTP</p>
 
         {!challengeId ? (
           <div className="mt-6 space-y-3">
@@ -140,13 +140,6 @@ export default function SignInPage() {
               className="w-full rounded-lg bg-cyan-600 px-4 py-2 font-semibold hover:bg-cyan-500 disabled:opacity-60"
             >
               {loading ? "Signing in..." : "Continue"}
-            </button>
-            <button
-              disabled={loading}
-              onClick={handleGoogle}
-              className="w-full rounded-lg border border-cyan-500/60 bg-transparent px-4 py-2 font-semibold hover:bg-cyan-600/20 disabled:opacity-60"
-            >
-              Continue with Google
             </button>
           </div>
         ) : (
