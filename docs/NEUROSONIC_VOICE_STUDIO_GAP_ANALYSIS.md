@@ -2,7 +2,7 @@
 
 **Document Date:** 2026-07-31  
 **Version:** v1.0  
-**Owner:** Neurosonic Platform Engineering (Execution Lead: API/AI Runtime Owner)
+**Owner:** Neurosonic Platform Engineering (Execution Lead: API/AI Runtime Owner )
 
 ## Scope
 This document captures the current verified state, missing pieces, and an implementation/testing plan for:
