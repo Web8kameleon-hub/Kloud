@@ -26,6 +26,10 @@ const OCEAN_BASE =
 const NODEDB_BASE =
   process.env.NODEDB_CONTROL_PLANE_URL ||
   (isDev ? "http://localhost:9090" : "http://kloud-nodedb-control-plane:9090");
+// Lightning SPP 3.14 — Scan-Process-Print fabric node (fabric API on :8080).
+const LIGHTNING_BASE =
+  process.env.LIGHTNING_SPP_URL ||
+  (isDev ? "http://localhost:8090" : "http://kloud-lightning-spp:8080");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -321,6 +325,15 @@ const nextConfig = {
       {
         source: "/api/nodedb-fluid/:path*",
         destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // Lightning SPP 3.14 -> Scan-Process-Print fabric node (status/scan/pipeline)
+      {
+        source: "/api/lightning",
+        destination: `${LIGHTNING_BASE}/api/v1/fabric/status`,
+      },
+      {
+        source: "/api/lightning/:path*",
+        destination: `${LIGHTNING_BASE}/api/v1/:path*`,
       },
       // Stigma (behavioral trace + film memory chain) -> nodedb resonant events
       {

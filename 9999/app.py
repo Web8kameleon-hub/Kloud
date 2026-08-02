@@ -19,15 +19,20 @@ import re
 import importlib
 
 import httpx
-import numpy as np
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+np: Any = None
 imageio: Any = None
 Image: Any = None
 ImageDraw: Any = None
+
+try:
+    np = importlib.import_module("numpy")
+except ModuleNotFoundError:
+    pass
 
 try:
     imageio = importlib.import_module("imageio.v2")
@@ -826,13 +831,39 @@ def _detect_language_hint(text: str) -> str:
         "vella",
         "vëlla",
         "a flet",
+        "kush je",
+        "kush te",
+        "kush të",
+        "je krijuar",
+        "krijuar",
+        "ndertoi",
+        "ndërtoi",
+        "faleminderit",
     ]
-    german_markers = ["hallo", "sprichst du", "deutsch", "dienst", "prozesse"]
+    german_markers = [
+        "hallo",
+        "sprichst du",
+        "sprechen sie",
+        "deutsch",
+        "deutch",
+        "guten tag",
+        "guten morgen",
+        "wer bist du",
+        "danke",
+        "dienst",
+        "prozesse",
+    ]
+    french_markers = ["bonjour", "parlez-vous", "parlez vous", "merci", "francais", "français", "comment"]
+    italian_markers = ["ciao", "parli italiano", "grazie", "italiano", "come stai"]
 
     if any(marker in f" {content} " for marker in albanian_markers):
         return "sq"
     if any(marker in content for marker in german_markers):
         return "de"
+    if any(marker in content for marker in french_markers):
+        return "fr"
+    if any(marker in content for marker in italian_markers):
+        return "it"
     return "en"
 
 
@@ -842,16 +873,64 @@ def _detect_intent(text: str) -> str:
         return "general"
 
     if re.search(
-        r"^(hi|hello|hey|pershendetje|përshëndetje|tung|tungjatjeta)\b", content
+        r"^(hi|hello|hey|hallo|guten tag|guten morgen|servus|bonjour|salut|ciao|hola|olá|"
+        r"pershendetje|përshëndetje|tung|tungjatjeta|c'kemi|ç'kemi|ckemi)\b",
+        content,
     ):
         return "greeting"
 
-    if (
-        "a flet shqip" in content
-        or "flas shqip" in content
-        or "do you speak albanian" in content
+    if any(
+        token in content
+        for token in [
+            "a flet shqip",
+            "a flisni shqip",
+            "flisni shqip",
+            "flet shqip",
+            "flas shqip",
+            "a di shqip",
+            "do you speak albanian",
+            "can you speak albanian",
+            "sprichst du albanisch",
+            "sprechen sie albanisch",
+            "a flet anglisht",
+            "do you speak english",
+            "sprichst du deutsch",
+            "sprechen sie deutsch",
+            "sprechen sie deutch",
+            "sprichst du deutch",
+            "do you speak german",
+            "a flet gjermanisht",
+            "parlez-vous",
+            "parli italiano",
+            "hablas español",
+        ]
     ):
         return "language_check"
+
+    if any(
+        token in content
+        for token in [
+            "nga kush je krijuar",
+            "kush te krijoi",
+            "kush të krijoi",
+            "kush te ndertoi",
+            "kush të ndërtoi",
+            "kush te beri",
+            "kush të bëri",
+            "kush je ti",
+            "cfare je ti",
+            "çfarë je ti",
+            "who created you",
+            "who made you",
+            "who built you",
+            "who are you",
+            "what are you",
+            "wer hat dich erstellt",
+            "wer hat dich gebaut",
+            "wer bist du",
+        ]
+    ):
+        return "identity"
 
     if any(
         token in content
@@ -882,12 +961,43 @@ def _template_reply(intent: str, lang: str) -> Optional[str]:
             return "Pershendetje! Jam OpenMind ne 9999 dhe jam gati te te ndihmoj me chat, memory, tasks, docs, vision, music dhe workflows."
         if lang == "de":
             return "Hallo! Ich bin OpenMind auf Port 9999 und bereit zu helfen bei Chat, Memory, Aufgaben und Workflows."
+        if lang == "fr":
+            return "Bonjour ! Je suis OpenMind sur le port 9999, pret a aider avec le chat, la memoire, les taches et les workflows."
+        if lang == "it":
+            return "Ciao! Sono OpenMind sulla porta 9999, pronto ad aiutarti con chat, memoria, attivita e workflow."
         return "Hello! I'm OpenMind on port 9999, ready to help with chat, memory, tasks, docs, vision, music, and workflows."
 
     if intent == "language_check":
         if lang == "sq":
-            return "Po, flas shqip. Mund te vazhdojme ne shqip, qarte dhe shkurt."
-        return "Yes, I can speak Albanian. We can continue in Albanian."
+            return "Po, flas shqip dhe shume gjuhe te tjera. Mund te vazhdojme ne shqip, qarte dhe shkurt."
+        if lang == "de":
+            return "Ja, ich spreche Deutsch (und viele weitere Sprachen). Wir koennen auf Deutsch fortfahren."
+        if lang == "fr":
+            return "Oui, je parle francais et de nombreuses autres langues. Nous pouvons continuer en francais."
+        if lang == "it":
+            return "Si, parlo italiano e molte altre lingue. Possiamo continuare in italiano."
+        return "Yes, I speak English and many other languages. We can continue in your language."
+
+    if intent == "identity":
+        if lang == "sq":
+            return (
+                "Jam OpenMind, moduli i pergjithshem AI i Kloud qe punon mbi motorin 9999. "
+                "Jam pjese e Kloud Sovereign Intelligence Fabric, i ndertuar nga Ledjan Ahmati "
+                "(Kameleon Life / ABA GmbH) dhe punoj mbi infrastrukture sovrane me modele lokale. "
+                "Te ndihmoj me chat, memory, tasks, dokumente, vision, muzike dhe workflows."
+            )
+        if lang == "de":
+            return (
+                "Ich bin OpenMind, das allgemeine KI-Modul von Kloud auf der 9999-Engine. "
+                "Ich bin Teil des Kloud Sovereign Intelligence Fabric, entwickelt von Ledjan Ahmati "
+                "(Kameleon Life / ABA GmbH), und laufe auf souveraener Infrastruktur mit lokalen Modellen."
+            )
+        return (
+            "I'm OpenMind, the general AI module of Kloud running on the 9999 engine. "
+            "I'm part of the Kloud Sovereign Intelligence Fabric, built by Ledjan Ahmati "
+            "(Kameleon Life / ABA GmbH), running on sovereign infrastructure with local models. "
+            "I help with chat, memory, tasks, documents, vision, music, and workflows."
+        )
 
     if intent == "emotional_ack":
         if lang == "sq":
@@ -1657,6 +1767,8 @@ async def video_create(req: VideoCreateRequest):
         raise HTTPException(status_code=503, detail="imageio is not installed")
     if Image is None or ImageDraw is None:
         raise HTTPException(status_code=503, detail="Pillow is not installed")
+    if np is None:
+        raise HTTPException(status_code=503, detail="numpy is not installed")
 
     subtitles = req.subtitles or [
         req.title,

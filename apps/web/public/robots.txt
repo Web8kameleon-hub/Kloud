@@ -1,50 +1,12 @@
-# Kameleon Life - Robots.txt
-# Maximum crawlability for search engines
+# Kameleon Life - robots.txt
+# Full crawlability for search engines.
+# AI-trainer gating (GPTBot, ClaudeBot, CCBot, etc.) is managed at the edge (Cloudflare).
+# A single wildcard group already permits every search crawler, so no per-bot
+# duplication is needed here.
 
 User-agent: *
 Allow: /
 
-# Sitemap
 Sitemap: https://kameleon.life/sitemap.xml
-
-# Specific bot allowances
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
-# SEO crawler tooling (allow to improve worldwide discoverability)
-User-agent: AhrefsBot
-Allow: /
-
-User-agent: SemrushBot
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
-User-agent: Yandex
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-# Host
 Host: kameleon.life
 

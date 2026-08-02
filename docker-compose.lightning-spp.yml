@@ -1,0 +1,44 @@
+# ============================================================================
+# Kloud Fabric overlay: Lightning SPP 3.14 (Scan-Process-Print)
+# ============================================================================
+# Standalone overlay that joins the existing Kloud fabric network so NodeDB
+# (nodedb-control-plane) can discover and supervise it as a first-class node.
+#
+# Usage (from repo root):
+#   docker compose -f docker-compose.lightning-spp.yml up -d --build
+#
+# Requires the main Kloud stack (which creates the kloud_default network) to be
+# running. NodeDB reaches it at http://kloud-lightning-spp:8080.
+# Health / identity endpoint: /api/v1/fabric/status
+# ============================================================================
+
+services:
+  lightning-spp:
+    build:
+      context: ./external/Lightning-SPP-3.14
+      dockerfile: Dockerfile
+    container_name: kloud-lightning-spp
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      DOTNET_RUNNING_IN_CONTAINER: "true"
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "1"
+      # Admin token for /api/license/issue and signing-status (set in .env)
+      LIGHTNING_ADMIN_TOKEN: "${LIGHTNING_ADMIN_TOKEN:-}"
+    command: ["serve", "8080"]
+    ports:
+      - "8090:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/fabric/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - kloud_default
+
+networks:
+  kloud_default:
+    external: true
