@@ -21,11 +21,8 @@ const REPORTING_BASE =
 const OCEAN_BASE =
   process.env.OCEAN_INTERNAL_URL ||
   (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
-// AI Global 9999 — resonant fabric host (rezonance, tide, stigma events, nanogrid)
-const GLOBAL_9999_BASE =
-  process.env.AI_9999_URL ||
-  (isDev ? "http://localhost:9999" : "http://ai-global-9999:9999");
-// NodeDB control plane — nodedb, nodedb-fluid, stigma write, scan-print, nanogrid status
+// NodeDB control plane — resonant fabric host: nodedb, nodedb-fluid, resonant
+// events, stigma, scan-print, nanogrid status (verified deployed on :9090).
 const NODEDB_BASE =
   process.env.NODEDB_CONTROL_PLANE_URL ||
   (isDev ? "http://localhost:9090" : "http://kloud-nodedb-control-plane:9090");
@@ -276,75 +273,69 @@ const nextConfig = {
         destination: `${OCEAN_BASE}/api/v1/health`,
       },
       // ======================================================================
-      // SOVEREIGN FABRIC ALIASES (proprietary modules -> real backends)
+      // SOVEREIGN FABRIC ALIASES (proprietary modules -> real deployed backends)
       // Profile: wwwmmm-ndb-stigma-tide-rezonance-nanogrid
+      // NOTE: exact routes MUST precede ":path*" (which also matches empty path).
+      // Verified against deployed nodedb-control-plane:9090 (resonant fabric host).
       // ======================================================================
-      // Rezonance (resonant event fabric) — AI Global 9999
-      {
-        source: "/api/rezonance/:path*",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/:path*`,
-      },
+      // Rezonance (resonant event fabric) -> nodedb-control-plane
       {
         source: "/api/rezonance",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/status`,
+        destination: `${NODEDB_BASE}/api/v1/resonant/events`,
+      },
+      {
+        source: "/api/rezonance/:path*",
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
       },
       {
         source: "/api/resonant/:path*",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/:path*`,
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
       },
-      // Tide (operational gating) — surfaced by resonant status on 9999
-      {
-        source: "/api/tide",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/status`,
-      },
-      {
-        source: "/api/tide/:path*",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/:path*`,
-      },
-      // Nanogrid — control-plane nanogrid status + 9999 resonant metrics
+      // Nanogrid -> control-plane nanogrid status (exact first)
       {
         source: "/api/nanogrid/status",
         destination: `${NODEDB_BASE}/api/v1/control-plane/nanogrid/status`,
       },
       {
-        source: "/api/nanogrid/:path*",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/:path*`,
-      },
-      {
         source: "/api/nanogrid",
         destination: `${NODEDB_BASE}/api/v1/control-plane/nanogrid/status`,
       },
-      // NodeDB + NodeDB Fluid — control plane
       {
-        source: "/api/nodedb/:path*",
+        source: "/api/nanogrid/:path*",
         destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
       },
+      // NodeDB -> control plane discovery (exact first)
       {
         source: "/api/nodedb",
         destination: `${NODEDB_BASE}/api/v1/control-plane/discovery`,
       },
       {
-        source: "/api/nodedb-fluid/:path*",
+        source: "/api/nodedb/:path*",
         destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
       },
+      // NodeDB Fluid -> sync-loop status (exact first)
       {
         source: "/api/nodedb-fluid",
         destination: `${NODEDB_BASE}/api/v1/control-plane/sync-loop/status`,
       },
-      // Stigma (behavioral trace + film memory chain) — nodedb + 9999 events
+      {
+        source: "/api/nodedb-fluid/:path*",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // Stigma (behavioral trace + film memory chain) -> nodedb resonant events
       {
         source: "/api/stigma/write",
         destination: `${NODEDB_BASE}/api/v1/stigma/write`,
       },
       {
         source: "/api/stigma/events",
-        destination: `${GLOBAL_9999_BASE}/api/v1/resonant/events`,
+        destination: `${NODEDB_BASE}/api/v1/resonant/events`,
       },
       {
         source: "/api/stigma/:path*",
-        destination: `${NODEDB_BASE}/api/v1/:path*`,
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
       },
-      // Scanner-Thinker-Printer — control-plane scan-print
+      // Scanner-Thinker-Printer -> control-plane scan-print (exact first)
       {
         source: "/api/scan-print",
         destination: `${NODEDB_BASE}/api/v1/control-plane/scan-print`,
@@ -352,6 +343,15 @@ const nextConfig = {
       {
         source: "/api/scan-print/:path*",
         destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // Fabric operational surfaces (real deployed control-plane endpoints)
+      {
+        source: "/api/fabric-monitoring",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/monitoring/status`,
+      },
+      {
+        source: "/api/fabric-topology",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/topology`,
       },
     ];
   },
