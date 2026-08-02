@@ -12,8 +12,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kameleon.life';
-const siteName = 'Kameleon Life';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kameleon.life";
+const siteName = "Kloud";
+const brandName = "Kameleon Life";
 const supportedLanguages: Record<string, string> = {
   en: `${siteUrl}/en`,
   sq: `${siteUrl}/sq`,
@@ -34,32 +35,42 @@ const supportedLanguages: Record<string, string> = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Kameleon Life - AI-Powered Industrial Intelligence Platform",
-    template: "%s | Kameleon Life"
+    default: "Kloud | Sovereign Intelligence Fabric by Kameleon Life",
+    template: "%s | Kloud",
   },
-  description: "Kameleon Life is the next-generation AI platform for industrial intelligence, behavioral science, EEG analytics, real-time monitoring, and adaptive automation. Transform data into actionable insights.",
+  description:
+    "Kloud by Kameleon Life is a sovereign intelligence fabric for AI operations, industrial intelligence, telemetry observability, secure distributed execution, and enterprise governance.",
   keywords: [
-    "kameleon life", "kameleon.life", "ai platform", "industrial intelligence",
-    "machine learning platform", "behavioral science ai", "real-time analytics",
-    "eeg analysis platform", "neural analytics", "biofeedback analytics",
-    "curiosity ocean ai", "multilingual ai assistant", "fastapi microservices",
-    "cloud-native ai", "predictive analytics", "cognitive computing",
-    "deep learning services", "iot analytics", "telemetry analytics",
-    "signal processing ai", "audio synthesis ai", "api orchestration",
-    "enterprise api platform", "saas ai infrastructure", "automation platform",
-    "smart manufacturing ai", "industry 4.0 ai", "digital transformation",
-    "system monitoring ai", "ai observability", "payment enabled saas",
-    "stripe sepa paypal integration", "jwt authentication api", "secure api gateway",
-    "data intelligence platform", "ai for operations", "adaptive intelligence",
-    "kloud cloud", "albi", "alba", "jona", "agi ecosystem",
-    "enterprise ai platform", "ai infrastructure", "ai orchestration platform",
-    "workflow automation ai", "ai observability platform", "agent telemetry",
-    "predictive maintenance ai", "digital twin intelligence", "neurotech platform",
-    "llm orchestration", "model serving platform", "real-time decision intelligence",
-    "edge ai platform", "distributed systems monitoring", "api-first ai platform",
-    "industrial automation software", "adaptive ai assistant", "sovereign ai cloud",
-    "ai analytics dashboard", "iot telemetry platform", "event-driven ai",
-    "multi-agent platform", "operational ai", "machine intelligence software"
+    "kloud",
+    "kameleon life",
+    "kameleon.life",
+    "ledjan ahmati",
+    "ABA GmbH",
+    "Bochum Germany",
+    "sovereign intelligence fabric",
+    "enterprise ai platform",
+    "ai orchestration platform",
+    "multi-agent ai platform",
+    "ai operations platform",
+    "industrial intelligence services",
+    "predictive analytics",
+    "iot telemetry analytics",
+    "operational intelligence platform",
+    "sovereign ai cloud",
+    "distributed execution engine",
+    "secure api gateway",
+    "edge routing governance",
+    "agent telemetry platform",
+    "ai observability",
+    "runtime monitoring ai",
+    "distributed systems monitoring",
+    "real-time decision intelligence",
+    "behavioral telemetry",
+    "BTI DAS PFD",
+    "CRDT runtime consistency",
+    "zero trust governance",
+    "AI infrastructure",
+    "platform reliability",
   ],
   authors: [
     { name: "Ledjan Ahmati", url: siteUrl },
@@ -94,21 +105,23 @@ export const metadata: Metadata = {
     alternateLocale: ['sq_AL', 'de_DE', 'it_IT', 'fr_FR', 'es_ES', 'pt_PT', 'tr_TR', 'ar_SA', 'hi_IN', 'zh_CN', 'ja_JP'],
     url: siteUrl,
     siteName,
-    title: 'Kameleon Life - AI-Powered Industrial Intelligence',
-    description: 'Transform operations with AI analytics, behavioral science insights, EEG processing, and real-time monitoring.',
+    title: "Kloud | Sovereign Intelligence Fabric by Kameleon Life",
+    description:
+      "Run AI operations with cognitive telemetry, distributed execution, and zero-trust governance in one enterprise control surface.",
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Kameleon Life - Industrial AI Platform',
+        alt: "Kloud - Sovereign Intelligence Fabric",
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kameleon Life - AI-Powered Industrial Intelligence',
-    description: 'AI platform for industrial intelligence, behavioral science, and real-time analytics.',
+    title: "Kloud | Sovereign Intelligence Fabric",
+    description:
+      "Enterprise AI operations platform for industrial intelligence, secure execution, and telemetry observability.",
     images: ['/og-image.png'],
     creator: '@kameleonlife',
   },
@@ -147,7 +160,7 @@ const softwareApplicationSchema = {
     ratingValue: '4.9',
     ratingCount: '150',
   },
-  description: 'AI-powered industrial intelligence and behavioral science platform',
+  description: 'Sovereign intelligence fabric for AI operations, infrastructure governance, and telemetry observability',
   url: siteUrl,
   author: {
     '@type': 'Organization',
@@ -159,7 +172,7 @@ const softwareApplicationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: siteName,
+  name: `${siteName} by ${brandName}`,
   url: siteUrl,
   inLanguage: ['en', 'sq', 'de', 'it', 'fr', 'es', 'pt', 'tr', 'ar', 'hi', 'zh', 'ja'],
   potentialAction: {
@@ -197,10 +210,18 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "Kameleon Life",
+              "name": "ABA GmbH",
               "url": siteUrl,
               "logo": `${siteUrl}/logo.png`,
               "legalName": "ABA GmbH",
+              "brand": [
+                "Kloud",
+                "Kameleon Life"
+              ],
+              "foundingLocation": {
+                "@type": "Place",
+                "name": "Bochum, Germany"
+              },
               "founder": {
                 "@type": "Person",
                 "name": "Ledjan Ahmati"
@@ -216,8 +237,8 @@ export default function RootLayout({
               "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "customer support",
-                "email": "support@kloud.com",
-                "availableLanguage": ["English", "Albanian"]
+                "email": "clisonix@pm.me",
+                "availableLanguage": ["English", "Albanian", "German"]
               }
             })
           }}

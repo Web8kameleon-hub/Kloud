@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic
+COPY datasource_hub_api.py /app/
+COPY data_sources /app/data_sources
+ENV PORT=40402
+EXPOSE 40402
+CMD ["python", "datasource_hub_api.py"]

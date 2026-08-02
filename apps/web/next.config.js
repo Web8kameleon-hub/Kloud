@@ -286,28 +286,5 @@ const nextConfig = {
   allowedDevOrigins: ["localhost:3000", "127.0.0.1:3000", "kloud.com"],
 };
 
-export default async () => {
-  if (process.env.NODE_ENV === "development") {
-    return nextConfig;
-  }
-
-  const { default: withPWAInit } = await import("@ducanh2912/next-pwa");
-  const withPWA = withPWAInit({
-    dest: "public",
-    disable: false,
-    register: true,
-    skipWaiting: true,
-    cacheOnFrontEndNav: true,
-    aggressiveFrontEndNavCaching: true,
-    reloadOnOnline: true,
-    fallbacks: {
-      document: "/offline",
-    },
-    workboxOptions: {
-      disableDevLogs: true,
-    },
-  });
-
-  return withPWA(nextConfig);
-};
+export default nextConfig;
 
