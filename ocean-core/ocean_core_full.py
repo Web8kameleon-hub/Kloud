@@ -499,6 +499,69 @@ async def stream_ollama_response(
 
 
 # ═══════════════════════════════════════════════════════════════════
+# SSE STREAMING (real chunks, large-output safe, no buffering dumps)
+# ═══════════════════════════════════════════════════════════════════
+
+# Split oversized single tokens/blocks so no giant dump is sent in one frame.
+SSE_MAX_CHUNK_CHARS = int(os.getenv("SSE_MAX_CHUNK_CHARS", "512"))
+SSE_HEADERS = {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    "Connection": "keep-alive",
+    # Disable proxy/Nginx buffering so chunks flush immediately (no dumps).
+    "X-Accel-Buffering": "no",
+}
+
+
+def _sse_frame(event: str, data: Dict[str, Any]) -> str:
+    """Serialize a single SSE frame: `event:` + `data:` + blank line."""
+    return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+def _chunk_text(text: str, size: int = SSE_MAX_CHUNK_CHARS) -> List[str]:
+    """Break a large string into <=size pieces so frames stay small (no dumps)."""
+    if len(text) <= size:
+        return [text]
+    return [text[i : i + size] for i in range(0, len(text), size)]
+
+
+async def sse_ollama_response(
+    model: str, messages: list, options: dict, engines_used: list, lang_code: str
+) -> AsyncGenerator[str, None]:
+    """
+    Real SSE stream: emits one `token` frame per model delta (chunked if large),
+    periodic `ping` heartbeats, and a terminal `done` frame. No full-response
+    buffering — every delta is flushed as it arrives from ollama.
+    """
+    index = 0
+    total_chars = 0
+    start = time.time()
+    # Opening frame lets clients render immediately (TTFT signal).
+    yield _sse_frame("open", {"model": model, "lang": lang_code, "ts": start})
+    try:
+        async for delta in stream_ollama_response(model, messages, options, engines_used, lang_code):
+            if not delta:
+                continue
+            for piece in _chunk_text(delta):
+                index += 1
+                total_chars += len(piece)
+                yield _sse_frame("token", {"i": index, "delta": piece})
+    except Exception as exc:  # pragma: no cover
+        yield _sse_frame("error", {"message": str(exc)[:200]})
+    finally:
+        yield _sse_frame(
+            "done",
+            {
+                "chunks": index,
+                "chars": total_chars,
+                "elapsed_ms": round((time.time() - start) * 1000, 1),
+            },
+        )
+        # Sentinel for EventSource clients that key off a literal [DONE].
+        yield "data: [DONE]\n\n"
+
+
+# ═══════════════════════════════════════════════════════════════════
 # MAIN PROCESSING PIPELINE
 # ═══════════════════════════════════════════════════════════════════
 
@@ -936,6 +999,9 @@ async def chat_stream(req: ChatRequest):
 
     _record_impulse(action="chat_stream", target="ocean-core", prompt=prompt, lang=req.language or "auto", streamed=True)
 
+    # Response format: SSE by default (real chunks), text/plain only if asked.
+    want_plain = (req.mode or "").lower() == "plain"
+
     # Quick language detection inline (no async overhead)
     lang_hint = ""
     if any(word in prompt.lower() for word in ["çfarë", "si", "pse", "ku", "kur", "përse", "një", "është"]):
@@ -949,10 +1015,24 @@ async def chat_stream(req: ChatRequest):
         if albanian_response:
             logger.info(f"🇦🇱 Albanian Dict direct: {prompt[:40]}...")
 
-            async def albanian_stream():
-                yield albanian_response
+            if want_plain:
+                async def albanian_stream_plain():
+                    yield albanian_response
 
-            return StreamingResponse(albanian_stream(), media_type="text/plain")
+                return StreamingResponse(albanian_stream_plain(), media_type="text/plain")
+
+            async def albanian_stream_sse():
+                start = time.time()
+                yield _sse_frame("open", {"model": "albanian_dict", "lang": "sq", "ts": start})
+                idx = 0
+                # Chunk the dictionary answer so no single large dump is sent.
+                for piece in _chunk_text(albanian_response):
+                    idx += 1
+                    yield _sse_frame("token", {"i": idx, "delta": piece})
+                yield _sse_frame("done", {"chunks": idx, "chars": len(albanian_response), "elapsed_ms": round((time.time() - start) * 1000, 1)})
+                yield "data: [DONE]\n\n"
+
+            return StreamingResponse(albanian_stream_sse(), media_type="text/event-stream", headers=SSE_HEADERS)
 
     # Build FAST prompt (minimal processing!)
     messages = [{"role": "system", "content": FAST_SYSTEM_PROMPT + lang_hint}, {"role": "user", "content": prompt}]
@@ -961,19 +1041,28 @@ async def chat_stream(req: ChatRequest):
     fast_options = {
         "temperature": 0.7,
         "num_ctx": 2048,  # Reduced from 8192!
-        "num_predict": 1024,  # Limit response length
+        "num_predict": int(os.getenv("SSE_NUM_PREDICT", "4096")),  # large-output safe
         "top_k": 40,  # Faster sampling
         "top_p": 0.9,
         "repeat_penalty": 1.1,
     }
 
-    logger.info(f"🚀 FAST streaming: {prompt[:40]}...")
+    logger.info(f"🚀 {'PLAIN' if want_plain else 'SSE'} streaming: {prompt[:40]}...")
+
+    if want_plain:
+        return StreamingResponse(
+            stream_ollama_response(
+                model=req.model or MODEL, messages=messages, options=fast_options, engines_used=["FastStream"], lang_code="auto"
+            ),
+            media_type="text/plain",
+        )
 
     return StreamingResponse(
-        stream_ollama_response(
+        sse_ollama_response(
             model=req.model or MODEL, messages=messages, options=fast_options, engines_used=["FastStream"], lang_code="auto"
         ),
-        media_type="text/plain",
+        media_type="text/event-stream",
+        headers=SSE_HEADERS,
     )
 
 
