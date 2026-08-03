@@ -794,15 +794,22 @@ async def _post_json(
     return response.json()
 
 
-async def _ocean_generate_text(prompt: str, max_tokens: int = 1024) -> str:
-    payload = {
-        "prompt": prompt,
-        "max_tokens": max_tokens,
+async def _ocean_generate_text(
+    prompt: str, language: str = "", max_tokens: int = 1024
+) -> str:
+    # Real inference via ocean-core -> ollama(CLX). ocean-core owns the
+    # system prompt, language detection and knowledge pipeline.
+    payload: Dict[str, Any] = {
+        "message": prompt,
+        "use_mega_layers": True,
+        "use_knowledge_seeds": True,
     }
+    if language:
+        payload["language"] = language
     data = await _post_json(
-        f"{OCEAN_CORE_URL}/api/v1/llm/generate", payload, timeout=120.0
+        f"{OCEAN_CORE_URL}/api/v1/chat", payload, timeout=120.0
     )
-    text = str(data.get("text", "")).strip()
+    text = str(data.get("response", "")).strip()
     return text or "Model returned empty output."
 
 
@@ -1604,13 +1611,17 @@ async def chat(req: ChatRequest):
             "intent": intent,
         }
 
-    lang_hint = f"\nRespond in {effective_lang}." if effective_lang else ""
-    effective_prompt = f"{GLOBAL_SYSTEM_PROMPT}{lang_hint}\n\nUser request:\n{prompt}"
     start = time.time()
     try:
-        text = await _ocean_generate_text(effective_prompt, max_tokens=1024)
-    except Exception:
-        text = "Upstream model unavailable. Please retry in a few seconds."
+        text = await _ocean_generate_text(prompt, language=effective_lang, max_tokens=1024)
+    except Exception as exc:
+        detail = str(exc)[:200]
+        if effective_lang == "sq":
+            text = f"Modeli nuk u pergjigj ne kohe (ocean-core). Detaj: {detail}"
+        elif effective_lang == "de":
+            text = f"Das Modell hat nicht rechtzeitig geantwortet (ocean-core). Detail: {detail}"
+        else:
+            text = f"The model did not respond in time (ocean-core). Detail: {detail}"
 
     return {
         "response": _sanitize_response(text, effective_lang),
