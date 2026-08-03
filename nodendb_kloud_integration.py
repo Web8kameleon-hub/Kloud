@@ -77,6 +77,7 @@ SERVICE_ENDPOINTS = {
     "clx-i": {"host": "kloud-clx-i", "port": 4444, "scheme": "http"},
     "ai-global-9999": {"host": "kloud-ai-global-9999", "port": 9999, "scheme": "http"},
     "aviation": {"host": "kloud-aviation", "port": 8080, "scheme": "http"},
+    "lightning-spp": {"host": "kloud-lightning-spp", "port": 8080, "scheme": "http"},
     "neo4j": {"host": "kloud-neo4j", "port": 7474, "scheme": "http"},
 }
 
@@ -89,6 +90,7 @@ SERVICE_HEALTH_PATHS = {
     "clx-i": ["/health", "/status", "/"],
     "ai-global-9999": ["/status", "/health", "/"],
     "aviation": ["/health", "/status", "/"],
+    "lightning-spp": ["/api/v1/fabric/status", "/api/health", "/"],
     "neo4j": ["/health", "/"],
 }
 
@@ -1003,6 +1005,54 @@ async def initialize_kloud_nodedb_real():
             logger.info(f"  ✓ Aviation registered: {node_id}\n")
         except Exception as e:
             logger.error(f"  ✗ Aviation registration failed: {e}\n")
+
+    # 6b. Lightning SPP - Scan-Process-Print (REAL HTTP)
+    if "lightning-spp" in available_services:
+        logger.info("📝 Registering Lightning SPP Scan-Process-Print (Real HTTP)...")
+        try:
+
+            class LightningSPPService:
+                __name__ = "lightning_spp"
+                __version__ = "3.14"
+                __doc__ = "Lightning SPP Scan-Process-Print (CLX/XCL/Stigma) - Real HTTP Service"
+
+            async def check_lightning_spp_health():
+                endpoint = (
+                    f"{SERVICE_ENDPOINTS['lightning-spp']['scheme']}://"
+                    f"{SERVICE_ENDPOINTS['lightning-spp']['host']}:"
+                    f"{SERVICE_ENDPOINTS['lightning-spp']['port']}"
+                )
+                try:
+                    async with httpx.AsyncClient(timeout=10.0) as client:
+                        response, health_data, health_path = await _get_first_ok_json(
+                            client,
+                            endpoint,
+                            SERVICE_HEALTH_PATHS.get(
+                                "lightning-spp", ["/api/v1/fabric/status", "/api/health"]
+                            ),
+                        )
+                        return {
+                            "status": "healthy"
+                            if response.status_code in [200, 201, 202, 204]
+                            else "error",
+                            "health_path": health_path,
+                            "data": health_data,
+                            "quality_score": 0.9
+                            if response.status_code in [200, 201, 202, 204]
+                            else 0.0,
+                        }
+                except Exception as e:
+                    return {"status": "error", "error": str(e), "quality_score": 0.0}
+
+            node_id = await register_service_with_nodedb(
+                LightningSPPService(),
+                "Lightning SPP (Scan-Process-Print)",
+                health_check_fn=check_lightning_spp_health,
+            )
+            registered["lightning-spp"] = node_id
+            logger.info(f"  ✓ Lightning SPP registered: {node_id}\n")
+        except Exception as e:
+            logger.error(f"  ✗ Lightning SPP registration failed: {e}\n")
 
     # 7. SOVEREIGN FABRIC NODES - SCALABLE MULTI-NODE ARCHITECTURE
     logger.info("=" * 80)

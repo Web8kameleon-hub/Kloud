@@ -4,22 +4,21 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Send, Sparkles, RefreshCw, ChevronRight, Loader2, Mic, Camera, FileText, X, Square, Plus, Settings2, ArrowLeft, Volume2, VolumeX } from 'lucide-react';
 
-// Clerk — safe runtime access (no hooks, avoids ClerkProvider requirement)
+// Internal sovereign auth — reads the session persisted by sign-in/sign-up.
+// 100% independent of external identity providers (no Clerk/Google/etc.).
 function getClerkUser(): { userId: string | null; firstName: string | null; username: string | null } {
   try {
-    // Access Clerk's client-side singleton if available
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const w = window as any;
-    if (w?.Clerk?.user) {
-      const u = w.Clerk.user;
-      return { userId: u.id || null, firstName: u.firstName || null, username: u.username || null };
+    if (typeof window === "undefined") {
+      return { userId: null, firstName: null, username: null };
     }
-    if (w?.Clerk?.session?.user) {
-      const u = w.Clerk.session.user;
-      return { userId: u.id || null, firstName: u.firstName || null, username: u.username || null };
-    }
+    const userId = localStorage.getItem("kloud_user_id");
+    const name = localStorage.getItem("kloud_user_name");
+    const email = localStorage.getItem("kloud_user_email");
+    const firstName = name ? name.split(" ")[0] : null;
+    const username = name || email || null;
+    return { userId: userId || null, firstName, username };
   } catch {
-    // Clerk not available
+    // localStorage not available
   }
   return { userId: null, firstName: null, username: null };
 }

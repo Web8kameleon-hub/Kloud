@@ -8,7 +8,19 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { verifyInternalToken } from "@/lib/internal-auth";
+
+/**
+ * Resolve the authenticated user id from the internal (sovereign) Bearer token.
+ * 100% independent of external identity providers.
+ */
+function getUserId(request: NextRequest): string | null {
+  const header = request.headers.get("authorization");
+  if (!header || !header.startsWith("Bearer ")) return null;
+  const payload = verifyInternalToken(header.slice("Bearer ".length).trim());
+  const sub = payload ? String(payload.sub || "") : "";
+  return sub || null;
+}
 
 const OCEAN_CORE_URL =
   process.env.NEXT_PUBLIC_OCEAN_API_URL || "http://localhost:8030";
@@ -34,7 +46,7 @@ const chatSessions = new Map<string, ChatSession>();
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = getUserId(request);
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -138,7 +150,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = getUserId(request);
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -193,7 +205,7 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = getUserId(request);
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

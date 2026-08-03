@@ -204,7 +204,7 @@ CORE_PHRASES = {
 # LANGUAGE DETECTION PATTERNS
 # ============================================================================
 LANGUAGE_PATTERNS = {
-    "sq": ["përshëndetje", "faleminderit", "mirëdita", "kush", "çfarë", "mund", "jam", "është", "shqip"],
+    "sq": ["përshëndetje", "pershendetje", "faleminderit", "mirëdita", "miredita", "kush", "çfarë", "cfare", "mund", "jam", "është", "eshte", "shqip", "vëlla", "vella", "mirupafshim", "ckemi", "c'kemi", "dua", "kam", "nje", "une", "ti", "sot", "pyetje"],
     "de": ["wie", "was", "warum", "können", "ich", "bitte", "danke", "guten", "ist", "nicht"],
     "fr": ["bonjour", "merci", "comment", "pourquoi", "quoi", "oui", "non", "bien", "très"],
     "it": ["ciao", "grazie", "come", "perché", "cosa", "buongiorno", "sono", "bene"],
@@ -254,20 +254,27 @@ class TranslationNode:
         logger.info(f"🌍 Translation Node initialized with {len(self.languages)} languages")
     
     def detect_language(self, text: str) -> tuple[str, float]:
-        """Detect language from text patterns"""
-        text_lower = text.lower()
+        """Detect language from text patterns (diacritic-insensitive)"""
+        def _fold(s: str) -> str:
+            table = str.maketrans({
+                "ë": "e", "ç": "c", "ä": "a", "ö": "o", "ü": "u", "ß": "ss",
+                "á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "à": "a", "è": "e",
+            })
+            return s.lower().translate(table)
+
+        text_lower = _fold(text)
         scores = {}
-        
+
         for lang, patterns in self.patterns.items():
-            score = sum(1 for p in patterns if p in text_lower)
+            score = sum(1 for p in patterns if _fold(p) in text_lower)
             if score > 0:
                 scores[lang] = score
-        
+
         if scores:
             best_lang = max(scores, key=scores.get)
             confidence = min(scores[best_lang] / 3.0, 1.0)
             return best_lang, confidence
-        
+
         # Default to English if no patterns match
         return "en", 0.5
     
