@@ -47,6 +47,93 @@ ALBANIAN_DICT_MODE = os.getenv("ALBANIAN_DICT_MODE", "off").lower()
 PORT = int(os.getenv("PORT", "8030"))
 TRANSLATION_NODE = os.getenv("TRANSLATION_NODE", "http://localhost:8036")
 
+# ═══════════════════════════════════════════════════════════════════
+# REAL TELEMETRY (no-fake): psutil-backed system signals + process uptime
+# ═══════════════════════════════════════════════════════════════════
+import importlib
+
+_PROCESS_START = time.time()
+
+# Real fabric activity tracking (updated by actual request handling; no fabrication)
+_FABRIC_STATE: Dict[str, Any] = {
+    "requests_total": 0,
+    "requests_streamed": 0,
+    "last_action": None,
+    "last_target": None,
+    "last_prompt_chars": 0,
+    "last_lang": None,
+    "last_ts": None,
+    "last_latency_ms": None,
+}
+
+
+def _record_impulse(action: str, target: str, prompt: str, lang: str, latency_ms: Optional[float] = None, streamed: bool = False) -> None:
+    """Record a REAL processing event so fabric endpoints report facts, not fiction."""
+    _FABRIC_STATE["requests_total"] += 1
+    if streamed:
+        _FABRIC_STATE["requests_streamed"] += 1
+    _FABRIC_STATE["last_action"] = action
+    _FABRIC_STATE["last_target"] = target
+    _FABRIC_STATE["last_prompt_chars"] = len(prompt or "")
+    _FABRIC_STATE["last_lang"] = lang
+    _FABRIC_STATE["last_ts"] = time.time()
+    if latency_ms is not None:
+        _FABRIC_STATE["last_latency_ms"] = round(latency_ms, 1)
+try:
+    psutil = importlib.import_module("psutil")
+    PSUTIL_AVAILABLE = True
+except Exception:  # pragma: no cover - optional dep
+    psutil = None
+    PSUTIL_AVAILABLE = False
+
+
+def _real_system_metrics() -> Dict[str, Any]:
+    """Read REAL host metrics via psutil. Returns available=False if psutil missing."""
+    if not PSUTIL_AVAILABLE:
+        return {"available": False}
+    try:
+        cpu = float(psutil.cpu_percent(interval=None))
+        vm = psutil.virtual_memory()
+        try:
+            load1, load5, load15 = psutil.getloadavg()
+        except (AttributeError, OSError):
+            load1 = load5 = load15 = 0.0
+        cpu_count = psutil.cpu_count(logical=True) or 1
+        return {
+            "available": True,
+            "cpu_percent": round(cpu, 2),
+            "mem_percent": round(float(vm.percent), 2),
+            "mem_used_mb": round(vm.used / 1_048_576, 1),
+            "mem_total_mb": round(vm.total / 1_048_576, 1),
+            "load1": round(load1, 3),
+            "load5": round(load5, 3),
+            "load15": round(load15, 3),
+            "cpu_count": cpu_count,
+            "load1_per_core": round(load1 / cpu_count, 3),
+        }
+    except Exception as exc:  # pragma: no cover
+        return {"available": False, "error": str(exc)[:200]}
+
+
+async def _probe(url: str, timeout: float = 3.0) -> Dict[str, Any]:
+    """Probe a real dependency. Returns actual status + latency (no simulation)."""
+    start = time.time()
+    try:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.get(url)
+        return {
+            "reachable": resp.status_code < 500,
+            "http": resp.status_code,
+            "latency_ms": round((time.time() - start) * 1000, 1),
+        }
+    except Exception as exc:
+        return {
+            "reachable": False,
+            "http": 0,
+            "latency_ms": round((time.time() - start) * 1000, 1),
+            "error": type(exc).__name__,
+        }
+
 # Global variable for warmup task
 _warmup_task = None
 
@@ -625,37 +712,54 @@ async def health():
 @app.get("/fabric/flow")
 async def fabric_flow():
     """
-    Return FlowFields - Fabric's neural state with 9 interdependent fields:
-    - tension: decision urgency (0-10)
-    - harmony: emotional alignment (0-10)
-    - risk: perceived danger level (0-10)
-    - gap: knowledge incompleteness (0-10)
-    - pattern: detected coherence (0-10)
-    - compute: CPU/cognitive load (0-10)
-    - load: total system stress (0-10)
-    - protection: safety barriers (0-10)
-    - origin_shift: trust in source authenticity (0-10)
+    Return FlowFields derived from REAL telemetry (no simulation, no random).
+    Fields are computed deterministically from psutil metrics + live dependency
+    probes. Each response includes the raw sources so values are auditable.
     """
-    # Simulate real-time flow fields with natural variation
-    import random
+    metrics = _real_system_metrics()
+    ollama = await _probe(f"{OLLAMA_HOST}/api/tags")
+    translation = await _probe(f"{TRANSLATION_NODE}/health")
 
-    timestamp = time.time()
-    base_tension = 3.5 + random.uniform(-0.5, 0.5)
+    def clamp(v: float) -> float:
+        return max(0.0, min(10.0, round(v, 2)))
+
+    if metrics.get("available"):
+        cpu = metrics["cpu_percent"]
+        load_pc = metrics["load1_per_core"]
+        mem = metrics["mem_percent"]
+    else:
+        cpu = load_pc = mem = 0.0
+
+    # Deterministic derivations from measured values:
+    compute = clamp(cpu / 10.0)                 # CPU load -> 0..10
+    load = clamp(load_pc * 10.0)                # load-per-core -> 0..10
+    tension = clamp((cpu / 20.0) + load_pc * 3) # urgency from pressure
+    # gap = knowledge unavailability: high if model/translation unreachable
+    gap = clamp((0 if ollama["reachable"] else 6) + (0 if translation["reachable"] else 4))
+    # protection: full unless dependencies degraded
+    protection = clamp(10 - (0 if ollama["reachable"] else 3) - (0 if translation["reachable"] else 2))
+    harmony = clamp(10 - abs(load - 3) - (mem / 20.0))
+    risk = clamp(load_pc * 4 + (2 if not ollama["reachable"] else 0))
 
     return {
-        "timestamp": timestamp,
+        "timestamp": time.time(),
         "flow_fields": {
-            "tension": max(0, min(10, base_tension)),
-            "harmony": max(0, min(10, 7.2 + random.uniform(-1, 1))),
-            "risk": max(0, min(10, 2.1 + random.uniform(-0.5, 0.5))),
-            "gap": max(0, min(10, 4.8 + random.uniform(-0.8, 0.8))),
-            "pattern": max(0, min(10, 6.3 + random.uniform(-0.6, 0.6))),
-            "compute": max(0, min(10, 1.2 + random.uniform(-0.3, 0.3))),
-            "load": max(0, min(10, 2.5 + random.uniform(-0.4, 0.4))),
-            "protection": max(0, min(10, 8.9 + random.uniform(-0.5, 0.5))),
-            "origin_shift": max(0, min(10, 7.1 + random.uniform(-0.6, 0.6))),
+            "tension": tension,
+            "harmony": harmony,
+            "risk": risk,
+            "gap": gap,
+            "compute": compute,
+            "load": load,
+            "protection": protection,
         },
-        "resonance_status": "stable",
+        "sources": {
+            "system": metrics,
+            "ollama": ollama,
+            "translation_node": translation,
+            "uptime_s": round(time.time() - _PROCESS_START, 1),
+        },
+        "derivation": "deterministic_from_psutil+probes",
+        "resonance_status": "stable" if metrics.get("available") else "psutil_unavailable",
         "fabric_state": "operational",
     }
 
@@ -663,67 +767,103 @@ async def fabric_flow():
 @app.get("/fabric/ocean/impulse")
 async def fabric_ocean_impulse():
     """
-    Return last OceanImpulse - JONA-filtered decision sent to capability broadcast
-    Structure:
-    - action: what capability is being invoked
-    - target: which module receives this
-    - intensity: how strongly (1-4 scale, JONA-clamped)
-    - reason: why this action was selected
-    - timestamp: when impulse was created
-    - jona_approved: whether it passed JONA Guardian filter
+    Return the REAL last processing impulse recorded by the request pipeline.
+    If no request has been processed yet, this is reported honestly (no invented
+    impulse). Rate is computed from actual counters and uptime.
     """
+    uptime = max(1e-6, time.time() - _PROCESS_START)
+    rate_hz = round(_FABRIC_STATE["requests_total"] / uptime, 4)
+    has_impulse = _FABRIC_STATE["last_ts"] is not None
+
     return {
         "last_impulse": {
-            "action": "activate_curiosity",
-            "target": "curiosity_ocean",
-            "intensity": 2,
-            "intensity_original": 2.8,  # Before JONA clamping
-            "reason": "User query detected - appropriate knowledge gathering",
-            "timestamp": time.time(),
-            "jona_approved": True,
-            "jona_filters_applied": [
-                "intensity_clamping(2.8 → 2)",
-                "language_softening_check",
-                "harmony_guard_verified",
-                "risk_override_allowed",
-            ],
+            "action": _FABRIC_STATE["last_action"],
+            "target": _FABRIC_STATE["last_target"],
+            "prompt_chars": _FABRIC_STATE["last_prompt_chars"],
+            "language": _FABRIC_STATE["last_lang"],
+            "latency_ms": _FABRIC_STATE["last_latency_ms"],
+            "timestamp": _FABRIC_STATE["last_ts"],
+            "recorded": has_impulse,
+        } if has_impulse else None,
+        "counters": {
+            "requests_total": _FABRIC_STATE["requests_total"],
+            "requests_streamed": _FABRIC_STATE["requests_streamed"],
         },
-        "fabric_decision_rate_hz": 12.5,
-        "jona_guardian_status": "active",
-        "safety_level": "green",
+        "fabric_decision_rate_hz": rate_hz,
+        "uptime_s": round(uptime, 1),
+        "status": "operational",
     }
 
 
 @app.get("/fabric/resonance")
 async def fabric_resonance():
     """
-    Return FabricSelfReport - JONA-filtered introspection of Fabric's state
-    This represents the Resonance Engine output with natural damping applied
+    Return fabric self-report backed by REAL telemetry only. No random values,
+    no scripted introspection: dependency health, system pressure and real
+    request statistics.
     """
+    metrics = _real_system_metrics()
+    ollama = await _probe(f"{OLLAMA_HOST}/api/tags")
+    translation = await _probe(f"{TRANSLATION_NODE}/health")
+
+    deps_ok = sum(1 for d in (ollama, translation) if d["reachable"])
+    field_coherence = round(deps_ok / 2.0, 2)
+
     return {
-        "fabric_introspection": {
-            "self_assessment": "Functioning optimally within ethical parameters",
-            "emotional_state": "Calm and analytical",
-            "confidence_level": 8.2,  # Out of 10
-            "uncertainty_areas": ["User intent disambiguation in edge cases", "Long-context semantic drift prevention"],
-            "active_resonances": [
-                "harmony_field_coupled_with_pattern_recognition",
-                "protection_barrier_actively_monitoring",
-                "natural_damping_applying_88-96%_decay",
-            ],
-            "last_impulse": "activate_curiosity",
-            "last_impulse_jona_check": "PASSED",
-            "guardian_note": "All recent decisions passed JONA filtering with intensity clamped to safe levels",
+        "dependencies": {
+            "ollama": ollama,
+            "translation_node": translation,
+            "healthy": deps_ok,
+            "total": 2,
+        },
+        "system": metrics,
+        "request_stats": {
+            "requests_total": _FABRIC_STATE["requests_total"],
+            "requests_streamed": _FABRIC_STATE["requests_streamed"],
+            "last_latency_ms": _FABRIC_STATE["last_latency_ms"],
         },
         "resonance_metrics": {
-            "field_coherence": 0.87,  # Cross-field coupling stability
-            "damping_ratio": 0.92,  # 92% natural decay per cycle
-            "decision_latency_ms": 45,
-            "jona_filter_latency_ms": 8,
-            "total_system_latency_ms": 53,
+            "field_coherence": field_coherence,
+            "model_latency_ms": ollama["latency_ms"],
+            "translation_latency_ms": translation["latency_ms"],
         },
         "timestamp": time.time(),
-        "status": "healthy",
+        "uptime_s": round(time.time() - _PROCESS_START, 1),
+        "status": "healthy" if deps_ok == 2 else ("degraded" if deps_ok == 1 else "offline"),
+    }
+
+
+@app.get("/fabric/signals")
+async def fabric_signals():
+    """
+    Unified REAL internal-signal aggregator: heartbeat/pulse, system pressure,
+    dependency health and request activity — every value measured, none faked.
+    """
+    metrics = _real_system_metrics()
+    ollama = await _probe(f"{OLLAMA_HOST}/api/tags")
+    translation = await _probe(f"{TRANSLATION_NODE}/health")
+    now = time.time()
+
+    return {
+        "heartbeat": {
+            "alive": True,
+            "uptime_s": round(now - _PROCESS_START, 1),
+            "timestamp": now,
+        },
+        "pulse": {
+            "requests_total": _FABRIC_STATE["requests_total"],
+            "requests_streamed": _FABRIC_STATE["requests_streamed"],
+            "requests_per_s": round(_FABRIC_STATE["requests_total"] / max(1e-6, now - _PROCESS_START), 4),
+            "last_ts": _FABRIC_STATE["last_ts"],
+            "last_latency_ms": _FABRIC_STATE["last_latency_ms"],
+        },
+        "system": metrics,
+        "dependencies": {
+            "ollama": ollama,
+            "translation_node": translation,
+        },
+        "model": MODEL,
+        "no_fake": True,
     }
 
 
@@ -771,7 +911,17 @@ async def enterprise_contract():
 @app.post("/api/v1/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     """Main chat endpoint - Full processing pipeline"""
-    return await process_query_full(req)
+    _t0 = time.time()
+    result = await process_query_full(req)
+    _record_impulse(
+        action="chat",
+        target="ocean-core",
+        prompt=(req.message or req.query or ""),
+        lang=getattr(result, "language_detected", "en"),
+        latency_ms=(time.time() - _t0) * 1000,
+        streamed=False,
+    )
+    return result
 
 
 @app.post("/api/v1/chat/stream")
@@ -783,6 +933,8 @@ async def chat_stream(req: ChatRequest):
     prompt = req.message or req.query
     if not prompt:
         raise HTTPException(status_code=400, detail="message or query required")
+
+    _record_impulse(action="chat_stream", target="ocean-core", prompt=prompt, lang=req.language or "auto", streamed=True)
 
     # Quick language detection inline (no async overhead)
     lang_hint = ""
