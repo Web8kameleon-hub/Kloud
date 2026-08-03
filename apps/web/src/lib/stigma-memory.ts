@@ -307,16 +307,52 @@ export async function writeAuthStigmaEvent(
 
   await prev;
   try {
-    // Write to NodeDB (async, non-blocking)
+    // Write to NodeDB (async, non-blocking). writeToNodeDB never throws.
     const ndbResult = await writeToNodeDB(event);
 
-    // Update local metrics (for secondary reporting)
-    await fs.mkdir(STIGMA_DIR, { recursive: true });
-    const metrics = await readMetrics();
-    const updated = updateAggregate(metrics, event);
-    await fs.writeFile(METRICS_PATH, JSON.stringify(updated, null, 2), "utf-8");
+    // Update local metrics (real, file-based persistence). Isolate failures so a
+    // read-only filesystem can never crash the auth flow (which previously caused
+    // an empty 500 body → "Unexpected end of JSON input" on the client).
+    let localPersisted = false;
+    let localMessage: string | undefined;
+    try {
+      await fs.mkdir(STIGMA_DIR, { recursive: true });
+      const metrics = await readMetrics();
+      const updated = updateAggregate(metrics, event);
+      await fs.writeFile(METRICS_PATH, JSON.stringify(updated, null, 2), "utf-8");
+      localPersisted = true;
+    } catch (err) {
+      localMessage = err instanceof Error ? err.message : String(err);
+    }
 
-    return ndbResult;
+    // Honest status resolution (no fake): if NodeDB is mandatory, only its result
+    // counts. Otherwise a successful local file write is real persistence.
+    if (REQUIRE_NODEDB_FLUID) {
+      return ndbResult;
+    }
+    if (ndbResult.status === "persisted") {
+      return ndbResult;
+    }
+    if (localPersisted) {
+      return {
+        status: "persisted",
+        transport: "local",
+        message:
+          ndbResult.status === "not_configured"
+            ? "nodedb_not_configured_local_persisted"
+            : undefined,
+      };
+    }
+    return {
+      status: "error",
+      message: localMessage || ndbResult.message || "stigma_persist_failed",
+    };
+  } catch (err) {
+    // Absolute guard: this function must never throw.
+    return {
+      status: "error",
+      message: err instanceof Error ? err.message : String(err),
+    };
   } finally {
     release();
   }

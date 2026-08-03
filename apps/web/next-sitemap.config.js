@@ -15,6 +15,10 @@ const config = {
     '/sign-in/*',
     '/sign-up/*',
     '/auth/*',
+    '/admin',
+    '/admin/*',
+    '/user',
+    '/user/*',
     '/404',
     '/500'
   ],
@@ -54,7 +58,6 @@ const config = {
       '/asi-demo',
       '/debate',
       '/dashboard',
-      '/user/dashboard',
       '/terms',
       '/modules/mood-journal',
       '/modules/daily-habits',

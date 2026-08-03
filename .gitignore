@@ -216,3 +216,10 @@ tmpclaude-*
 tmpclaude-*
 
 
+
+# External proprietary repos (own repos, cloned locally)
+external/
+
+# Local diagnostic / bundle artifacts
+kloud_fix.bundle
+scripts/diag_*.sh

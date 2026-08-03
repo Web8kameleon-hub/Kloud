@@ -121,9 +121,9 @@ const usageMetrics = [
 ]
 
 const authModes = [
-  'Email login via Clerk',
-  'Phone number + SMS login via Clerk',
-  'Session-based browser auth',
+  'Internal email + OTP login',
+  'Internal phone + SMS OTP login',
+  'Session token-based browser auth',
   'Stripe-linked customer identity for billing flows',
 ]
 
@@ -543,7 +543,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
         <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-6">
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-8">
             <h2 className="text-2xl font-bold mb-4">Authentication Modes</h2>
-            <p className="text-slate-400 mb-6">Login is wired through Clerk in the web app. Phone/SMS is a configuration step, not a fake UI promise.</p>
+            <p className="text-slate-400 mb-6">Login is fully internal in the web app (email/phone + OTP). No external identity provider required.</p>
             <ul className="space-y-3">
               {authModes.map((mode) => (
                 <li key={mode} className="flex items-center gap-3 text-sm text-slate-300">
@@ -577,7 +577,7 @@ print(f"CPU: {data['cpu_percent']}%, RAM: {data['memory_percent']}%")`,
               { q: 'Do these APIs actually work?', a: 'Yes. Every endpoint listed on this page is live on production. Click "Try" next to any endpoint above to see the real response.' },
               { q: 'What AI models power Ocean?', a: 'Curiosity Ocean uses CLX for text, CLX.I for vision, and Faster-Whisper for audio transcription. All models run on our infrastructure — no external API calls.' },
               { q: 'Can I bill per usage instead of fixed tiers?', a: 'Yes. The platform supports metered billing. Track billable units such as api_request, ocean_chat, vision_job, audio_job, and export_job, then attach them to Stripe metered products.' },
-              { q: 'How do I enable phone and SMS login?', a: 'Use Clerk as the identity provider and enable phone number sign-in plus SMS verification in the Clerk dashboard. The app UI already supports Clerk-based auth surfaces.' },
+              { q: 'How do I enable phone and SMS login?', a: 'Enable internal OTP delivery channels (SMS/email) in your environment and use the built-in internal-auth endpoints for challenge and verification.' },
               { q: 'Can I upgrade or downgrade anytime?', a: 'Yes. Upgrades take effect immediately. Downgrades apply at the next billing cycle. All payments are processed through Stripe.' },
               { q: 'Is there an SDK?', a: 'SDKs are in development. For now, all endpoints work with any HTTP client — cURL, fetch, requests, axios, etc. See the code examples above.' },
               { q: 'Do you offer enterprise solutions?', a: 'Yes — custom API limits, dedicated infrastructure, SLA guarantees, and on-premise deployment. Contact enterprise@kloud.com.' },

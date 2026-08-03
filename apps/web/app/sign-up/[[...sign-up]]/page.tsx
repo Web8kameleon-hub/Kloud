@@ -46,6 +46,22 @@ export default function SignUpPage() {
     if (user?.phone) localStorage.setItem("kloud_user_phone", user.phone);
   };
 
+  // Safe parse: some error responses (e.g. 500) can have an empty body, which
+  // would otherwise throw "Unexpected end of JSON input" on res.json().
+  const safeJson = async <T,>(res: Response): Promise<T> => {
+    const text = await res.text();
+    if (!text) {
+      throw new Error(
+        res.ok ? "Empty response from server" : `Server error (${res.status})`,
+      );
+    }
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      throw new Error(`Unexpected server response (${res.status})`);
+    }
+  };
+
   const handleRegister = async () => {
     setLoading(true);
     setError(null);
@@ -65,7 +81,7 @@ export default function SignUpPage() {
           remember,
         }),
       });
-      const data = (await res.json()) as RegisterResult;
+      const data = await safeJson<RegisterResult>(res);
       if (!res.ok || !data.success || !data.challengeId) {
         throw new Error(data.error || "Registration failed");
       }
@@ -91,7 +107,7 @@ export default function SignUpPage() {
         },
         body: JSON.stringify({ challengeId, code: otpCode }),
       });
-      const data = (await res.json()) as VerifyResult;
+      const data = await safeJson<VerifyResult>(res);
       if (!res.ok || !data.success || !data.token) {
         throw new Error(data.error || "OTP verification failed");
       }

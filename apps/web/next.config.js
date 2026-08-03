@@ -21,6 +21,15 @@ const REPORTING_BASE =
 const OCEAN_BASE =
   process.env.OCEAN_INTERNAL_URL ||
   (isDev ? "http://localhost:8030" : "http://kloud-ocean-core:8030");
+// NodeDB control plane — resonant fabric host: nodedb, nodedb-fluid, resonant
+// events, stigma, scan-print, nanogrid status (verified deployed on :9090).
+const NODEDB_BASE =
+  process.env.NODEDB_CONTROL_PLANE_URL ||
+  (isDev ? "http://localhost:9090" : "http://kloud-nodedb-control-plane:9090");
+// Lightning SPP 3.14 — Scan-Process-Print fabric node (fabric API on :8080).
+const LIGHTNING_BASE =
+  process.env.LIGHTNING_SPP_URL ||
+  (isDev ? "http://localhost:8090" : "http://kloud-lightning-spp:8080");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -267,6 +276,96 @@ const nextConfig = {
         source: "/api/ocean",
         destination: `${OCEAN_BASE}/api/v1/health`,
       },
+      // ======================================================================
+      // SOVEREIGN FABRIC ALIASES (proprietary modules -> real deployed backends)
+      // Profile: wwwmmm-ndb-stigma-tide-rezonance-nanogrid
+      // NOTE: exact routes MUST precede ":path*" (which also matches empty path).
+      // Verified against deployed nodedb-control-plane:9090 (resonant fabric host).
+      // ======================================================================
+      // Rezonance (resonant event fabric) -> nodedb-control-plane
+      {
+        source: "/api/rezonance",
+        destination: `${NODEDB_BASE}/api/v1/resonant/events`,
+      },
+      {
+        source: "/api/rezonance/:path*",
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
+      },
+      {
+        source: "/api/resonant/:path*",
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
+      },
+      // Nanogrid -> control-plane nanogrid status (exact first)
+      {
+        source: "/api/nanogrid/status",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/nanogrid/status`,
+      },
+      {
+        source: "/api/nanogrid",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/nanogrid/status`,
+      },
+      {
+        source: "/api/nanogrid/:path*",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // NodeDB -> control plane discovery (exact first)
+      {
+        source: "/api/nodedb",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/discovery`,
+      },
+      {
+        source: "/api/nodedb/:path*",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // NodeDB Fluid -> sync-loop status (exact first)
+      {
+        source: "/api/nodedb-fluid",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/sync-loop/status`,
+      },
+      {
+        source: "/api/nodedb-fluid/:path*",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // Lightning SPP 3.14 -> Scan-Process-Print fabric node (status/scan/pipeline)
+      {
+        source: "/api/lightning",
+        destination: `${LIGHTNING_BASE}/api/v1/fabric/status`,
+      },
+      {
+        source: "/api/lightning/:path*",
+        destination: `${LIGHTNING_BASE}/api/v1/:path*`,
+      },
+      // Stigma (behavioral trace + film memory chain) -> nodedb resonant events
+      {
+        source: "/api/stigma/write",
+        destination: `${NODEDB_BASE}/api/v1/stigma/write`,
+      },
+      {
+        source: "/api/stigma/events",
+        destination: `${NODEDB_BASE}/api/v1/resonant/events`,
+      },
+      {
+        source: "/api/stigma/:path*",
+        destination: `${NODEDB_BASE}/api/v1/resonant/:path*`,
+      },
+      // Scanner-Thinker-Printer -> control-plane scan-print (exact first)
+      {
+        source: "/api/scan-print",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/scan-print`,
+      },
+      {
+        source: "/api/scan-print/:path*",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/:path*`,
+      },
+      // Fabric operational surfaces (real deployed control-plane endpoints)
+      {
+        source: "/api/fabric-monitoring",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/monitoring/status`,
+      },
+      {
+        source: "/api/fabric-topology",
+        destination: `${NODEDB_BASE}/api/v1/control-plane/topology`,
+      },
     ];
   },
 
@@ -286,28 +385,5 @@ const nextConfig = {
   allowedDevOrigins: ["localhost:3000", "127.0.0.1:3000", "kloud.com"],
 };
 
-export default async () => {
-  if (process.env.NODE_ENV === "development") {
-    return nextConfig;
-  }
-
-  const { default: withPWAInit } = await import("@ducanh2912/next-pwa");
-  const withPWA = withPWAInit({
-    dest: "public",
-    disable: false,
-    register: true,
-    skipWaiting: true,
-    cacheOnFrontEndNav: true,
-    aggressiveFrontEndNavCaching: true,
-    reloadOnOnline: true,
-    fallbacks: {
-      document: "/offline",
-    },
-    workboxOptions: {
-      disableDevLogs: true,
-    },
-  });
-
-  return withPWA(nextConfig);
-};
+export default nextConfig;
 

@@ -32,6 +32,18 @@
 
 ---
 
+## Development Topology (Multilang / Multipackage)
+
+### 🧭 Monorepo Multilangue Guide
+
+**→ [MONOREPO_MULTILANG_GUIDE.md](MONOREPO_MULTILANG_GUIDE.md)**
+
+- Clarifies JS/TS workspace, Rust workspace, and Python extras/isolation model
+- Contains practical PR checklist for multi-language changes
+- Includes server-side `gh` recovery note (`gh` vs `gitsome` package conflict)
+
+---
+
 ## Deployment Tools
 
 ### 🔧 deploy.sh (Root Directory)

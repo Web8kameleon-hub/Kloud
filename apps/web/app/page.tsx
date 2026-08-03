@@ -240,6 +240,46 @@ export default function HomePage() {
     })),
   };
 
+  // Per-module structured data — built from the real MODULES list (no hardcoded duplicates)
+  const moduleItemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Kloud Platform Modules',
+    itemListElement: MODULES.map((module, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'SoftwareApplication',
+        name: module.name,
+        applicationCategory: module.category,
+        operatingSystem: 'Web',
+        description: module.description,
+        url: `https://kameleon.life/modules/${module.id}`,
+      },
+    })),
+  };
+
+  // Dedicated Service schema for Ocean Core — the autonomous operational brain
+  const oceanCoreSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Ocean Core',
+    serviceType: 'AI Orchestration & Operational Governance',
+    url: 'https://kameleon.life/services/ocean-core',
+    areaServed: 'Global',
+    description:
+      'Ocean Core is the autonomous operational brain of Kloud. It orchestrates workloads, enforces policy, guides users, and preserves system integrity in real time across sovereign nodes.',
+    provider: {
+      '@type': 'Organization',
+      name: 'Kameleon Life',
+      url: 'https://kameleon.life',
+    },
+    audience: {
+      '@type': 'Audience',
+      audienceType: 'Enterprise AI Platforms',
+    },
+  };
+
   useEffect(() => {
     let isMounted = true;
 
@@ -287,6 +327,22 @@ export default function HomePage() {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(serviceItemListSchema),
+        }}
+      />
+      <Script
+        id="home-modules-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(moduleItemListSchema),
+        }}
+      />
+      <Script
+        id="ocean-core-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(oceanCoreSchema),
         }}
       />
       {/* Navigation */}
