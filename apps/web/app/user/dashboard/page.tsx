@@ -12,21 +12,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-// Conditional Clerk imports
-const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let useUser: any = () => ({ user: null, isLoaded: true });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let UserButton: any = () => null;
-
-if (isClerkConfigured) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const clerk = require("@clerk/nextjs");
-  useUser = clerk.useUser;
-  UserButton = clerk.UserButton;
-}
-
 interface UserStats {
   apiCalls: number;
   apiLimit: number;
@@ -74,23 +59,28 @@ interface SovereignData {
 }
 
 export default function UserDashboardPage() {
-  const { user, isLoaded } = useUser();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [recentChats, setRecentChats] = useState<Array<{id: string, title: string, updatedAt: string}>>([]);
   const [sovereignData, setSovereignData] = useState<SovereignData | null>(null);
   const [sovereignError, setSovereignError] = useState<string>("");
 
   useEffect(() => {
-    if (isLoaded && user) {
-      // Fetch user stats
-      fetchUserStats();
-      fetchRecentChats();
-      fetchSovereignData();
-    } else if (isLoaded && !user && isClerkConfigured) {
-      // Redirect to sign in if not authenticated and Clerk is configured
+    const token = typeof window !== "undefined" ? localStorage.getItem("kloud_auth_token") : null;
+    if (!token) {
+      setIsLoaded(true);
+      setIsAuthenticated(false);
       window.location.href = "/sign-in";
+      return;
     }
-  }, [isLoaded, user]);
+
+    setIsAuthenticated(true);
+    setIsLoaded(true);
+    fetchUserStats();
+    fetchRecentChats();
+    fetchSovereignData();
+  }, []);
 
   const fetchUserStats = async () => {
     // In production, fetch from API
@@ -171,7 +161,19 @@ export default function UserDashboardPage() {
               <Link href="/pricing" className="text-slate-400 hover:text-white text-sm">
                 Upgrade
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <button
+                onClick={() => {
+                  localStorage.removeItem("kloud_auth_token");
+                  localStorage.removeItem("kloud_user_id");
+                  localStorage.removeItem("kloud_user_name");
+                  localStorage.removeItem("kloud_user_email");
+                  localStorage.removeItem("kloud_user_phone");
+                  window.location.href = "/sign-in";
+                }}
+                className="text-slate-400 hover:text-white text-sm"
+              >
+                Sign out
+              </button>
             </div>
           </div>
         </div>

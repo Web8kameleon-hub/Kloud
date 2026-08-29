@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic httpx
+COPY clx_sovereign_api.py /app/
+ENV PORT=40400
+EXPOSE 40400
+CMD ["python", "clx_sovereign_api.py"]

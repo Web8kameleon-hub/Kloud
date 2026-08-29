@@ -44,6 +44,22 @@ export default function SignInPage() {
     if (user?.phone) localStorage.setItem("kloud_user_phone", user.phone);
   };
 
+  // Safe parse: error responses can have an empty body, which would otherwise
+  // throw "Unexpected end of JSON input" on res.json().
+  const safeJson = async <T,>(res: Response): Promise<T> => {
+    const text = await res.text();
+    if (!text) {
+      throw new Error(
+        res.ok ? "Empty response from server" : `Server error (${res.status})`,
+      );
+    }
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      throw new Error(`Unexpected server response (${res.status})`);
+    }
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
@@ -56,7 +72,7 @@ export default function SignInPage() {
         },
         body: JSON.stringify({ identifier, password, channel, remember }),
       });
-      const data = (await res.json()) as LoginResult;
+      const data = await safeJson<LoginResult>(res);
       if (!res.ok || !data.success || !data.challengeId) {
         throw new Error(data.error || "Login failed");
       }
@@ -82,7 +98,7 @@ export default function SignInPage() {
         },
         body: JSON.stringify({ challengeId, code: otpCode }),
       });
-      const data = (await res.json()) as VerifyResult;
+      const data = await safeJson<VerifyResult>(res);
       if (!res.ok || !data.success || !data.token) {
         throw new Error(data.error || "OTP verification failed");
       }
@@ -95,31 +111,12 @@ export default function SignInPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/internal-auth/google/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnUrl: onboardingTarget }),
-      });
-      const data = (await res.json()) as { success?: boolean; authUrl?: string; error?: string };
-      if (!res.ok || !data.success || !data.authUrl) {
-        throw new Error(data.error || "Google auth init failed");
-      }
-      window.location.href = data.authUrl;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Google auth init failed");
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-900 p-4 text-white">
       <div className="mx-auto mt-14 max-w-md rounded-2xl border border-cyan-700/50 bg-slate-900/80 p-6 shadow-2xl">
         <h1 className="text-3xl font-bold">Sign In</h1>
-        <p className="mt-1 text-sm text-cyan-100/80">Internal auth: SMS, Email OTP, Google OAuth</p>
+        <p className="mt-1 text-sm text-cyan-100/80">Internal auth only: Email OTP / SMS OTP</p>
 
         {!challengeId ? (
           <div className="mt-6 space-y-3">
@@ -159,13 +156,6 @@ export default function SignInPage() {
               className="w-full rounded-lg bg-cyan-600 px-4 py-2 font-semibold hover:bg-cyan-500 disabled:opacity-60"
             >
               {loading ? "Signing in..." : "Continue"}
-            </button>
-            <button
-              disabled={loading}
-              onClick={handleGoogle}
-              className="w-full rounded-lg border border-cyan-500/60 bg-transparent px-4 py-2 font-semibold hover:bg-cyan-600/20 disabled:opacity-60"
-            >
-              Continue with Google
             </button>
           </div>
         ) : (

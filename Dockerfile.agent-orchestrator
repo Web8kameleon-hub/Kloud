@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic httpx
+COPY agent_orchestrator_api.py /app/
+COPY agents.py /app/
+ENV PORT=40401
+EXPOSE 40401
+CMD ["python", "agent_orchestrator_api.py"]
