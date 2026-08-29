@@ -1,39 +1,11 @@
+
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-
-interface SystemStats {
-  uptime: string
-  modules: number
-  apis: number
-  labs: number
-}
+import NatureHero from '../components/landing/NatureHero'
+import LiveServicesPanel from '../components/landing/LiveServicesPanel'
 
 export default function HomePage() {
-  const [stats, setStats] = useState<SystemStats>({
-    uptime: '0h',
-    modules: 4,
-    apis: 10,
-    labs: 23
-  })
-
-  useEffect(() => {
-    // Calculate uptime
-    const startTime = Date.now()
-    const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000)
-      const hours = Math.floor(elapsed / 3600)
-      const minutes = Math.floor((elapsed % 3600) / 60)
-      setStats(prev => ({
-        ...prev,
-        uptime: `${hours}h ${minutes}m`
-      }))
-    }, 60000)
-
-    return () => clearInterval(interval)
-  }, [])
-
   const modules = [
     { name: 'EEG Analysis', path: '/modules/eeg-analysis', icon: '🧠', status: 'active' },
     { name: 'Neural Synthesis', path: '/modules/neural-synthesis', icon: '⚡', status: 'active' },
@@ -43,37 +15,14 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen text-white">
-      {/* Hero Section */}
-      <div className="text-center py-12">
-        <h1 className="text-5xl font-black mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Kloud Cloud
-        </h1>
-        <p className="text-xl text-gray-400 mb-8">
-          Advanced Neural & Audio Intelligence Platform
-        </p>
-        <p className="text-sm text-gray-500">
-          By Ledjan Ahmati • 14 months of development
-        </p>
+      {/* Hero (Nature + inspiring UI) */}
+      <div className="mb-6">
+        <NatureHero />
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-        <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-xl border border-blue-700">
-          <div className="text-3xl font-bold text-blue-300">{stats.modules}</div>
-          <div className="text-sm text-blue-400">Modules</div>
-        </div>
-        <div className="bg-gradient-to-br from-green-900 to-green-800 p-6 rounded-xl border border-green-700">
-          <div className="text-3xl font-bold text-green-300">{stats.apis}</div>
-          <div className="text-sm text-green-400">Public APIs</div>
-        </div>
-        <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-6 rounded-xl border border-purple-700">
-          <div className="text-3xl font-bold text-purple-300">{stats.labs}</div>
-          <div className="text-sm text-purple-400">Laboratories</div>
-        </div>
-        <div className="bg-gradient-to-br from-orange-900 to-orange-800 p-6 rounded-xl border border-orange-700">
-          <div className="text-3xl font-bold text-orange-300">61</div>
-          <div className="text-sm text-orange-400">Alphabet Layers</div>
-        </div>
+      {/* Live Services (real-time from /api/backend-health) */}
+      <div className="mb-10">
+        <LiveServicesPanel />
       </div>
 
       {/* Quick Access Modules */}
@@ -99,12 +48,17 @@ export default function HomePage() {
         <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
           <h3 className="font-bold text-lg mb-4">🧠 Ocean Core</h3>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li>✅ 14 Expert Personas</li>
-            <li>✅ 23 Laboratories</li>
+            <li>✅ Expert Personas</li>
+            <li>✅ Laboratories</li>
             <li>✅ Auto-Learning Engine</li>
             <li>✅ Response Orchestrator</li>
           </ul>
-          <a href="http://localhost:8030/api/docs" target="_blank" className="mt-4 inline-block text-blue-400 hover:text-blue-300 text-sm">
+          <a
+            href="http://localhost:8030/api/docs"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mt-4 inline-block text-blue-400 hover:text-blue-300 text-sm"
+          >
             Open API Docs →
           </a>
         </div>
@@ -112,8 +66,8 @@ export default function HomePage() {
         <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
           <h3 className="font-bold text-lg mb-4">🔤 Alphabet Layers</h3>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li>✅ Greek: 24 letters (α-ω)</li>
-            <li>✅ Albanian: 36 letters</li>
+            <li>✅ Greek: α-ω</li>
+            <li>✅ Albanian: letters</li>
             <li>✅ Mathematical functions</li>
             <li>✅ Phonetic properties</li>
           </ul>
@@ -135,11 +89,11 @@ export default function HomePage() {
           <Link href="/modules" className="text-blue-400 hover:text-blue-300">
             All Modules
           </Link>
-          <a href="https://kloud.com" target="_blank" className="text-purple-400 hover:text-purple-300">
+          <a href="https://kloud.com" target="_blank" rel="noreferrer noopener" className="text-purple-400 hover:text-purple-300">
             Kloud.com
           </a>
-          <a href="https://vilsonit.com" target="_blank" className="text-green-400 hover:text-green-300">
-            Vilsonit.com
+          <a href="https://clisonix.com" target="_blank" rel="noreferrer noopener" className="text-green-400 hover:text-green-300">
+            clisonix.com
           </a>
         </div>
       </div>
